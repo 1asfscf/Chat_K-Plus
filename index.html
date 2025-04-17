@@ -7,22 +7,13 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- 기존 헤더 (원본 그대로 유지) -->
+  <!-- 수정된 헤더: 왼쪽 영역에서는 로고만 남기고 나머지 텍스트(네비게이션 메뉴)는 삭제 -->
   <header>
     <div class="header-left">
       <div class="menu-icon">☰</div>
       <!-- 로고 클릭 시 home(index.html)로 이동 -->
       <a href="index.html" class="logo">momQ</a>
-      <nav class="nav-links">
-        <ul>
-          <li><a href="#best">베스트</a></li>
-          <li><a href="#wishlist">찜(하)기스데이</a></li>
-          <li><a href="#sale">삭플/이벤트</a></li>
-          <li><a href="#brand">브랜드</a></li>
-          <li><a href="#community">커뮤니티</a></li>
-          <li><a href="#plan">기획전</a></li>
-        </ul>
-      </nav>
+      <!-- 기존 네비게이션 메뉴 삭제됨 -->
     </div>
     <div class="header-right">
       <div class="search-bar">
@@ -38,7 +29,8 @@
     </div>
   </header>
 
-  <!-- 자동 전환 배너 이미지 (기존 그대로) -->
+  <!-- 헤더 아래 나머지 UI는 그대로 유지 -->
+  <!-- 자동 전환 배너 이미지 -->
   <img id="toggleImage"
        class="header-banner"
        src="https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png"
@@ -91,8 +83,8 @@
     </div>
   </section>
 
-<!-- 추천 상품 영역 (10개 상품) -->
-<div class="recommended-products">
+  <!-- 추천 상품 영역 (10개 상품) -->
+  <div class="recommended-products">
     <h2>추천 상품</h2>
     <div class="products-container">
       <a href="product.html">
@@ -187,7 +179,6 @@
       </a>
     </div>
   </div>
-  
 
   <!-- 기존 로그인 모달 (동일하게 유지) -->
   <div id="loginModal" class="modal">
