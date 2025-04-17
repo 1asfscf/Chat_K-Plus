@@ -7,25 +7,34 @@
   <style>
     /* 기본 리셋 */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
     body {
-      font-family: "Arial", sans-serif;
+      font-family: Arial, sans-serif;
       background: #f5f5f5;
       color: #333;
     }
+    /* 헤더 스타일 */
     header {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
       background: #fff;
-      padding: 20px;
       border-bottom: 1px solid #e5e5e5;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
     }
     /* 탭 네비게이션 */
     .tabs {
       display: flex;
       justify-content: center;
-      margin-bottom: 20px;
+      margin: 20px 0;
     }
     .tabs a {
       text-decoration: none;
@@ -56,8 +65,9 @@
       outline: none;
     }
     .search-container button {
-      padding: 10px;
+      padding: 10px 15px;
       border: 1px solid #ccc;
+      border-left: none;
       background: #333;
       color: #fff;
       border-radius: 0 3px 3px 0;
@@ -68,7 +78,7 @@
     .search-container button:hover {
       background: #555;
     }
-    /* 공지사항 목록 */
+    /* 공지사항 목록 스타일 */
     .notice-list {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -91,7 +101,6 @@
       flex: 1;
       text-align: center;
     }
-    /* 제목 부분은 왼쪽 정렬 */
     .notice-header .title-header {
       flex: 3;
       text-align: left;
@@ -134,70 +143,76 @@
   </style>
 </head>
 <body>
+  <!-- 헤더: 로고를 클릭하면 index.html로 이동 -->
   <header>
-    <!-- 탭 네비게이션 -->
+    <a href="index.html" class="logo">momQ</a>
+  </header>
+
+  <main>
+    <!-- 탭 네비게이션 (추가 메뉴) -->
     <nav class="tabs">
       <a href="faq.html">FAQ</a>
       <a href="inquiry.html">1:1 문의</a>
       <a href="notice.html" class="active">공지사항</a>
     </nav>
-    <!-- 검색바 영역 -->
+
+    <!-- 검색바 -->
     <div class="search-container">
       <input type="text" placeholder="공지사항 검색..." />
       <button type="button">🔍</button>
     </div>
-  </header>
-  
-  <!-- 공지사항 목록 영역 -->
-  <section class="notice-list">
-    <!-- 헤더 행 -->
-    <div class="notice-header">
-      <div class="title-header">제목</div>
-      <div>등록일</div>
-    </div>
-    <!-- 개별 공지 항목 -->
-    <div class="notice-item">
-      <div class="title">
-        <span class="label">공지</span>
-        탈배사 변경 안내
+
+    <!-- 공지사항 목록 -->
+    <section class="notice-list">
+      <!-- 목록 헤더 -->
+      <div class="notice-header">
+        <div class="title-header">제목</div>
+        <div>등록일</div>
       </div>
-      <div>2025.04.07</div>
-    </div>
-    <div class="notice-item">
-      <div class="title">
-        <span class="label">공지</span>
-        하기사 선물대전(I♥HUGGIES) 명칭 변경 및 정보 전환 정정 안내
+      <!-- 개별 공지 항목 -->
+      <div class="notice-item">
+        <div class="title">
+          <span class="label">공지</span>
+          탈배사 변경 안내
+        </div>
+        <div>2025.04.07</div>
       </div>
-      <div>2025.03.24</div>
-    </div>
-    <div class="notice-item">
-      <div class="title">
-        <span class="label">공지</span>
-        포인트 사용 정보 정정 안내
+      <div class="notice-item">
+        <div class="title">
+          <span class="label">공지</span>
+          하기사 선물대전(I♥HUGGIES) 명칭 변경 및 정보 전환 정정 안내
+        </div>
+        <div>2025.03.24</div>
       </div>
-      <div>2024.09.19</div>
-    </div>
-    <div class="notice-item">
-      <div class="title">
-        <span class="label">공지</span>
-        당일출고 서비스 시작 안내
+      <div class="notice-item">
+        <div class="title">
+          <span class="label">공지</span>
+          포인트 사용 정보 정정 안내
+        </div>
+        <div>2024.09.19</div>
       </div>
-      <div>2022.05.24</div>
-    </div>
-    <div class="notice-item">
-      <div class="title">
-        <span class="label">발표</span>
-        맘킴 03월 05일 좋은너낌 유기능 신제품 기획전 당착자 고지
+      <div class="notice-item">
+        <div class="title">
+          <span class="label">공지</span>
+          당일출고 서비스 시작 안내
+        </div>
+        <div>2022.05.24</div>
       </div>
-      <div>2025.04.17</div>
-    </div>
-    <div class="notice-item">
-      <div class="title">
-        <span class="label">발표</span>
-        맘킴 04월 베베그루우 신제품 듀어베이미 기획전 당착자 고지
+      <div class="notice-item">
+        <div class="title">
+          <span class="label">발표</span>
+          맘킴 03월 05일 좋은너낌 유기능 신제품 기획전 당착자 고지
+        </div>
+        <div>2025.04.17</div>
       </div>
-      <div>2025.04.17</div>
-    </div>
-  </section>
+      <div class="notice-item">
+        <div class="title">
+          <span class="label">발표</span>
+          맘킴 04월 베베그루우 신제품 듀어베이미 기획전 당착자 고지
+        </div>
+        <div>2025.04.17</div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
