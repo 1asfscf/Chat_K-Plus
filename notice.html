@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공지사항 - momQ</title>
+  <style>
+    /* 기본 리셋 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Arial", sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+    header {
+      background: #fff;
+      padding: 20px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    /* 탭 네비게이션 */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tabs a {
+      text-decoration: none;
+      color: #666;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s, color 0.3s;
+      font-weight: bold;
+    }
+    .tabs a.active {
+      border-color: #333;
+      color: #333;
+    }
+    /* 검색바 */
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin: 0 auto 20px;
+      max-width: 600px;
+    }
+    .search-container input[type="text"] {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px 0 0 3px;
+      font-size: 16px;
+      outline: none;
+    }
+    .search-container button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #333;
+      color: #fff;
+      border-radius: 0 3px 3px 0;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .search-container button:hover {
+      background: #555;
+    }
+    /* 공지사항 목록 */
+    .notice-list {
+      max-width: 800px;
+      margin: 0 auto 40px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .notice-header, .notice-item {
+      display: flex;
+      padding: 15px;
+      align-items: center;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .notice-header {
+      background: #f0f0f0;
+      font-weight: bold;
+    }
+    .notice-header div {
+      flex: 1;
+      text-align: center;
+    }
+    /* 제목 부분은 왼쪽 정렬 */
+    .notice-header .title-header {
+      flex: 3;
+      text-align: left;
+      padding-left: 20px;
+    }
+    .notice-item div {
+      flex: 1;
+      text-align: center;
+    }
+    .notice-item .title {
+      flex: 3;
+      text-align: left;
+      padding-left: 20px;
+    }
+    .notice-item span.label {
+      background: #333;
+      color: #fff;
+      padding: 2px 6px;
+      font-size: 12px;
+      border-radius: 3px;
+      margin-right: 5px;
+    }
+    .notice-item:hover {
+      background: #fafafa;
+    }
+    /* 반응형 */
+    @media (max-width: 600px) {
+      .notice-header, .notice-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .notice-header div, .notice-item div {
+        text-align: left;
+        width: 100%;
+      }
+      .notice-header .title-header, .notice-item .title {
+        padding-left: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- 탭 네비게이션 -->
+    <nav class="tabs">
+      <a href="faq.html">FAQ</a>
+      <a href="inquiry.html">1:1 문의</a>
+      <a href="notice.html" class="active">공지사항</a>
+    </nav>
+    <!-- 검색바 영역 -->
+    <div class="search-container">
+      <input type="text" placeholder="공지사항 검색..." />
+      <button type="button">🔍</button>
+    </div>
+  </header>
+  
+  <!-- 공지사항 목록 영역 -->
+  <section class="notice-list">
+    <!-- 헤더 행 -->
+    <div class="notice-header">
+      <div class="title-header">제목</div>
+      <div>등록일</div>
+    </div>
+    <!-- 개별 공지 항목 -->
+    <div class="notice-item">
+      <div class="title">
+        <span class="label">공지</span>
+        탈배사 변경 안내
+      </div>
+      <div>2025.04.07</div>
+    </div>
+    <div class="notice-item">
+      <div class="title">
+        <span class="label">공지</span>
+        하기사 선물대전(I♥HUGGIES) 명칭 변경 및 정보 전환 정정 안내
+      </div>
+      <div>2025.03.24</div>
+    </div>
+    <div class="notice-item">
+      <div class="title">
+        <span class="label">공지</span>
+        포인트 사용 정보 정정 안내
+      </div>
+      <div>2024.09.19</div>
+    </div>
+    <div class="notice-item">
+      <div class="title">
+        <span class="label">공지</span>
+        당일출고 서비스 시작 안내
+      </div>
+      <div>2022.05.24</div>
+    </div>
+    <div class="notice-item">
+      <div class="title">
+        <span class="label">발표</span>
+        맘킴 03월 05일 좋은너낌 유기능 신제품 기획전 당착자 고지
+      </div>
+      <div>2025.04.17</div>
+    </div>
+    <div class="notice-item">
+      <div class="title">
+        <span class="label">발표</span>
+        맘킴 04월 베베그루우 신제품 듀어베이미 기획전 당착자 고지
+      </div>
+      <div>2025.04.17</div>
+    </div>
+  </section>
+</body>
+</html>
