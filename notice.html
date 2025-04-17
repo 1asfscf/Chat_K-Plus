@@ -126,6 +126,12 @@
     .notice-item:hover {
       background: #fafafa;
     }
+    /* 링크 스타일 제거 */
+    .notice-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
     /* 반응형 */
     @media (max-width: 600px) {
       .notice-header, .notice-item {
@@ -143,13 +149,13 @@
   </style>
 </head>
 <body>
-  <!-- 헤더: 로고를 클릭하면 index.html로 이동 -->
+  <!-- 헤더 영역 (단순 헤더: 로고 클릭 시 index.html로 이동) -->
   <header>
     <a href="index.html" class="logo">momQ</a>
   </header>
 
   <main>
-    <!-- 탭 네비게이션 (추가 메뉴) -->
+    <!-- 탭 네비게이션 -->
     <nav class="tabs">
       <a href="faq.html">FAQ</a>
       <a href="inquiry.html">1:1 문의</a>
@@ -169,14 +175,17 @@
         <div class="title-header">제목</div>
         <div>등록일</div>
       </div>
-      <!-- 개별 공지 항목 -->
-      <div class="notice-item">
-        <div class="title">
-          <span class="label">공지</span>
-          탈배사 변경 안내
+      <!-- 첫 번째 공지사항 항목: 클릭 시 상세 페이지로 이동 -->
+      <a href="notice_detail.html" class="notice-link">
+        <div class="notice-item">
+          <div class="title">
+            <span class="label">공지</span>
+            탈배사 변경 안내
+          </div>
+          <div>2025.04.07</div>
         </div>
-        <div>2025.04.07</div>
-      </div>
+      </a>
+      <!-- 나머지 공지사항 항목들 -->
       <div class="notice-item">
         <div class="title">
           <span class="label">공지</span>
