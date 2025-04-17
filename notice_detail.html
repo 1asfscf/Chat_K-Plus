@@ -46,20 +46,62 @@
     }
     .notice-content {
       font-size: 16px;
+      margin-bottom: 40px;
+    }
+    /* 기존 "목록으로 돌아가기" 링크는 대신 내비게이션 영역으로 대체 */
+    .notice-navigation {
+      text-align: center;
       margin-bottom: 20px;
     }
-    .back-link {
+    .notice-nav-button {
       display: inline-block;
-      margin-top: 20px;
-      text-decoration: none;
+      background-color: #e63946; /* 고급스러운 레드 계열 */
       color: #fff;
-      background: #333;
       padding: 10px 20px;
-      border-radius: 3px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
       transition: background 0.3s;
+      margin-bottom: 20px;
     }
-    .back-link:hover {
-      background: #555;
+    .notice-nav-button:hover {
+      background-color: #d62828;
+    }
+    /* 이전글/다음글 영역 */
+    .notice-nav-post {
+      display: flex;
+      justify-content: space-between;
+    }
+    .notice-nav-post .nav-post {
+      width: 48%;
+      background-color: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: left;
+    }
+    .nav-post .post-label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .nav-post .post-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .nav-post .post-date {
+      font-size: 14px;
+      color: #777;
+    }
+    /* 반응형 처리 */
+    @media (max-width: 600px) {
+      .notice-nav-post {
+        flex-direction: column;
+      }
+      .notice-nav-post .nav-post {
+        width: 100%;
+        margin-bottom: 10px;
+      }
     }
   </style>
 </head>
@@ -77,7 +119,22 @@
       <p>2025년 4월 8일부터 모든 주문은 CJ대한통운으로 배송됩니다. 이에 따라 기존의 탈배사 배송 방식은 변경되오니, 이용에 불편 없으시길 바랍니다.</p>
       <p>자세한 사항은 고객센터로 문의해 주시기 바랍니다.</p>
     </div>
-    <a href="notice.html" class="back-link">목록으로 돌아가기</a>
+    <!-- 추가: 내비게이션 영역 -->
+    <div class="notice-navigation">
+      <a href="notice.html" class="notice-nav-button">목록으로 가기</a>
+      <div class="notice-nav-post">
+        <div class="nav-post prev-post">
+          <div class="post-label">이전글</div>
+          <div class="post-title">[발표] 흡그박스 후기사작 2025년 3월 당첨자</div>
+          <div class="post-date">2025.03.15</div>
+        </div>
+        <div class="nav-post next-post">
+          <div class="post-label">다음글</div>
+          <div class="post-title">[발표] 3월 푸만의 선물위크 당첨자 발표</div>
+          <div class="post-date">2025.03.20</div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 </html>
