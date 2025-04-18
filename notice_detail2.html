@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공지 상세 - 맘큐 포인트 사용 정책 변경 안내 | momQ</title>
+  <style>
+    /* 기본 리셋 및 전체 폰트 설정 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #fdfdfd; 
+      color: #333; 
+      line-height: 1.6; 
+      padding: 20px;
+    }
+    /* 헤더 스타일 */
+    header {
+      background: #fff;
+      padding: 20px;
+      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    header a.logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+    }
+    /* 컨테이너 스타일 */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .notice-title {
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .notice-date {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .notice-content {
+      font-size: 16px;
+      margin-bottom: 40px;
+    }
+    .notice-content p {
+      margin-bottom: 15px;
+    }
+    .notice-content ul {
+      margin-left: 20px;
+      list-style: disc;
+    }
+    .notice-content ul li {
+      margin-bottom: 8px;
+    }
+    /* 내비게이션 영역 스타일 */
+    .notice-navigation {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .notice-nav-button {
+      display: inline-block;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: background 0.3s;
+      margin-bottom: 20px;
+    }
+    .notice-nav-button:hover {
+      background-color: #555;
+    }
+    .notice-nav-post {
+      display: flex;
+      justify-content: space-between;
+    }
+    .notice-nav-post .nav-post {
+      width: 48%;
+      background-color: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: left;
+    }
+    .nav-post .post-label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .nav-post .post-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .nav-post .post-date {
+      font-size: 14px;
+      color: #777;
+    }
+    /* 반응형 처리 */
+    @media (max-width: 600px) {
+      .notice-nav-post {
+        flex-direction: column;
+      }
+      .notice-nav-post .nav-post {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더: 로고 클릭 시 index.html로 이동 -->
+  <header>
+    <a href="index.html" class="logo">momQ</a>
+  </header>
+  <div class="container">
+    <div class="notice-title">맘큐 포인트 사용 정책 변경 안내</div>
+    <div class="notice-date">2024.12.02 10:00</div>
+    <div class="notice-content">
+      <p>유한킴벌리 직영몰 momQ를 이용해 주시는 회원 여러분께 진심으로 감사드리며, 
+      맘큐의 포인트 사용 정책 변경에 관한 안내 말씀드립니다. 아래의 변경사항을 확인하시고, 
+      서비스 이용에 참고 부탁드립니다.</p>
+      <ul>
+        <li><strong>변경 전:</strong> 보유 포인트를 상품 구매 시 제한 없이 사용 가능</li>
+        <li><strong>변경 후:</strong> 보유 포인트를 최종 결제금액(상품 쿠폰, 장바구니 쿠폰, 쇼핑지원금 등 각종 할인 적용 후)의 최대 50%까지 사용 가능</li>
+        <li><strong>적용 일자:</strong> 2024년 12월 2일(월) 오전 10시부터</li>
+      </ul>
+      <p>감사합니다.</p>
+    </div>
+    <!-- 내비게이션 영역 -->
+    <div class="notice-navigation">
+      <a href="notice.html" class="notice-nav-button">목록으로 가기</a>
+      <div class="notice-nav-post">
+        <div class="nav-post prev-post">
+          <div class="post-label">이전글</div>
+          <div class="post-title">[공지] 기존 포인트 사용 정책 안내</div>
+          <div class="post-date">2024.11.15</div>
+        </div>
+        <div class="nav-post next-post">
+          <div class="post-label">다음글</div>
+          <div class="post-title">[공지] 시스템 업그레이드 안내</div>
+          <div class="post-date">2024.12.10</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
