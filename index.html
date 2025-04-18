@@ -21,10 +21,23 @@
       color: #fff;
       border-color: #333;
     }
+    /* 추가: 배너 섹션 스타일 */
+    .banner-section {
+      max-width: 1200px;
+      margin: 20px auto; /* 기존 메뉴 버튼 영역 다음, 추천 상품 영역 바로 위에 배치 */
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .banner-section img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
-  <!-- 기존 헤더: 왼쪽 영역에서는 로고만 남기고 나머지 네비게이션 메뉴는 삭제한 상태 -->
+  <!-- 기존 헤더: 왼쪽 영역에서는 로고와 공지사항 링크, 오른쪽에는 검색바와 아이콘들 -->
   <header>
     <div class="header-left">
       <div class="menu-icon">☰</div>
@@ -49,15 +62,14 @@
     </div>
   </header>
 
-  <!-- 헤더 아래 나머지 UI는 그대로 유지 -->
-  <!-- 자동 전환 배너 이미지 -->
+  <!-- 기존 자동 전환 배너 이미지 -->
   <img id="toggleImage"
        class="header-banner"
        src="https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png"
        data-state="first"
        alt="momQ 홍보 이미지">
 
-  <!-- 추가: 10개 메뉴 버튼 영역 -->
+  <!-- 10개 메뉴 버튼 영역 (기존) -->
   <section class="menu-buttons-section">
     <div class="menu-buttons">
       <button class="menu-button">
@@ -101,6 +113,11 @@
         <span>육아정보</span>
       </button>
     </div>
+  </section>
+
+  <!-- 추가: 배너 섹션(추천 상품 텍스트 바로 위에 고급 배너 추가) -->
+  <section class="banner-section">
+    <img src="https://img.makeshop.co.kr/4/29457/202504/2e47b15696f4a602a5f1ed3cdfb02200.jpg" alt="고급 배너 이미지">
   </section>
 
   <!-- 추천 상품 영역 (10개 상품) -->
