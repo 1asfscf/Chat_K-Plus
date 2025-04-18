@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>자주 묻는 질문 - momQ FAQ</title>
   <!-- Google Fonts: Roboto -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
@@ -15,15 +15,14 @@
       color: #333;
       line-height: 1.75;
     }
-    /* ----------------------
-       상단 헤더 (notice.html 스타일)
-       ---------------------- */
+    /* 상단 헤더 (notice.html의 헤더 스타일) */
     .site-header {
       display: flex;
       align-items: center;
       padding: 10px 20px;
       background: #fff;
       border-bottom: 1px solid #e5e5e5;
+      margin-bottom: 30px;
     }
     .site-header .logo {
       font-size: 24px;
@@ -31,9 +30,7 @@
       color: #333;
       text-decoration: none;
     }
-    /* ----------------------
-       탭 네비게이션
-       ---------------------- */
+    /* 탭 네비게이션 */
     nav.tabs {
       display: flex;
       justify-content: center;
@@ -52,9 +49,7 @@
       border-color: #333;
       color: #333;
     }
-    /* ----------------------
-       검색바
-       ---------------------- */
+    /* 검색바 */
     .search-container {
       display: flex;
       justify-content: center;
@@ -83,9 +78,7 @@
     .search-container button:hover {
       background: #555;
     }
-    /* ----------------------
-       FAQ 카테고리 섹션 (사진참고 디자인)
-       ---------------------- */
+    /* FAQ 카테고리 섹션 */
     .faq-categories {
       display: flex;
       flex-wrap: wrap;
@@ -102,9 +95,8 @@
       cursor: pointer;
       transition: background 0.3s, color 0.3s;
     }
-    /* 전체보기 항목 강조 */
     .faq-category.active {
-      background: #e60012; /* 고급스러운 레드 톤 */
+      background: #e60012;
       color: #fff;
       border-color: #e60012;
     }
@@ -112,9 +104,7 @@
       background: #fff;
       color: #333;
     }
-    /* ----------------------
-       FAQ 컨테이너 (아코디언)
-       ---------------------- */
+    /* FAQ 컨테이너 (아코디언) */
     .faq-container {
       max-width: 800px;
       margin: 0 auto 40px;
@@ -167,9 +157,7 @@
     .faq-item.active .faq-answer {
       display: block;
     }
-    /* ----------------------
-       고객센터 정보
-       ---------------------- */
+    /* 고객센터 정보 영역 */
     .customer-service {
       text-align: center;
       margin-top: 40px;
@@ -245,6 +233,16 @@
       <div class="faq-item">
         <div class="faq-question">Q. 배송 문의나 기타 도움이 필요하면 어떻게 하나요?</div>
         <div class="faq-answer">A. 배송 문의 및 기타 문의사항은 고객센터(전화: 080-500-5200, 운영시간: 평일 09:00~17:30)로 연락 주시면 도움을 받으실 수 있습니다.</div>
+      </div>
+      <!-- 새 FAQ 항목 추가 -->
+      <div class="faq-item">
+        <div class="faq-question">Q. [주문/결제] 왜 기저귀 구매 제한을 두는 건가요?</div>
+        <div class="faq-answer">
+          A. 보다 많은 회원분들께 혜택을 드리고자 1개 ID당 한달에 최대 기저귀 7박스~10박스까지 구매 가능합니다.(제품마다 상이)<br>
+          이는 기저귀 제품에 한하며, 체험팩은 구매제한에서 제외됩니다. 기저귀 구매개수 제한은 매월 1일을 기준으로 초기화됩니다.<br>
+          * 일반상품, 세트상품, 추가구성상품, 선물하기 수량이 모두 적용됩니다.(기저귀 체험팩 제외)<br>
+          * 주문 취소 시, 구매 가능 수량은 복구됩니다.(단, 반품 시 반품완료 후 복구)
+        </div>
       </div>
     </div>
     
