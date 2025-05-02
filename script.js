@@ -3,13 +3,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const firstImageSrc = 'https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png';
   const secondImageSrc = 'https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg';
   const thirdImageSrc = 'https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg'; // 추가된 이미지
-  const toggleImage = document.querySelectorAll('.slider img');
+  const toggleImages = document.querySelectorAll('.slider img');
 
   let currentIndex = 0;
   const images = [firstImageSrc, secondImageSrc, thirdImageSrc];
 
   function showSlide(index) {
-    toggleImage.forEach((img, i) => {
+    toggleImages.forEach((img, i) => {
       img.style.display = (i === index) ? 'block' : 'none';
     });
   }
@@ -18,9 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     currentIndex = (currentIndex + 1) % images.length; // 다음 이미지 인덱스
     showSlide(currentIndex);
   }, 5000); // 5초마다 슬라이드 전환
-});
 
-document.addEventListener('DOMContentLoaded', function () {
   // ----------------- 로그인 모달 관련 이벤트 -----------------
   const profileIcon = document.querySelector('.profile-icon');
   const loginModal = document.getElementById('loginModal');
