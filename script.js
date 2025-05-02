@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     showSlide(currentIndex);
   }, 5000); // 5초마다 슬라이드 전환
 });
+
 document.addEventListener('DOMContentLoaded', function () {
   // ----------------- 로그인 모달 관련 이벤트 -----------------
   const profileIcon = document.querySelector('.profile-icon');
