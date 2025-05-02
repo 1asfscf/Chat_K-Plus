@@ -6,6 +6,30 @@
   <title>momQ 홈</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .slider {
+      position: relative;
+      max-width: 1200px;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+    .slider img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
     .header-notice-link {
       font-size: 18px;
       color: #333;
@@ -46,21 +70,9 @@
 
   <!-- 슬라이드 이미지 영역 -->
   <div class="slider">
-    <img id="toggleImage"
-         class="header-banner"
-         src="https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png"
-         data-state="first"
-         alt="momQ 홍보 이미지">
-    <img id="toggleImage"
-         class="header-banner"
-         src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg"
-         data-state="second"
-         alt="momQ 추가 이미지">
-    <img id="toggleImage"
-         class="header-banner"
-         src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg"
-         data-state="third"
-         alt="momQ 세 번째 이미지"> <!-- 주신 이미지 추가 -->
+    <img id="slide1" class="header-banner" src="https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png" alt="momQ 홍보 이미지">
+    <img id="slide2" class="header-banner" src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="momQ 추가 이미지">
+    <img id="slide3" class="header-banner" src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="momQ 세 번째 이미지">
   </div>
 
   <!-- 10개 메뉴 버튼 영역 -->
