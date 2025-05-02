@@ -1,26 +1,25 @@
 document.addEventListener('DOMContentLoaded', function () {
   // ----------------- 자동 전환 배너 이미지 관련 -----------------
   const firstImageSrc = 'https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png';
-  const secondImageSrc = 'https://img.makeshop.co.kr/4/29457/202504/49e801664229d24660af75c502a1baf6.jpg';
-  const toggleImage = document.getElementById('toggleImage');
+  const secondImageSrc = 'https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg';
+  const thirdImageSrc = 'https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg'; // 추가된 이미지
+  const toggleImage = document.querySelectorAll('.slider img');
+
+  let currentIndex = 0;
+  const images = [firstImageSrc, secondImageSrc, thirdImageSrc];
+
+  function showSlide(index) {
+    toggleImage.forEach((img, i) => {
+      img.style.display = (i === index) ? 'block' : 'none';
+    });
+  }
 
   setInterval(function () {
-    toggleImage.classList.add('fade-out');
-    toggleImage.addEventListener('transitionend', function handler() {
-      if (toggleImage.getAttribute('data-state') === 'first') {
-        toggleImage.src = secondImageSrc;
-        toggleImage.setAttribute('data-state', 'second');
-      } else {
-        toggleImage.src = firstImageSrc;
-        toggleImage.setAttribute('data-state', 'first');
-      }
-      setTimeout(() => {
-        toggleImage.classList.remove('fade-out');
-      }, 50);
-      toggleImage.removeEventListener('transitionend', handler);
-    });
-  }, 5000);
-
+    currentIndex = (currentIndex + 1) % images.length; // 다음 이미지 인덱스
+    showSlide(currentIndex);
+  }, 5000); // 5초마다 슬라이드 전환
+});
+document.addEventListener('DOMContentLoaded', function () {
   // ----------------- 로그인 모달 관련 이벤트 -----------------
   const profileIcon = document.querySelector('.profile-icon');
   const loginModal = document.getElementById('loginModal');
@@ -68,11 +67,9 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // ----------------- 로그인 기능 구현 (임시) -----------------
-  // 임시 계정 정보
   const validUsername = 'admin';
   const validPassword = '1234';
 
-  // 로그인 폼 요소 선택 (모달 내의 폼)
   const loginForm = document.querySelector('#loginModal form');
   loginForm.addEventListener('submit', function (event) {
     event.preventDefault(); // 기본 제출 동작 방지
@@ -82,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (usernameInput === validUsername && passwordInput === validPassword) {
       alert('로그인 성공!');
-      // 인증 성공 시 profile.html 페이지로 리다이렉션
       window.location.href = 'profile.html';
     } else {
       alert('아이디 또는 비밀번호가 올바르지 않습니다.');
