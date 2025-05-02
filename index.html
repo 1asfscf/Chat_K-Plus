@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>momQ 홈</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- 헤더 내 공지사항 링크를 위한 인라인 스타일 (원하는 대로 수정 가능) -->
   <style>
     .header-notice-link {
       font-size: 18px;
@@ -21,28 +20,13 @@
       color: #fff;
       border-color: #333;
     }
-    /* 신규 추가: 헤더 아래 삽입할 이미지 섹션 */
-    .new-image-section {
-      max-width: 1200px;
-      margin: 20px auto; /* 헤더 아래 중앙 배치 */
-    }
-    .new-image-section img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
   </style>
 </head>
 <body>
-  <!-- 기존 헤더: 로고, 메뉴 아이콘, 공지사항 링크, 검색바, 채팅/장바구니/프로필 아이콘 -->
   <header>
     <div class="header-left">
       <div class="menu-icon">☰</div>
-      <!-- 로고 클릭 시 index.html로 이동 -->
       <a href="index.html" class="logo">momQ</a>
-      <!-- 공지사항 링크 -->
       <a href="notice.html" class="header-notice-link">공지사항</a>
     </div>
     <div class="header-right">
@@ -60,14 +44,8 @@
     </div>
   </header>
 
-  <!-- 신규 추가: 헤더 바로 아래에 로컬 이미지 (Cheesecake in Town) 삽입 -->
-  <section class="new-image-section">
-    <img src="file:///C:/Users/lieol/Downloads/Cheesecake%20in%20Town.jpg" alt="Cheesecake In Town">
-  </section>
-  
   <!-- 기존 index.html 나머지 내용은 그대로 유지 -->
-  <!-- 자동 전환 배너 이미지, 10개 메뉴 버튼 영역, 추천 상품 영역, 로그인 모달 등 -->
-  <!-- 예시로 자동 전환 배너 이미지 -->
+  <!-- 자동 전환 배너 이미지 -->
   <img id="toggleImage"
        class="header-banner"
        src="https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png"
@@ -146,33 +124,3 @@
           <h2>로그인</h2>
           <p>안녕하세요, momQ에 오신 것을 환영합니다.</p>
           <form action="#" method="post">
-            <div class="form-group">
-              <label for="username">아이디</label>
-              <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-              <label for="password">비밀번호</label>
-              <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group checkbox">
-              <input type="checkbox" id="saveId" name="saveId">
-              <label for="saveId">아이디 저장</label>
-            </div>
-            <button type="submit" class="btn login-btn">로그인</button>
-          </form>
-          <div class="login-links">
-            <a href="#">아이디 찾기</a>
-            <a href="#">비밀번호 찾기</a>
-            <a href="#">회원가입</a>
-          </div>
-        </div>
-        <div class="image-section">
-          <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTg7tKahQos1IOIbDZXpNDJeJBIImQnGYE4QNqPrRRWESgCIPn_" alt="캐릭터 이미지">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
