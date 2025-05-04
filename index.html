@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>momQ 스타일 쇼핑몰</title>
+    <title>momQ 프리미엄 쇼핑몰</title>
     <style>
         /* 전체 스타일 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Pretendard', sans-serif;
         }
         body {
-            background-color: #f8f9fa;
+            background-color: #f9f9f9;
             color: #333;
         }
-        
+
         /* 헤더 */
         .header {
             display: flex;
@@ -24,10 +24,10 @@
             justify-content: space-between;
             background-color: white;
             padding: 20px 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         .header-logo {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: bold;
             color: #004085;
         }
@@ -36,7 +36,7 @@
             display: flex;
         }
         .header-nav ul li {
-            margin: 0 15px;
+            margin: 0 20px;
         }
         .header-nav ul li a {
             color: #333;
@@ -48,39 +48,40 @@
         .header-nav ul li a:hover {
             color: #007bff;
         }
-        
-        /* 히어로 섹션 */
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: url('banner.jpg') no-repeat center center/cover;
-            color: white;
+
+        /* 이미지 배너 */
+        .image-banner {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
         }
-        .hero h2 {
-            font-size: 32px;
-            font-weight: bold;
-        }
-        .hero p {
-            font-size: 18px;
-            margin: 15px 0;
+        .image-banner img {
+            width: 85%;
+            max-width: 1200px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* 버튼 요소 */
+        /* 버튼 컨테이너 */
         .buttons-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            padding: 30px 10px;
+            gap: 20px;
+            padding: 40px 10px;
             text-align: center;
             background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: 0 auto;
+            width: 85%;
+            max-width: 1100px;
         }
         .button-box {
             background: #004085;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 16px;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            font-size: 18px;
             font-weight: bold;
             color: white;
             cursor: pointer;
@@ -88,7 +89,7 @@
         }
         .button-box:hover {
             background-color: #007bff;
-            transform: scale(1.05);
+            transform: scale(1.06);
         }
 
         /* 푸터 */
@@ -98,6 +99,7 @@
             background-color: #f1f1f1;
             color: #666;
             font-size: 14px;
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -114,10 +116,12 @@
             </ul>
         </nav>
     </header>
-    <section class="hero">
-        <h2>물가 역주행! 초특가 육아템 균일가전</h2>
-        <p>#4,900원~ #아이간식 #식기류</p>
+
+    <!-- 이미지 배너 -->
+    <section class="image-banner">
+        <img src="https://img.makeshop.co.kr/4/29457/202505/f1209b13f25e5d92900bb38ef6a9f521.jpg" alt="momQ 이벤트 배너">
     </section>
+
     <section class="buttons-container">
         <div class="button-box">웰컴혜택</div>
         <div class="button-box">허그박스</div>
@@ -130,6 +134,7 @@
         <div class="button-box">프리미엄</div>
         <div class="button-box">육아정보</div>
     </section>
+
     <footer>
         © 2025 momQ 스타일. 모든 권리 보유.
     </footer>
