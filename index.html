@@ -1,335 +1,120 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>momQ 홈</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
-    header {
-      background-color: #fff;
-      padding: 10px 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .slider {
-      position: relative;
-      max-width: 1200px;
-      margin: 20px auto;
-      overflow: hidden;
-    }
-    .slider img {
-      width: 100%;
-      height: auto;
-      display: none; /* 기본적으로 숨김 */
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      transition: opacity 1s ease; /* 부드러운 전환 효과 */
-    }
-    .slider img.active {
-      display: block; /* 활성화된 이미지만 표시 */
-      opacity: 1; /* 활성화된 이미지는 보이도록 설정 */
-    }
-    .header-notice-link {
-      font-size: 18px;
-      color: #333;
-      text-decoration: none;
-      padding: 8px 12px;
-      border: 1px solid transparent;
-      transition: all 0.3s ease;
-      margin-left: 20px;
-    }
-    .header-notice-link:hover {
-      background-color: #333;
-      color: #fff;
-      border-color: #333;
-    }
-    .menu-buttons-section {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 20px 0;
-    }
-    .menu-button {
-      margin: 10px;
-      padding: 10px;
-      border: none;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .menu-button:hover {
-      transform: scale(1.05);
-    }
-    .menu-button img {
-      max-width: 100px;
-      height: auto;
-    }
-    /* 로그인 모달 스타일 */
-    .modal {
-      display: none; /* 기본적으로 숨김 */
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-    }
-    .modal-content {
-      background-color: #fff;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 300px; /* 모달 너비 */
-      border-radius: 8px; /* 모달 테두리 둥글게 */
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-    .modal .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .modal .close:hover,
-    .modal .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .modal input[type="text"],
-    .modal input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .modal button {
-      width: 100%;
-      padding: 10px;
-      background-color: #5cb85c;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .modal button:hover {
-      background-color: #4cae4c;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>momQ 스타일 쇼핑몰</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            background-color: #004085;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #003366;
+            padding: 10px;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: url('banner.jpg') no-repeat center center/cover;
+            color: white;
+        }
+        .products {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 50px;
+        }
+        .product {
+            background: white;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+        }
+        .product img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .cta-button {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <div class="menu-icon">☰</div>
-      <a href="index.html" class="logo">momQ</a>
-      <a href="notice.html" class="header-notice-link">공지사항</a>
-    </div>
-    <div class="header-right">
-      <div class="search-bar">
-        <input type="text" placeholder="검색" />
-        <button type="button">🔍</button>
-      </div>
-      <div class="icons">
-        <span class="icon chat-icon">💬</span>
-        <span class="icon cart-icon">
-          🛒<small class="badge">0</small>
-        </span>
-        <span class="icon profile-icon">👤</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- 슬라이드 이미지 영역 -->
-  <div class="slider">
-    <img class="header-banner active" src="https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png" alt="momQ 홍보 이미지">
-    <img class="header-banner" src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="momQ 추가 이미지">
-    <img class="header-banner" src="https://img.makeshop.co.kr/4/29457/202505/7ae639373d3457aa3329bceecb8697fb.jpg" alt="momQ 세 번째 이미지"> <!-- 주신 이미지로 수정 -->
-  </div>
-
-  <!-- 10개 메뉴 버튼 영역 -->
-  <section class="menu-buttons-section">
-    <div class="menu-buttons">
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="웰컴혜택">
-        <span>웰컴혜택</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="허그박스">
-        <span>허그박스</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="맘큐라이브">
-        <span>맘큐라이브</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="쿠폰/포인트">
-        <span>쿠폰/포인트</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="커뮤니티">
-        <span>커뮤니티</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="샘플신청">
-        <span>샘플신청</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="데일리리추어">
-        <span>데일리리추어</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="하기스 핏팅룸">
-        <span>하기스 핏팅룸</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="프리미엄 멤버십">
-        <span>프리미엄 멤버십</span>
-      </button>
-      <button class="menu-button">
-        <img src="https://www.momq.co.kr/shopimages/2020nemomq/2020_logo.png" alt="육아정보">
-        <span>육아정보</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- 추천 상품 영역 (기존 내용 그대로) -->
-  <div class="recommended-products">
-    <h2>추천 상품</h2>
-    <div class="products-container">
-      <a href="product.html">
-        <div class="product-item">
-          <img src="https://image.newdaily.co.kr/site/data/img/2018/06/15/2018061500077_0.jpg" alt="기저귀 1">
-          <div class="product-details">
-            <span class="product-name">기저귀 1</span>
-            <span class="product-price">1만원</span>
-          </div>
+    <header>
+        <h1>momQ 프리미엄 쇼핑몰</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">홈</a></li>
+            <li><a href="#">제품</a></li>
+            <li><a href="#">이벤트</a></li>
+            <li><a href="#">커뮤니티</a></li>
+            <li><a href="#">문의하기</a></li>
+        </ul>
+    </nav>
+    <section class="hero">
+        <h2>프리미엄 육아용품, 한곳에서 편리하게!</h2>
+        <p>안전하고 믿을 수 있는 제품을 제공합니다. 최고의 선택을 지금 만나보세요.</p>
+        <button class="cta-button">더 알아보기</button>
+    </section>
+    <section class="products">
+        <div class="product">
+            <img src="product1.jpg" alt="하기스 기저귀">
+            <h3>하기스 네이처메이드</h3>
+            <p>최고의 품질을 자랑하는 프리미엄 기저귀</p>
+            <button class="cta-button">구매하기</button>
         </div>
-      </a>
-      <!-- 나머지 추천 상품들 ... -->
-    </div>
-  </div>
-
-  <!-- 기존 로그인 모달 등 기타 요소들은 그대로 유지 -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div class="modal-body">
-        <div class="form-section">
-          <h2>로그인</h2>
-          <p>안녕하세요, momQ에 오신 것을 환영합니다.</p>
-          <form action="#" method="post">
-            <input type="text" id="username" placeholder="아이디" required />
-            <input type="password" id="password" placeholder="비밀번호" required />
-            <button type="submit">로그인</button>
-          </form>
+        <div class="product">
+            <img src="product2.jpg" alt="그린핑거 스킨케어">
+            <h3>그린핑거 베이비 로션</h3>
+            <p>아기 피부를 위한 순한 케어</p>
+            <button class="cta-button">구매하기</button>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JavaScript 코드 -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // ----------------- 자동 전환 배너 이미지 관련 -----------------
-      const images = [
-        'https://img.makeshop.co.kr/4/29457/202504/be565292ad4c3d90c670a84df580d0f5.png',
-        'https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg',
-        'https://img.makeshop.co.kr/4/29457/202505/7ae639373d3457aa3329bceecb8697fb.jpg' // 주신 이미지로 수정
-      ];
-      
-      const slider = document.querySelector('.slider');
-      const toggleImages = slider.querySelectorAll('img');
-      let currentIndex = 0;
-
-      function showSlide(index) {
-        toggleImages.forEach((img, i) => {
-          img.style.display = (i === index) ? 'block' : 'none';
-        });
-      }
-
-      setInterval(function () {
-        currentIndex = (currentIndex + 1) % images.length; // 다음 이미지 인덱스
-        showSlide(currentIndex);
-      }, 5000); // 5초마다 슬라이드 전환
-
-      // ----------------- 로그인 모달 관련 이벤트 -----------------
-      const profileIcon = document.querySelector('.profile-icon');
-      const loginModal = document.getElementById('loginModal');
-      const closeBtn = document.querySelector('.modal .close');
-      const buyButton = document.querySelector('.buy-button');
-      const menuButtons = document.querySelectorAll('.menu-button');
-      const cartButton = document.querySelector('.cart-button');
-
-      // 프로필 아이콘 클릭 시 모달 열기
-      profileIcon.addEventListener('click', function () {
-        loginModal.style.display = 'block';
-      });
-
-      // 메뉴 버튼 클릭 시 모달 열기
-      menuButtons.forEach(button => {
-        button.addEventListener('click', function () {
-          loginModal.style.display = 'block';
-        });
-      });
-
-      // 구매하기 버튼 클릭 시 모달 열기
-      if (buyButton) {
-        buyButton.addEventListener('click', function () {
-          loginModal.style.display = 'block';
-        });
-      }
-
-      // 장바구니 버튼 클릭 시 모달 열기
-      if (cartButton) {
-        cartButton.addEventListener('click', function () {
-          loginModal.style.display = 'block';
-        });
-      }
-
-      // 모달 외부 클릭 시 모달 닫기
-      window.addEventListener('click', function (event) {
-        if (event.target === loginModal) {
-          loginModal.style.display = 'none';
-        }
-      });
-
-      // 닫기(X) 버튼 클릭 시 모달 닫기
-      closeBtn.addEventListener('click', function () {
-        loginModal.style.display = 'none';
-      });
-
-      // ----------------- 로그인 기능 구현 (임시) -----------------
-      const validUsername = 'admin';
-      const validPassword = '1234';
-
-      const loginForm = document.querySelector('#loginModal form');
-      loginForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // 기본 제출 동작 방지
-
-        const usernameInput = document.querySelector('#username').value.trim();
-        const passwordInput = document.querySelector('#password').value;
-
-        if (usernameInput === validUsername && passwordInput === validPassword) {
-          alert('로그인 성공!');
-          window.location.href = 'profile.html';
-        } else {
-          alert('아이디 또는 비밀번호가 올바르지 않습니다.');
-        }
-      });
-    });
-  </script>
+    </section>
+    <footer>
+        <p>© 2025 momQ 스타일. 모든 권리 보유.</p>
+    </footer>
 </body>
 </html>
