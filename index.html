@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>momQ 프리미엄 추천 상품</title>
+    <title>momQ 프리미엄 쇼핑몰</title>
     <style>
         /* 전체 스타일 */
         * {
@@ -50,11 +50,57 @@
             color: #007bff;
         }
 
+        /* 이미지 배너 */
+        .image-banner {
+            display: flex;
+            justify-content: center;
+            margin: 30px auto;
+            padding: 0 5%;
+        }
+        .image-banner img {
+            width: 100%;
+            max-width: 1400px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 버튼 컨테이너 */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: nowrap;
+            gap: 10px;
+            padding: 15px 5%;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 1400px;
+            margin: 15px auto;
+            overflow-x: auto;
+        }
+        .button-box {
+            background: #1E5799;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            border: 2px solid #164E8D;
+            min-width: 80px;
+        }
+        .button-box:hover {
+            background: #164E8D;
+            border-color: #1E7FBF;
+            transform: scale(1.05);
+        }
+
         /* 추천 상품 섹션 */
         .products-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
             padding: 30px 10%;
             background: white;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
@@ -65,31 +111,31 @@
         }
         .product-box {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
             text-align: center;
             border: 1px solid #ddd;
         }
         .product-box img {
             width: 100%;
-            max-width: 180px;
+            max-width: 200px;
             border-radius: 5px;
             margin-bottom: 10px;
         }
         .product-box h3 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             color: #333;
             margin-bottom: 5px;
         }
         .product-box p {
-            font-size: 14px;
+            font-size: 13px;
             color: #666;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .product-box .price {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: #d43f3f;
         }
@@ -107,7 +153,7 @@
 </head>
 <body>
     <header class="header">
-        <div class="header-logo">momQ 추천 상품</div>
+        <div class="header-logo">momQ 쇼핑몰</div>
         <nav class="header-nav">
             <ul>
                 <li><a href="#">홈</a></li>
@@ -119,25 +165,32 @@
         </nav>
     </header>
 
+    <!-- 이미지 배너 -->
+    <section class="image-banner">
+        <img src="https://img.makeshop.co.kr/4/29457/202505/f1209b13f25e5d92900bb38ef6a9f521.jpg" alt="momQ 이벤트 배너">
+    </section>
+
+    <!-- 버튼 컨테이너 -->
+    <section class="buttons-container">
+        <div class="button-box">웰컴혜택</div>
+        <div class="button-box">허그박스</div>
+        <div class="button-box">맘큐라이브</div>
+        <div class="button-box">쿠폰/포인트</div>
+        <div class="button-box">커뮤니티</div>
+        <div class="button-box">샘플신청</div>
+        <div class="button-box">데일리퍼즐</div>
+        <div class="button-box">피팅룸</div>
+        <div class="button-box">프리미엄</div>
+        <div class="button-box">육아정보</div>
+    </section>
+
     <!-- 추천 상품 섹션 -->
     <section class="products-container">
         <div class="product-box">
             <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="하기스 네이처메이드 썸머팬츠">
             <h3>하기스 네이처메이드 썸머팬츠</h3>
-            <p>2025 하기스 네이처메이드 여름팬티 5단계 80매 x 2팩 (총 160매)</p>
+            <p>2025 하기스 네이처메이드 여름팬티 5단계 80매 x 2팩</p>
             <p class="price">108,900원 <small style="color:gray; text-decoration: line-through;">172,000원</small></p>
-        </div>
-        <div class="product-box">
-            <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/sample.jpg" alt="오리지널 물티슈">
-            <h3>오리지널 물티슈 마이멜로디 & 쿠로미</h3>
-            <p>디자인 랜덤 발송 / 무료배송, 20매 x 10팩</p>
-            <p class="price">10,900원 <small style="color:gray; text-decoration: line-through;">15,000원</small></p>
-        </div>
-        <div class="product-box">
-            <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/sample2.jpg" alt="그린핑거 유아용 젖병">
-            <h3>그린핑거 유아용 젖병</h3>
-            <p>[3~6개월] PA 퓨어 베이비젖병 280ml (와이드넥) + 와이드넥 젖꼭지 M</p>
-            <p class="price">42,300원 <small style="color:gray; text-decoration: line-through;">61,300원</small></p>
         </div>
     </section>
 
