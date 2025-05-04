@@ -5,116 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>momQ 스타일 쇼핑몰</title>
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
+        /* 전체 스타일 */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        body {
             background-color: #f8f9fa;
             color: #333;
         }
-        header {
-            background-color: #004085;
-            color: white;
-            padding: 20px;
-            text-align: center;
+        /* 헤더 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            padding: 20px 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        nav {
-            background-color: #003366;
-            padding: 10px;
-            text-align: center;
+        .header-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #004085;
         }
-        nav ul {
+        .header-nav ul {
             list-style: none;
-            padding: 0;
+            display: flex;
         }
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
+        .header-nav ul li {
+            margin: 0 20px;
         }
-        nav ul li a {
-            color: white;
+        .header-nav ul li a {
+            color: #333;
             text-decoration: none;
             font-weight: bold;
+            font-size: 16px;
         }
+        .header-nav ul li a:hover {
+            color: #007bff;
+        }
+        /* 히어로 섹션 */
         .hero {
             text-align: center;
             padding: 80px 20px;
             background: url('banner.jpg') no-repeat center center/cover;
             color: white;
         }
-        .products {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            padding: 50px;
+        .hero h2 {
+            font-size: 32px;
+            font-weight: bold;
         }
-        .product {
-            background: white;
-            padding: 20px;
-            margin: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 250px;
-        }
-        .product img {
-            width: 100%;
-            border-radius: 10px;
+        .hero p {
+            font-size: 18px;
+            margin: 15px 0;
         }
         .cta-button {
             padding: 12px 24px;
-            background-color: #007bff;
+            background-color: #ff6b6b;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             border-radius: 5px;
         }
         .cta-button:hover {
-            background-color: #0056b3;
+            background-color: #d43f3f;
         }
+        /* 푸터 */
         footer {
             text-align: center;
             padding: 20px;
             background-color: #f1f1f1;
             color: #666;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>momQ 프리미엄 쇼핑몰</h1>
+    <header class="header">
+        <div class="header-logo">momQ 쇼핑몰</div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="#">홈</a></li>
+                <li><a href="#">제품</a></li>
+                <li><a href="#">이벤트</a></li>
+                <li><a href="#">커뮤니티</a></li>
+                <li><a href="#">문의하기</a></li>
+            </ul>
+        </nav>
     </header>
-    <nav>
-        <ul>
-            <li><a href="#">홈</a></li>
-            <li><a href="#">제품</a></li>
-            <li><a href="#">이벤트</a></li>
-            <li><a href="#">커뮤니티</a></li>
-            <li><a href="#">문의하기</a></li>
-        </ul>
-    </nav>
     <section class="hero">
-        <h2>프리미엄 육아용품, 한곳에서 편리하게!</h2>
-        <p>안전하고 믿을 수 있는 제품을 제공합니다. 최고의 선택을 지금 만나보세요.</p>
+        <h2>물가 역주행! 초특가 육아템 균일가전</h2>
+        <p>#4,900원~ #아이간식 #식기류</p>
         <button class="cta-button">더 알아보기</button>
     </section>
-    <section class="products">
-        <div class="product">
-            <img src="product1.jpg" alt="하기스 기저귀">
-            <h3>하기스 네이처메이드</h3>
-            <p>최고의 품질을 자랑하는 프리미엄 기저귀</p>
-            <button class="cta-button">구매하기</button>
-        </div>
-        <div class="product">
-            <img src="product2.jpg" alt="그린핑거 스킨케어">
-            <h3>그린핑거 베이비 로션</h3>
-            <p>아기 피부를 위한 순한 케어</p>
-            <button class="cta-button">구매하기</button>
-        </div>
-    </section>
     <footer>
-        <p>© 2025 momQ 스타일. 모든 권리 보유.</p>
+        © 2025 momQ 스타일. 모든 권리 보유.
     </footer>
 </body>
 </html>
