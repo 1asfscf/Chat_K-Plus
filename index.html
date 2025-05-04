@@ -60,7 +60,6 @@
         .image-banner img {
             width: 100%;
             max-width: 1400px;
-            border-radius: 15px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -69,30 +68,31 @@
             display: flex;
             justify-content: center;
             flex-wrap: nowrap;
-            gap: 12px;
+            gap: 10px;
             padding: 20px 5%;
             background: white;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            border-radius: 15px;
             width: 90%;
             max-width: 1400px;
             margin: 15px auto;
-            overflow-x: auto; /* 가로 스크롤 가능 */
+            overflow-x: auto;
         }
         .button-box {
-            background: linear-gradient(135deg, #1E5799, #2989D8);
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            background: #1E5799;
+            padding: 14px 24px;
+            border: 2px solid #164E8D;
             font-size: 14px;
             font-weight: bold;
             color: white;
             cursor: pointer;
             transition: all 0.3s ease;
-            white-space: nowrap;
+            text-align: center;
+            min-width: 120px;
+            display: inline-block;
         }
         .button-box:hover {
-            background: linear-gradient(135deg, #164E8D, #1E7FBF);
+            background: #164E8D;
+            border-color: #1E7FBF;
             transform: scale(1.05);
         }
 
