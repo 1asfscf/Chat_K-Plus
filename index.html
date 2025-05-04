@@ -21,8 +21,8 @@
         /* 헤더 */
         .header {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
             background-color: white;
             padding: 16px 30px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
@@ -35,9 +35,11 @@
         .header-nav ul {
             list-style: none;
             display: flex;
+            gap: 15px;
+            margin-top: 10px;
         }
         .header-nav ul li {
-            margin: 0 15px;
+            margin: 0 10px;
         }
         .header-nav ul li a {
             color: #333;
@@ -48,6 +50,39 @@
         }
         .header-nav ul li a:hover {
             color: #007bff;
+        }
+
+        /* 버튼 컨테이너 - 헤더 아래 */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            width: 80%;
+            max-width: 1200px;
+            margin: 15px auto;
+            border-radius: 8px;
+        }
+        .button-box {
+            background: #1E5799;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            border: 2px solid #164E8D;
+            min-width: 80px;
+        }
+        .button-box:hover {
+            background: #164E8D;
+            border-color: #1E7FBF;
+            transform: scale(1.05);
         }
 
         /* 추천 상품 섹션 */
@@ -130,16 +165,24 @@
         </nav>
     </header>
 
+    <!-- 버튼 컨테이너 -->
+    <section class="buttons-container">
+        <div class="button-box">웰컴혜택</div>
+        <div class="button-box">허그박스</div>
+        <div class="button-box">맘큐라이브</div>
+        <div class="button-box">쿠폰/포인트</div>
+        <div class="button-box">커뮤니티</div>
+        <div class="button-box">샘플신청</div>
+        <div class="button-box">데일리퍼즐</div>
+        <div class="button-box">피팅룸</div>
+        <div class="button-box">프리미엄</div>
+        <div class="button-box">육아정보</div>
+    </section>
+
     <!-- 추천 상품 섹션 -->
     <section class="products-section">
         <h2>🔹 추천 상품 🔹</h2>
         <div class="products-container">
-            <div class="product-box">
-                <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="하기스 네이처메이드 썸머팬츠">
-                <h3>하기스 네이처메이드 썸머팬츠</h3>
-                <p>2025 하기스 네이처메이드 여름팬티 5단계 80매 x 2팩</p>
-                <p class="price">108,900원 <small style="color:gray; text-decoration: line-through;">172,000원</small></p>
-            </div>
             <div class="product-box">
                 <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="하기스 네이처메이드 썸머팬츠">
                 <h3>하기스 네이처메이드 썸머팬츠</h3>
