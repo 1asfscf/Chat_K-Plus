@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>momQ 프리미엄 쇼핑몰</title>
   <style>
-    /* 전체 스타일 */
+    /* 전체 기본 스타일 */
     * {
       margin: 0;
       padding: 0;
@@ -17,7 +17,7 @@
       color: #333;
       text-align: center;
     }
-    /* 고급스러운 헤더 */
+    /* 고급스러운 헤더 영역 */
     .header {
       background: linear-gradient(135deg, #141E30, #243B55);
       color: #fff;
@@ -31,7 +31,7 @@
       max-width: 1200px;
       margin: 0 auto;
     }
-    /* 로고: "momQ" 텍스트, 프리미엄 빨간색 적용 */
+    /* 로고: 빨간색 'momQ' – 프리미엄 느낌 */
     .header-logo {
       font-size: 32px;
       font-weight: bold;
@@ -39,6 +39,7 @@
       color: #E74C3C;
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
+    /* 네비게이션 메뉴 */
     .header-nav ul {
       list-style: none;
       display: flex;
@@ -70,9 +71,25 @@
     .header-nav ul li a:hover:after {
       width: 100%;
     }
+    /* 헤더 아래 배너 이미지 영역 */
+    .banner {
+      width: 100%;
+      overflow: hidden;
+      margin: 0 auto;
+      border-top: 4px solid #243B55;
+      border-bottom: 4px solid #243B55;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* (기존 index.html의 나머지 내용은 여기에 추가됨) */
   </style>
 </head>
 <body>
+  <!-- 헤더 영역 -->
   <header class="header">
     <div class="header-container">
       <div class="header-logo">momQ</div>
@@ -88,7 +105,13 @@
     </div>
   </header>
 
-  <!-- 여기서부터 index.html의 나머지 내용이 들어갑니다 -->
-  
+  <!-- 헤더 아래 고급스러운 배너 이미지 -->
+  <section class="banner">
+    <img src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="프리미엄 배너 이미지">
+  </section>
+
+  <!-- 기존 index.html의 나머지 콘텐츠(예: 버튼, 추천 상품 등) -->
+  <!-- ... 여기에 추가 ... -->
+
 </body>
 </html>
