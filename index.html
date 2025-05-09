@@ -5,7 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>momQ 프리미엄 쇼핑몰</title>
   <style>
-    /* 헤더 기본 스타일 */
+    /* 전체 스타일 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Pretendard', sans-serif;
+    }
+    body {
+      background-color: #f9f9f9;
+      color: #333;
+      text-align: center;
+    }
+    /* 고급스러운 헤더 */
     .header {
       background: linear-gradient(135deg, #141E30, #243B55);
       color: #fff;
@@ -24,8 +36,6 @@
       font-weight: bold;
       letter-spacing: 1px;
     }
-    
-    /* 네비게이션 메뉴 */
     .header-nav ul {
       list-style: none;
       display: flex;
@@ -41,7 +51,6 @@
       position: relative;
       padding-bottom: 4px;
     }
-    /* 밑줄 애니메이션 효과 */
     .header-nav ul li a:after {
       content: "";
       position: absolute;
@@ -57,6 +66,21 @@
     }
     .header-nav ul li a:hover:after {
       width: 100%;
+    }
+    /* 헤더 아래 배너 이미지 영역 */
+    .banner {
+      width: 100%;
+      overflow: hidden;
+      margin: 0 auto;
+      /* 고급스러운 테두리와 그림자 효과 */
+      border-top: 4px solid #243B55;
+      border-bottom: 4px solid #243B55;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .banner img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
   </style>
 </head>
@@ -75,5 +99,10 @@
       </nav>
     </div>
   </header>
+
+  <!-- 헤더 아래 고급스러운 배너 이미지 영역 -->
+  <section class="banner">
+    <img src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="프리미엄 배너 이미지">
+  </section>
 </body>
 </html>
