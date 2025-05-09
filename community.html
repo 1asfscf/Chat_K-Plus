@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>커뮤니티 사이트</title>
+  <style>
+      /* 기본 리셋 */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      body {
+          font-family: 'Pretendard', sans-serif;
+          background-color: #f5f5f5;
+          color: #333;
+      }
+      a {
+          text-decoration: none;
+          color: inherit;
+      }
+      /* 상단 헤더 */
+      .community-header {
+          background-color: #fff;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          padding: 10px 20px;
+      }
+      .header-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+      }
+      .search-bar {
+          flex: 1;
+          min-width: 250px;
+          margin-right: 20px;
+      }
+      .search-bar input {
+          width: 100%;
+          padding: 8px 12px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 14px;
+      }
+      .header-nav {
+          flex: 1;
+          display: flex;
+          justify-content: flex-end;
+      }
+      .header-nav ul {
+          display: flex;
+          gap: 20px;
+          list-style: none;
+      }
+      .header-nav li {
+          font-size: 16px;
+      }
+      .header-nav li a {
+          padding: 6px 8px;
+          transition: color 0.3s;
+      }
+      .header-nav li a:hover {
+          color: #E74C3C;
+      }
+      /* 커뮤니티 콘텐츠 영역 */
+      .community-content {
+          max-width: 1200px;
+          margin: 20px auto;
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+      /* 프로필 영역 */
+      .profile-section {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+      }
+      .profile-icon {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background-color: #ddd;
+          margin-right: 15px;
+      }
+      .profile-name {
+          font-size: 20px;
+          font-weight: bold;
+      }
+      /* 탭 영역 */
+      .tab-section {
+          margin-bottom: 20px;
+      }
+      .tabs {
+          list-style: none;
+          display: flex;
+          gap: 20px;
+          border-bottom: 2px solid #ccc;
+      }
+      .tabs li {
+          padding: 10px 0;
+          cursor: pointer;
+          font-size: 16px;
+      }
+      .tabs li.active {
+          border-bottom: 2px solid #E74C3C;
+          color: #E74C3C;
+          font-weight: bold;
+      }
+      /* 해시태그 영역 */
+      .hashtags {
+          margin-bottom: 20px;
+      }
+      .hashtags ul {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+      }
+      .hashtags li {
+          background-color: #E74C3C;
+          color: #fff;
+          padding: 5px 8px;
+          border-radius: 4px;
+          font-size: 13px;
+      }
+      /* 게시글 영역 */
+      .posts {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 20px;
+      }
+      .post {
+          background-color: #fff;
+          padding: 15px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      }
+      .post h3 {
+          font-size: 18px;
+          margin-bottom: 10px;
+          color: #E74C3C;
+      }
+      .post p {
+          font-size: 14px;
+          line-height: 1.5;
+          color: #666;
+      }
+      /* 푸터 */
+      footer {
+          text-align: center;
+          padding: 20px;
+          background-color: #fff;
+          margin-top: 20px;
+          box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+          font-size: 14px;
+          color: #777;
+      }
+  </style>
+</head>
+<body>
+  <!-- 헤더 영역 -->
+  <header class="community-header">
+      <div class="header-inner">
+          <div class="search-bar">
+              <input type="text" placeholder="커뮤니티 통합검색">
+          </div>
+          <nav class="header-nav">
+              <ul>
+                  <li><a href="#">공지사항</a></li>
+                  <li><a href="#">육아수다</a></li>
+                  <li><a href="#">맘챌린지</a></li>
+              </ul>
+          </nav>
+      </div>
+  </header>
+  
+  <!-- 메인 커뮤니티 콘텐츠 -->
+  <section class="community-content">
+      <!-- 프로필 영역 -->
+      <div class="profile-section">
+          <img class="profile-icon" src="https://via.placeholder.com/80" alt="프로필 아이콘">
+          <div class="profile-name">프로필 이름</div>
+      </div>
+      
+      <!-- 탭 영역 -->
+      <div class="tab-section">
+          <ul class="tabs">
+              <li class="active">전체글</li>
+              <li>인기글</li>
+          </ul>
+      </div>
+      
+      <!-- 해시태그 영역 -->
+      <div class="hashtags">
+          <ul>
+              <li>#육아</li>
+              <li>#육아이일상</li>
+              <li>#부모이기전에</li>
+              <li>#맘챌린지</li>
+              <li>#육아자기소개</li>
+              <li>#자유시간</li>
+              <li>#내돈내산리뷰</li>
+              <li>#항상지원해</li>
+              <li>#육아팁캠핑</li>
+              <li>#소확행</li>
+          </ul>
+      </div>
+      
+      <!-- 게시글 리스트 영역 -->
+      <div class="posts">
+          <div class="post">
+              <h3>공지사항/이벤트: 아이 언어 발달</h3>
+              <p>아이의 언어발달에 대해 전문가에게 1:1 상담 받아보세요!</p>
+          </div>
+          <div class="post">
+              <h3>육아수다: 오늘의 이야기</h3>
+              <p>아이와의 하루, 행복한 육아의 순간들을 공유합니다.</p>
+          </div>
+          <div class="post">
+              <h3>맘챌린지: 도전! 육아 팁</h3>
+              <p>육아 팁을 공유하며 함께 성장하는 맘들의 이야기입니다.</p>
+          </div>
+          <div class="post">
+              <h3>공지사항: 이벤트 당첨자 발표</h3>
+              <p>최근 진행한 이벤트 당첨자 발표 및 후기를 확인하세요.</p>
+          </div>
+      </div>
+  </section>
+  
+  <!-- 푸터 영역 -->
+  <footer>
+      © 2025 커뮤니티 사이트. 모든 권리 보유.
+  </footer>
+</body>
+</html>
