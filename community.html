@@ -2,30 +2,26 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>모던 커뮤니티 사이트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>커뮤니티 - momQ 프리미엄 쇼핑몰</title>
   <style>
-    /* 기본 스타일 및 리셋 */
+    /* 기본 리셋 및 폰트 설정 */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Pretendard', sans-serif;
     }
     body {
-      font-family: 'Pretendard', sans-serif;
-      background: #f4f7f9;
+      background-color: #f9f9f9;
       color: #333;
-      line-height: 1.6;
+      text-align: center;
     }
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    /* 헤더 영역 */
-    header {
-      background: #fff;
-      padding: 20px;
-      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    /* index.html에서 사용한 고급스러운 헤더 스타일 */
+    .header {
+      background: linear-gradient(135deg, #141E30, #243B55);
+      padding: 20px 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     .header-container {
       max-width: 1200px;
@@ -33,214 +29,90 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
     }
-    /* 검색창 */
-    .search-bar {
-      flex: 1;
-      min-width: 250px;
-      margin-right: 20px;
+    .header-logo {
+      font-size: 32px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #E74C3C; /* 프리미엄 빨간색 */
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
     }
-    .search-bar input {
-      width: 100%;
-      padding: 10px 15px;
-      font-size: 16px;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      transition: box-shadow 0.3s;
-    }
-    .search-bar input:focus {
-      outline: none;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
-    }
-    /* 네비게이션 메뉴 */
-    .nav-menu {
+    .header-nav ul {
+      list-style: none;
       display: flex;
       gap: 20px;
-      align-items: center;
     }
-    .nav-menu li {
-      list-style: none;
-    }
-    .nav-menu a {
+    .header-nav ul li a {
+      color: #fff;
       font-size: 16px;
-      padding: 8px 12px;
-      border-radius: 4px;
-      transition: background 0.3s;
-    }
-    .nav-menu a:hover {
-      background: #f0f0f0;
-    }
-    
-    /* 메인 콘텐츠 영역 */
-    .content {
-      max-width: 1200px;
-      margin: 20px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    /* 프로필 섹션 */
-    .profile {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    .profile img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .profile-name {
-      font-size: 20px;
-      font-weight: 600;
-    }
-    /* 탭 섹션 */
-    .tabs {
-      display: flex;
-      border-bottom: 2px solid #e0e0e0;
-      margin-bottom: 20px;
-    }
-    .tabs button {
-      background: none;
-      border: none;
-      font-size: 16px;
-      padding: 10px 20px;
-      cursor: pointer;
+      padding-bottom: 4px;
+      position: relative;
+      text-decoration: none;
       transition: color 0.3s;
     }
-    .tabs button.active {
-      border-bottom: 2px solid #E74C3C;
-      color: #E74C3C;
-      font-weight: bold;
-    }
-    /* 해시태그 영역 */
-    .hashtags {
-      margin-bottom: 20px;
-    }
-    .hashtags ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 0;
-      list-style: none;
-    }
-    .hashtags li {
-      background: #E74C3C;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 14px;
-    }
-    /* 게시글 카드 */
-    .posts {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .post {
-      padding: 15px;
-      border: 1px solid #eee;
-      border-radius: 8px;
+    .header-nav ul li a:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
       background: #fff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
+      left: 0;
+      bottom: 0;
+      transition: width 0.3s;
     }
-    .post:hover {
-      transform: translateY(-4px);
+    .header-nav ul li a:hover {
+      color: #ddd;
     }
-    .post h3 {
-      font-size: 18px;
-      color: #E74C3C;
-      margin-bottom: 10px;
+    .header-nav ul li a:hover:after {
+      width: 100%;
     }
-    .post p {
-      font-size: 14px;
-      line-height: 1.5;
-      color: #555;
-    }
-    
-    /* 푸터 */
-    footer {
-      text-align: center;
+    /* 커뮤니티 페이지 본문 기본 레이아웃 */
+    .community-content {
+      max-width: 1200px;
+      margin: 30px auto;
       padding: 20px;
-      color: #777;
-      font-size: 14px;
-      margin: 40px 0 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .community-content h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #E74C3C;
+    }
+    .community-content p {
+      font-size: 16px;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <!-- 헤더 영역 -->
-  <header>
+  <!-- 상단 헤더 (index.html과 동일한 디자인) -->
+  <header class="header">
     <div class="header-container">
-      <div class="search-bar">
-          <input type="text" placeholder="커뮤니티 통합검색">
-      </div>
-      <nav>
-         <ul class="nav-menu">
-            <li><a href="#">공지사항</a></li>
-            <li><a href="#">육아수다</a></li>
-            <li><a href="#">맘챌린지</a></li>
-         </ul>
+      <!-- 로고를 클릭하면 index.html로 이동 -->
+      <a href="index.html" class="header-logo">momQ</a>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="index.html">홈</a></li>
+          <li><a href="#">제품</a></li>
+          <li><a href="#">이벤트</a></li>
+          <li><a href="community.html">커뮤니티</a></li>
+          <li><a href="#">문의하기</a></li>
+        </ul>
       </nav>
     </div>
   </header>
-  
-  <!-- 메인 콘텐츠 영역 -->
-  <div class="content">
-    <!-- 프로필 섹션 -->
-    <div class="profile">
-      <img src="https://via.placeholder.com/80" alt="프로필 사진">
-      <div class="profile-name">프로필 이름</div>
-    </div>
-    <!-- 탭 영역 -->
-    <div class="tabs">
-      <button class="active">전체글</button>
-      <button>인기글</button>
-    </div>
-    <!-- 해시태그 영역 -->
-    <div class="hashtags">
-      <ul>
-        <li>#육아</li>
-        <li>#육아이일상</li>
-        <li>#부모이기전에</li>
-        <li>#맘챌린지</li>
-        <li>#육아자기소개</li>
-        <li>#자유시간</li>
-        <li>#내돈내산리뷰</li>
-        <li>#항상지원해</li>
-        <li>#육아팁캠핑</li>
-        <li>#소확행</li>
-      </ul>
-    </div>
-    <!-- 게시글 영역 -->
-    <div class="posts">
-      <div class="post">
-        <h3>공지사항/이벤트: 아이 언어 발달 상담</h3>
-        <p>아이의 언어 발달에 대해 전문가와 상담해보세요!</p>
-      </div>
-      <div class="post">
-        <h3>육아수다: 오늘의 이야기</h3>
-        <p>아이와의 하루를 공유하며 이야기 나눠봅니다.</p>
-      </div>
-      <div class="post">
-        <h3>맘챌린지: 육아 팁 공유</h3>
-        <p>육아와 관련된 꿀팁을 모아 함께 도전해보세요.</p>
-      </div>
-      <div class="post">
-        <h3>공지사항: 이벤트 당첨자 발표</h3>
-        <p>최근 진행한 이벤트의 당첨자와 후기를 확인하세요!</p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- 푸터 영역 -->
-  <footer>
-    © 2025 커뮤니티 사이트. 모든 권리 보유.
-  </footer>
+
+  <!-- 커뮤니티 페이지 본문 (추후 추가할 콘텐츠용 기본 구조) -->
+  <main class="community-content">
+    <h1>커뮤니티에 오신 것을 환영합니다</h1>
+    <p>
+      여기는 최신 게시글과 활발한 대화가 이루어지는 커뮤니티 공간입니다.<br>
+      원하는 주제를 클릭하여 다양한 정보를 확인해 보세요.
+    </p>
+    <!-- 추가적인 커뮤니티 콘텐츠나 게시물 리스트를 여기에 확장할 수 있습니다. -->
+  </main>
 </body>
 </html>
