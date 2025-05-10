@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>커뮤니티 - momQ 프리미엄 쇼핑몰</title>
   <style>
-    /* 공통 리셋 및 폰트 설정 */
+    /* 기본 리셋 및 폰트 설정 */
     * {
       margin: 0;
       padding: 0;
@@ -70,6 +70,7 @@
     .site-header .header-nav ul li a:hover:after {
       width: 100%;
     }
+    
     /* ===============================
        기존 커뮤니티 페이지 헤더 (검색창 & 메뉴 – 기존 community.html 코드)
        =============================== */
@@ -117,30 +118,30 @@
     .community-header nav .nav-menu li a:hover {
       background: #f0f0f0;
     }
+    
     /* ===============================
-       기존 커뮤니티 콘텐츠 영역
-       (프로필, 탭, 해시태그, 게시글)
+       기존 커뮤니티 콘텐츠 영역 (프로필, 탭, 해시태그, 게시글)
        =============================== */
     .community-content {
       max-width: 1200px;
       margin: 20px auto;
       background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     .community-content .profile-section {
       display: flex;
       align-items: center;
       gap: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .community-content .profile-section .profile-icon {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background-color: #ddd;
       overflow: hidden;
+      border: 2px solid #E74C3C;
     }
     .community-content .profile-section .profile-icon img {
       width: 100%;
@@ -148,11 +149,11 @@
       object-fit: cover;
     }
     .community-content .profile-section .profile-name {
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 22px;
+      font-weight: 600;
     }
     .community-content .tab-section {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .community-content .tabs {
       list-style: none;
@@ -164,7 +165,7 @@
     .community-content .tabs li {
       padding: 10px 0;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 18px;
     }
     .community-content .tabs li.active {
       border-bottom: 2px solid #E74C3C;
@@ -172,43 +173,51 @@
       font-weight: bold;
     }
     .community-content .hashtags {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
     .community-content .hashtags ul {
       list-style: none;
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      padding: 0;
+      padding-left: 0;
     }
     .community-content .hashtags li {
       background: #E74C3C;
       color: #fff;
-      padding: 5px 8px;
-      border-radius: 4px;
-      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
     }
+    
+    /* 개선된 게시글 카드 스타일 */
     .community-content .posts {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
     }
     .community-content .post {
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .community-content .post:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
     .community-content .post h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
+      font-size: 20px;
+      margin-bottom: 12px;
       color: #E74C3C;
     }
     .community-content .post p {
-      font-size: 14px;
-      line-height: 1.5;
-      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
     }
+    
     /* ===============================
        푸터 영역
        =============================== */
@@ -216,7 +225,7 @@
       text-align: center;
       padding: 20px;
       background: #fff;
-      margin-top: 20px;
+      margin-top: 30px;
       box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
       font-size: 14px;
       color: #777;
@@ -227,7 +236,7 @@
   <!-- 새로 추가된 사이트 헤더 (index.html 헤더 스타일) -->
   <header class="site-header">
     <div class="header-container">
-      <!-- 로고를 클릭하면 index.html로 이동 -->
+      <!-- 로고 클릭 시 index.html로 이동 -->
       <a href="index.html" class="header-logo">momQ</a>
       <nav class="header-nav">
         <ul>
@@ -257,7 +266,7 @@
     </div>
   </header>
   
-  <!-- 기존 커뮤니티 콘텐츠 영역 -->
+  <!-- 기존 커뮤니티 콘텐츠 영역 (프로필, 탭, 해시태그, 게시글) -->
   <section class="community-content">
     <div class="profile-section">
       <div class="profile-icon">
