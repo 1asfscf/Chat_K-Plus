@@ -5,91 +5,228 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>커뮤니티 - momQ 프리미엄 쇼핑몰</title>
   <style>
-    /* 기본 리셋 및 폰트 설정 */
+    /* 공통 리셋 및 폰트 설정 */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Pretendard', sans-serif;
     }
     body {
-      background-color: #f9f9f9;
+      font-family: 'Pretendard', sans-serif;
+      background: #f9f9f9;
       color: #333;
-      text-align: center;
     }
-    /* index.html에서 사용한 고급스러운 헤더 스타일 */
-    .header {
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    /* ===============================
+       상단 사이트 헤더 (index.html 헤더 스타일)
+       =============================== */
+    .site-header {
       background: linear-gradient(135deg, #141E30, #243B55);
       padding: 20px 40px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
-    .header-container {
+    .site-header .header-container {
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
-    .header-logo {
+    .site-header .header-logo {
       font-size: 32px;
       font-weight: bold;
       letter-spacing: 2px;
       color: #E74C3C; /* 프리미엄 빨간색 */
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-      text-decoration: none;
     }
-    .header-nav ul {
+    .site-header .header-nav ul {
       list-style: none;
       display: flex;
       gap: 20px;
     }
-    .header-nav ul li a {
-      color: #fff;
+    .site-header .header-nav ul li a {
       font-size: 16px;
       padding-bottom: 4px;
       position: relative;
-      text-decoration: none;
       transition: color 0.3s;
+      color: #fff;
     }
-    .header-nav ul li a:after {
+    .site-header .header-nav ul li a:hover {
+      color: #ddd;
+    }
+    .site-header .header-nav ul li a:after {
       content: "";
       position: absolute;
+      left: 0;
+      bottom: 0;
       width: 0;
       height: 2px;
       background: #fff;
-      left: 0;
-      bottom: 0;
       transition: width 0.3s;
     }
-    .header-nav ul li a:hover {
-      color: #ddd;
-    }
-    .header-nav ul li a:hover:after {
+    .site-header .header-nav ul li a:hover:after {
       width: 100%;
     }
-    /* 커뮤니티 페이지 본문 기본 레이아웃 */
+    /* ===============================
+       기존 커뮤니티 페이지 헤더
+       (검색창 & 메뉴 – 기존 community.html 코드)
+       =============================== */
+    header.community-header {
+      background: #fff;
+      padding: 10px 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .community-header .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .community-header .search-bar {
+      flex: 1;
+      min-width: 250px;
+      margin-right: 20px;
+    }
+    .community-header .search-bar input {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      transition: box-shadow 0.3s;
+    }
+    .community-header .search-bar input:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .community-header nav .nav-menu {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .community-header nav .nav-menu li a {
+      font-size: 16px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .community-header nav .nav-menu li a:hover {
+      background: #f0f0f0;
+    }
+    /* ===============================
+       기존 커뮤니티 콘텐츠 영역
+       (프로필, 탭, 해시태그, 게시글)
+       =============================== */
     .community-content {
       max-width: 1200px;
-      margin: 30px auto;
-      padding: 20px;
+      margin: 20px auto;
       background: #fff;
+      padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    .community-content h1 {
+    .community-content .profile-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
       margin-bottom: 20px;
-      font-size: 28px;
+    }
+    .community-content .profile-section .profile-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #ddd;
+      overflow: hidden;
+    }
+    .community-content .profile-section .profile-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .community-content .profile-section .profile-name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .community-content .tab-section {
+      margin-bottom: 20px;
+    }
+    .community-content .tabs {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      border-bottom: 2px solid #ccc;
+      padding-left: 0;
+    }
+    .community-content .tabs li {
+      padding: 10px 0;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .community-content .tabs li.active {
+      border-bottom: 2px solid #E74C3C;
+      color: #E74C3C;
+      font-weight: bold;
+    }
+    .community-content .hashtags {
+      margin-bottom: 20px;
+    }
+    .community-content .hashtags ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+    }
+    .community-content .hashtags li {
+      background: #E74C3C;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .community-content .posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .community-content .post {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .community-content .post h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
       color: #E74C3C;
     }
-    .community-content p {
-      font-size: 16px;
-      line-height: 1.6;
+    .community-content .post p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #666;
+    }
+    /* ===============================
+       푸터 영역
+       =============================== */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #fff;
+      margin-top: 20px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+      font-size: 14px;
+      color: #777;
     }
   </style>
 </head>
 <body>
-  <!-- 상단 헤더 (index.html과 동일한 디자인) -->
-  <header class="header">
+  <!-- 새로 추가된 사이트 헤더 (index.html 헤더 스타일) -->
+  <header class="site-header">
     <div class="header-container">
       <!-- 로고를 클릭하면 index.html로 이동 -->
       <a href="index.html" class="header-logo">momQ</a>
@@ -104,15 +241,76 @@
       </nav>
     </div>
   </header>
-
-  <!-- 커뮤니티 페이지 본문 (추후 추가할 콘텐츠용 기본 구조) -->
-  <main class="community-content">
-    <h1>커뮤니티에 오신 것을 환영합니다</h1>
-    <p>
-      여기는 최신 게시글과 활발한 대화가 이루어지는 커뮤니티 공간입니다.<br>
-      원하는 주제를 클릭하여 다양한 정보를 확인해 보세요.
-    </p>
-    <!-- 추가적인 커뮤니티 콘텐츠나 게시물 리스트를 여기에 확장할 수 있습니다. -->
-  </main>
+  
+  <!-- 기존 커뮤니티 페이지 헤더 (검색창 & 메뉴) -->
+  <header class="community-header">
+    <div class="header-inner">
+      <div class="search-bar">
+        <input type="text" placeholder="커뮤니티 통합검색">
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#">공지사항</a></li>
+          <li><a href="#">육아수다</a></li>
+          <li><a href="#">맘챌린지</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  
+  <!-- 기존 커뮤니티 콘텐츠 영역 -->
+  <section class="community-content">
+    <div class="profile-section">
+      <div class="profile-icon">
+        <img src="https://via.placeholder.com/80" alt="프로필 아이콘">
+      </div>
+      <div class="profile-name">프로필 이름</div>
+    </div>
+    
+    <div class="tab-section">
+      <ul class="tabs">
+        <li class="active">전체글</li>
+        <li>인기글</li>
+      </ul>
+    </div>
+    
+    <div class="hashtags">
+      <ul>
+        <li>#육아</li>
+        <li>#육아이일상</li>
+        <li>#부모이기전에</li>
+        <li>#맘챌린지</li>
+        <li>#육아자기소개</li>
+        <li>#자유시간</li>
+        <li>#내돈내산리뷰</li>
+        <li>#항상지원해</li>
+        <li>#육아팁캠핑</li>
+        <li>#소확행</li>
+      </ul>
+    </div>
+    
+    <div class="posts">
+      <div class="post">
+        <h3>공지사항/이벤트: 아이 언어 발달 상담</h3>
+        <p>아이의 언어 발달에 대해 전문가와 상담해보세요!</p>
+      </div>
+      <div class="post">
+        <h3>육아수다: 오늘의 이야기</h3>
+        <p>아이와의 하루를 공유하며 이야기 나눠봅니다.</p>
+      </div>
+      <div class="post">
+        <h3>맘챌린지: 육아 팁 공유</h3>
+        <p>육아와 관련된 꿀팁을 모아 함께 도전해보세요.</p>
+      </div>
+      <div class="post">
+        <h3>공지사항: 이벤트 당첨자 발표</h3>
+        <p>최근 진행한 이벤트의 당첨자와 후기를 확인하세요!</p>
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    © 2025 커뮤니티 사이트. 모든 권리 보유.
+  </footer>
 </body>
 </html>
