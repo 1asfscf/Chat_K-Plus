@@ -41,7 +41,7 @@
       font-weight: bold;
       letter-spacing: 2px;
       color: #E74C3C; /* 프리미엄 빨간색 */
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
     .header-nav ul {
       list-style: none;
@@ -107,6 +107,29 @@
       border-bottom: 2px solid #E74C3C;
       color: #141E30;
     }
+    /* 카테고리 버튼 영역 (전체, 베이비, 키즈, 패밀리) */
+    .category-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .category-buttons button {
+      background-color: #fff;
+      border: 2px solid #E74C3C;
+      color: #E74C3C;
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .category-buttons button.active,
+    .category-buttons button:hover {
+      background-color: #E74C3C;
+      color: #fff;
+    }
+    /* 제품 카드 그리드 레이아웃 */
     .products-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -148,7 +171,7 @@
     }
     
     /* ==========================
-         기존 콘텐츠 영역 (예: 버튼, 추천상품 등)
+         기존 콘텐츠 영역 (예: 버튼, 추천상품, 기타)
          ========================== */
     .content {
       padding: 20px;
@@ -193,6 +216,13 @@
   <!-- 맘큐 판매 베스트 섹션 -->
   <section class="best-sellers">
     <h2>맘큐 판매 베스트</h2>
+    <!-- 카테고리 버튼 영역 -->
+    <div class="category-buttons">
+      <button class="active">전체</button>
+      <button>베이비</button>
+      <button>키즈</button>
+      <button>패밀리</button>
+    </div>
     <div class="products-container">
       <div class="product-card">
         <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 1">
@@ -209,11 +239,11 @@
         <h3>상품명 C</h3>
         <p class="price">75,900원 <small>100,000원</small></p>
       </div>
-      <!-- 추가 상품 카드가 필요하면 여기에 계속 추가 -->
+      <!-- 추가 상품 카드가 필요하면 계속 추가 -->
     </div>
   </section>
 
-  <!-- 기존 index.html의 나머지 콘텐츠 영역 (버튼, 추천상품, 기타) -->
+  <!-- 기존 index.html 콘텐츠 영역 (예: 버튼, 추천상품, 기타) -->
   <div class="content">
     <p>여기에 기존 index.html의 콘텐츠가 들어갑니다.</p>
   </div>
