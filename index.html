@@ -17,52 +17,48 @@
       color: #333;
       text-align: center;
     }
-    /* 고급스러운 헤더 영역 */
+    /* 헤더 영역 */
     .header {
       background: linear-gradient(135deg, #141E30, #243B55);
-      color: #fff;
       padding: 20px 40px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     .header-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       max-width: 1200px;
       margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    /* 로고: 빨간색 'momQ' – 프리미엄 느낌 */
     .header-logo {
       font-size: 32px;
       font-weight: bold;
       letter-spacing: 2px;
-      color: #E74C3C;
+      color: #E74C3C; /* 프리미엄 빨간색 */
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      text-decoration: none;
     }
-    /* 네비게이션 메뉴 */
     .header-nav ul {
       list-style: none;
       display: flex;
       gap: 20px;
-      margin: 0;
-      padding: 0;
     }
     .header-nav ul li a {
+      font-size: 16px;
       color: #fff;
       text-decoration: none;
-      font-size: 16px;
-      transition: color 0.3s;
-      position: relative;
       padding-bottom: 4px;
+      position: relative;
+      transition: color 0.3s;
     }
     .header-nav ul li a:after {
       content: "";
       position: absolute;
+      left: 0;
+      bottom: 0;
       width: 0;
       height: 2px;
       background: #fff;
-      left: 0;
-      bottom: 0;
       transition: width 0.3s;
     }
     .header-nav ul li a:hover {
@@ -71,28 +67,34 @@
     .header-nav ul li a:hover:after {
       width: 100%;
     }
-    /* 헤더 아래 배너 이미지 영역 */
-    .banner {
+    /* 슬라이드 영역 */
+    .slider {
       width: 100%;
+      max-width: 1400px;
+      margin: 20px auto;
       overflow: hidden;
-      margin: 0 auto;
-      border-top: 4px solid #243B55;
-      border-bottom: 4px solid #243B55;
+      position: relative;
+      border: 4px solid #243B55;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
-    .banner img {
+    .slider img {
       width: 100%;
       height: auto;
       display: block;
+      opacity: 1;
+      transition: opacity 1s ease-in-out;
     }
-    /* (기존 index.html의 나머지 내용은 여기에 추가됨) */
+    /* 기존 콘텐츠 영역 (예: 버튼, 추천상품 등) */
+    .content {
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
-  <!-- 헤더 영역 -->
+  <!-- 헤더 영역 (로고 클릭 시 index.html로 이동) -->
   <header class="header">
     <div class="header-container">
-      <div class="header-logo">momQ</div>
+      <a href="index.html" class="header-logo">momQ</a>
       <nav class="header-nav">
         <ul>
           <li><a href="#">홈</a></li>
@@ -105,13 +107,34 @@
     </div>
   </header>
 
-  <!-- 헤더 아래 고급스러운 배너 이미지 -->
-  <section class="banner">
-    <img src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="프리미엄 배너 이미지">
+  <!-- 슬라이드 영역 (5초마다 이미지 전환) -->
+  <section class="slider">
+    <img id="slider-image" src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="슬라이드 이미지">
   </section>
 
-  <!-- 기존 index.html의 나머지 콘텐츠(예: 버튼, 추천 상품 등) -->
-  <!-- ... 여기에 추가 ... -->
+  <!-- 기존 index.html 콘텐츠 영역 (예시) -->
+  <div class="content">
+    <p>여기에 기존 index.html의 콘텐츠가 들어갑니다. (예: 버튼, 추천 상품, 게시물 등)</p>
+  </div>
 
+  <script>
+    // 슬라이드에 사용할 이미지 배열 (기존 이미지 + 새로운 이미지)
+    const images = [
+      "https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg",
+      "https://img.makeshop.co.kr/4/29457/202505/65ab5e1d661a882151f87e4ab7a9748e.jpg"
+    ];
+    let currentIndex = 0;
+    const sliderImage = document.getElementById("slider-image");
+
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % images.length;
+      // 간단한 페이드 아웃 후 이미지 교체 (0.5초 후 페이드 인)
+      sliderImage.style.opacity = 0;
+      setTimeout(() => {
+        sliderImage.src = images[currentIndex];
+        sliderImage.style.opacity = 1;
+      }, 500);
+    }, 5000);
+  </script>
 </body>
 </html>
