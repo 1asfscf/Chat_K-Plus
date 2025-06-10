@@ -18,14 +18,7 @@
     img { max-width:100%; display:block; }
 
     /* --------- 공통 헤더 --------- */
-    .header,
-    .community-bar {
-      position:fixed; left:0; width:100vw; z-index:100;
-      transition:transform 0.38s cubic-bezier(.7,0,.3,1), box-shadow var(--transition), background var(--transition), opacity 0.25s;
-      will-change: transform, opacity;
-    }
-    .header {
-      top:0;
+    .header { position:fixed; top:0; left:0; width:100vw; z-index:100;
       background:var(--header-bg); backdrop-filter:var(--blur);
       display:flex; align-items:center; justify-content:space-between;
       height:60px; padding:0 2vw; box-sizing:border-box;
@@ -33,10 +26,10 @@
       gap:1vw;
     }
     .header-left { display:flex; align-items:center; gap:1vw; min-width:0;}
-    .logo { font-size:2.1vw; color:var(--main-red); font-weight:700; min-width:70px; }
+    .logo { font-size:clamp(1.2rem,2.1vw,2.2rem); color:var(--main-red); font-weight:700; min-width:60px; }
     .search-bar {
       background:#232323; border-radius:18px; border:none; padding:8px 18px;
-      color:#fff; font-size:1vw; min-width:100px; width:20vw; max-width:320px;
+      color:#fff; font-size:clamp(0.9rem,1vw,1.1rem); min-width:80px; width:20vw; max-width:320px;
       margin:0 2vw; transition:width var(--transition);
       display:block;
     }
@@ -45,58 +38,16 @@
       flex-shrink:0;
     }
     .profile-img, .grandma-img {
-      width:2.8vw; min-width:32px; max-width:48px; aspect-ratio:1/1;
-      height:auto; border-radius:50%; object-fit:cover; border:2px solid #fff;
+      width:clamp(28px,2.8vw,48px); aspect-ratio:1/1; height:auto;
+      border-radius:50%; object-fit:cover; border:2px solid #fff;
       background:#333;
       box-shadow:0 2px 8px rgba(0,0,0,0.13);
       transition:box-shadow var(--transition), border var(--transition);
     }
     .grandma-img { margin-left:0.7vw; border-color:var(--main-red);}
-    /* --------- 커뮤니티 메뉴 바 --------- */
-    .community-bar {
-      top:60px;
-      background:var(--nav-bg); backdrop-filter:var(--blur);
-      display:flex; align-items:center; justify-content:center;
-      height:46px;
-      box-shadow:0 2px 12px rgba(0,0,0,0.09);
-      opacity:0.98;
-      padding:0 2vw;
-      font-size:1.07rem;
-      gap:32px;
-      overflow-x:visible;
-    }
-    .community-menu {
-      display:flex; gap:32px;
-      width:100%; max-width:1100px; justify-content:center;
-    }
-    .community-menu a {
-      color:#fff; opacity:0.85; font-weight:500; letter-spacing:0.01em;
-      padding:6px 18px; border-radius:8px; transition:background 0.18s, color 0.18s, opacity 0.18s;
-      position:relative;
-      white-space:nowrap;
-      font-size:1.07rem;
-      display:inline-block;
-    }
-    .community-menu a:hover, .community-menu a.active {
-      background:rgba(255,255,255,0.08);
-      color:var(--main-red); opacity:1;
-    }
-    /* --------- 숨김 애니메이션 --------- */
-    .hide-up {
-      transform: translateY(-120%);
-      opacity: 0;
-      pointer-events: none;
-    }
-    .show-down {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
     /* --------- 슬라이더 --------- */
     .main-slider {
-      margin-top:106px; /* 헤더+커뮤니티바 */
-      width:100vw; overflow:hidden;
+      margin-top:60px; width:100vw; overflow:hidden;
       border-radius:0 0 22px 22px; box-shadow:0 4px 24px rgba(0,0,0,0.25);
       position:relative; background:#222;
       min-height:25vw; max-height:380px;
@@ -123,8 +74,8 @@
       color:#fff; border-radius:0 0 22px 22px;
       animation:fadeInUp 0.7s;
     }
-    .slide-caption h2 { font-size:2vw; margin-bottom:1vw;}
-    .slide-caption p { font-size:1.05vw; opacity:0.8;}
+    .slide-caption h2 { font-size:clamp(1.1rem,2vw,2rem); margin-bottom:1vw;}
+    .slide-caption p { font-size:clamp(0.95rem,1.05vw,1.15rem); opacity:0.8;}
     .slider-dots {
       position:absolute; left:50%; bottom:1.2vw; transform:translateX(-50%);
       display:flex; gap:0.7vw;
@@ -134,14 +85,15 @@
       background:#fff; opacity:0.4; transition:opacity 0.2s;
     }
     .slider-dot.active { background:var(--main-red); opacity:1;}
+    /* --------- 콘텐츠 --------- */
     .content-section { max-width:1100px; margin:3vw auto 0 auto; }
-    .section-title { font-size:1.3vw; font-weight:700; margin:0 0 1vw 0.7vw;}
+    .section-title { font-size:clamp(1.1rem,1.3vw,1.4rem); font-weight:700; margin:0 0 1vw 0.7vw;}
     .card-grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:1.3vw; margin-bottom:2vw;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+      gap:clamp(14px,1.3vw,28px); margin-bottom:2vw;
     }
     .content-card {
-      background:#232323; border-radius:12px; overflow:hidden;
+      background:#232323; border-radius:clamp(10px,12px,16px); overflow:hidden;
       box-shadow:0 2px 10px rgba(0,0,0,0.13);
       transition:transform 0.35s cubic-bezier(.7,0,.3,1), box-shadow 0.18s;
       cursor:pointer; position:relative;
@@ -149,13 +101,19 @@
       min-width:0;
       display:flex; flex-direction:column;
     }
-    .content-card img { width:100%; height:10vw; min-height:90px; object-fit:cover;}
+    .content-card img {
+      width:100%; height:clamp(90px,10vw,180px); object-fit:cover;
+      background:#333;
+      border-radius:clamp(10px,12px,16px) clamp(10px,12px,16px) 0 0;
+      transition:filter 0.2s;
+    }
     .content-card .badge {
-      position:absolute; top:10px; left:10px; background:var(--main-red); color:#fff;
-      font-size:0.9vw; padding:2px 10px; border-radius:12px; font-weight:600;
+      position:absolute; top:clamp(6px,10px,16px); left:clamp(6px,10px,16px);
+      background:var(--main-red); color:#fff;
+      font-size:clamp(0.69rem,0.9vw,1.05rem); padding:2px 10px; border-radius:12px; font-weight:600;
     }
     .content-card p {
-      font-size:1vw; color:#fff; margin:12px 0 9px 14px; font-weight:500;
+      font-size:clamp(0.91rem,1vw,1.13rem); color:#fff; margin:clamp(8px,12px,18px) 0 clamp(7px,9px,13px) clamp(10px,14px,18px); font-weight:500;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .content-card:hover { transform:scale(1.05);}
@@ -163,6 +121,7 @@
       transform: translateY(-12px) scale(1.05);
       box-shadow: 0 16px 36px rgba(255,23,68,0.18);
     }
+    /* --------- 하단 네비 (모바일) --------- */
     .bottom-nav {
       display:none;
     }
@@ -173,35 +132,47 @@
       .logo { font-size:1.2rem;}
       .search-bar { display:none;}
       .profile-img, .grandma-img { width:34px; min-width:28px; max-width:38px;}
-      .community-bar {
-        top:48px;
-        height:44px;
-        font-size:0.98rem;
-        padding:0 0;
-        gap:0;
-        box-shadow:0 2px 12px rgba(0,0,0,0.09);
-        overflow-x:auto;
+      .main-slider { min-height:120px; max-height:180px;}
+      .slide { height:38vw; min-height:120px; max-height:180px;}
+      .slide-caption { padding:12px 14px 10px 10px;}
+      .slide-caption h2 { font-size:1.05rem;}
+      .slide-caption p { font-size:0.93rem;}
+      .slider-dot { width:8px; height:8px;}
+      .content-section {
+        margin-top:18px;
+        padding-bottom:70px; /* 하단 내비게이션 겹침 방지 */
       }
-      .community-menu {
-        display:flex;
-        flex-wrap:nowrap;
-        gap:8px;
-        width:auto;
-        max-width:100vw;
-        justify-content:flex-start;
-        padding:0 8px;
-        overflow-x:auto;
-        scrollbar-width:thin;
+      .section-title { font-size:1.02rem;}
+      .card-grid {
+        grid-template-columns:repeat(2,1fr);
+        gap:14px;
+        margin-bottom:2vw;
       }
-      .community-menu a {
-        font-size:0.97rem;
-        padding:7px 14px;
-        border-radius:7px;
-        margin:0;
-        min-width:fit-content;
-        text-align:center;
-        white-space:nowrap;
-        background:none;
+      .card-row { display:none;}
+      .content-card { min-width:0; }
+      .content-card img { height:96px;}
+      .content-card .badge { font-size:0.69rem;}
+      .content-card p { font-size:0.91rem;}
+      .bottom-nav {
+        position:fixed; left:0; bottom:0; width:100vw; height:54px;
+        background:rgba(24,24,24,0.93); backdrop-filter:var(--blur);
+        display:flex; justify-content:space-around; align-items:center; z-index:120;
+        box-shadow:0 -2px 18px rgba(0,0,0,0.13);
+      }
+      .bottom-nav a {
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        color:#bbb; font-size:0.85rem; text-decoration:none; gap:2px; width:60px; height:48px; border-radius:12px;
+        transition:background 0.18s, color 0.18s;
+      }
+      .bottom-nav a.active, .bottom-nav a:active { color:var(--main-red); background:#232323;}
+      .bottom-nav img { width:21px; height:21px; margin-bottom:2px;}
+      /* 모바일 검색창 */
+      .mobile-search-bar {
+        display:block; position:fixed; top:48px; left:0; width:100vw; z-index:200;
+        background:rgba(34,34,34,0.97); padding:10px 16px 8px 16px;
+        border:none; border-radius:0 0 16px 16px; font-size:1rem; color:#fff;
+        outline:none; box-shadow:0 2px 8px rgba(0,0,0,0.16);
+        animation:fadeInDown 0.3s;
       }
     }
     @keyframes fadeInUp {
@@ -216,7 +187,7 @@
 </head>
 <body>
   <!-- 해더 -->
-  <header class="header show-down" id="mainHeader">
+  <header class="header">
     <div class="header-left">
       <span class="logo">noonoo</span>
       <input class="search-bar" type="text" placeholder="검색 (PC)">
@@ -226,18 +197,6 @@
       <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/grandma-2028307_1280.png" alt="할머니" class="grandma-img">
     </div>
   </header>
-
-  <!-- 커뮤니티 메뉴 바 -->
-  <nav class="community-bar show-down" id="communityBar">
-    <div class="community-menu">
-      <a href="#" class="active">홈</a>
-      <a href="#">커뮤니티</a>
-      <a href="#">공지사항</a>
-      <a href="#">이벤트</a>
-      <a href="#">Q&A</a>
-      <a href="#">고객센터</a>
-    </div>
-  </nav>
 
   <!-- 모바일 전용 검색창 (동적 생성) -->
   <div id="mobileSearchWrap"></div>
@@ -267,13 +226,6 @@
   <section class="content-section">
     <div class="section-title">추천 콘텐츠</div>
     <div class="card-grid">
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">ORIGINAL</span><p>콘텐츠 A</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">NEW</span><p>콘텐츠 B</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">HOT</span><p>콘텐츠 C</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">BEST</span><p>콘텐츠 D</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">TREND</span><p>콘텐츠 E</p></div>
-    </div>
-    <div class="card-row">
       <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">ORIGINAL</span><p>콘텐츠 A</p></div>
       <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">NEW</span><p>콘텐츠 B</p></div>
       <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">HOT</span><p>콘텐츠 C</p></div>
@@ -318,8 +270,7 @@
     // PC/모바일 카드 구분
     function handleResize() {
       const isPC = window.innerWidth>=900;
-      document.querySelector('.card-grid').style.display = isPC?'grid':'none';
-      document.querySelector('.card-row').style.display = isPC?'none':'flex';
+      document.querySelector('.card-grid').style.display = isPC?'grid':'grid';
     }
     window.addEventListener('resize',handleResize);
     window.addEventListener('DOMContentLoaded',handleResize);
@@ -355,34 +306,6 @@
       });
     }
     window.addEventListener('DOMContentLoaded', addCardClickEffect);
-
-    // 헤더/커뮤니티 메뉴 스크롤 애니메이션
-    let lastScroll = window.scrollY;
-    let ticking = false;
-    function handleHeaderScroll() {
-      const header = document.getElementById('mainHeader');
-      const commBar = document.getElementById('communityBar');
-      const curr = window.scrollY;
-      if (curr > lastScroll && curr > 60) {
-        header.classList.remove('show-down');
-        header.classList.add('hide-up');
-        commBar.classList.remove('show-down');
-        commBar.classList.add('hide-up');
-      } else {
-        header.classList.remove('hide-up');
-        header.classList.add('show-down');
-        commBar.classList.remove('hide-up');
-        commBar.classList.add('show-down');
-      }
-      lastScroll = curr;
-      ticking = false;
-    }
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(handleHeaderScroll);
-        ticking = true;
-      }
-    });
   </script>
 </body>
 </html>
