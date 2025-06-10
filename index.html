@@ -3,183 +3,172 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>TVWIKI 스타일 반응형 UI</title>
+  <title>noonoo스트리밍 - 반응형 고급 UI</title>
   <style>
     :root {
-      --main-bg: #18181c;
-      --header-bg: #18181c;
-      --card-bg: #23232a;
-      --card-shadow: 0 2px 12px rgba(0,0,0,0.18);
-      --main-text: #fff;
-      --sub-text: #bdbdbd;
-      --accent: #ff1744;
-      --radius: 14px;
-      --transition: 0.28s cubic-bezier(.7,0,.3,1);
-      --notice-blue: #2267d3;
+      --main-red: #ff1744;
+      --header-bg: rgba(24,24,24,0.82);
+      --nav-bg: rgba(28,28,28,0.93);
+      --blur: blur(12px);
+      --transition: 0.3s cubic-bezier(.7,0,.3,1);
     }
-    html,body { margin:0; padding:0; background:var(--main-bg); color:var(--main-text); font-family:'Pretendard','Noto Sans KR',sans-serif;}
+    html, body { margin:0; padding:0; background:#181818; color:#fff; font-family:'Pretendard','Noto Sans KR',sans-serif;}
     body { min-height:100vh; }
     a { color:inherit; text-decoration:none; }
     img { max-width:100%; display:block; }
 
-    /* --------- 해더 --------- */
+    /* --------- 공통 헤더 --------- */
     .header {
       position:fixed; top:0; left:0; width:100vw; z-index:100;
-      background:var(--header-bg); box-shadow:0 2px 12px rgba(0,0,0,0.13);
+      background:var(--header-bg); backdrop-filter:var(--blur);
       display:flex; align-items:center; justify-content:space-between;
-      height:56px; padding:0 36px;
-      border-bottom:1px solid #23232a;
+      height:60px; padding:0 2vw; box-sizing:border-box;
+      box-shadow:0 2px 12px rgba(0,0,0,0.13);
+      transition:box-shadow var(--transition), background var(--transition);
+      gap:1vw;
     }
-    .header-left { display:flex; align-items:center; gap:32px;}
-    .logo { font-size:1.7rem; font-weight:700; letter-spacing:1.5px; }
-    .header-menu { display:flex; gap:30px;}
-    .header-menu a { font-size:1.07rem; color:var(--main-text); opacity:0.88; transition:opacity var(--transition);}
-    .header-menu a:hover { opacity:1; color:var(--accent);}
-    .header-right { display:flex; align-items:center; gap:18px;}
-    .icon-btn { background:none; border:none; cursor:pointer; }
-    .icon-btn img { width:25px; height:25px;}
-    .profile-img { width:32px; height:32px; border-radius:50%; object-fit:cover; border:2px solid #fff;}
-
-    /* --------- 안내 바 --------- */
-    .notice-bar {
-      margin-top:56px;
-      width:100vw;
-      background:var(--notice-blue);
-      color:#fff;
-      font-size:1.01rem;
-      padding:8px 0 8px 36px;
-      letter-spacing:0.01em;
+    .header-left { display:flex; align-items:center; gap:1vw; min-width:0;}
+    .logo { font-size:2.1vw; color:var(--main-red); font-weight:700; min-width:70px; }
+    .search-bar {
+      background:#232323; border-radius:18px; border:none; padding:8px 18px;
+      color:#fff; font-size:1vw; min-width:100px; width:20vw; max-width:320px;
+      margin:0 2vw; transition:width var(--transition);
+      display:block;
     }
-
-    /* --------- 배너/슬라이드 --------- */
-    .banner-section {
-      width:100vw; max-width:100vw;
-      background:none; display:flex; gap:18px;
-      padding:32px 36px 0 36px;
-      box-sizing:border-box;
+    .header-right {
+      display:flex; align-items:center; gap:1vw; min-width:0;
+      flex-shrink:0;
     }
-    .main-banner {
-      flex:2.1; min-width:0;
-      background:var(--card-bg);
-      border-radius:var(--radius);
+    .profile-img, .grandma-img {
+      width:2.8vw; min-width:32px; max-width:48px; aspect-ratio:1/1;
+      height:auto; border-radius:50%; object-fit:cover; border:2px solid #fff;
+      background:#333;
+      box-shadow:0 2px 8px rgba(0,0,0,0.13);
+      transition:box-shadow var(--transition), border var(--transition);
+    }
+    .grandma-img { margin-left:0.7vw; border-color:var(--main-red);}
+    /* --------- 슬라이더 --------- */
+    .main-slider {
+      margin-top:60px; width:100vw; overflow:hidden;
+      border-radius:0 0 22px 22px; box-shadow:0 4px 24px rgba(0,0,0,0.25);
+      position:relative; background:#222;
+      min-height:25vw; max-height:380px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .slide-track {
+      display:flex; width:100%; height:100%; transition:transform var(--transition);
+    }
+    .slide {
+      min-width:100vw; height:32vw; min-height:180px; max-height:380px;
+      position:relative; opacity:0.7; transition:opacity 0.5s;
+      display:flex; align-items:flex-end; justify-content:flex-start;
       overflow:hidden;
-      box-shadow:var(--card-shadow);
-      display:flex; align-items:flex-end; position:relative;
-      aspect-ratio: 2.2/1;
     }
-    .main-banner img { width:100%; height:100%; object-fit:cover; }
-    .main-banner-caption {
-      position:absolute; left:0; bottom:0; width:100%;
-      background:linear-gradient(0deg,rgba(24,24,28,0.92) 70%,rgba(24,24,28,0));
-      color:#fff; padding:22px 24px 18px 22px;
-      border-radius:0 0 var(--radius) var(--radius);
+    .slide.active { opacity:1;}
+    .slide img {
+      width:100vw; height:100%; object-fit:cover;
+      transition:transform 0.5s;
     }
-    .main-banner-caption h2 { font-size:1.25rem; margin:0 0 8px 0;}
-    .main-banner-caption p { font-size:1rem; margin:0; opacity:0.9;}
-    .side-banner {
-      flex:1; min-width:0;
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      overflow:hidden;
-      box-shadow:var(--card-shadow);
-      display:flex; align-items:flex-end; position:relative;
-      aspect-ratio: 2.2/1;
+    .slide-caption {
+      position:absolute; left:0; bottom:0; width:100%; max-width:100vw;
+      padding:2.5vw 4vw 2vw 2vw;
+      background:linear-gradient(0deg,rgba(24,24,24,0.92) 80%,rgba(24,24,24,0));
+      color:#fff; border-radius:0 0 22px 22px;
+      animation:fadeInUp 0.7s;
     }
-    .side-banner img { width:100%; height:100%; object-fit:cover;}
-    .side-banner-caption {
-      position:absolute; left:0; bottom:0; width:100%;
-      background:linear-gradient(0deg,rgba(24,24,28,0.92) 70%,rgba(24,24,28,0));
-      color:#fff; padding:18px 18px 14px 18px;
-      border-radius:0 0 var(--radius) var(--radius);
-      font-size:1.02rem;
+    .slide-caption h2 { font-size:2vw; margin-bottom:1vw;}
+    .slide-caption p { font-size:1.05vw; opacity:0.8;}
+    .slider-dots {
+      position:absolute; left:50%; bottom:1.2vw; transform:translateX(-50%);
+      display:flex; gap:0.7vw;
     }
-
-    /* --------- 섹션 타이틀 --------- */
-    .section-title {
-      font-size:1.13rem; font-weight:600;
-      margin:38px 0 18px 36px;
-      letter-spacing:0.01em;
+    .slider-dot {
+      width:0.8vw; height:0.8vw; min-width:8px; min-height:8px; border-radius:50%;
+      background:#fff; opacity:0.4; transition:opacity 0.2s;
     }
-
-    /* --------- 카드 그리드 --------- */
+    .slider-dot.active { background:var(--main-red); opacity:1;}
+    /* --------- 콘텐츠 --------- */
+    .content-section { max-width:1100px; margin:3vw auto 0 auto; }
+    .section-title { font-size:1.3vw; font-weight:700; margin:0 0 1vw 0.7vw;}
     .card-grid {
-      display:grid; grid-template-columns: repeat(5,1fr);
-      gap:28px;
-      padding:0 36px 48px 36px;
-      background:none;
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:1.3vw; margin-bottom:2vw;
     }
     .content-card {
-      background:var(--card-bg);
-      border-radius:var(--radius);
-      overflow:hidden;
-      box-shadow:var(--card-shadow);
-      transition: transform var(--transition), box-shadow 0.18s;
+      background:#232323; border-radius:12px; overflow:hidden;
+      box-shadow:0 2px 10px rgba(0,0,0,0.13);
+      transition:transform 0.35s cubic-bezier(.7,0,.3,1), box-shadow 0.18s;
       cursor:pointer; position:relative;
-      display:flex; flex-direction:column; align-items:stretch;
-      border:1.5px solid rgba(255,255,255,0.04);
+      animation:fadeInUp 0.7s;
       min-width:0;
+      display:flex; flex-direction:column;
     }
-    .content-card img {
-      width:100%; height:180px; object-fit:cover;
-      background:#333;
-      border-radius:var(--radius) var(--radius) 0 0;
-      transition:filter 0.2s;
-    }
+    .content-card img { width:100%; height:10vw; min-height:90px; object-fit:cover;}
     .content-card .badge {
-      position:absolute; top:13px; left:13px;
-      background:var(--accent); color:#fff;
-      font-size:0.93rem; padding:2.5px 13px;
-      border-radius:13px; font-weight:600;
-      box-shadow:0 2px 8px rgba(255,23,68,0.11);
+      position:absolute; top:10px; left:10px; background:var(--main-red); color:#fff;
+      font-size:0.9vw; padding:2px 10px; border-radius:12px; font-weight:600;
     }
     .content-card p {
-      font-size:1.05rem; color:#fff;
-      margin:16px 0 10px 16px; font-weight:500;
+      font-size:1vw; color:#fff; margin:12px 0 9px 14px; font-weight:500;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-      letter-spacing:0.01em;
     }
-    .content-card .meta {
-      font-size:0.93rem; color:var(--sub-text); margin:0 0 14px 16px;
-      display:flex; gap:10px; align-items:center;
+    .content-card:hover { transform:scale(1.05);}
+    .content-card.active {
+      transform: translateY(-12px) scale(1.05);
+      box-shadow: 0 16px 36px rgba(255,23,68,0.18);
     }
-    .content-card:hover, .content-card.active {
-      transform:translateY(-12px) scale(1.04);
-      box-shadow:0 16px 36px rgba(255,23,68,0.18);
+    /* --------- 하단 네비 (모바일) --------- */
+    .bottom-nav {
+      display:none;
     }
-
     /* --------- 모바일 --------- */
     @media (max-width: 900px) {
-      .header { height:48px; padding:0 14px;}
-      .header-left { gap:18px;}
-      .logo { font-size:1.1rem;}
-      .header-menu { gap:18px;}
-      .header-menu a { font-size:0.99rem;}
-      .header-right { gap:11px;}
-      .profile-img { width:27px; height:27px;}
-      .notice-bar { margin-top:48px; padding-left:10px; font-size:0.97rem;}
-      .banner-section { flex-direction:column; gap:10px; padding:18px 10px 0 10px;}
-      .main-banner, .side-banner { aspect-ratio: 1.7/1; min-height:120px; }
-      .main-banner-caption, .side-banner-caption { padding:13px 14px 10px 13px; font-size:0.97rem;}
-      .main-banner-caption h2 { font-size:1rem;}
-      .section-title { font-size:1.01rem; margin:20px 0 12px 10px;}
+      .header { height:48px; padding:0 3vw;}
+      .logo { font-size:1.2rem;}
+      .search-bar { display:none;}
+      .profile-img, .grandma-img { width:34px; min-width:28px; max-width:38px;}
+      .main-slider { min-height:120px; max-height:180px;}
+      .slide { height:38vw; min-height:120px; max-height:180px;}
+      .slide-caption { padding:12px 14px 10px 10px;}
+      .slide-caption h2 { font-size:1.05rem;}
+      .slide-caption p { font-size:0.93rem;}
+      .slider-dot { width:8px; height:8px;}
+      .content-section { margin-top:18px;}
+      .section-title { font-size:1.02rem;}
       .card-grid { display:none;}
-      .card-row {
-        display:flex; gap:13px; overflow-x:auto;
-        padding:0 0 20px 10px; background:none;
+      .card-row { display:flex; gap:10px; overflow-x:auto; padding:0 0 8px 12px;}
+      .content-card { flex:0 0 120px; min-width:120px; max-width:150px;}
+      .content-card img { height:80px;}
+      .content-card .badge { font-size:0.69rem;}
+      .content-card p { font-size:0.91rem;}
+      .bottom-nav {
+        position:fixed; left:0; bottom:0; width:100vw; height:54px;
+        background:rgba(24,24,24,0.93); backdrop-filter:var(--blur);
+        display:flex; justify-content:space-around; align-items:center; z-index:120;
+        box-shadow:0 -2px 18px rgba(0,0,0,0.13);
       }
-      .content-card {
-        flex:0 0 128px; min-width:128px; max-width:160px;
-        border-radius:13px;
-        margin-bottom:0;
+      .bottom-nav a {
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        color:#bbb; font-size:0.85rem; text-decoration:none; gap:2px; width:60px; height:48px; border-radius:12px;
+        transition:background 0.18s, color 0.18s;
       }
-      .content-card img { height:88px; border-radius:13px 13px 0 0;}
-      .content-card .badge { top:9px; left:9px; font-size:0.81rem; padding:3px 11px;}
-      .content-card p { font-size:0.97rem; margin:11px 0 7px 11px;}
-      .content-card .meta { font-size:0.85rem; margin:0 0 10px 11px;}
-      .content-card.active { transform:translateY(-9px) scale(1.04);}
+      .bottom-nav a.active, .bottom-nav a:active { color:var(--main-red); background:#232323;}
+      .bottom-nav img { width:21px; height:21px; margin-bottom:2px;}
+      /* 모바일 검색창 */
+      .mobile-search-bar {
+        display:block; position:fixed; top:48px; left:0; width:100vw; z-index:200;
+        background:rgba(34,34,34,0.97); padding:10px 16px 8px 16px;
+        border:none; border-radius:0 0 16px 16px; font-size:1rem; color:#fff;
+        outline:none; box-shadow:0 2px 8px rgba(0,0,0,0.16);
+        animation:fadeInDown 0.3s;
+      }
     }
     @keyframes fadeInUp {
       0% { opacity:0; transform:translateY(20px);}
+      100% { opacity:1; transform:translateY(0);}
+    }
+    @keyframes fadeInDown {
+      0% { opacity:0; transform:translateY(-24px);}
       100% { opacity:1; transform:translateY(0);}
     }
   </style>
@@ -188,45 +177,131 @@
   <!-- 해더 -->
   <header class="header">
     <div class="header-left">
-      <span class="logo">TVWIKI</span>
-      <nav class="header-menu">
-        <a href="#">인기영상</a>
-        <a href="#">카테고리</a>
-        <a href="#">APP 다운로드</a>
-      </nav>
+      <span class="logo">noonoo</span>
+      <input class="search-bar" type="text" placeholder="검색 (PC)">
     </div>
     <div class="header-right">
-      <button class="icon-btn"><img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="알림"></button>
       <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="프로필" class="profile-img">
+      <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/grandma-2028307_1280.png" alt="할머니" class="grandma-img">
     </div>
   </header>
 
-  <!-- 안내 바 -->
-  <div class="notice-bar">
-   서버 점검중입니다 이용에 불편을 드려 죄송합니다. 😊
-  </div>
+  <!-- 모바일 전용 검색창 (동적 생성) -->
+  <div id="mobileSearchWrap"></div>
 
-  <!-- 배너/슬라이드 -->
-  <section class="banner-section">
-    <div class="main-banner">
-      <img src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="배너1">
-      <div class="main-banner-caption">
-        <h2>#2023 NEW 토크쇼<br>강심장 리그</h2>
-        <p>12년 만에 업그레이드된 강심장 리그!<br>SBS | 화요일 예능</p>
+  <!-- 메인 슬라이드 -->
+  <section class="main-slider">
+    <div class="slide-track" id="slideTrack">
+      <div class="slide active">
+        <img src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="슬라이드1">
+        <div class="slide-caption">
+          <h2>실시간 인기 콘텐츠, noonoo 스트리밍</h2>
+          <p>최신 트렌드와 오리지널 시리즈를 한눈에!</p>
+        </div>
+      </div>
+      <div class="slide">
+        <img src="https://img.makeshop.co.kr/4/29457/202505/65ab5e1d661a882151f87e4ab7a9748e.jpg" alt="슬라이드2">
+        <div class="slide-caption">
+          <h2>놓치면 아쉬운 오늘의 추천작</h2>
+          <p>지금 바로 감상해보세요.</p>
+        </div>
       </div>
     </div>
-    <div class="side-banner">
-      <img src="https://img.makeshop.co.kr/4/29457/202505/65ab5e1d661a882151f87e4ab7a9748e.jpg" alt="배너2">
-      <div class="side-banner-caption">
-        <strong>마이 리그</strong><br>영웅이와 함께 떠나는 여행
-      </div>
+    <div class="slider-dots" id="sliderDots"></div>
+  </section>
+
+  <!-- 콘텐츠 섹션 -->
+  <section class="content-section">
+    <div class="section-title">추천 콘텐츠</div>
+    <div class="card-grid">
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">ORIGINAL</span><p>콘텐츠 A</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">NEW</span><p>콘텐츠 B</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">HOT</span><p>콘텐츠 C</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">BEST</span><p>콘텐츠 D</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">TREND</span><p>콘텐츠 E</p></div>
+    </div>
+    <div class="card-row">
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">ORIGINAL</span><p>콘텐츠 A</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">NEW</span><p>콘텐츠 B</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">HOT</span><p>콘텐츠 C</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">BEST</span><p>콘텐츠 D</p></div>
+      <div class="content-card"><img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527"><span class="badge">TREND</span><p>콘텐츠 E</p></div>
     </div>
   </section>
 
-  
-  
+  <!-- 모바일 하단 네비게이션 -->
+  <nav class="bottom-nav">
+    <a href="#" class="active"><img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" alt="홈"><span>홈</span></a>
+    <a href="#" id="mobileSearchBtn"><img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색"><span>검색</span></a>
+    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="마이"><span>마이</span></a>
+    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="알림"><span>알림</span></a>
+  </nav>
 
-   
+  <script>
+    // 슬라이드 동작
+    const slides = document.querySelectorAll('.slide');
+    const slideTrack = document.getElementById('slideTrack');
+    const dotsBox = document.getElementById('sliderDots');
+    let current = 0;
+    function showSlide(idx) {
+      slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+      document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+      slideTrack.style.transform = `translateX(-${idx*100}vw)`;
+    }
+    // 도트 생성
+    dotsBox.innerHTML = '';
+    slides.forEach((_,i)=>{
+      const d = document.createElement('div');
+      d.className = 'slider-dot'+(i===0?' active':'');
+      d.onclick = ()=>{current=i;showSlide(current);}
+      dotsBox.appendChild(d);
+    });
+    function moveSlide(dir) {
+      current = (current+dir+slides.length)%slides.length;
+      showSlide(current);
+    }
+    setInterval(()=>{moveSlide(1);},4200);
+
+    // PC/모바일 카드 구분
+    function handleResize() {
+      const isPC = window.innerWidth>=900;
+      document.querySelector('.card-grid').style.display = isPC?'grid':'none';
+      document.querySelector('.card-row').style.display = isPC?'none':'flex';
+    }
+    window.addEventListener('resize',handleResize);
+    window.addEventListener('DOMContentLoaded',handleResize);
+
+    // 모바일 검색 버튼
+    const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+    const mobileSearchWrap = document.getElementById('mobileSearchWrap');
+    let mobileSearchInput = null;
+    mobileSearchBtn && mobileSearchBtn.addEventListener('click',()=>{
+      if(document.querySelector('.mobile-search-bar')) return;
+      mobileSearchInput = document.createElement('input');
+      mobileSearchInput.className = 'mobile-search-bar';
+      mobileSearchInput.type = 'text';
+      mobileSearchInput.placeholder = '검색 (모바일)';
+      mobileSearchWrap.appendChild(mobileSearchInput);
+      mobileSearchInput.focus();
+      mobileSearchInput.addEventListener('blur',()=>{
+        mobileSearchInput.remove();
+      });
+    });
+
+    // 카드 클릭/터치 시 부드럽게 위로 올라가는 효과 (PC/모바일 모두)
+    function addCardClickEffect() {
+      document.querySelectorAll('.content-card').forEach(card => {
+        card.addEventListener('click', function() {
+          card.classList.add('active');
+          setTimeout(() => card.classList.remove('active'), 400);
+        });
+        card.addEventListener('touchstart', function() {
+          card.classList.add('active');
+          setTimeout(() => card.classList.remove('active'), 400);
+        });
+      });
+    }
+    window.addEventListener('DOMContentLoaded', addCardClickEffect);
   </script>
 </body>
 </html>
