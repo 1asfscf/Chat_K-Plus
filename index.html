@@ -203,7 +203,7 @@
 
   <!-- 안내 바 -->
   <div class="notice-bar">
-    접속이 차단 되었을때의 비상 주소에 대해 알려드립니다! 지금 바로 확인하세요 😊
+   서버 점검중입니다 이용에 불편을 드려 죄송합니다. 😊
   </div>
 
   <!-- 배너/슬라이드 -->
@@ -223,100 +223,10 @@
     </div>
   </section>
 
-  <!-- 섹션 타이틀 -->
-  <div class="section-title">인기 있는 영상을 지금 확인 해보세요</div>
+  
+  
 
-  <!-- 카드 그리드 (PC) -->
-  <div class="card-grid">
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="사냥개들">
-      <span class="badge">OTT 드라마</span>
-      <p>사냥개들</p>
-      <div class="meta">넷플릭스 · ♥1</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="낭만닥터 김사부 시즌3">
-      <span class="badge">드라마</span>
-      <p>낭만닥터 김사부 시즌3</p>
-      <div class="meta">SBS · ♥1</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="구미호뎐1938">
-      <span class="badge">드라마</span>
-      <p>구미호뎐1938</p>
-      <div class="meta">tvN · ♥1</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="이로운 사기">
-      <span class="badge">드라마</span>
-      <p>이로운 사기</p>
-      <div class="meta">tvN · ♥0</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="귀멸의 칼날 도공 마을편">
-      <span class="badge">애니메이션</span>
-      <p>귀멸의 칼날 도공 마을편</p>
-      <div class="meta">애니 · ♥0</div>
-    </div>
-  </div>
-  <!-- 카드 가로 스크롤 (모바일) -->
-  <div class="card-row">
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="사냥개들">
-      <span class="badge">OTT 드라마</span>
-      <p>사냥개들</p>
-      <div class="meta">넷플릭스 · ♥1</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="낭만닥터 김사부 시즌3">
-      <span class="badge">드라마</span>
-      <p>낭만닥터 김사부 시즌3</p>
-      <div class="meta">SBS · ♥1</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="구미호뎐1938">
-      <span class="badge">드라마</span>
-      <p>구미호뎐1938</p>
-      <div class="meta">tvN · ♥1</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="이로운 사기">
-      <span class="badge">드라마</span>
-      <p>이로운 사기</p>
-      <div class="meta">tvN · ♥0</div>
-    </div>
-    <div class="content-card">
-      <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="귀멸의 칼날 도공 마을편">
-      <span class="badge">애니메이션</span>
-      <p>귀멸의 칼날 도공 마을편</p>
-      <div class="meta">애니 · ♥0</div>
-    </div>
-  </div>
-
-  <script>
-    // 카드 클릭/터치 시 부드럽게 위로 올라가는 효과 (PC/모바일 모두)
-    function addCardClickEffect() {
-      document.querySelectorAll('.content-card').forEach(card => {
-        card.addEventListener('click', function() {
-          card.classList.add('active');
-          setTimeout(() => card.classList.remove('active'), 400);
-        });
-        card.addEventListener('touchstart', function() {
-          card.classList.add('active');
-          setTimeout(() => card.classList.remove('active'), 400);
-        });
-      });
-    }
-    window.addEventListener('DOMContentLoaded', addCardClickEffect);
-
-    // PC/모바일 카드 구분
-    function handleResize() {
-      const isPC = window.innerWidth>=900;
-      document.querySelector('.card-grid').style.display = isPC?'grid':'none';
-      document.querySelector('.card-row').style.display = isPC?'none':'flex';
-    }
-    window.addEventListener('resize',handleResize);
-    window.addEventListener('DOMContentLoaded',handleResize);
+   
   </script>
 </body>
 </html>
