@@ -25,8 +25,21 @@
       box-shadow:0 2px 12px rgba(0,0,0,0.13);
       gap:1vw;
     }
-    .header-left { display:flex; align-items:center; gap:1vw; min-width:0;}
+    .header-left { display:flex; align-items:center; gap:2vw; min-width:0;}
     .logo { font-size:clamp(1.2rem,2.1vw,2.2rem); color:var(--main-red); font-weight:700; min-width:60px; }
+    .header-menu {
+      display:flex; gap:1.2vw;
+    }
+    .header-menu a {
+      color:#fff; font-size:clamp(0.97rem,1vw,1.13rem); opacity:0.85;
+      font-weight:500; letter-spacing:0.01em; padding:6px 12px; border-radius:7px;
+      transition:background 0.18s, color 0.18s, opacity 0.18s;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .header-menu a:hover, .header-menu a.active {
+      background:rgba(255,255,255,0.08); color:var(--main-red); opacity:1;
+    }
     .search-bar {
       background:#232323; border-radius:18px; border:none; padding:8px 18px;
       color:#fff; font-size:clamp(0.9rem,1vw,1.1rem); min-width:80px; width:20vw; max-width:320px;
@@ -45,9 +58,52 @@
       transition:box-shadow var(--transition), border var(--transition);
     }
     .grandma-img { margin-left:0.7vw; border-color:var(--main-red);}
+    /* --------- 커뮤니티 메뉴 바 --------- */
+    .community-bar {
+      position:fixed; left:0; width:100vw; z-index:99;
+      top:60px;
+      background:var(--nav-bg); backdrop-filter:var(--blur);
+      display:flex; align-items:center; justify-content:center;
+      height:46px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.09);
+      opacity:0.98;
+      padding:0 2vw;
+      font-size:1.07rem;
+      gap:32px;
+      overflow-x:visible;
+    }
+    .community-menu {
+      display:flex; gap:32px;
+      width:100%; max-width:1100px; justify-content:center;
+    }
+    .community-menu a {
+      color:#fff; opacity:0.85; font-weight:500; letter-spacing:0.01em;
+      padding:6px 18px; border-radius:8px; transition:background 0.18s, color 0.18s, opacity 0.18s;
+      position:relative;
+      white-space:nowrap;
+      font-size:1.07rem;
+      display:inline-block;
+    }
+    .community-menu a:hover, .community-menu a.active {
+      background:rgba(255,255,255,0.08);
+      color:var(--main-red); opacity:1;
+    }
+    /* --------- 숨김 애니메이션 --------- */
+    .hide-up {
+      transform: translateY(-120%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .show-down {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     /* --------- 슬라이더 --------- */
     .main-slider {
-      margin-top:60px; width:100vw; overflow:hidden;
+      margin-top:106px; /* 헤더+커뮤니티바 */
+      width:100vw; overflow:hidden;
       border-radius:0 0 22px 22px; box-shadow:0 4px 24px rgba(0,0,0,0.25);
       position:relative; background:#222;
       min-height:25vw; max-height:380px;
@@ -85,7 +141,6 @@
       background:#fff; opacity:0.4; transition:opacity 0.2s;
     }
     .slider-dot.active { background:var(--main-red); opacity:1;}
-    /* --------- 콘텐츠 --------- */
     .content-section { max-width:1100px; margin:3vw auto 0 auto; }
     .section-title { font-size:clamp(1.1rem,1.3vw,1.4rem); font-weight:700; margin:0 0 1vw 0.7vw;}
     .card-grid {
@@ -121,7 +176,6 @@
       transform: translateY(-12px) scale(1.05);
       box-shadow: 0 16px 36px rgba(255,23,68,0.18);
     }
-    /* --------- 하단 네비 (모바일) --------- */
     .bottom-nav {
       display:none;
     }
@@ -129,50 +183,41 @@
     /* --------- 모바일 --------- */
     @media (max-width: 900px) {
       .header { height:48px; padding:0 3vw;}
+      .header-left { gap:10px; }
       .logo { font-size:1.2rem;}
+      .header-menu { gap:7px; }
+      .header-menu a { font-size:0.97rem; padding:6px 8px; }
       .search-bar { display:none;}
       .profile-img, .grandma-img { width:34px; min-width:28px; max-width:38px;}
-      .main-slider { min-height:120px; max-height:180px;}
-      .slide { height:38vw; min-height:120px; max-height:180px;}
-      .slide-caption { padding:12px 14px 10px 10px;}
-      .slide-caption h2 { font-size:1.05rem;}
-      .slide-caption p { font-size:0.93rem;}
-      .slider-dot { width:8px; height:8px;}
-      .content-section {
-        margin-top:18px;
-        padding-bottom:70px; /* 하단 내비게이션 겹침 방지 */
+      .community-bar {
+        top:48px;
+        height:44px;
+        font-size:0.98rem;
+        padding:0 0;
+        gap:0;
+        box-shadow:0 2px 12px rgba(0,0,0,0.09);
+        overflow-x:auto;
       }
-      .section-title { font-size:1.02rem;}
-      .card-grid {
-        grid-template-columns:repeat(2,1fr);
-        gap:14px;
-        margin-bottom:2vw;
+      .community-menu {
+        display:flex;
+        flex-wrap:nowrap;
+        gap:8px;
+        width:auto;
+        max-width:100vw;
+        justify-content:flex-start;
+        padding:0 8px;
+        overflow-x:auto;
+        scrollbar-width:thin;
       }
-      .card-row { display:none;}
-      .content-card { min-width:0; }
-      .content-card img { height:96px;}
-      .content-card .badge { font-size:0.69rem;}
-      .content-card p { font-size:0.91rem;}
-      .bottom-nav {
-        position:fixed; left:0; bottom:0; width:100vw; height:54px;
-        background:rgba(24,24,24,0.93); backdrop-filter:var(--blur);
-        display:flex; justify-content:space-around; align-items:center; z-index:120;
-        box-shadow:0 -2px 18px rgba(0,0,0,0.13);
-      }
-      .bottom-nav a {
-        display:flex; flex-direction:column; align-items:center; justify-content:center;
-        color:#bbb; font-size:0.85rem; text-decoration:none; gap:2px; width:60px; height:48px; border-radius:12px;
-        transition:background 0.18s, color 0.18s;
-      }
-      .bottom-nav a.active, .bottom-nav a:active { color:var(--main-red); background:#232323;}
-      .bottom-nav img { width:21px; height:21px; margin-bottom:2px;}
-      /* 모바일 검색창 */
-      .mobile-search-bar {
-        display:block; position:fixed; top:48px; left:0; width:100vw; z-index:200;
-        background:rgba(34,34,34,0.97); padding:10px 16px 8px 16px;
-        border:none; border-radius:0 0 16px 16px; font-size:1rem; color:#fff;
-        outline:none; box-shadow:0 2px 8px rgba(0,0,0,0.16);
-        animation:fadeInDown 0.3s;
+      .community-menu a {
+        font-size:0.97rem;
+        padding:7px 14px;
+        border-radius:7px;
+        margin:0;
+        min-width:fit-content;
+        text-align:center;
+        white-space:nowrap;
+        background:none;
       }
     }
     @keyframes fadeInUp {
@@ -190,6 +235,10 @@
   <header class="header">
     <div class="header-left">
       <span class="logo">noonoo</span>
+      <nav class="header-menu">
+        <a href="#" class="active">홈</a>
+        <a href="#">카테고리</a>
+      </nav>
       <input class="search-bar" type="text" placeholder="검색 (PC)">
     </div>
     <div class="header-right">
@@ -197,6 +246,17 @@
       <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/grandma-2028307_1280.png" alt="할머니" class="grandma-img">
     </div>
   </header>
+
+  <!-- 커뮤니티 메뉴 바 -->
+  <nav class="community-bar" id="communityBar">
+    <div class="community-menu">
+      <a href="#" class="active">커뮤니티</a>
+      <a href="#">공지사항</a>
+      <a href="#">이벤트</a>
+      <a href="#">Q&A</a>
+      <a href="#">고객센터</a>
+    </div>
+  </nav>
 
   <!-- 모바일 전용 검색창 (동적 생성) -->
   <div id="mobileSearchWrap"></div>
