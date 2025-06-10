@@ -39,9 +39,19 @@
     .icon-btn img { width:25px; height:25px;}
     .profile-img { width:32px; height:32px; border-radius:50%; object-fit:cover; border:2px solid #fff;}
 
+    /* --------- 안내 바 --------- */
+    .notice-bar {
+      margin-top:56px;
+      width:100vw;
+      background:#2267d3;
+      color:#fff;
+      font-size:1.01rem;
+      padding:8px 0 8px 36px;
+      letter-spacing:0.01em;
+    }
+
     /* --------- 배너/슬라이드 --------- */
     .banner-section {
-      margin-top:56px;
       width:100vw; max-width:100vw;
       background:none; display:flex; gap:18px;
       padding:32px 36px 0 36px;
@@ -145,6 +155,7 @@
       .header-menu a { font-size:0.99rem;}
       .header-right { gap:11px;}
       .profile-img { width:27px; height:27px;}
+      .notice-bar { margin-top:48px; padding-left:10px; font-size:0.97rem;}
       .banner-section { flex-direction:column; gap:10px; padding:18px 10px 0 10px;}
       .main-banner, .side-banner { aspect-ratio: 1.7/1; min-height:120px; }
       .main-banner-caption, .side-banner-caption { padding:13px 14px 10px 13px; font-size:0.97rem;}
@@ -188,6 +199,11 @@
       <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="프로필" class="profile-img">
     </div>
   </header>
+
+  <!-- 안내 바 -->
+  <div class="notice-bar">
+    접속이 차단 되었을때의 비상 주소에 대해 알려드립니다! 지금 바로 확인하세요 😊
+  </div>
 
   <!-- 배너/슬라이드 -->
   <section class="banner-section">
