@@ -16,13 +16,20 @@
     body { min-height:100vh; }
     a { color:inherit; text-decoration:none; }
     img { max-width:100%; display:block; }
+
+    /* --------- 공통 헤더 --------- */
+    .header,
+    .community-bar {
+      position:fixed; left:0; width:100vw; z-index:100;
+      transition:transform 0.38s cubic-bezier(.7,0,.3,1), box-shadow var(--transition), background var(--transition), opacity 0.25s;
+      will-change: transform, opacity;
+    }
     .header {
-      position:fixed; top:0; left:0; width:100vw; z-index:100;
+      top:0;
       background:var(--header-bg); backdrop-filter:var(--blur);
       display:flex; align-items:center; justify-content:space-between;
       height:60px; padding:0 2vw; box-sizing:border-box;
       box-shadow:0 2px 12px rgba(0,0,0,0.13);
-      transition:box-shadow var(--transition), background var(--transition);
       gap:1vw;
     }
     .header-left { display:flex; align-items:center; gap:1vw; min-width:0;}
@@ -45,8 +52,47 @@
       transition:box-shadow var(--transition), border var(--transition);
     }
     .grandma-img { margin-left:0.7vw; border-color:var(--main-red);}
+    /* --------- 커뮤니티 메뉴 바 --------- */
+    .community-bar {
+      top:60px;
+      background:var(--nav-bg); backdrop-filter:var(--blur);
+      display:flex; align-items:center; justify-content:center;
+      height:46px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.09);
+      opacity:0.98;
+      padding:0 2vw;
+      font-size:1.07rem;
+      gap:32px;
+    }
+    .community-menu {
+      display:flex; gap:32px;
+      width:100%; max-width:1100px; justify-content:center;
+    }
+    .community-menu a {
+      color:#fff; opacity:0.85; font-weight:500; letter-spacing:0.01em;
+      padding:6px 18px; border-radius:8px; transition:background 0.18s, color 0.18s, opacity 0.18s;
+      position:relative;
+    }
+    .community-menu a:hover, .community-menu a.active {
+      background:rgba(255,255,255,0.08);
+      color:var(--main-red); opacity:1;
+    }
+    /* --------- 숨김 애니메이션 --------- */
+    .hide-up {
+      transform: translateY(-120%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .show-down {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* --------- 슬라이더 --------- */
     .main-slider {
-      margin-top:60px; width:100vw; overflow:hidden;
+      margin-top:106px; /* 헤더+커뮤니티바 */
+      width:100vw; overflow:hidden;
       border-radius:0 0 22px 22px; box-shadow:0 4px 24px rgba(0,0,0,0.25);
       position:relative; background:#222;
       min-height:25vw; max-height:380px;
@@ -118,19 +164,17 @@
     }
     @media (max-width: 900px) {
       .header { height:48px; padding:0 3vw;}
+      .community-bar { top:48px; height:42px; font-size:1rem; gap:18px;}
       .logo { font-size:1.2rem;}
       .search-bar { display:none;}
       .profile-img, .grandma-img { width:34px; min-width:28px; max-width:38px;}
-      .main-slider { min-height:120px; max-height:180px;}
+      .main-slider { min-height:120px; max-height:180px; margin-top:90px;}
       .slide { height:38vw; min-height:120px; max-height:180px;}
       .slide-caption { padding:12px 14px 10px 10px;}
       .slide-caption h2 { font-size:1.05rem;}
       .slide-caption p { font-size:0.93rem;}
       .slider-dot { width:8px; height:8px;}
-      .content-section {
-        margin-top:18px;
-        padding-bottom:70px; /* 하단 내비게이션 겹침 방지 */
-      }
+      .content-section { margin-top:18px;}
       .section-title { font-size:1.02rem;}
       .card-grid { display:none;}
       .card-row { display:flex; gap:10px; overflow-x:auto; padding:0 0 8px 12px;}
@@ -171,7 +215,7 @@
 </head>
 <body>
   <!-- 해더 -->
-  <header class="header">
+  <header class="header show-down" id="mainHeader">
     <div class="header-left">
       <span class="logo">noonoo</span>
       <input class="search-bar" type="text" placeholder="검색 (PC)">
@@ -181,6 +225,18 @@
       <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/grandma-2028307_1280.png" alt="할머니" class="grandma-img">
     </div>
   </header>
+
+  <!-- 커뮤니티 메뉴 바 -->
+  <nav class="community-bar show-down" id="communityBar">
+    <div class="community-menu">
+      <a href="#" class="active">홈</a>
+      <a href="#">커뮤니티</a>
+      <a href="#">공지사항</a>
+      <a href="#">이벤트</a>
+      <a href="#">Q&A</a>
+      <a href="#">고객센터</a>
+    </div>
+  </nav>
 
   <!-- 모바일 전용 검색창 (동적 생성) -->
   <div id="mobileSearchWrap"></div>
@@ -298,6 +354,34 @@
       });
     }
     window.addEventListener('DOMContentLoaded', addCardClickEffect);
+
+    // 헤더/커뮤니티 메뉴 스크롤 애니메이션
+    let lastScroll = window.scrollY;
+    let ticking = false;
+    function handleHeaderScroll() {
+      const header = document.getElementById('mainHeader');
+      const commBar = document.getElementById('communityBar');
+      const curr = window.scrollY;
+      if (curr > lastScroll && curr > 60) {
+        header.classList.remove('show-down');
+        header.classList.add('hide-up');
+        commBar.classList.remove('show-down');
+        commBar.classList.add('hide-up');
+      } else {
+        header.classList.remove('hide-up');
+        header.classList.add('show-down');
+        commBar.classList.remove('hide-up');
+        commBar.classList.add('show-down');
+      }
+      lastScroll = curr;
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleHeaderScroll);
+        ticking = true;
+      }
+    });
   </script>
 </body>
 </html>
