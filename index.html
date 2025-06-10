@@ -3,272 +3,296 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>momQ 프리미엄 쇼핑몰</title>
+  <title>momQ 프리미엄 쇼핑몰 - 티빙 스타일</title>
   <style>
-    /* 기본 리셋 및 기본 폰트 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* 다크 테마 & 기본 리셋 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Pretendard', sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      text-align: center;
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: #181818;
+      color: #fff;
+      min-height: 100vh;
     }
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    /* ==========================
-         헤더 영역 (index.html)
-         ========================== */
+    a { color: inherit; text-decoration: none; }
+
+    /* 헤더 */
     .header {
-      background: linear-gradient(135deg, #141E30, #243B55);
-      padding: 20px 40px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      background: #111;
+      padding: 0 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
     .header-container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       display: flex;
       align-items: center;
+      height: 70px;
       justify-content: space-between;
     }
     .header-logo {
-      font-size: 32px;
+      font-size: 2.2rem;
       font-weight: bold;
+      color: #ff1744;
       letter-spacing: 2px;
-      color: #E74C3C; /* 프리미엄 빨간색 */
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
     .header-nav ul {
-      list-style: none;
       display: flex;
-      gap: 20px;
+      gap: 28px;
+      list-style: none;
     }
     .header-nav ul li a {
-      font-size: 16px;
+      font-size: 1.1rem;
       color: #fff;
-      padding-bottom: 4px;
+      padding: 8px 0;
       position: relative;
-      transition: color 0.3s;
+      transition: color 0.2s;
     }
-    .header-nav ul li a:after {
+    .header-nav ul li a::after {
       content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 2px;
-      background: #fff;
-      transition: width 0.3s;
-    }
-    .header-nav ul li a:hover {
-      color: #ddd;
-    }
-    .header-nav ul li a:hover:after {
-      width: 100%;
-    }
-    
-    /* ==========================
-         슬라이드 영역
-         ========================== */
-    .slider {
-      width: 100%;
-      max-width: 1400px;
-      margin: 20px auto;
-      overflow: hidden;
-      position: relative;
-      border: 4px solid #243B55;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-    .slider img {
-      width: 100%;
-      height: auto;
       display: block;
-      opacity: 1;
-      transition: opacity 1s ease-in-out;
+      width: 0%;
+      height: 2px;
+      background: #ff1744;
+      transition: width 0.3s;
+      position: absolute;
+      left: 0; bottom: -2px;
     }
-    
-    /* ==========================
-         맘큐 판매 베스트 섹션
-         ========================== */
-    .best-sellers {
+    .header-nav ul li a:hover,
+    .header-nav ul li.active a {
+      color: #ff1744;
+    }
+    .header-nav ul li a:hover::after,
+    .header-nav ul li.active a::after {
+      width: 100%;
+    }
+
+    /* 슬라이드(배너) */
+    .main-slider {
+      width: 100%;
       max-width: 1400px;
-      margin: 40px auto;
-      padding: 20px;
+      margin: 32px auto 0;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+      position: relative;
+      aspect-ratio: 21/7;
+      background: #222;
     }
-    .best-sellers h2 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #E74C3C;
-      color: #141E30;
+    .main-slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.8s;
+      opacity: 1;
     }
-    /* 카테고리 버튼 영역 (전체, 베이비, 키즈, 패밀리) */
-    .category-buttons {
+
+    /* 카테고리 탭 */
+    .category-tabs {
       display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 30px;
+      gap: 18px;
+      justify-content: flex-start;
+      margin: 40px 0 24px 0;
+      padding-left: 40px;
     }
-    .category-buttons button {
-      background-color: #fff;
-      border: 2px solid #E74C3C;
-      color: #E74C3C;
-      padding: 8px 16px;
-      font-size: 16px;
-      border-radius: 25px;
+    .category-tabs button {
+      background: none;
+      border: none;
+      color: #bbb;
+      font-size: 1.15rem;
+      font-weight: 500;
+      padding: 8px 20px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background 0.2s, color 0.2s;
     }
-    .category-buttons button.active,
-    .category-buttons button:hover {
-      background-color: #E74C3C;
+    .category-tabs button.active,
+    .category-tabs button:hover {
+      background: #ff1744;
       color: #fff;
     }
-    /* 제품 카드 그리드 레이아웃 */
-    .products-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
+
+    /* 콘텐츠(상품) 카드 슬라이더 */
+    .products-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px 60px 40px;
+    }
+    .products-row {
+      display: flex;
+      gap: 28px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 8px;
     }
     .product-card {
-      background: #fff;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      flex: 0 0 260px;
+      background: #232323;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      min-width: 260px;
     }
     .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(255,23,68,0.18);
     }
     .product-card img {
       width: 100%;
-      border-radius: 5px;
-      margin-bottom: 10px;
+      height: 170px;
+      object-fit: cover;
+      background: #333;
+      display: block;
     }
-    .product-card h3 {
-      font-size: 18px;
+    .product-info {
+      padding: 16px 14px 18px 14px;
+      text-align: left;
+    }
+    .product-info h3 {
+      font-size: 1.07rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-info .price {
+      font-size: 1.05rem;
       font-weight: bold;
-      margin-bottom: 5px;
-      color: #333;
+      color: #ff1744;
     }
-    .product-card p.price {
-      font-size: 16px;
-      font-weight: bold;
-      color: #E74C3C;
-    }
-    .product-card p.price small {
-      font-size: 14px;
+    .product-info .price small {
+      font-size: 0.95rem;
+      color: #888;
+      margin-left: 6px;
       text-decoration: line-through;
-      color: #999;
-      margin-left: 5px;
     }
-    
-    /* ==========================
-         기존 콘텐츠 영역 (예: 버튼, 추천상품, 기타)
-         ========================== */
-    .content {
-      padding: 20px;
-    }
-    
-    /* ==========================
-         푸터 영역
-         ========================== */
+
+    /* 푸터 */
     footer {
       text-align: center;
-      padding: 20px;
-      background: #fff;
-      margin-top: 30px;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-      font-size: 14px;
-      color: #777;
+      padding: 28px 0 18px 0;
+      background: #151515;
+      color: #888;
+      font-size: 1rem;
+      margin-top: 60px;
+    }
+
+    /* 스크롤바 스타일 */
+    ::-webkit-scrollbar { height: 8px; background: #222; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb { background: #444; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ff1744; }
+    @media (max-width: 800px) {
+      .header-container, .products-section { padding: 0 10px; }
+      .category-tabs { padding-left: 10px; }
+      .main-slider { border-radius: 8px; }
+      .product-card { min-width: 180px; }
+      .product-card img { height: 110px; }
     }
   </style>
 </head>
 <body>
-  <!-- 헤더 영역 (로고 클릭 시 index.html로 이동) -->
+  <!-- 헤더 -->
   <header class="header">
     <div class="header-container">
       <a href="index.html" class="header-logo">momQ</a>
       <nav class="header-nav">
         <ul>
-          <li><a href="index.html">홈</a></li>
-          <li><a href="#">제품</a></li>
-          <li><a href="#">이벤트</a></li>
+          <li class="active"><a href="index.html">홈</a></li>
+          <li><a href="product.html">제품</a></li>
+          <li><a href="best.html">이벤트</a></li>
           <li><a href="community.html">커뮤니티</a></li>
-          <li><a href="#">문의하기</a></li>
+          <li><a href="inquiry.html">문의하기</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- 슬라이드 영역 (5초마다 이미지 전환) -->
-  <section class="slider">
-    <img id="slider-image" src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="슬라이드 이미지">
+  <!-- 메인 슬라이드 배너 -->
+  <section class="main-slider">
+    <img id="slider-image" src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="메인 배너">
   </section>
 
-  <!-- 맘큐 판매 베스트 섹션 -->
-  <section class="best-sellers">
-    <h2>맘큐 판매 베스트</h2>
-    <!-- 카테고리 버튼 영역 -->
-    <div class="category-buttons">
-      <button class="active">전체</button>
-      <button>베이비</button>
-      <button>키즈</button>
-      <button>패밀리</button>
-    </div>
-    <div class="products-container">
-      <div class="product-card">
-        <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 1">
-        <h3>상품명 A</h3>
-        <p class="price">108,900원 <small>172,000원</small></p>
-      </div>
-      <div class="product-card">
-        <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 2">
-        <h3>상품명 B</h3>
-        <p class="price">95,000원 <small>120,000원</small></p>
-      </div>
-      <div class="product-card">
-        <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 3">
-        <h3>상품명 C</h3>
-        <p class="price">75,900원 <small>100,000원</small></p>
-      </div>
-      <!-- 추가 상품 카드가 필요하면 계속 추가 -->
-    </div>
-  </section>
-
-  <!-- 기존 index.html 콘텐츠 영역 (예: 버튼, 추천상품, 기타) -->
-  <div class="content">
-    <p>여기에 기존 index.html의 콘텐츠가 들어갑니다.</p>
+  <!-- 카테고리 탭 -->
+  <div class="category-tabs">
+    <button class="active" onclick="showCategory('all')">전체</button>
+    <button onclick="showCategory('baby')">베이비</button>
+    <button onclick="showCategory('kids')">키즈</button>
+    <button onclick="showCategory('family')">패밀리</button>
   </div>
+
+  <!-- 상품(콘텐츠) 슬라이더 -->
+  <section class="products-section">
+    <div class="products-row" id="products-row">
+      <!-- 상품 카드 예시 -->
+      <div class="product-card" data-category="baby">
+        <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 1">
+        <div class="product-info">
+          <h3>상품명 A</h3>
+          <div class="price">108,900원 <small>172,000원</small></div>
+        </div>
+      </div>
+      <div class="product-card" data-category="kids">
+        <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 2">
+        <div class="product-info">
+          <h3>상품명 B</h3>
+          <div class="price">95,000원 <small>120,000원</small></div>
+        </div>
+      </div>
+      <div class="product-card" data-category="family">
+        <img src="https://cdn5-aka.makeshop.co.kr/shopimages/2020nemomq/001004006440.jpg?1742963527" alt="상품 3">
+        <div class="product-info">
+          <h3>상품명 C</h3>
+          <div class="price">75,900원 <small>100,000원</small></div>
+        </div>
+      </div>
+      <!-- 필요시 상품 카드 추가 -->
+    </div>
+  </section>
 
   <footer>
     © 2025 momQ 스타일. 모든 권리 보유.
   </footer>
 
   <script>
-    // 슬라이드 이미지 배열 (기존 이미지와 새로 제시 받은 이미지)
+    // 슬라이드 이미지 전환
     const images = [
       "https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg",
       "https://img.makeshop.co.kr/4/29457/202505/65ab5e1d661a882151f87e4ab7a9748e.jpg"
     ];
     let currentIndex = 0;
     const sliderImage = document.getElementById("slider-image");
-
     setInterval(() => {
       currentIndex = (currentIndex + 1) % images.length;
       sliderImage.style.opacity = 0;
       setTimeout(() => {
         sliderImage.src = images[currentIndex];
         sliderImage.style.opacity = 1;
-      }, 500);
+      }, 400);
     }, 5000);
+
+    // 카테고리별 필터
+    function showCategory(category) {
+      document.querySelectorAll('.category-tabs button').forEach(btn => btn.classList.remove('active'));
+      if (category === 'all') {
+        document.querySelector('.category-tabs button').classList.add('active');
+      } else {
+        document.querySelector(`.category-tabs button[onclick="showCategory('${category}')"]`).classList.add('active');
+      }
+      document.querySelectorAll('.product-card').forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
   </script>
 </body>
 </html>
