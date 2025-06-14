@@ -3,80 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT Light Mode with Memory</title>
+    <title>ChatGPT Light Mode Clone</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        /* --- 이전과 동일한 CSS 스타일 --- */
         :root {
-            --sidebar-bg: #202123;
-            --main-bg: #FFFFFF;
-            --text-light: #ECECF1;
-            --text-dark: #353740;
-            --border-color: #E5E5E5;
-            --suggestion-bg: #F7F7F8;
+            --sidebar-bg: #202123; --main-bg: #FFFFFF; --text-light: #ECECF1;
+            --text-dark: #353740; --border-color: #E5E5E5; --suggestion-bg: #F7F7F8;
             --hover-bg: #ECECF1;
         }
-
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
-        body { display: flex; height: 100vh; overflow: hidden; }
+        body { display: flex; height: 100vh; overflow: hidden; background-color: var(--main-bg); }
 
-        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 12px; }
-        .sidebar .new-chat { display: flex; align-items: center; padding: 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 12px; transition: width 0.2s; }
+        .sidebar .new-chat { display: flex; align-items: center; padding: 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-size: 0.9em; white-space: nowrap; }
         .sidebar .new-chat:hover { background-color: rgba(255,255,255,0.05); }
         .sidebar .new-chat span { margin-right: 8px; }
-        .sidebar .chat-history { flex-grow: 1; margin-top: 24px; overflow-y: auto; }
+        .sidebar .chat-history { flex-grow: 1; margin-top: 24px; overflow-y: auto; scrollbar-width: thin; }
         .sidebar .user-menu { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px; }
         .user-menu ul, .chat-history ul { list-style: none; }
-        .user-menu li, .chat-history li { display: flex; align-items: center; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 0.9em; }
+        .user-menu li, .chat-history li { display: flex; align-items: center; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 0.9em; white-space: nowrap; }
         .user-menu li:hover, .chat-history li:hover { background-color: #343541; }
         .user-menu li span, .chat-history li span { margin-right: 12px; }
 
-        .chat-area { flex-grow: 1; background-color: var(--main-bg); display: flex; flex-direction: column; position: relative; }
+        .chat-area { flex-grow: 1; display: flex; flex-direction: column; position: relative; }
         
-        #welcome-screen { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-bottom: 150px; }
-        #welcome-screen h1 { font-size: 2.2em; color: var(--text-dark); margin-bottom: 40px; }
+        #welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; flex-grow: 1; text-align: center; padding-bottom: 150px; }
+        #welcome-screen h1 { font-size: 2.2em; color: #5E5E5E; margin-bottom: 40px; font-weight: 700; }
         .suggestion-columns { display: flex; gap: 16px; width: 100%; max-width: 768px; }
         .suggestion-column { flex: 1; }
-        .suggestion-column h2 { font-size: 1.1em; margin-bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .suggestion-column h2 { font-size: 1.1em; margin-bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--text-dark); }
         .suggestion-item { background-color: var(--suggestion-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 0.9em; cursor: pointer; width: 100%; text-align: left; }
         .suggestion-item:hover { background-color: var(--hover-bg); }
+        .suggestion-item.info { cursor: default; } .suggestion-item.info:hover { background-color: var(--suggestion-bg); }
 
         #chat-log { display: none; flex-grow: 1; overflow-y: auto; padding: 24px 10%; }
         .message { display: flex; gap: 16px; padding: 24px 0; line-height: 1.6; }
-        .message.bot { border-bottom: 1px solid var(--border-color); }
-        .avatar { width: 30px; height: 30px; border-radius: 4px; background-color: #19c37d; flex-shrink: 0; display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; }
-        .message.bot .avatar { background-color: #9b59b6; }
-        .content { white-space: pre-wrap; color: var(--text-dark); }
+        .message.bot { background-color: #F7F7F8; padding-left: 10%; padding-right: 10%; margin: 0 -10%; }
+        .avatar { width: 30px; height: 30px; border-radius: 4px; background-color: #10A37F; flex-shrink: 0; display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; }
+        .message.bot .avatar { background-color: #9B59B6; }
+        .content { white-space: pre-wrap; color: var(--text-dark); padding-top: 2px; }
         
-        .chat-input-container { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 768px; padding: 0 20px; }
-        .chat-input-wrapper { position: relative; background-color: var(--main-bg); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .chat-input-wrapper textarea { width: 100%; padding: 16px 50px 16px 20px; border: none; outline: none; resize: none; border-radius: 16px; font-size: 1em; line-height: 1.5; max-height: 200px; }
-        .chat-input-wrapper button { position: absolute; right: 12px; bottom: 12px; background: none; border: none; cursor: pointer; color: #8e8ea0; }
-        .chat-input-wrapper button:hover { color: var(--text-dark); }
+        .chat-input-container { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 768px; padding: 0 20px; }
+        .chat-input-wrapper { position: relative; background-color: var(--main-bg); border: 1px solid #C5C5D2; border-radius: 16px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .chat-input-wrapper textarea { width: 100%; padding: 16px 50px 16px 20px; border: none; outline: none; resize: none; border-radius: 16px; font-size: 1em; line-height: 1.5; max-height: 200px; background: transparent; }
+        .chat-input-wrapper button { position: absolute; right: 12px; bottom: 12px; background: #EBEBEB; border: none; cursor: pointer; color: #8E8EA0; border-radius: 8px; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; }
+        .chat-input-wrapper button:hover { background-color: #D7D7D7; }
+        .chat-input-wrapper textarea:valid + button { background-color: #10A37F; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- HTML 구조는 이전과 동일 -->
-    <aside class="sidebar"><!-- ... --></aside>
-    <main class="chat-area"><!-- ... --></main>
+    <aside class="sidebar">
+        <div class="new-chat"><span class="material-symbols-outlined">add</span>새 채팅</div>
+        <nav class="chat-history">
+            <ul>
+                <li><span class="material-symbols-outlined">chat_bubble</span>ChatGPT는 무엇인가?</li>
+                <li><span class="material-symbols-outlined">chat_bubble</span>분짜는 무엇인가?</li>
+                <li><span class="material-symbols-outlined">chat_bubble</span>태국권소개</li>
+            </ul>
+        </nav>
+        <nav class="user-menu">
+            <ul>
+                <li><span class="material-symbols-outlined">upgrade</span>플러스로 업그레이드</li>
+                <li><span class="material-symbols-outlined">settings</span>설정</li>
+                <li><span class="material-symbols-outlined">help</span>도움말 보기</li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="chat-area">
+        <div id="welcome-screen">
+            <h1>채팅GPT</h1>
+            <div class="suggestion-columns">
+                <div class="suggestion-column">
+                    <h2><span class="material-symbols-outlined">light_mode</span>예</h2>
+                    <button class="suggestion-item">"간단한 용어로 양자 컴퓨팅 설명해줘"</button>
+                    <button class="suggestion-item">"10살 생일을 위한 창의적인 아이디어 있어?"</button>
+                    <button class="suggestion-item">"JavaScript에서 HTTP 요청을 하려면?"</button>
+                </div>
+                <div class="suggestion-column">
+                    <h2><span class="material-symbols-outlined">bolt</span>기능</h2>
+                    <p class="suggestion-item info">사용자가 대화에서 말한 내용을 기억합니다.</p>
+                    <p class="suggestion-item info">사용자가 후속 수정을 제공할 수 있습니다.</p>
+                    <p class="suggestion-item info">부적절한 요청을 거부하도록 훈련되었습니다.</p>
+                </div>
+                <div class="suggestion-column">
+                    <h2><span class="material-symbols-outlined">warning</span>제한 사항</h2>
+                    <p class="suggestion-item info">때때로 잘못된 정보를 생성할 수 있습니다.</p>
+                    <p class="suggestion-item info">때때로 유해한 지침이나 편향된 콘텐츠를 생성할 수 있습니다.</p>
+                    <p class="suggestion-item info">2021년 이후의 세계와 사건에 대한 지식이 제한적입니다.</p>
+                </div>
+            </div>
+        </div>
+        <div id="chat-log"></div>
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <textarea id="chat-input" placeholder="메시지를 보낸다..." rows="1" required></textarea>
+                <button id="send-btn"><span class="material-symbols-outlined">arrow_upward</span></button>
+            </div>
+        </div>
+    </main>
 
     <script>
+        const API_KEY = ""; // ★★★★★ 여기에 당신의 OpenAI API 키를 입력하세요 ★★★★★
+
         const welcomeScreen = document.getElementById('welcome-screen');
         const chatLog = document.getElementById('chat-log');
         const chatInput = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
         const suggestionItems = document.querySelectorAll('.suggestion-item');
 
-        const API_KEY = "YOUR_OPENAI_API_KEY"; // 여기에 API 키를 입력하세요
-
-        // ★★★ 1. 대화 기록을 저장할 배열 초기화 ★★★
-        // 시스템 메시지를 통해 챗봇의 기본 역할을 설정합니다.
-        let conversationHistory = [
-            { role: "system", content: "You are a helpful assistant." }
-        ];
+        let isApiConfigured = API_KEY && API_KEY !== "";
+        let conversationHistory = [{ role: "system", content: "You are a helpful assistant." }];
+        
+        const cannedResponses = {
+            "간단한 용어로 양자 컴퓨팅 설명해줘": "양자 컴퓨팅은 일반 컴퓨터가 정보를 '0' 또는 '1'로만 저장하는 것과 달리, '큐비트'라는 단위를 사용해 '0'이면서 동시에 '1'인 상태를 표현할 수 있습니다. 이 덕분에 특정 종류의 복잡한 문제들을 기존 컴퓨터보다 훨씬 빠르게 풀 수 있는 잠재력을 가진 차세대 컴퓨팅 기술입니다.",
+            "10살 생일을 위한 창의적인 아이디어 있어?": "물론이죠! 10살 생일 파티 아이디어 몇 가지를 제안해 드릴게요.\n1. **과학 실험 파티**: 간단한 슬라임 만들기, 화산 폭발 실험 등 아이들이 직접 참여하며 즐길 수 있는 과학 테마 파티입니다.\n2. **나만의 피자 만들기**: 각자 좋아하는 토핑으로 직접 피자를 만들어보는 요리 파티는 성취감과 재미를 동시에 줄 수 있습니다.\n3. **보물찾기 게임**: 집이나 공원에 숨겨진 단서들을 따라가며 최종 보물을 찾는 어드벤처 컨셉의 파티도 아이들이 아주 좋아합니다.",
+            "JavaScript에서 HTTP 요청을 하려면?": "JavaScript에서 HTTP 요청을 보내는 가장 현대적이고 간편한 방법은 `fetch()` 함수를 사용하는 것입니다. 다음은 간단한 GET 요청 예시 코드입니다.\n\n``````"
+        };
 
         const startChat = () => {
             if (welcomeScreen.style.display !== 'none') {
@@ -86,45 +131,44 @@
         };
 
         const sendMessage = async (messageText) => {
-            if (!messageText || API_KEY === "YOUR_OPENAI_API_KEY") {
-                if(API_KEY === "YOUR_OPENAI_API_KEY") alert("OpenAI API 키를 스크립트에 입력해주세요.");
-                return;
-            }
-
+            if (!messageText) return;
             startChat();
             appendMessage('user', messageText);
             chatInput.value = '';
+            
+            if (isApiConfigured) {
+                await getApiResponse(messageText);
+            } else {
+                getBasicResponse(messageText);
+            }
+        };
 
-            // ★★★ 2. 사용자의 메시지를 대화 기록에 추가 ★★★
-            conversationHistory.push({ role: "user", content: messageText });
+        const getBasicResponse = (userMessage) => {
+            const botThinkingMessage = appendMessage('bot', '...');
+            setTimeout(() => {
+                const response = cannedResponses[userMessage] || "API 키가 설정되지 않았습니다. 스크립트 파일의 `API_KEY` 변수에 유효한 OpenAI API 키를 입력하면 모든 질문에 답변할 수 있습니다.";
+                botThinkingMessage.querySelector('.content').innerHTML = response.replace(/\n/g, '<br>').replace(/``````/g, '</code></pre>');
+            }, 500);
+        };
 
+        const getApiResponse = async (userMessage) => {
+            conversationHistory.push({ role: "user", content: userMessage });
             const botThinkingMessage = appendMessage('bot', '...');
 
             try {
                 const response = await fetch("https://api.openai.com/v1/chat/completions", {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_KEY}`
-                    },
-                    // ★★★ 3. API 요청 시, 전체 대화 기록을 전송 ★★★
-                    body: JSON.stringify({
-                        model: 'gpt-3.5-turbo',
-                        messages: conversationHistory // 단일 메시지 대신 전체 기록 전송
-                    })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ model: 'gpt-3.5-turbo', messages: conversationHistory })
                 });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 const botResponse = data.choices[0].message.content;
-                
-                // ★★★ 4. 봇의 응답도 대화 기록에 추가 ★★★
                 conversationHistory.push({ role: "assistant", content: botResponse });
-                
                 botThinkingMessage.querySelector('.content').textContent = botResponse;
-
             } catch (error) {
-                // 오류 발생 시, 마지막 사용자 메시지를 기록에서 제거하여 재시도 가능하게 함
-                conversationHistory.pop(); 
-                botThinkingMessage.querySelector('.content').textContent = '오류가 발생했습니다. 다시 시도해주세요.';
+                conversationHistory.pop();
+                botThinkingMessage.querySelector('.content').textContent = `오류가 발생했습니다: ${error.message}`;
             }
         };
         
@@ -138,20 +182,16 @@
             chatLog.scrollTop = chatLog.scrollHeight;
             return messageDiv;
         };
-        
+
         sendBtn.addEventListener('click', () => sendMessage(chatInput.value.trim()));
         chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage(chatInput.value.trim());
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(chatInput.value.trim()); }
         });
         
         suggestionItems.forEach(item => {
             if (item.tagName === 'BUTTON') {
                 item.addEventListener('click', () => {
                     const question = item.textContent.replace(/"/g, '').trim();
-                    chatInput.value = question;
                     sendMessage(question);
                 });
             }
