@@ -1,371 +1,325 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>noonoo스트리밍 - 반응형 고급 UI</title>
-  <style>
-    :root {
-      --main-red: #ff1744;
-      --header-bg: rgba(24,24,24,0.82);
-      --nav-bg: rgba(28,28,28,0.93);
-      --blur: blur(12px);
-      --transition: 0.3s cubic-bezier(.7,0,.3,1);
-    }
-    html, body { margin:0; padding:0; background:#181818; color:#fff; font-family:'Pretendard','Noto Sans KR',sans-serif;}
-    body { min-height:100vh; }
-    a { color:inherit; text-decoration:none; }
-    img { max-width:100%; display:block; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <!-- Google Fonts 및 Material Icons 로드 -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <style>
+        /* 기본 스타일 및 폰트 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        body {
+            background: #f0f2f5;
+        }
 
-    /* --------- 공통 헤더 --------- */
-    .header { position:fixed; top:0; left:0; width:100vw; z-index:100;
-      background:var(--header-bg); backdrop-filter:var(--blur);
-      display:flex; align-items:center; justify-content:space-between;
-      height:60px; padding:0 2vw; box-sizing:border-box;
-      box-shadow:0 2px 12px rgba(0,0,0,0.13);
-      gap:1vw;
-    }
-    .header-left { display:flex; align-items:center; gap:2vw; min-width:0;}
-    .logo { font-size:clamp(1.2rem,2.1vw,2.2rem); color:var(--main-red); font-weight:700; min-width:60px; }
-    .header-menu {
-      display:flex; gap:1.2vw;
-    }
-    .header-menu a {
-      color:#fff; font-size:clamp(0.97rem,1vw,1.13rem); opacity:0.85;
-      font-weight:500; letter-spacing:0.01em; padding:6px 12px; border-radius:7px;
-      transition:background 0.18s, color 0.18s, opacity 0.18s;
-      text-decoration:none;
-      white-space:nowrap;
-    }
-    .header-menu a:hover, .header-menu a.active {
-      background:rgba(255,255,255,0.08); color:var(--main-red); opacity:1;
-    }
-    .search-bar {
-      background:#232323; border-radius:18px; border:none; padding:8px 18px;
-      color:#fff; font-size:clamp(0.9rem,1vw,1.1rem); min-width:80px; width:20vw; max-width:320px;
-      margin:0 2vw; transition:width var(--transition);
-      display:block;
-    }
-    .header-right {
-      display:flex; align-items:center; gap:1vw; min-width:0;
-      flex-shrink:0;
-    }
-    .profile-img, .grandma-img {
-      width:clamp(28px,2.8vw,48px); aspect-ratio:1/1; height:auto;
-      border-radius:50%; object-fit:cover; border:2px solid #fff;
-      background:#333;
-      box-shadow:0 2px 8px rgba(0,0,0,0.13);
-      transition:box-shadow var(--transition), border var(--transition);
-    }
-    .grandma-img { margin-left:0.7vw; border-color:var(--main-red);}
-    /* --------- 커뮤니티 메뉴 바 --------- */
-    .community-bar {
-      position:fixed; left:0; width:100vw; z-index:99;
-      top:60px;
-      background:var(--nav-bg); backdrop-filter:var(--blur);
-      display:flex; align-items:center; justify-content:center;
-      height:46px;
-      box-shadow:0 2px 12px rgba(0,0,0,0.09);
-      opacity:0.98;
-      padding:0 2vw;
-      font-size:1.07rem;
-      gap:32px;
-      overflow-x:visible;
-    }
-    .community-menu {
-      display:flex; gap:32px;
-      width:100%; max-width:1100px; justify-content:center;
-    }
-    .community-menu a {
-      color:#fff; opacity:0.85; font-weight:500; letter-spacing:0.01em;
-      padding:6px 18px; border-radius:8px; transition:background 0.18s, color 0.18s, opacity 0.18s;
-      position:relative;
-      white-space:nowrap;
-      font-size:1.07rem;
-      display:inline-block;
-    }
-    .community-menu a:hover, .community-menu a.active {
-      background:rgba(255,255,255,0.08);
-      color:var(--main-red); opacity:1;
-    }
-    /* --------- 숨김 애니메이션 --------- */
-    .hide-up {
-      transform: translateY(-120%);
-      opacity: 0;
-      pointer-events: none;
-    }
-    .show-down {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
+        /* 챗봇 토글 버튼 */
+        .chatbot-toggler {
+            position: fixed;
+            bottom: 30px;
+            right: 35px;
+            outline: none;
+            border: none;
+            height: 50px;
+            width: 50px;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #724ae8; /* 포인트 컬러 */
+            transition: all 0.2s ease;
+        }
+        body.show-chatbot .chatbot-toggler {
+            transform: rotate(90deg);
+        }
+        .chatbot-toggler span {
+            color: #fff;
+            position: absolute;
+        }
+        .chatbot-toggler span:last-child,
+        body.show-chatbot .chatbot-toggler span:first-child  {
+            opacity: 0;
+        }
+        body.show-chatbot .chatbot-toggler span:last-child {
+            opacity: 1;
+        }
 
-    /* --------- 슬라이더 --------- */
-    .main-slider {
-      margin-top:106px; /* 헤더+커뮤니티바 */
-      width:100vw; overflow:hidden;
-      border-radius:0 0 22px 22px; box-shadow:0 4px 24px rgba(0,0,0,0.25);
-      position:relative; background:#222;
-      min-height:25vw; max-height:380px;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .slide-track {
-      display:flex; width:100%; height:100%; transition:transform var(--transition);
-    }
-    .slide {
-      min-width:100vw; height:32vw; min-height:180px; max-height:380px;
-      position:relative; opacity:0.7; transition:opacity 0.5s;
-      display:flex; align-items:flex-end; justify-content:flex-start;
-      overflow:hidden;
-    }
-    .slide.active { opacity:1;}
-    .slide img {
-      width:100vw; height:100%; object-fit:cover;
-      transition:transform 0.5s;
-    }
-    .slide-caption {
-      position:absolute; left:0; bottom:0; width:100%; max-width:100vw;
-      padding:2.5vw 4vw 2vw 2vw;
-      background:linear-gradient(0deg,rgba(24,24,24,0.92) 80%,rgba(24,24,24,0));
-      color:#fff; border-radius:0 0 22px 22px;
-      animation:fadeInUp 0.7s;
-    }
-    .slide-caption h2 { font-size:clamp(1.1rem,2vw,2rem); margin-bottom:1vw;}
-    .slide-caption p { font-size:clamp(0.95rem,1.05vw,1.15rem); opacity:0.8;}
-    .slider-dots {
-      position:absolute; left:50%; bottom:1.2vw; transform:translateX(-50%);
-      display:flex; gap:0.7vw;
-    }
-    .slider-dot {
-      width:0.8vw; height:0.8vw; min-width:8px; min-height:8px; border-radius:50%;
-      background:#fff; opacity:0.4; transition:opacity 0.2s;
-    }
-    .slider-dot.active { background:var(--main-red); opacity:1;}
-    .content-section { max-width:1100px; margin:3vw auto 0 auto; }
-    .section-title { font-size:clamp(1.1rem,1.3vw,1.4rem); font-weight:700; margin:0 0 1vw 0.7vw;}
-    .card-grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-      gap:clamp(14px,1.3vw,28px); margin-bottom:2vw;
-    }
-    .content-card {
-      background:#232323; border-radius:clamp(10px,12px,16px); overflow:hidden;
-      box-shadow:0 2px 10px rgba(0,0,0,0.13);
-      transition:transform 0.35s cubic-bezier(.7,0,.3,1), box-shadow 0.18s;
-      cursor:pointer; position:relative;
-      animation:fadeInUp 0.7s;
-      min-width:0;
-      display:flex; flex-direction:column;
-    }
-    .content-card img {
-      width:100%; height:clamp(90px,10vw,180px); object-fit:cover;
-      background:#333;
-      border-radius:clamp(10px,12px,16px) clamp(10px,12px,16px) 0 0;
-      transition:filter 0.2s;
-    }
-    .content-card .badge {
-      position:absolute; top:clamp(6px,10px,16px); left:clamp(6px,10px,16px);
-      background:var(--main-red); color:#fff;
-      font-size:clamp(0.69rem,0.9vw,1.05rem); padding:2px 10px; border-radius:12px; font-weight:600;
-    }
-    .content-card p {
-      font-size:clamp(0.91rem,1vw,1.13rem); color:#fff; margin:clamp(8px,12px,18px) 0 clamp(7px,9px,13px) clamp(10px,14px,18px); font-weight:500;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    }
-    .content-card:hover { transform:scale(1.05);}
-    .content-card.active {
-      transform: translateY(-12px) scale(1.05);
-      box-shadow: 0 16px 36px rgba(255,23,68,0.18);
-    }
-    .bottom-nav {
-      display:none;
-    }
+        /* 챗봇 컨테이너 */
+        .chatbot {
+            position: fixed;
+            right: 35px;
+            bottom: 90px;
+            width: 420px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.5);
+            transform-origin: bottom right;
+            box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
+                        0 32px 64px -48px rgba(0,0,0,0.5);
+            transition: all 0.1s ease;
+        }
+        body.show-chatbot .chatbot {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
 
-    /* --------- 모바일 --------- */
-    @media (max-width: 900px) {
-      .header { height:48px; padding:0 3vw;}
-      .header-left { gap:10px; }
-      .logo { font-size:1.2rem;}
-      .header-menu { gap:7px; }
-      .header-menu a { font-size:0.97rem; padding:6px 8px; }
-      .search-bar { display:none;}
-      .profile-img, .grandma-img { width:34px; min-width:28px; max-width:38px;}
-      .community-bar {
-        top:48px;
-        height:44px;
-        font-size:0.98rem;
-        padding:0 0;
-        gap:0;
-        box-shadow:0 2px 12px rgba(0,0,0,0.09);
-        overflow-x:auto;
-      }
-      .community-menu {
-        display:flex;
-        flex-wrap:nowrap;
-        gap:8px;
-        width:auto;
-        max-width:100vw;
-        justify-content:flex-start;
-        padding:0 8px;
-        overflow-x:auto;
-        scrollbar-width:thin;
-      }
-      .community-menu a {
-        font-size:0.97rem;
-        padding:7px 14px;
-        border-radius:7px;
-        margin:0;
-        min-width:fit-content;
-        text-align:center;
-        white-space:nowrap;
-        background:none;
-      }
-    }
-    @keyframes fadeInUp {
-      0% { opacity:0; transform:translateY(20px);}
-      100% { opacity:1; transform:translateY(0);}
-    }
-    @keyframes fadeInDown {
-      0% { opacity:0; transform:translateY(-24px);}
-      100% { opacity:1; transform:translateY(0);}
-    }
-  </style>
+        /* 챗봇 헤더 */
+        .chatbot header {
+            padding: 16px 0;
+            position: relative;
+            text-align: center;
+            color: #fff;
+            background: #724ae8;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .chatbot header h2 {
+            font-size: 1.4rem;
+        }
+        .chatbot header span {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            display: none;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        /* 대화창 */
+        .chatbot .chatbox {
+            overflow-y: auto;
+            height: 510px;
+            padding: 30px 20px 100px;
+        }
+        .chatbox .chat {
+            display: flex;
+            list-style: none;
+        }
+        .chatbox .outgoing {
+            margin: 20px 0;
+            justify-content: flex-end; /* 보낸 메시지는 오른쪽 정렬 */
+        }
+        .chatbox .incoming span {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            cursor: default;
+            text-align: center;
+            line-height: 32px;
+            align-self: flex-end;
+            background: #724ae8;
+            border-radius: 4px;
+            margin: 0 10px 7px 0;
+        }
+        .chatbox .chat p {
+            white-space: pre-wrap;
+            padding: 12px 16px;
+            border-radius: 10px 10px 0 10px;
+            max-width: 75%;
+            color: #fff;
+            font-size: 0.95rem;
+            background: #724ae8;
+        }
+        .chatbox .chat p.error {
+            border-color: #e55865;
+            background: #e55865;
+        }
+        .chatbox .incoming p {
+            border-radius: 10px 10px 10px 0;
+            color: #000;
+            background: #f2f2f2;
+        }
+
+        /* 입력창 */
+        .chatbot .chat-input {
+            display: flex;
+            gap: 5px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            padding: 3px 20px;
+            border-top: 1px solid #ddd;
+        }
+        .chat-input textarea {
+            height: 55px;
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            max-height: 180px;
+            padding: 15px 15px 15px 0;
+            font-size: 0.95rem;
+        }
+        .chat-input span {
+            align-self: flex-end;
+            color: #724ae8;
+            cursor: pointer;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            font-size: 1.35rem;
+        }
+        .chat-input textarea:valid ~ span {
+            visibility: visible;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 490px) {
+            .chatbot-toggler {
+                right: 20px;
+                bottom: 20px;
+            }
+            .chatbot {
+                right: 0;
+                bottom: 0;
+                height: 100%;
+                border-radius: 0;
+                width: 100%;
+            }
+            .chatbot .chatbox {
+                height: 90%;
+                padding: 25px 15px 100px;
+            }
+            .chatbot .chat-input {
+                padding: 5px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- 해더 -->
-  <header class="header">
-    <div class="header-left">
-      <span class="logo">noonoo</span>
-      <nav class="header-menu">
-        <a href="#" class="active">홈</a>
-        <a href="#">카테고리</a>
-      </nav>
-      <input class="search-bar" type="text" placeholder="검색 (PC)">
-    </div>
-    <div class="header-right">
-      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="프로필" class="profile-img">
-      <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/grandma-2028307_1280.png" alt="할머니" class="grandma-img">
-    </div>
-  </header>
 
-  <!-- 커뮤니티 메뉴 바 -->
-  <nav class="community-bar" id="communityBar">
-    <div class="community-menu">
-      <a href="#" class="active">커뮤니티</a>
-      <a href="#">공지사항</a>
-      <a href="#">이벤트</a>
-      <a href="#">Q&A</a>
-      <a href="#">고객센터</a>
-    </div>
-  </nav>
+    <!-- 챗봇 토글 버튼 -->
+    <button class="chatbot-toggler">
+        <span class="material-symbols-outlined">mode_comment</span>
+        <span class="material-symbols-outlined">close</span>
+    </button>
 
-  <!-- 모바일 전용 검색창 (동적 생성) -->
-  <div id="mobileSearchWrap"></div>
-
-  <!-- 메인 슬라이드 -->
-  <section class="main-slider">
-    <div class="slide-track" id="slideTrack">
-      <div class="slide active">
-        <img src="https://img.makeshop.co.kr/4/29457/202505/e884ed9ac295c362bcc500ec35759ca6.jpg" alt="슬라이드1">
-        <div class="slide-caption">
-          <h2>실시간 인기 콘텐츠, noonoo 스트리밍</h2>
-          <p>최신 트렌드와 오리지널 시리즈를 한눈에!</p>
+    <!-- 챗봇 컨테이너 -->
+    <div class="chatbot">
+        <header>
+            <h2>AI Chatbot</h2>
+        </header>
+        <ul class="chatbox">
+            <li class="chat incoming">
+                <span class="material-symbols-outlined">smart_toy</span>
+                <p>안녕하세요! 무엇을 도와드릴까요?</p>
+            </li>
+        </ul>
+        <div class="chat-input">
+            <textarea placeholder="메시지를 입력하세요..." required></textarea>
+            <span id="send-btn" class="material-symbols-outlined">send</span>
         </div>
-      </div>
-      <div class="slide">
-        <img src="https://img.makeshop.co.kr/4/29457/202505/65ab5e1d661a882151f87e4ab7a9748e.jpg" alt="슬라이드2">
-        <div class="slide-caption">
-          <h2>놓치면 아쉬운 오늘의 추천작</h2>
-          <p>지금 바로 감상해보세요.</p>
-        </div>
-      </div>
     </div>
-    <div class="slider-dots" id="sliderDots"></div>
-  </section>
 
-  <!-- 콘텐츠 섹션 -->
-  <section class="content-section">
-    <div class="section-title">추천 콘텐츠</div>
-    <div class="card-grid">
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">ORIGINAL</span><p>콘텐츠 A</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">NEW</span><p>콘텐츠 B</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">HOT</span><p>콘텐츠 C</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">BEST</span><p>콘텐츠 D</p></div>
-      <div class="content-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsrEySPC8SDVpzm_pNZvh8LxdvIWTEoRKyfg&s"><span class="badge">TREND</span><p>콘텐츠 E</p></div>
-    </div>
-  </section>
+    <script>
+        // DOM 요소 가져오기
+        const chatbotToggler = document.querySelector(".chatbot-toggler");
+        const chatbot = document.querySelector(".chatbot");
+        const chatbox = document.querySelector(".chatbox");
+        const chatInput = document.querySelector(".chat-input textarea");
+        const sendChatBtn = document.querySelector(".chat-input span");
 
-  <!-- 모바일 하단 네비게이션 -->
-  <nav class="bottom-nav">
-    <a href="#" class="active"><img src="https://cdn-icons-png.flaticon.com/512/1946/1946436.png" alt="홈"><span>홈</span></a>
-    <a href="#" id="mobileSearchBtn"><img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색"><span>검색</span></a>
-    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="마이"><span>마이</span></a>
-    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png" alt="알림"><span>알림</span></a>
-  </nav>
+        // ★★ 중요: 실제 사용 시에는 서버를 통해 안전하게 관리해야 합니다. ★★
+        // 브라우저에 API 키를 직접 노출하는 것은 매우 위험합니다.
+        let userApiKey = "YOUR_OPENAI_API_KEY"; // 여기에 OpenAI API 키를 입력하세요.
 
-  <script>
-    // 슬라이드 동작
-    const slides = document.querySelectorAll('.slide');
-    const slideTrack = document.getElementById('slideTrack');
-    const dotsBox = document.getElementById('sliderDots');
-    let current = 0;
-    function showSlide(idx) {
-      slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
-      document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
-      slideTrack.style.transform = `translateX(-${idx*100}vw)`;
-    }
-    // 도트 생성
-    dotsBox.innerHTML = '';
-    slides.forEach((_,i)=>{
-      const d = document.createElement('div');
-      d.className = 'slider-dot'+(i===0?' active':'');
-      d.onclick = ()=>{current=i;showSlide(current);}
-      dotsBox.appendChild(d);
-    });
-    function moveSlide(dir) {
-      current = (current+dir+slides.length)%slides.length;
-      showSlide(current);
-    }
-    setInterval(()=>{moveSlide(1);},4200);
+        let userMessage;
+        const inputInitHeight = chatInput.scrollHeight;
 
-    // PC/모바일 카드 구분
-    function handleResize() {
-      const isPC = window.innerWidth>=900;
-      document.querySelector('.card-grid').style.display = isPC?'grid':'grid';
-    }
-    window.addEventListener('resize',handleResize);
-    window.addEventListener('DOMContentLoaded',handleResize);
+        // 채팅 메시지 엘리먼트 생성
+        const createChatLi = (message, className) => {
+            const chatLi = document.createElement("li");
+            chatLi.classList.add("chat", className);
+            let chatContent = className === "outgoing" 
+                ? `<p>${message}</p>` 
+                : `<span class="material-symbols-outlined">smart_toy</span><p>${message}</p>`;
+            chatLi.innerHTML = chatContent;
+            return chatLi;
+        }
 
-    // 모바일 검색 버튼
-    const mobileSearchBtn = document.getElementById('mobileSearchBtn');
-    const mobileSearchWrap = document.getElementById('mobileSearchWrap');
-    let mobileSearchInput = null;
-    mobileSearchBtn && mobileSearchBtn.addEventListener('click',()=>{
-      if(document.querySelector('.mobile-search-bar')) return;
-      mobileSearchInput = document.createElement('input');
-      mobileSearchInput.className = 'mobile-search-bar';
-      mobileSearchInput.type = 'text';
-      mobileSearchInput.placeholder = '검색 (모바일)';
-      mobileSearchWrap.appendChild(mobileSearchInput);
-      mobileSearchInput.focus();
-      mobileSearchInput.addEventListener('blur',()=>{
-        mobileSearchInput.remove();
-      });
-    });
+        // OpenAI API 호출 및 응답 처리
+        const generateResponse = (incomingChatLi) => {
+            const API_URL = "https://api.openai.com/v1/chat/completions";
+            const messageElement = incomingChatLi.querySelector("p");
 
-    // 카드 클릭/터치 시 부드럽게 위로 올라가는 효과 (PC/모바일 모두)
-    function addCardClickEffect() {
-      document.querySelectorAll('.content-card').forEach(card => {
-        card.addEventListener('click', function() {
-          card.classList.add('active');
-          setTimeout(() => card.classList.remove('active'), 400);
+            // API 요청 설정
+            const requestOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${userApiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "user", content: userMessage }]
+                })
+            }
+
+            // API 호출
+            fetch(API_URL, requestOptions).then(res => res.json()).then(data => {
+                if (data.choices && data.choices.length > 0) {
+                    messageElement.textContent = data.choices[0].message.content.trim();
+                } else {
+                    messageElement.classList.add("error");
+                    messageElement.textContent = "죄송합니다. 오류가 발생했습니다. API 키를 확인해주세요.";
+                }
+            }).catch(() => {
+                messageElement.classList.add("error");
+                messageElement.textContent = "죄송합니다. 응답을 가져오는 중 오류가 발생했습니다.";
+            }).finally(() => chatbox.scrollTo(0, chatbox.scrollHeight));
+        }
+
+        // 채팅 처리 핸들러
+        const handleChat = () => {
+            userMessage = chatInput.value.trim();
+            if(!userMessage) return;
+            
+            chatInput.value = "";
+            chatInput.style.height = `${inputInitHeight}px`;
+
+            // 사용자의 메시지를 채팅창에 추가
+            chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+            chatbox.scrollTo(0, chatbox.scrollHeight);
+
+            setTimeout(() => {
+                // "Thinking..." 메시지와 함께 봇의 응답 li 추가
+                const incomingChatLi = createChatLi("Thinking...", "incoming");
+                chatbox.appendChild(incomingChatLi);
+                chatbox.scrollTo(0, chatbox.scrollHeight);
+                generateResponse(incomingChatLi);
+            }, 600);
+        }
+        
+        // 텍스트 입력창 높이 자동 조절
+        chatInput.addEventListener("input", () => {
+            chatInput.style.height = `${inputInitHeight}px`;
+            chatInput.style.height = `${chatInput.scrollHeight}px`;
         });
-        card.addEventListener('touchstart', function() {
-          card.classList.add('active');
-          setTimeout(() => card.classList.remove('active'), 400);
+
+        // Enter 키 입력 시 메시지 전송
+        chatInput.addEventListener("keydown", (e) => {
+            if(e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+                e.preventDefault();
+                handleChat();
+            }
         });
-      });
-    }
-    window.addEventListener('DOMContentLoaded', addCardClickEffect);
-  </script>
+        
+        // 전송 버튼 클릭 시 메시지 전송
+        sendChatBtn.addEventListener("click", handleChat);
+        
+        // 챗봇 토글 버튼 클릭 이벤트
+        chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
+    </script>
 </body>
 </html>
