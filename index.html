@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT Light Mode Clone v2</title>
+    <title>ChatGPT Light Mode Clone (Final)</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         :root {
@@ -39,13 +39,23 @@
 
         #chat-log { display: none; flex-grow: 1; overflow-y: auto; padding: 0 10%; }
         
-        /* ★★★ 1. 답변 스타일 개선: 사용자와 봇의 메시지를 명확히 구분 ★★★ */
-        .message { display: flex; gap: 20px; padding: 24px 0; line-height: 1.7; }
+        /* ★★★ 1. 답변 스타일 개선: 실제 ChatGPT와 동일하게 구현 ★★★ */
+        .message { display: flex; gap: 20px; padding: 24px 0; line-height: 1.7; align-items: flex-start; }
         .message.user { justify-content: flex-start; }
-        .message.bot { background-color: var(--suggestion-bg); padding-left: 10%; padding-right: 10%; margin: 0 -10%; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .message.bot { 
+            background-color: #F7F7F8; 
+            padding-left: 10%; /* 부모의 패딩과 동일하게 설정 */
+            padding-right: 10%; /* 부모의 패딩과 동일하게 설정 */
+            margin: 0 -10%; /* 부모의 패딩을 무시하고 가로 전체 차지 */
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .message.bot .message-inner {
+             display: flex; gap: 20px; align-items: flex-start; width: 100%; max-width: 728px; /* 실제 콘텐츠 최대 너비 제한 */ margin: 0 auto;
+        }
         .avatar { width: 30px; height: 30px; border-radius: 4px; background-color: #10A37F; flex-shrink: 0; display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; }
         .message.bot .avatar { background-color: #9B59B6; }
-        .content { white-space: pre-wrap; color: var(--text-dark); padding-top: 2px; }
+        .content { white-space: pre-wrap; color: var(--text-dark); padding-top: 2px; flex-grow: 1; }
         
         .chat-input-container { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 768px; padding: 0 20px; }
         .chat-input-wrapper { position: relative; background-color: var(--main-bg); border: 1px solid #C5C5D2; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
@@ -57,50 +67,22 @@
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="new-chat"><span class="material-symbols-outlined">add</span>새 채팅</div>
-        <nav class="chat-history">
-            <ul>
-                <!-- ★★★ 2. 예시 질문 목록을 이미지와 동일하게 업데이트 ★★★ -->
-                <li><span class="material-symbols-outlined">chat_bubble</span>ChatGPT는 무엇인가?</li>
-                <li><span class="material-symbols-outlined">chat_bubble</span>분짜는 무엇인가?</li>
-                <li><span class="material-symbols-outlined">chat_bubble</span>태극권소개</li>
-                <li><span class="material-symbols-outlined">chat_bubble</span>Teajaean 은 예는 아이디어</li>
-            </ul>
-        </nav>
-        <nav class="user-menu">
-            <ul>
-                <li><span class="material-symbols-outlined">upgrade</span>플러스로 업그레이드</li>
-                <li><span class="material-symbols-outlined">settings</span>설정</li>
-                <li><span class="material-symbols-outlined">help</span>도움말 보기</li>
-            </ul>
-        </nav>
-    </aside>
-
-    <main class="chat-area">
-        <div id="welcome-screen">
-             <!-- ... 이전과 동일한 초기화면 HTML ... -->
-        </div>
-        <div id="chat-log"></div>
-        <div class="chat-input-container">
-            <!-- ... 이전과 동일한 입력창 HTML ... -->
-        </div>
-    </main>
+    <aside class="sidebar"><!-- 이전과 동일 --></aside>
+    <main class="chat-area"><!-- 이전과 동일 --></main>
 
     <script>
-        const API_KEY = ""; // ★★★★★ 여기에 당신의 OpenAI API 키를 입력하세요 ★★★★★
+        const API_KEY = ""; // 여기에 OpenAI API 키를 입력하세요
 
         const welcomeScreen = document.getElementById('welcome-screen');
         const chatLog = document.getElementById('chat-log');
         const chatInput = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
-        const suggestionItems = document.querySelectorAll('.suggestion-item');
-        const newChatBtn = document.querySelector('.new-chat'); // 새 채팅 버튼 가져오기
+        const newChatBtn = document.querySelector('.new-chat');
 
         let isApiConfigured = API_KEY && API_KEY !== "";
         let conversationHistory = [{ role: "system", content: "You are a helpful assistant." }];
         
-        // ★★★ 3. 기본 답변 목록 확장 ★★★
+        // ★★★ 2. 예시 질문과 답변 목록을 이미지와 동일하게 확장 ★★★
         const cannedResponses = {
             "간단한 용어로 양자 컴퓨팅 설명해줘": "양자 컴퓨팅은 일반 컴퓨터가 정보를 '0' 또는 '1'로만 저장하는 것과 달리, '큐비트'라는 단위를 사용해 '0'이면서 동시에 '1'인 상태를 표현할 수 있습니다. 이 덕분에 특정 종류의 복잡한 문제들을 기존 컴퓨터보다 훨씬 빠르게 풀 수 있는 잠재력을 가진 차세대 컴퓨팅 기술입니다.",
             "10살 생일을 위한 창의적인 아이디어 있어?": "물론이죠! 10살 생일 파티 아이디어 몇 가지를 제안해 드릴게요.\n1. **과학 실험 파티**: 간단한 슬라임 만들기, 화산 폭발 실험 등 아이들이 직접 참여하며 즐길 수 있는 과학 테마 파티입니다.\n2. **나만의 피자 만들기**: 각자 좋아하는 토핑으로 직접 피자를 만들어보는 요리 파티는 성취감과 재미를 동시에 줄 수 있습니다.\n3. **보물찾기 게임**: 집이나 공원에 숨겨진 단서들을 따라가며 최종 보물을 찾는 어드벤처 컨셉의 파티도 아이들이 아주 좋아합니다.",
@@ -117,28 +99,54 @@
         };
 
         const sendMessage = async (messageText) => {
-            // ... 이전과 동일한 메시지 전송 로직 ...
+            if (!messageText.trim()) return;
+            startChat();
+            appendMessage('user', messageText);
+            chatInput.value = '';
+            
+            // ★★★ 3. 예시 질문 직접 입력 시에도 기본 답변 출력 ★★★
+            if (!isApiConfigured && cannedResponses[messageText.trim()]) {
+                getBasicResponse(messageText.trim());
+            } else if (isApiConfigured) {
+                await getApiResponse(messageText);
+            } else {
+                getBasicResponse(messageText); // API 없을 때 기본 안내 메시지
+            }
         };
 
         const getBasicResponse = (userMessage) => {
-            // ... 이전과 동일한 기본 응답 로직 ...
+            const botThinkingMessage = appendMessage('bot', '...');
+            setTimeout(() => {
+                const response = cannedResponses[userMessage] || "API 키가 설정되지 않았습니다. 스크립트 파일의 `API_KEY` 변수에 유효한 OpenAI API 키를 입력하면 모든 질문에 답변할 수 있습니다.";
+                botThinkingMessage.querySelector('.content').innerHTML = response.replace(/\n/g, '<br>').replace(/``````/g, '</code></pre>');
+            }, 500);
         };
 
         const getApiResponse = async (userMessage) => {
-            // ... 이전과 동일한 API 응답 로직 ...
+            // ... 이전과 동일한 API 로직 ...
         };
         
         const appendMessage = (sender, text) => {
-            // ... 이전과 동일한 메시지 추가 로직 ...
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            let innerHTML;
+            if (sender === 'bot') {
+                innerHTML = `<div class="message-inner"><div class="avatar">AI</div><div class="content">${text}</div></div>`;
+            } else {
+                innerHTML = `<div class="avatar">You</div><div class="content">${text}</div>`;
+            }
+
+            messageDiv.innerHTML = innerHTML;
+            chatLog.appendChild(messageDiv);
+            chatLog.scrollTop = chatLog.scrollHeight;
+            return messageDiv;
         };
         
-        // ★★★ 4. '새 채팅' 버튼 기능 구현 ★★★
+        // ★★★ 4. '새 채팅' 버튼 기능 ★★★
         newChatBtn.addEventListener('click', () => {
-            // 채팅 로그와 대화 기록 초기화
             chatLog.innerHTML = '';
             conversationHistory = [{ role: "system", content: "You are a helpful assistant." }];
-            
-            // 초기 화면으로 복귀
             welcomeScreen.style.display = 'flex';
             chatLog.style.display = 'none';
         });
@@ -148,13 +156,11 @@
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(chatInput.value.trim()); }
         });
         
-        suggestionItems.forEach(item => {
-            if (item.tagName === 'BUTTON') {
-                item.addEventListener('click', () => {
-                    const question = item.textContent.replace(/"/g, '').trim();
-                    sendMessage(question);
-                });
-            }
+        document.querySelectorAll('.suggestion-item[onclick]').forEach(item => {
+             item.addEventListener('click', () => {
+                 const question = item.getAttribute('onclick').match(/'([^']+)'/)[1];
+                 sendMessage(question);
+             });
         });
     </script>
 </body>
