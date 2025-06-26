@@ -1,130 +1,63 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <title>티비판(TVPAN) - 최신영화, 드라마, 애니, 미드 등 다시보기</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="keywords" content="티비판 다시보기,티비 다시보기,실시간 다시보기,다시보기,무료 다시보기,실시간티비,실시간티비 다시보기,최신영화 다시보기,영화 다시보기,한국영화 다시보기,해외영화 다시보기,최신드라마 다시보기,드라마 다시보기,한국드라마 다시보기,해외드라마 다시보기,미드 다시보기,최신예능 다시보기,예능 다시보기,애니메이션 다시보기,애니 다시보기">
-    <meta name="description" content="티비판은 다양한 영화, 드라마, 예능 다시보기 정보를 제공하는 티비 다시보기 사이트입니다. 빠르고 쉽게 시청하고싶은 콘텐츠를 찾아보세요.">
+<div class="index_wrap contents_wrap">
+    <!-- 광고 섹션: 이미지에 alt 속성 추가, 외부 링크에 rel="noopener noreferrer" 추가 -->
+    <ul class="admain_top adv_top">
+        <li><a href="https://p-7777.com/bbs/register_form.php?reco_mb_id=tvpan&amp;reco_key=tvpan" target="_blank" rel="noopener noreferrer"><img src="/static/upload/ef97383b-085a-4cdb-881e-4c823f1a1110.png" class="ad_img" alt="광고: P-7777.com 회원가입"></a></li>
+        <li><a href="https://오렌지팟주소.com/" target="_blank" rel="noopener noreferrer"><img src="/static/upload/d3ac68a5-64de-4fc9-bcfd-fa1f690fe112.jpg" class="ad_img" alt="광고: 오렌지팟"></a></li>
+        <li><a href="https://xn--mi3bz4k.com" target="_blank" rel="noopener noreferrer"><img src="/static/upload/7dc49249-c13-4939-8370-59055e580005.png" class="ad_img" alt="광고: 미드 다시보기"></a></li>
+        <li><a href="https://jmg328.com/" target="_blank" rel="noopener noreferrer"><img src="/static/upload/27956cda-a803-4639-9e68-a7cdd20e3c9e.png" class="ad_img" alt="광고: JMG328"></a></li>
+        <li><a href="https://t.me/tvpan24" target="_blank" rel="noopener noreferrer"><img src="/static/upload/6e9f44d7-8a18-41cb-aaee-9c8340686755.jpg" class="ad_img" alt="광고: 티비판 텔레그램 채널"></a></li>
+        <li><a href="https://t.me/tvpan24" target="_blank" rel="noopener noreferrer"><img src="/static/upload/28a06af0-02a4-4d09-8526-af25d3377940.jpg" class="ad_img" alt="광고: 티비판 텔레그램 채널"></a></li>
+        <li><a href="https://t.me/tvpan24" target="_blank" rel="noopener noreferrer"><img src="/static/upload/3dfb20ee-bc2b-4b64-8ee6-e1a802082cb4.jpg" class="ad_img" alt="광고: 티비판 텔레그램 채널"></a></li>
+        <li><a href="https://t.me/tvpan24" target="_blank" rel="noopener noreferrer"><img src="/static/upload/3919f739-c725-4e87-95e8-abba999c3bed.jpg" class="ad_img" alt="광고: 티비판 텔레그램 채널"></a></li>
+    </ul>
 
-    <!-- CSS 파일은 <head> 안에 두어 빠르게 스타일을 로드합니다. -->
-    <link rel="stylesheet" type="text/css" href="/templates/tv_tvpan_pc_tving/css/all.css?v=20250618310509">
-    <link rel="stylesheet" type="text/css" href="/templates/tv_tvpan_pc_tving/css/index.css?v=220250618310509">
-    <link rel="stylesheet" type="text/css" href="/templates/tv_tvpan_pc_tving/css/swiper-bundle.min.css">
-
-    <!-- 파비콘 및 애플 터치 아이콘 설정 -->
-    <link rel="apple-touch-icon" sizes="57x57" href="/static/upload/tvpan/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/static/upload/tvpan/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/static/upload/tvpan/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/static/upload/tvpan/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/static/upload/tvpan/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/static/upload/tvpan/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/static/upload/tvpan/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/static/upload/tvpan/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/upload/tvpan/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/static/upload/tvpan/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/upload/tvpan/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/static/upload/tvpan/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/upload/tvpan/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/static/upload/tvpan/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/static/upload/tvpan/favicon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <!-- Swiper 버튼 스타일 (기존과 동일) -->
-    <style>
-        .swiper-button-next.swiper-button-disabled,
-        .swiper-button-prev.swiper-button-disabled {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-    <!-- Google Analytics 스크립트는 <head> 또는 <body> 시작 부분에 두어 빠르게 추적을 시작합니다. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SEH0RWH4GP"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-SEH0RWH4GP');
-    </script>
-
-    <!-- 헤더 시작 -->
-    <header>
-        <div class="header_wrap">
-            <div class="h_left">
-                <a href="/" class="logo" aria-label="티비판 홈으로 이동">
-                    <!-- 이미지에 alt 속성을 추가하여 접근성을 높입니다. -->
-                    <img src="/static/upload/be3043e3-4777-453d-be16-702cfaca532a.png" class="logo_img" alt="티비판 로고">
-                </a>
-                <!-- 네비게이션 메뉴에 aria-label을 추가하여 스크린 리더 사용자에게 정보를 제공합니다. -->
-                <nav class="nav_all" aria-label="메인 메뉴">
-                    <ul>
-                        <li style="display:none;">
-                            <a href="/">홈</a>
-                        </li>
-                        <li>
-                            <a href="/promotion.html">보증업체</a>
-                        </li>
-                        <li>
-                            <!-- 하위 메뉴가 있는 경우, aria-haspopup과 aria-expanded를 사용하여 접근성을 높일 수 있습니다. -->
-                            <a href="#" aria-haspopup="true" aria-expanded="false">영화</a>
-                            <dl class="submenu">
-                                <dd><a href="/kor_movie.html">한국영화</a></dd>
-                                <dd><a href="/hw_movie.html">해외영화</a></dd>
-                                <dd><a href="/gz_movie.html">극장판</a></dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <a href="#" aria-haspopup="true" aria-expanded="false">드라마</a>
-                            <dl class="submenu">
-                                <dd><a href="/kr_drama.html">한국드라마</a></dd>
-                                <dd><a href="/hw_drama.html">해외드라마</a></dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <a href="#" aria-haspopup="true" aria-expanded="false">방송프로그램</a>
-                            <dl class="submenu">
-                                <dd><a href="/yn_movie.html">예능프로그램</a></dd>
-                                <dd><a href="/dk_movie.html">다큐/시사</a></dd>
-                            </dl>
-                        </li>
-                        <li>
-                            <a href="/ani_movie.html">애니메이션</a>
-                        </li>
-                        <li>
-                            <a href="/customer/index.html">고객센터</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <div class="h_right">
-                <a href="/search.html" class="search" status="off" aria-label="검색">
-                    <img src="/templates/tv_tvpan_pc_tving/image" alt="검색 아이콘">
-                    <!-- 이미지 경로가 불완전합니다. 올바른 이미지 경로를 입력해주세요. -->
-                </a>
-                <!-- 나머지 헤더 내용 -->
-            </div>
+    <!-- 공지사항 섹션: li 대신 a 태그를 클릭 가능하게 변경, 이미지에 alt 속성 추가 -->
+    <div class="top_notice">
+        <div class="n_left">공지</div>
+        <div class="notice_title">
+            <ul class="notice_list" id="notice_list" style="margin-top: 0px;">
+                <!-- 각 공지사항 항목을 <a> 태그로 감싸서 접근성을 높입니다. -->
+                <li><a href="/customer/view/48.html">자료 요청 규정 안내</a></li>
+                <li><a href="/customer/view/52.html">저작권 관련 안내</a></li>
+                <li><a href="/customer/view/49.html">티비판 제휴/배너/임대 안내</a></li>
+            </ul>
         </div>
-    </header>
+        <a href="/customer/index.html" class="arrow_go_link" aria-label="고객센터로 이동">
+            <img src="/templates/tv_tvpan_pc_tving/images/arrow_r.png" class="arrow_go" alt="고객센터 바로가기 화살표">
+        </a>
+    </div>
 
-    <!-- 주요 콘텐츠 영역 (예: 메인 슬라이더, 최신 콘텐츠 목록 등) -->
-    <main>
-        <!-- 여기에 페이지의 주요 내용이 들어갑니다. -->
-    </main>
+    <!-- 메인 배너 슬라이더: 이미지에 alt 속성 추가 -->
+    <div class="swiper swiper_banner swiper-initialized swiper-horizontal swiper-backface-hidden">
+        <div class="swiper-wrapper adv_banner" id="swiper-wrapper-643de9d4dd108bcb5" aria-live="off" style="transition-duration: 600ms; transform: translate3d(-6400px, 0px, 0px);">
+            <div class="swiper-slide" role="group" aria-label="1 / 6" style="width: 1280px;"><a href="/kr_drama/79ZX8XHLULJL.html" target="_self"><img src="/static/upload/1e5f74f5-978f-4833-ae3c-f1f96a80071b.jpg" alt="배너 이미지: 드라마 제목 1"></a></div>
+            <div class="swiper-slide" role="group" aria-label="2 / 6" style="width: 1280px;"><a href="/kr_drama/UT42EJLXBHGF.html" target="_self"><img src="/static/upload/edab709e-8eaa-4204-81f6-11c75a037a4b.jpg" alt="배너 이미지: 드라마 제목 2"></a></div>
+            <div class="swiper-slide" role="group" aria-label="3 / 6" style="width: 1280px;"><a href="/yn_movie/A0D5CLNDRYOF.html" target="_self"><img src="/static/upload/c276ecb7-fd9e-4524-875d-89ced8d971e8.jpg" alt="배너 이미지: 예능 제목 3"></a></div>
+            <div class="swiper-slide" role="group" aria-label="4 / 6" style="width: 1280px;"><a href="/kr_drama/9E30HONZAVYO.html" target="_self"><img src="/static/upload/f5a82b57-a87e-4a7c-96a5-15ef1516a1a2.png" alt="배너 이미지: 드라마 제목 4"></a></div>
+            <div class="swiper-slide swiper-slide-prev" role="group" aria-label="5 / 6" style="width: 1280px;"><a href="/kr_drama/BV072UUUKMRG.html" target="_self"><img src="/static/upload/cbcb3552-ca91-40ea-b4fa-b89b757010fe.jpg" alt="배너 이미지: 드라마 제목 5"></a></div>
+            <div class="swiper-slide swiper-slide-active" role="group" aria-label="6 / 6" style="width: 1280px;"><a href="/yn_movie/9068SH9VVJZ9.html" target="_self"><img src="/static/upload/3ed2d17d-484c-4c7e-a56b-fd1bf133a911.jpg" alt="배너 이미지: 예능 제목 6"></a></div>
+        </div>
+        <div class="swiper-pagination swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" aria-current="true"></span></div>
+        <!-- Swiper 네비게이션 버튼은 <button> 태그를 사용하는 것이 더 적절합니다. -->
+        <button type="button" class="swiper-button-prev" aria-label="이전 슬라이드" aria-controls="swiper-wrapper-643de9d4dd108bcb5" aria-disabled="false"></button>
+        <button type="button" class="swiper-button-next swiper-button-disabled" aria-label="다음 슬라이드" aria-controls="swiper-wrapper-643de9d4dd108bcb5" aria-disabled="true"></button>
+    </div>
 
-    <!-- 푸터 영역 -->
-    <footer>
-        <!-- 푸터 내용 -->
-    </footer>
+    <!-- 메인 광고 섹션 (현재 비어 있음) -->
+    <div class="Ad_main">
+        <ul class="adv_middle">
+            <!-- 동적으로 콘텐츠가 추가되지 않는다면 이 ul 태그는 제거하는 것이 좋습니다. -->
+        </ul>
+    </div>
 
-    <!-- JavaScript 파일은 </body> 닫는 태그 직전에 두어 페이지 로딩 속도를 향상시킵니다. -->
-    <!-- defer 속성을 사용하여 HTML 파싱을 방해하지 않도록 합니다. -->
-    <script src="/static/common/js/def_tv_v1_rem/jquery-1.12.1.min.js" defer></script>
-    <script src="/static/common/js/def_tv_v1_rem/swiper-bundle.min.js" defer></script>
-    <script src="/static/common/js/def_tv_v1_rem/common.js?v=20250618310509" defer></script>
-    <script src="/static/common/js/def_tv_v1_rem/index.js?v=20250618310509" defer></script>
-    <script src="/static/common/js/def_tv_v1_rem/jquery.cookie.js" defer></script>
-    <script src="/static/common/js/def_tv_v1_rem/jquery.storageapi.min.js" defer></script>
-</body>
-</html>
+    <!-- 필름 목록 섹션: 이미지에 alt 속성 추가, 네비게이션 버튼을 <button> 태그로 변경 -->
+    <div class="film_list film_list_1 mov_list resize_li">
+        <div class="title_top">
+            <h3>인기있는 영상을 지금 확인하세요</h3>
+        </div>
+        <div class="swiper-latest-series swiper-initialized swiper-horizontal swiper-free-mode" style="position: relative;">
+            <div class="f_arrow swiper-list-nav">
+                <!-- Swiper 네비게이션 버튼은 <button> 태그를 사용하는 것이 더 적절합니다. -->
+                <button type="button" class="swiper-button-prev sw-prev swiper-button-disabled" aria-label="이전 슬라이드" aria-disabled="true" style="opacity: 0;"></button>
+                <button type="button" class="swiper-button-next sw-next" aria-label="다음 슬라이드"></button>
+                <!-- 코드가 여기서 잘렸습니다. -->
