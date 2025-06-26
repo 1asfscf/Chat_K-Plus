@@ -3,107 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OTT 다시보기</title>
+  <title>OTT 다시보기 – 티빙 스타일</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      background-color: #000;
-      font-family: 'Noto Sans KR', sans-serif;
-      color: #fff;
-    }
+    /* Reset & 기본 세팅 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; }
 
-    header {
-      padding: 20px 30px;
-      font-size: 24px;
+    /* 배너 */
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      background: url('img/jirisan-banner.jpg') center/cover no-repeat;
+      filter: brightness(0.6);
+    }
+    .banner .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
+    }
+    .banner .content {
+      position: absolute;
+      bottom: 5%;
+      left: 5%;
+      max-width: 50%;
+    }
+    .banner .content h1 {
+      font-size: 3rem;
       font-weight: 700;
-      background-color: #111;
-      border-bottom: 1px solid #333;
+      margin-bottom: 0.5rem;
+    }
+    .banner .content p.tagline {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+    .banner .content .btn {
+      display: inline-block;
+      padding: 0.8rem 1.8rem;
+      background-color: #e60012;
+      color: #fff;
+      font-weight: 500;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .banner .content .btn:hover {
+      background-color: #ff1f3f;
     }
 
-    .container {
-      padding: 30px;
+    /* 섹션 */
+    .section {
+      padding: 3rem 5%;
+    }
+    .section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
     }
 
-    .section-title {
-      font-size: 20px;
-      margin: 20px 0 10px;
-      font-weight: bold;
+    /* 슬라이더 */
+    .slider {
+      position: relative;
     }
-
-    .thumbnails {
+    .slider-track {
       display: flex;
       overflow-x: auto;
-      gap: 12px;
+      scroll-behavior: smooth;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
     }
-
-    .thumbnail {
-      min-width: 180px;
-      background-color: #222;
-      border-radius: 6px;
-      overflow: hidden;
+    .slider-track::-webkit-scrollbar {
+      height: 6px;
+    }
+    .slider-track::-webkit-scrollbar-track {
+      background: #111;
+    }
+    .slider-track::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 3px;
+    }
+    .slide {
+      flex: 0 0 200px;
       cursor: pointer;
       transition: transform 0.3s;
     }
-
-    .thumbnail:hover {
-      transform: scale(1.05);
-    }
-
-    .thumbnail img {
-      width: 100%;
+    .slide:hover { transform: scale(1.05); }
+    .slide img {
       display: block;
-    }
-
-    .thumb-info {
-      padding: 10px;
-    }
-
-    .thumb-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .thumb-meta {
-      font-size: 13px;
-      color: #aaa;
-    }
-
-    ::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #111;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #444;
+      width: 100%;
       border-radius: 4px;
+    }
+    .slide .title {
+      margin-top: 0.6rem;
+      font-size: 1rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 화살표 버튼 */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.5rem; height: 2.5rem;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+    .arrow:hover { background: rgba(0,0,0,0.8); }
+    .arrow.prev { left: 0.5%; }
+    .arrow.next { right: 0.5%; }
+    .arrow svg {
+      width: 1.2rem; height: 1.2rem;
+      fill: #fff;
     }
   </style>
 </head>
 <body>
-  <header>다시보기</header>
-  <div class="container">
-    <div class="section-title">최신 에피소드</div>
-    <div class="thumbnails">
-      <div class="thumbnail">
-        <img src="https://via.placeholder.com/180x100.png?text=썸네일1" alt="ep1"/>
-        <div class="thumb-info">
-          <div class="thumb-title">예능 쇼 시즌2 - EP01</div>
-          <div class="thumb-meta">2025.06.24 · 72분</div>
-        </div>
-      </div>
-      <div class="thumbnail">
-        <img src="https://via.placeholder.com/180x100.png?text=썸네일2" alt="ep2"/>
-        <div class="thumb-info">
-          <div class="thumb-title">드라마 밤하늘 - EP10</div>
-          <div class="thumb-meta">2025.06.21 · 64분</div>
-        </div>
-      </div>
-      <!-- 원하는 만큼 썸네일 추가 -->
+
+  <!-- 1. 메인 배너 -->
+  <section class="banner">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>지리산</h1>
+      <p class="tagline">하늘과 만나는 곳, 이곳에 계곡의 관객</p>
+      <a href="#" class="btn">자세히 보기</a>
     </div>
-  </div>
+  </section>
+
+  <!-- 2. 추천 콘텐츠 섹션 -->
+  <section class="section">
+    <h2>티빙에서 꼭 봐야하는 콘텐츠</h2>
+    <div class="slider">
+      <div class="arrow prev">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </div>
+      <div class="slider-track">
+        <!-- 슬라이드 항목들 -->
+        <div class="slide">
+          <img src="img/happiness.jpg" alt="해피니스">
+          <div class="title">해피니스</div>
+        </div>
+        <div class="slide">
+          <img src="img/lovecatcher.jpg" alt="러브 캐처">
+          <div class="title">러브 캐처</div>
+        </div>
+        <div class="slide">
+          <img src="img/winning-women.jpg" alt="승부도시여자들">
+          <div class="title">승부도시여자들</div>
+        </div>
+        <div class="slide">
+          <img src="img/adult-trainee.jpg" alt="어른연습생">
+          <div class="title">어른연습생</div>
+        </div>
+        <div class="slide">
+          <img src="img/virtual-idol.jpg" alt="가상세계와 연 스타가 될 수 있을까">
+          <div class="title">가상세계와 연 스타가 될 수 있을까</div>
+        </div>
+        <div class="slide">
+          <img src="img/emergency.jpg" alt="EMERGENCY">
+          <div class="title">EMERGENCY</div>
+        </div>
+      </div>
+      <div class="arrow next">
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 스크롤 제어 스크립트 -->
+  <script>
+    const track = document.querySelector('.slider-track');
+    document.querySelector('.next').addEventListener('click', () => {
+      track.scrollBy({ left: track.clientWidth * 0.6, behavior: 'smooth' });
+    });
+    document.querySelector('.prev').addEventListener('click', () => {
+      track.scrollBy({ left: -track.clientWidth * 0.6, behavior: 'smooth' });
+    });
+  </script>
+
 </body>
 </html>
+```
