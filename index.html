@@ -4,7 +4,427 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>티빙 스타일 다시보기 - [콘텐츠 제목]</title>
-    <link rel="stylesheet" href="style.css"> <!-- CSS 파일을 연결합니다 -->
+    <!-- Google Noto Sans KR 폰트 임포트 (티빙과 유사한 깔끔한 폰트) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS 변수 정의 */
+        :root {
+            --main-bg-color: #141414; /* 메인 배경색 (어두운 회색) */
+            --secondary-bg-color: #222222; /* 보조 배경색 (더 진한 회색) */
+            --text-color: #E0E0E0; /* 기본 텍스트 색상 (밝은 회색) */
+            --accent-color: #FF5E00; /* 강조 색상 (티빙 주황색) */
+            --light-gray: #A0A0A0; /* 연한 회색 */
+        }
+
+        /* 기본 스타일 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif; /* 폰트 적용 */
+            background-color: var(--main-bg-color); /* 메인 배경색 적용 */
+            color: var(--text-color); /* 기본 텍스트 색상 적용 */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+        }
+
+        a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease; /* 부드러운 색상 전환 효과 */
+        }
+
+        a:hover {
+            color: var(--accent-color); /* 호버 시 강조 색상으로 변경 */
+        }
+
+        .container {
+            max-width: 1200px; /* 콘텐츠 최대 너비 */
+            margin: 0 auto; /* 가운데 정렬 */
+            padding: 0 20px; /* 좌우 패딩 */
+        }
+
+        /* 헤더 스타일 */
+        .main-header {
+            background-color: var(--secondary-bg-color); /* 보조 배경색 적용 */
+            padding: 15px 0;
+            border-bottom: 1px solid #333; /* 하단 경계선 */
+            position: sticky; /* 스크롤 시 상단 고정 */
+            top: 0;
+            z-index: 1000; /* 다른 요소 위에 표시 */
+        }
+
+        .main-header .container {
+            display: flex; /* 플렉스 박스 레이아웃 */
+            justify-content: space-between; /* 양 끝 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            flex-wrap: wrap; /* 반응형을 위해 줄 바꿈 허용 */
+        }
+
+        .main-header .logo {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .main-header .logo a {
+            color: var(--accent-color); /* 로고 색상 강조 */
+        }
+
+        .main-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex; /* 가로 정렬 */
+        }
+
+        .main-nav li {
+            margin-left: 30px; /* 메뉴 항목 간 간격 */
+        }
+
+        .main-nav a {
+            font-size: 16px;
+            font-weight: 500;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .main-nav a::after { /* 호버 시 밑줄 효과 */
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .main-nav a:hover::after {
+            width: 100%;
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-area input[type="text"] {
+            background-color: #333;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px; /* 둥근 모서리 */
+            color: var(--text-color);
+            font-size: 14px;
+            width: 150px;
+            margin-right: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .user-area input[type="text"]::placeholder {
+            color: var(--light-gray);
+        }
+
+        .user-area input[type="text"]:focus {
+            width: 200px; /* 포커스 시 너비 확장 */
+            outline: none;
+        }
+
+        .user-area .search-btn {
+            background: none;
+            border: none;
+            color: var(--light-gray);
+            font-size: 18px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .user-area .profile-icon {
+            background-color: var(--accent-color); /* 프로필 아이콘 배경색 강조 */
+            width: 35px;
+            height: 35px;
+            border-radius: 50%; /* 원형 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        /* 메인 콘텐츠 영역 */
+        .content-wrapper {
+            padding-bottom: 50px;
+        }
+
+        .video-player-section {
+            background-color: #000;
+            padding-top: 56.25%; /* 16:9 비율 유지 (높이/너비 * 100%) */
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 비디오가 컨테이너를 채우도록 */
+        }
+
+        .video-info {
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+
+        .video-info h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .video-info .genre {
+            color: var(--light-gray);
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .video-info .description {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .video-info .actions button {
+            background-color: #333;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .video-info .actions button:hover {
+            background-color: #555;
+        }
+
+        /* 에피소드 목록 */
+        .episode-list-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .episode-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* 반응형 그리드 */
+            gap: 15px;
+        }
+
+        .episode-item {
+            background-color: var(--secondary-bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .episode-item:hover {
+            background-color: #333;
+        }
+
+        .episode-item.active { /* 현재 재생 중인 에피소드 강조 */
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        .episode-item.active .episode-number,
+        .episode-item.active .episode-title {
+            color: #fff;
+        }
+
+        .episode-item .episode-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-color); /* 기본 상태에서 강조 색상 */
+            margin-right: 10px;
+        }
+
+        .episode-item .episode-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* 추천 콘텐츠 */
+        .recommended-content-section {
+            margin-top: 50px;
+        }
+
+        .recommended-content-section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 반응형 그리드 */
+            gap: 20px;
+        }
+
+        .content-card {
+            background-color: var(--secondary-bg-color);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px); /* 호버 시 살짝 위로 이동 */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* 그림자 효과 */
+        }
+
+        .content-card img {
+            width: 100%;
+            height: 250px; /* 고정 높이 */
+            object-fit: cover; /* 이미지 비율 유지하며 채우기 */
+            display: block;
+        }
+
+        .content-card .card-title {
+            padding: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            white-space: nowrap; /* 한 줄로 표시 */
+            overflow: hidden; /* 넘치는 텍스트 숨김 */
+            text-overflow: ellipsis; /* 넘치는 텍스트 ...으로 표시 */
+        }
+
+        /* 푸터 */
+        .main-footer {
+            background-color: var(--secondary-bg-color);
+            padding: 30px 0;
+            text-align: center;
+            font-size: 14px;
+            color: var(--light-gray);
+            margin-top: 50px;
+        }
+
+        .main-footer .footer-links a {
+            color: var(--light-gray);
+            margin: 0 10px;
+        }
+
+        .main-footer .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 반응형 디자인 (미디어 쿼리) */
+        @media (max-width: 768px) {
+            .main-header .container {
+                flex-direction: column; /* 세로 정렬 */
+                align-items: flex-start;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .main-nav li {
+                margin: 5px 0;
+            }
+
+            .user-area {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 15px;
+                position: relative; /* 검색 버튼 위치 조정을 위해 */
+            }
+
+            .user-area input[type="text"] {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .user-area .search-btn {
+                position: absolute; /* 검색 버튼을 인풋 필드 안에 배치 */
+                right: 20px;
+                top: 15px;
+            }
+
+            .video-info h2 {
+                font-size: 24px;
+            }
+
+            .episode-list {
+                grid-template-columns: 1fr; /* 모바일에서는 한 줄에 하나 */
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .content-card img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-header .logo {
+                font-size: 24px;
+            }
+
+            .main-nav a {
+                font-size: 14px;
+            }
+
+            .user-area input[type="text"] {
+                width: calc(100% - 60px); /* 검색 버튼 공간 확보 */
+            }
+
+            .video-info .actions button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .episode-item {
+                padding: 12px;
+            }
+
+            .episode-item .episode-number {
+                font-size: 16px;
+            }
+
+            .episode-item .episode-title {
+                font-size: 14px;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .content-card img {
+                height: 180px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -22,7 +442,7 @@
             <div class="user-area">
                 <input type="text" placeholder="검색">
                 <button class="search-btn">🔍</button>
-                <div class="profile-icon">👤</div>
+                <div class="profile-icon">박</div> <!-- 박성민님의 닉네임을 활용했습니다. -->
             </div>
         </div>
     </header>
@@ -30,16 +450,20 @@
     <main class="content-wrapper">
         <section class="video-player-section">
             <div class="video-player">
-                <!-- 여기에 비디오 플레이어 (예: <video> 태그 또는 임베드 코드) -->
-                <video controls width="100%" height="auto">
-                    <source src="your-video-source.mp4" type="video/mp4">
+                <!-- 비디오 플레이어 영역 -->
+                <video id="mainVideoPlayer" controls autoplay>
+                    <!-- 예시 비디오 소스 (W3Schools 제공) -->
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                     죄송합니다. 브라우저가 비디오 태그를 지원하지 않습니다.
                 </video>
             </div>
             <div class="video-info container">
-                <h2>[콘텐츠 제목] - [회차 제목]</h2>
-                <p class="genre">장르: 드라마 | 방영일: 2024.06.26</p>
-                <p class="description">이곳에 콘텐츠에 대한 간략한 줄거리나 설명을 작성합니다. 사용자가 콘텐츠에 대해 빠르게 이해할 수 있도록 돕습니다.</p>
+                <!-- 비디오 정보 영역 -->
+                <h2 id="videoTitle">환혼: 빛과 그림자 - 1화</h2>
+                <p class="genre" id="videoGenre">장르: 판타지, 로맨스 | 방영일: 2022.12.10</p>
+                <p class="description" id="videoDescription">
+                    역사에도 지도에도 존재하지 않은 대호국을 배경으로, 영혼을 바꾸는 '환혼술'로 인해 운명이 비틀린 주인공들이 이를 극복하고 성장해가는 판타지 로맨스 활극.
+                </p>
                 <div class="actions">
                     <button class="like-btn">👍 좋아요</button>
                     <button class="share-btn">🔗 공유하기</button>
@@ -49,39 +473,71 @@
 
         <section class="episode-list-section container">
             <h3>전체 에피소드</h3>
-            <ul class="episode-list">
-                <li class="episode-item active">
+            <ul class="episode-list" id="episodeList">
+                <!-- 에피소드 목록 (data- 속성으로 비디오 정보 저장) -->
+                <li class="episode-item active"
+                    data-video-src="https://www.w3schools.com/html/mov_bbb.mp4"
+                    data-title="환혼: 빛과 그림자 - 1화"
+                    data-genre="장르: 판타지, 로맨스 | 방영일: 2022.12.10"
+                    data-description="역사에도 지도에도 존재하지 않은 대호국을 배경으로, 영혼을 바꾸는 '환혼술'로 인해 운명이 비틀린 주인공들이 이를 극복하고 성장해가는 판타지 로맨스 활극.">
                     <span class="episode-number">1화</span>
-                    <span class="episode-title">[에피소드 1 제목]</span>
+                    <span class="episode-title">운명의 시작</span>
                 </li>
-                <li class="episode-item">
+                <li class="episode-item"
+                    data-video-src="https://www.w3schools.com/html/movie.mp4"
+                    data-title="환혼: 빛과 그림자 - 2화"
+                    data-genre="장르: 판타지, 로맨스 | 방영일: 2022.12.11"
+                    data-description="장욱과 무덕이의 관계가 깊어지면서 새로운 위기가 찾아온다.">
                     <span class="episode-number">2화</span>
-                    <span class="episode-title">[에피소드 2 제목]</span>
+                    <span class="episode-title">엇갈린 운명</span>
                 </li>
-                <li class="episode-item">
+                <li class="episode-item"
+                    data-video-src="https://www.w3schools.com/html/mov_bbb.mp4"
+                    data-title="환혼: 빛과 그림자 - 3화"
+                    data-genre="장르: 판타지, 로맨스 | 방영일: 2022.12.17"
+                    data-description="환혼술의 비밀이 점차 드러나고, 등장인물들의 갈등이 심화된다.">
                     <span class="episode-number">3화</span>
-                    <span class="episode-title">[에피소드 3 제목]</span>
+                    <span class="episode-title">비밀의 서막</span>
                 </li>
-                <!-- 더 많은 에피소드 -->
+                <li class="episode-item"
+                    data-video-src="https://www.w3schools.com/html/movie.mp4"
+                    data-title="환혼: 빛과 그림자 - 4화"
+                    data-genre="장르: 판타지, 로맨스 | 방영일: 2022.12.18"
+                    data-description="새로운 인물들의 등장과 함께 이야기는 예측할 수 없는 방향으로 흘러간다.">
+                    <span class="episode-number">4화</span>
+                    <span class="episode-title">새로운 위협</span>
+                </li>
             </ul>
         </section>
 
         <section class="recommended-content-section container">
             <h3>이런 콘텐츠는 어떠세요?</h3>
             <div class="content-grid">
+                <!-- 추천 콘텐츠 카드 (placeholder 이미지 사용) -->
                 <div class="content-card">
-                    <img src="thumbnail1.jpg" alt="추천 콘텐츠 1">
-                    <p class="card-title">추천 콘텐츠 1</p>
+                    <img src="https://via.placeholder.com/180x250/FF5E00/FFFFFF?text=콘텐츠+1" alt="추천 콘텐츠 1">
+                    <p class="card-title">재벌집 막내아들</p>
                 </div>
                 <div class="content-card">
-                    <img src="thumbnail2.jpg" alt="추천 콘텐츠 2">
-                    <p class="card-title">추천 콘텐츠 2</p>
+                    <img src="https://via.placeholder.com/180x250/007BFF/FFFFFF?text=콘텐츠+2" alt="추천 콘텐츠 2">
+                    <p class="card-title">술꾼도시여자들</p>
                 </div>
                 <div class="content-card">
-                    <img src="thumbnail3.jpg" alt="추천 콘텐츠 3">
-                    <p class="card-title">추천 콘텐츠 3</p>
+                    <img src="https://via.placeholder.com/180x250/28A745/FFFFFF?text=콘텐츠+3" alt="추천 콘텐츠 3">
+                    <p class="card-title">유미의 세포들</p>
                 </div>
-                <!-- 더 많은 추천 콘텐츠 -->
+                <div class="content-card">
+                    <img src="https://via.placeholder.com/180x250/DC3545/FFFFFF?text=콘텐츠+4" alt="추천 콘텐츠 4">
+                    <p class="card-title">이재, 곧 죽습니다</p>
+                </div>
+                <div class="content-card">
+                    <img src="https://via.placeholder.com/180x250/6F42C1/FFFFFF?text=콘텐츠+5" alt="추천 콘텐츠 5">
+                    <p class="card-title">내 남편과 결혼해줘</p>
+                </div>
+                <div class="content-card">
+                    <img src="https://via.placeholder.com/180x250/FD7E14/FFFFFF?text=콘텐츠+6" alt="추천 콘텐츠 6">
+                    <p class="card-title">선재 업고 튀어</p>
+                </div>
             </div>
         </section>
     </main>
@@ -95,6 +551,42 @@
         </div>
     </footer>
 
-    <script src="script.js"></script> <!-- JavaScript 파일을 연결합니다 -->
+    <script>
+        // JavaScript 코드
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoPlayer = document.getElementById('mainVideoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+            const videoGenre = document.getElementById('videoGenre');
+            const videoDescription = document.getElementById('videoDescription');
+            const episodeList = document.getElementById('episodeList');
+            const episodeItems = episodeList.querySelectorAll('.episode-item');
+
+            // 각 에피소드 항목에 클릭 이벤트 리스너 추가
+            episodeItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 모든 에피소드 아이템의 'active' 클래스 제거
+                    episodeItems.forEach(ep => ep.classList.remove('active'));
+
+                    // 클릭된 에피소드 아이템에 'active' 클래스 추가
+                    this.classList.add('active');
+
+                    // data- 속성에서 비디오 정보 가져오기
+                    const newSrc = this.dataset.videoSrc;
+                    const newTitle = this.dataset.title;
+                    const newGenre = this.dataset.genre;
+                    const newDescription = this.dataset.description;
+
+                    // 비디오 플레이어와 정보 업데이트
+                    videoPlayer.src = newSrc;
+                    videoTitle.textContent = newTitle;
+                    videoGenre.textContent = newGenre;
+                    videoDescription.textContent = newDescription;
+
+                    videoPlayer.load(); // 새로운 비디오 로드
+                    videoPlayer.play(); // 비디오 자동 재생
+                });
+            });
+        });
+    </script>
 </body>
 </html>
