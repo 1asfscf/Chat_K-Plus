@@ -17,7 +17,12 @@
       display: flex; align-items: center;
       z-index: 20;
     }
-    .logo img { height: 32px; }
+    /* 텍스트 로고 */
+    .logo-text {
+      font-size: 32px; font-weight: 700;
+      letter-spacing: -1px;
+    }
+    /* 네비게이션 */
     nav {
       margin-left: 40px;
       display: flex; gap: 24px;
@@ -34,6 +39,7 @@
       color: #e60012; border-color: #e60012;
     }
 
+    /* 우측 액션 아이콘 */
     .header-actions {
       margin-left: auto;
       display: flex; align-items: center; gap: 20px;
@@ -132,9 +138,7 @@
 
   <!-- 헤더 -->
   <header>
-    <div class="logo">
-      <img src="img/tving-logo.svg" alt="티빙 로고">
-    </div>
+    <div class="logo-text">TVING</div>
     <nav>
       <a href="#" class="tab">LIVE</a>
       <a href="#" class="tab active">다시보기</a>
@@ -180,9 +184,9 @@
           <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스">
           <div class="title">해피니스</div>
         </div>
-        <!-- 2 -->
+        <!-- 2 (이미지 변경) -->
         <div class="slide">
-          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="랜덤캐처">
+          <img src="https://mblogthumb-phinf.pstatic.net/MjAyMjEyMjRfMTIg/MDAxNjcxODc1MTExMTQw.hY93feGxSlOUBR2gUU6guO6fk3rmKdXvsHDTihH31kMg.tXtkX6nBywMGdrfMpxB8OtgMpAxVoWMgiHprseFNE00g.PNG.hlogic72/20221224_010236.png?type=w800" alt="랜덤캐처">
           <div class="title">랜덤캐처</div>
         </div>
         <!-- 3 -->
@@ -212,7 +216,7 @@
     </div>
   </section>
 
-  <!-- 3. 스크립트 -->
+  <!-- 스크립트 -->
   <script>
     const track = document.querySelector('.slider-track');
     document.querySelector('.next').addEventListener('click', () => {
