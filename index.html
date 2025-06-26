@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>티빙 스타일 UI 재현</title>
+<title>티빙 스타일 다시보기 UI</title>
 <style>
-  /* 기본 색상 */
   :root {
     --bg-dark: #141414;
     --bg-darker: #0f0f0f;
@@ -14,19 +13,15 @@
     --gray-dark: #222;
     --gray-light: #555;
   }
-
-  /* Reset */
   * {
     margin: 0; padding: 0; box-sizing: border-box;
   }
-
   body {
     font-family: 'Noto Sans KR', sans-serif, sans-serif;
     background-color: var(--bg-dark);
     color: var(--text-light);
     min-height: 100vh;
   }
-
   a {
     color: var(--text-light);
     text-decoration: none;
@@ -34,8 +29,6 @@
   a:hover {
     color: var(--accent);
   }
-
-  /* 헤더 */
   header {
     background: var(--bg-darker);
     padding: 12px 24px;
@@ -72,7 +65,6 @@
   nav ul li:hover {
     color: var(--accent);
   }
-
   .user-area {
     display: flex;
     align-items: center;
@@ -108,12 +100,10 @@
     cursor: pointer;
     user-select: none;
   }
-
-  /* 메인 배너 */
   .main-banner {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 420px;
     background: url('https://tving.com/images/main_banner.jpg') center center/cover no-repeat;
     margin-bottom: 40px;
   }
@@ -126,8 +116,6 @@
     font-weight: 700;
     text-shadow: 0 0 10px rgba(0,0,0,0.7);
   }
-
-  /* 섹션 제목 */
   section {
     margin-bottom: 40px;
   }
@@ -137,8 +125,6 @@
     margin-bottom: 16px;
     padding-left: 8px;
   }
-
-  /* 가로 스크롤 슬라이더 */
   .slider {
     display: flex;
     overflow-x: auto;
@@ -156,8 +142,6 @@
   .slider::-webkit-scrollbar-track {
     background: var(--gray-dark);
   }
-
-  /* 콘텐츠 카드 */
   .content-card {
     min-width: 140px;
     background: var(--bg-darker);
@@ -200,8 +184,6 @@
     padding: 2px 6px;
     border-radius: 4px;
   }
-
-  /* 준비중 이미지 스타일 */
   .placeholder-img {
     display: flex;
     justify-content: center;
@@ -212,24 +194,6 @@
     font-weight: 600;
     height: 210px;
   }
-
-  /* 인기 콘텐츠 번호 */
-  .rank-number {
-    position: absolute;
-    bottom: 8px;
-    left: 8px;
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--accent);
-    text-shadow: 0 0 6px #000;
-  }
-
-  /* 인기 콘텐츠 카드 */
-  .popular-card {
-    position: relative;
-  }
-
-  /* 반응형 */
   @media (max-width: 768px) {
     header {
       flex-wrap: wrap;
@@ -255,6 +219,14 @@
     }
     .content-card {
       min-width: 120px;
+    }
+    .main-banner {
+      height: 280px;
+    }
+    .main-banner-text {
+      font-size: 20px;
+      bottom: 20px;
+      left: 20px;
     }
   }
   @media (max-width: 480px) {
@@ -301,17 +273,13 @@
   </div>
 
   <section>
-    <h2 class="section-title">#티빙에서 꼭 봐야하는 프로그램</h2>
-    <div class="slider" id="tv-programs-slider">
-      <!-- JS로 콘텐츠 카드 삽입 -->
-    </div>
+    <h2 class="section-title">티빙에서 꼭 봐야하는 콘텐츠</h2>
+    <div class="slider" id="tv-programs-slider"></div>
   </section>
 
   <section>
     <h2 class="section-title">인기 콘텐츠</h2>
-    <div class="slider" id="popular-contents-slider">
-      <!-- JS로 콘텐츠 카드 삽입 -->
-    </div>
+    <div class="slider" id="popular-contents-slider"></div>
   </section>
 </main>
 
@@ -319,20 +287,20 @@
   const placeholderImg = "https://via.placeholder.com/280x420/333333/AAAAAA?text=준비중";
 
   const tvPrograms = [
-    { title: "환혼", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000000_0000000000.jpg", badge: "NEW" },
-    { title: "슬기로운 의사생활", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000001_0000000001.jpg" },
-    { title: "예고편", img: null },
-    { title: "유미의 세포들", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000002_0000000002.jpg" },
-    { title: "아는 형님", img: null },
-    { title: "놀면 뭐하니?", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000003_0000000003.jpg" }
+    { title: "해피니스", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000000_0000000000.jpg", badge: "ORIGINAL" },
+    { title: "러브캐처 인 서울", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000001_0000000001.jpg", badge: "ORIGINAL" },
+    { title: "슬픈도시여자들", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000002_0000000002.jpg", badge: "ORIGINAL" },
+    { title: "어른연습생", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000003_0000000003.jpg", badge: "ORIGINAL" },
+    { title: "가상세계재단 스타가 되고 싶어", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000004_0000000004.jpg", badge: "ORIGINAL" },
+    { title: "EMERGENCY", img: null, badge: "ORIGINAL" }
   ];
 
   const popularContents = [
-    { title: "재벌집 막내아들", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000004_0000000004.jpg" },
+    { title: "재벌집 막내아들", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000005_0000000005.jpg" },
     { title: "술꾼도시여자들", img: null },
-    { title: "유미의 세포들", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000005_0000000005.jpg" },
+    { title: "유미의 세포들", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000006_0000000006.jpg" },
     { title: "이재, 곧 죽습니다", img: null },
-    { title: "내 남편과 결혼해줘", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000006_0000000006.jpg" },
+    { title: "내 남편과 결혼해줘", img: "https://image.tving.com/upload/contents/2023/06/01/1000000000_0000000007_0000000007.jpg" },
     { title: "선재 업고 튀어", img: null }
   ];
 
