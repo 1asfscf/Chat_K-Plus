@@ -21,7 +21,7 @@
     /* PC 전용 헤더 */
     .header-desktop {
       display:flex; align-items:center; padding:16px 5%;
-      animation: fadeUp .6s ease-out;
+      animation:fadeUp .6s ease-out;
     }
     .header-desktop .logo-text { font-size:32px; font-weight:700; letter-spacing:-1px; }
     .header-desktop nav {
@@ -45,26 +45,87 @@
 
     /* 모바일 전용 헤더 */
     .header-mobile {
-      display:none; /* 기본 숨김 */
+      display:none;
       justify-content:space-between; align-items:center;
       padding:10px 5%; background:rgba(0,0,0,0.8);
-      animation: slideDown .4s ease-out;
+      animation:slideDown .4s ease-out;
     }
     .header-mobile .logo-text { font-size:24px; font-weight:700; }
-    .header-mobile .mobile-actions { display:flex; gap:16px; align-items:center; }
-    .header-mobile .mobile-actions button { display:flex; align-items:center; justify-content:center; }
+    .header-mobile .mobile-actions { display:flex; gap:16px; }
     .header-mobile .mobile-actions .icon svg { width:24px; height:24px; fill:#fff; transition:fill .2s; }
     .header-mobile .mobile-actions .icon:hover svg { fill:#e60012; }
 
-    /* ─── 배너 / 섹션 / 슬라이더 등 나머지 기존 스타일 유지 ─── */
-    .banner { /* ...기존 fadeUp 애니메이션 포함... */ }
-    .section, .slider, .slide, .arrow { /* ...생략... */ }
+    /* ─── 배너 ─── */
+    .banner {
+      position:relative; margin-top:64px;
+      width:100%; height:60vh;
+      background:url('https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg') center/cover no-repeat;
+      filter:brightness(0.6);
+      animation:fadeUp .8s ease-out .6s both;
+    }
+    .banner .overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
+    }
+    .banner .content {
+      position:absolute; left:5%; bottom:5%; max-width:50%;
+      animation:fadeUp .8s ease-out .8s both;
+    }
+    .banner h1 { font-size:48px; font-weight:700; margin-bottom:8px; }
+    .banner p.tagline { font-size:18px; line-height:1.4; margin-bottom:24px; }
+    .banner .btn {
+      display:inline-block; padding:12px 28px; background:#e60012;
+      color:#fff; font-weight:500; border-radius:4px;
+      text-decoration:none; transition:background .2s;
+    }
+    .banner .btn:hover { background:#ff1f3f; }
+
+    /* ─── 섹션 타이틀 ─── */
+    .section { padding:48px 5%; }
+    .section h2 {
+      font-size:28px; font-weight:700; margin-bottom:24px;
+      animation:fadeUp .6s ease-out 1s both;
+    }
+
+    /* ─── 슬라이더 + 스크롤 스냅 ─── */
+    .slider { position:relative; }
+    .slider-track {
+      display:flex; overflow-x:auto; scroll-behavior:smooth;
+      gap:16px; padding-bottom:8px; scroll-snap-type:x mandatory;
+      animation:fadeUp .6s ease-out 1.2s both;
+    }
+    .slider-track::-webkit-scrollbar { height:6px; }
+    .slider-track::-webkit-scrollbar-thumb { background:#444; border-radius:3px; }
+
+    .slide {
+      flex:0 0 200px; cursor:pointer; transition:transform .3s;
+      scroll-snap-align:start; animation:fadeUp .5s ease-out both;
+    }
+    .slide:hover { transform:scale(1.05); }
+    .slide img { width:100%; display:block; border-radius:4px; }
+    .slide .title {
+      margin-top:8px; font-size:16px; font-weight:500;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+
+    /* ─── 화살표 ─── */
+    .arrow {
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:40px; height:40px; background:rgba(0,0,0,0.6);
+      border-radius:50%; display:flex; align-items:center;
+      justify-content:center; cursor:pointer; transition:background .2s;
+      z-index:10; animation:fadeUp .6s ease-out 1.4s both;
+    }
+    .arrow.prev { left:2%; }
+    .arrow.next { right:2%; }
+    .arrow:hover { background:rgba(0,0,0,0.8); }
+    .arrow svg { width:24px; height:24px; fill:#fff; }
 
     /* ─── 반응형 ─── */
     @media (max-width:768px) {
       .header-desktop { display:none; }
       .header-mobile  { display:flex; }
-      /* 배너, 슬라이더, 폰트, 패딩 등 모바일용 크기로 조정 */
+
       .banner { margin-top:56px; height:50vh; }
       .banner h1 { font-size:32px; }
       .banner p.tagline { font-size:14px; margin-bottom:16px; }
@@ -84,6 +145,7 @@
 </head>
 <body>
 
+  <!-- 헤더 -->
   <header>
     <!-- PC 헤더 -->
     <div class="header-desktop">
@@ -98,25 +160,94 @@
         <a href="#">키즈</a>
       </nav>
       <div class="header-actions">
-        <button class="icon search"><!-- svg --></button>
-        <button class="icon bookmark"><!-- svg --></button>
-        <button class="profile"><img src="img/profile.jpg" alt="프로필"/></button>
+        <button class="icon search" aria-label="검색">
+          <!-- SVG 아이콘 -->
+        </button>
+        <button class="icon bookmark" aria-label="찜목록">
+          <!-- SVG 아이콘 -->
+        </button>
+        <button class="profile" aria-label="프로필">
+          <img src="img/profile.jpg" alt="프로필 사진"/>
+        </button>
       </div>
     </div>
-
     <!-- 모바일 헤더 -->
     <div class="header-mobile">
       <div class="logo-text">TVING</div>
       <div class="mobile-actions">
-        <button class="icon community" aria-label="커뮤니티"><!-- 커뮤니티 svg --></button>
-        <button class="icon menu" aria-label="메뉴"><!-- 햄버거 svg --></button>
+        <button class="icon community" aria-label="커뮤니티">
+          <!-- 커뮤니티 SVG -->
+        </button>
+        <button class="icon menu" aria-label="메뉴">
+          <!-- 햄버거 SVG -->
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- 나머지 배너, 섹션, 슬라이더, 스크립트 등 기존 코드 그대로 -->
-  <section class="banner">…</section>
-  <section class="section">…</section>
-  <script>/* 슬라이더 스크롤 & 페이드업 JS (기존) */</script>
+  <!-- 메인 배너 -->
+  <section class="banner">
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>지리산</h1>
+      <p class="tagline">하늘과 만나는 곳, 이곳에 계곡의 관객</p>
+      <a href="#" class="btn">자세히 보기</a>
+    </div>
+  </section>
+
+  <!-- 추천 콘텐츠 섹션 -->
+  <section class="section">
+    <h2>티빙에서 꼭 봐야하는 콘텐츠</h2>
+    <div class="slider">
+      <div class="arrow prev">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </div>
+      <div class="slider-track">
+        <!-- 1 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스">
+          <div class="title">해피니스</div>
+        </div>
+        <!-- 2 -->
+        <div class="slide">
+          <img src="https://mblogthumb-phinf.pstatic.net/MjAyMjEyMjRfMTIg/MDAxNjcxODc1MTExMTQw.hY93feGxSlOUBR2gUU6guO6fk3rmKdXvsHDTihH31kMg.tXtkX6nBywMGdrfMpxB8OtgMpAxVoWMgiHprseFNE00g.PNG.hlogic72/20221224_010236.png?type=w800" alt="랜덤캐처">
+          <div class="title">랜덤캐처</div>
+        </div>
+        <!-- 3 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="승부도시여자들">
+          <div class="title">승부도시여자들</div>
+        </div>
+        <!-- 4 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="어른연습생">
+          <div class="title">어른연습생</div>
+        </div>
+        <!-- 5 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="가족을 지키기만 하면 되는거였어">
+          <div class="title">가족을 지키기만 하면 되는거였어</div>
+        </div>
+        <!-- 6 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="EMERGENCY">
+          <div class="title">EMERGENCY</div>
+        </div>
+      </div>
+      <div class="arrow next">
+        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const track = document.querySelector('.slider-track');
+    document.querySelector('.next').addEventListener('click', () =>
+      track.scrollBy({ left: track.clientWidth * 0.6, behavior: 'smooth' })
+    );
+    document.querySelector('.prev').addEventListener('click', () =>
+      track.scrollBy({ left: -track.clientWidth * 0.6, behavior: 'smooth' })
+    );
+  </script>
 </body>
 </html>
