@@ -1,85 +1,130 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>오류 1006 - 접근 불가</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white text-black antialiased">
+    <meta charset="utf-8">
+    <title>티비판(TVPAN) - 최신영화, 드라마, 애니, 미드 등 다시보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="keywords" content="티비판 다시보기,티비 다시보기,실시간 다시보기,다시보기,무료 다시보기,실시간티비,실시간티비 다시보기,최신영화 다시보기,영화 다시보기,한국영화 다시보기,해외영화 다시보기,최신드라마 다시보기,드라마 다시보기,한국드라마 다시보기,해외드라마 다시보기,미드 다시보기,최신예능 다시보기,예능 다시보기,애니메이션 다시보기,애니 다시보기">
+    <meta name="description" content="티비판은 다양한 영화, 드라마, 예능 다시보기 정보를 제공하는 티비 다시보기 사이트입니다. 빠르고 쉽게 시청하고싶은 콘텐츠를 찾아보세요.">
 
-  <!-- 오류 헤더 -->
-  <div id="cf-error-details" class="p-0">
-    <header class="max-w-3xl mx-auto pt-10 px-4 mb-12">
-      <h1 class="text-4xl md:text-3xl font-light text-black-dark leading-tight mb-2">
-        오류 <span class="font-semibold">1006</span>
-      </h1>
-      <div class="text-sm text-gray-600 font-mono leading-relaxed">
-        <p>레이 ID: 955b8255e8b70705 • 2025-06-26 08:59:32 UTC</p>
-      </div>
-      <h2 class="text-2xl text-gray-700 font-light mt-4">접근 불가</h2>
+    <!-- CSS 파일은 <head> 안에 두어 빠르게 스타일을 로드합니다. -->
+    <link rel="stylesheet" type="text/css" href="/templates/tv_tvpan_pc_tving/css/all.css?v=20250618310509">
+    <link rel="stylesheet" type="text/css" href="/templates/tv_tvpan_pc_tving/css/index.css?v=220250618310509">
+    <link rel="stylesheet" type="text/css" href="/templates/tv_tvpan_pc_tving/css/swiper-bundle.min.css">
+
+    <!-- 파비콘 및 애플 터치 아이콘 설정 -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/upload/tvpan/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/upload/tvpan/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/upload/tvpan/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/upload/tvpan/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/upload/tvpan/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/upload/tvpan/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/upload/tvpan/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/upload/tvpan/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/upload/tvpan/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/upload/tvpan/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/upload/tvpan/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/static/upload/tvpan/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/upload/tvpan/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/static/upload/tvpan/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/static/upload/tvpan/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Swiper 버튼 스타일 (기존과 동일) -->
+    <style>
+        .swiper-button-next.swiper-button-disabled,
+        .swiper-button-prev.swiper-button-disabled {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Analytics 스크립트는 <head> 또는 <body> 시작 부분에 두어 빠르게 추적을 시작합니다. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SEH0RWH4GP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-SEH0RWH4GP');
+    </script>
+
+    <!-- 헤더 시작 -->
+    <header>
+        <div class="header_wrap">
+            <div class="h_left">
+                <a href="/" class="logo" aria-label="티비판 홈으로 이동">
+                    <!-- 이미지에 alt 속성을 추가하여 접근성을 높입니다. -->
+                    <img src="/static/upload/be3043e3-4777-453d-be16-702cfaca532a.png" class="logo_img" alt="티비판 로고">
+                </a>
+                <!-- 네비게이션 메뉴에 aria-label을 추가하여 스크린 리더 사용자에게 정보를 제공합니다. -->
+                <nav class="nav_all" aria-label="메인 메뉴">
+                    <ul>
+                        <li style="display:none;">
+                            <a href="/">홈</a>
+                        </li>
+                        <li>
+                            <a href="/promotion.html">보증업체</a>
+                        </li>
+                        <li>
+                            <!-- 하위 메뉴가 있는 경우, aria-haspopup과 aria-expanded를 사용하여 접근성을 높일 수 있습니다. -->
+                            <a href="#" aria-haspopup="true" aria-expanded="false">영화</a>
+                            <dl class="submenu">
+                                <dd><a href="/kor_movie.html">한국영화</a></dd>
+                                <dd><a href="/hw_movie.html">해외영화</a></dd>
+                                <dd><a href="/gz_movie.html">극장판</a></dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <a href="#" aria-haspopup="true" aria-expanded="false">드라마</a>
+                            <dl class="submenu">
+                                <dd><a href="/kr_drama.html">한국드라마</a></dd>
+                                <dd><a href="/hw_drama.html">해외드라마</a></dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <a href="#" aria-haspopup="true" aria-expanded="false">방송프로그램</a>
+                            <dl class="submenu">
+                                <dd><a href="/yn_movie.html">예능프로그램</a></dd>
+                                <dd><a href="/dk_movie.html">다큐/시사</a></dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <a href="/ani_movie.html">애니메이션</a>
+                        </li>
+                        <li>
+                            <a href="/customer/index.html">고객센터</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="h_right">
+                <a href="/search.html" class="search" status="off" aria-label="검색">
+                    <img src="/templates/tv_tvpan_pc_tving/image" alt="검색 아이콘">
+                    <!-- 이미지 경로가 불완전합니다. 올바른 이미지 경로를 입력해주세요. -->
+                </a>
+                <!-- 나머지 헤더 내용 -->
+            </div>
+        </div>
     </header>
 
-    <!-- 내용 섹션 -->
-    <section class="max-w-3xl mx-auto mb-12 px-4">
-      <div id="what-happened-section">
-        <h2 class="text-2xl font-medium text-black-dark mb-4" data-translate="what_happened">무슨 일이에요?</h2>
-        <p class="mb-4">
-          이 웹사이트(https://1afscfg.vercel.app/)의 소유자가 귀하의 IP 주소(182.220.164.68)를 차단했습니다.
-        </p>
-        <p>
-          자세한 내용은 
-          <a 
-            href="https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1006/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            class="text-blue-600 underline"
-          >
-            Cloudflare 지원 문서
-          </a>
-          를 참조하세요.
-        </p>
-      </div>
-    </section>
+    <!-- 주요 콘텐츠 영역 (예: 메인 슬라이더, 최신 콘텐츠 목록 등) -->
+    <main>
+        <!-- 여기에 페이지의 주요 내용이 들어갑니다. -->
+    </main>
 
-    <!-- 피드백 영역 -->
-    <div class="py-8 text-center">
-      <p class="mb-4 text-gray-800">이 페이지가 도움이 되었나요?</p>
-      <div>
-        <button class="border border-gray-400 px-4 py-2 rounded mx-2 hover:bg-gray-100">예</button>
-        <button class="border border-gray-400 px-4 py-2 rounded mx-2 hover:bg-gray-100">아니요</button>
-      </div>
-      <div id="error-feedback-success" class="mt-4 hidden text-green-600">피드백을 주셔서 감사합니다!</div>
-    </div>
-
-    <!-- 푸터 -->
-    <footer class="border-t border-gray-300 text-sm text-center sm:text-left max-w-3xl mx-auto py-6 px-4">
-      <p class="mb-2">
-        <span class="font-semibold">Cloudflare Ray ID:</span> 955b8255e8b70705
-      </p>
-      <p class="mb-2">
-        귀하의 IP: <button id="cf-footer-ip-reveal" class="text-blue-600 underline">클릭하여 공개하세요</button>
-        <span id="cf-footer-ip" class="hidden">182.220.164.68</span>
-      </p>
-      <p>
-        <a href="https://www.cloudflare.com/5xx-error-landing" target="_blank" class="text-blue-600 underline">
-          Cloudflare 성능 및 보안 정보
-        </a>
-      </p>
+    <!-- 푸터 영역 -->
+    <footer>
+        <!-- 푸터 내용 -->
     </footer>
 
-    <!-- IP 공개 스크립트 -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const button = document.getElementById("cf-footer-ip-reveal");
-        const ip = document.getElementById("cf-footer-ip");
-        button.addEventListener("click", () => {
-          button.classList.add("hidden");
-          ip.classList.remove("hidden");
-        });
-      });
-    </script>
-  </div>
-
+    <!-- JavaScript 파일은 </body> 닫는 태그 직전에 두어 페이지 로딩 속도를 향상시킵니다. -->
+    <!-- defer 속성을 사용하여 HTML 파싱을 방해하지 않도록 합니다. -->
+    <script src="/static/common/js/def_tv_v1_rem/jquery-1.12.1.min.js" defer></script>
+    <script src="/static/common/js/def_tv_v1_rem/swiper-bundle.min.js" defer></script>
+    <script src="/static/common/js/def_tv_v1_rem/common.js?v=20250618310509" defer></script>
+    <script src="/static/common/js/def_tv_v1_rem/index.js?v=20250618310509" defer></script>
+    <script src="/static/common/js/def_tv_v1_rem/jquery.cookie.js" defer></script>
+    <script src="/static/common/js/def_tv_v1_rem/jquery.storageapi.min.js" defer></script>
 </body>
 </html>
