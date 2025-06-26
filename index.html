@@ -8,123 +8,80 @@
   <style>
     /* Reset & 기본 세팅 */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Noto Sans KR', sans-serif; }
+    html, body { width:100%; height:100%; background:#000; color:#fff; font-family:'Noto Sans KR',sans-serif; }
 
     /* 배너 */
     .banner {
       position: relative;
-      width: 100%;
-      height: 60vh;
+      width: 100%; height: 60vh;
       background: url('img/jirisan-banner.jpg') center/cover no-repeat;
       filter: brightness(0.6);
     }
     .banner .overlay {
-      position: absolute; inset: 0;
+      position:absolute; inset:0;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
     }
     .banner .content {
-      position: absolute;
-      bottom: 5%;
-      left: 5%;
-      max-width: 50%;
+      position:absolute; left:5%; bottom:5%; max-width:50%;
     }
-    .banner .content h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
+    .banner h1 {
+      font-size: 3rem; font-weight:700; margin-bottom:0.5rem;
     }
-    .banner .content p.tagline {
-      font-size: 1.2rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.4;
+    .banner p.tagline {
+      font-size: 1.2rem; line-height:1.4; margin-bottom:1.5rem;
     }
-    .banner .content .btn {
-      display: inline-block;
-      padding: 0.8rem 1.8rem;
-      background-color: #e60012;
-      color: #fff;
-      font-weight: 500;
-      border-radius: 4px;
-      text-decoration: none;
+    .banner .btn {
+      display:inline-block; padding:0.8rem 1.8rem;
+      background:#e60012; color:#fff; font-weight:500;
+      border-radius:4px; text-decoration:none;
       transition: background 0.2s;
     }
-    .banner .content .btn:hover {
-      background-color: #ff1f3f;
-    }
+    .banner .btn:hover { background:#ff1f3f; }
 
     /* 섹션 */
-    .section {
-      padding: 3rem 5%;
-    }
+    .section { padding:3rem 5%; }
     .section h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
+      font-size:1.8rem; font-weight:700; margin-bottom:1.5rem;
     }
 
     /* 슬라이더 */
-    .slider {
-      position: relative;
-    }
+    .slider { position:relative; }
     .slider-track {
-      display: flex;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      gap: 1rem;
-      padding-bottom: 0.5rem;
+      display:flex; overflow-x:auto; scroll-behavior:smooth;
+      gap:1rem; padding-bottom:0.5rem;
     }
-    .slider-track::-webkit-scrollbar {
-      height: 6px;
-    }
-    .slider-track::-webkit-scrollbar-track {
-      background: #111;
-    }
+    .slider-track::-webkit-scrollbar { height:6px; }
+    .slider-track::-webkit-scrollbar-track { background:#111; }
     .slider-track::-webkit-scrollbar-thumb {
-      background: #444;
-      border-radius: 3px;
+      background:#444; border-radius:3px;
     }
     .slide {
-      flex: 0 0 200px;
-      cursor: pointer;
+      flex:0 0 200px; cursor:pointer;
       transition: transform 0.3s;
     }
-    .slide:hover { transform: scale(1.05); }
+    .slide:hover { transform:scale(1.05); }
     .slide img {
-      display: block;
-      width: 100%;
-      border-radius: 4px;
+      width:100%; display:block; border-radius:4px;
     }
     .slide .title {
-      margin-top: 0.6rem;
-      font-size: 1rem;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      margin-top:0.6rem; font-size:1rem;
+      font-weight:500; white-space:nowrap;
+      overflow:hidden; text-overflow:ellipsis;
     }
 
     /* 화살표 버튼 */
     .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 2.5rem; height: 2.5rem;
-      background: rgba(0,0,0,0.6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.2s;
+      position:absolute; top:50%;
+      transform:translateY(-50%);
+      width:2.5rem; height:2.5rem;
+      background:rgba(0,0,0,0.6); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; transition:background 0.2s; z-index:10;
     }
-    .arrow:hover { background: rgba(0,0,0,0.8); }
-    .arrow.prev { left: 0.5%; }
-    .arrow.next { right: 0.5%; }
-    .arrow svg {
-      width: 1.2rem; height: 1.2rem;
-      fill: #fff;
-    }
+    .arrow:hover { background:rgba(0,0,0,0.8); }
+    .arrow.prev { left:0.5%; }
+    .arrow.next { right:0.5%; }
+    .arrow svg { width:1.2rem; height:1.2rem; fill:#fff; }
   </style>
 </head>
 <body>
@@ -147,29 +104,34 @@
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
       </div>
       <div class="slider-track">
-        <!-- 슬라이드 항목들 -->
+        <!-- 1 -->
         <div class="slide">
-          <img src="img/happiness.jpg" alt="해피니스">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스 #1">
           <div class="title">해피니스</div>
         </div>
+        <!-- 2 -->
         <div class="slide">
-          <img src="img/lovecatcher.jpg" alt="러브 캐처">
-          <div class="title">러브 캐처</div>
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스 #2">
+          <div class="title">랜덤캐처</div>
         </div>
+        <!-- 3 -->
         <div class="slide">
-          <img src="img/winning-women.jpg" alt="승부도시여자들">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스 #3">
           <div class="title">승부도시여자들</div>
         </div>
+        <!-- 4 -->
         <div class="slide">
-          <img src="img/adult-trainee.jpg" alt="어른연습생">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스 #4">
           <div class="title">어른연습생</div>
         </div>
+        <!-- 5 -->
         <div class="slide">
-          <img src="img/virtual-idol.jpg" alt="가상세계와 연 스타가 될 수 있을까">
-          <div class="title">가상세계와 연 스타가 될 수 있을까</div>
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스 #5">
+          <div class="title">가족을 지키기만 하면 되는거였어</div>
         </div>
+        <!-- 6 -->
         <div class="slide">
-          <img src="img/emergency.jpg" alt="EMERGENCY">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스 #6">
           <div class="title">EMERGENCY</div>
         </div>
       </div>
