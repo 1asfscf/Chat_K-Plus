@@ -1,167 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT Light Mode Clone (Final)</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        :root {
-            --sidebar-bg: #202123; --main-bg: #FFFFFF; --text-light: #ECECF1;
-            --text-dark: #353740; --border-color: #E5E5E5; --suggestion-bg: #F7F7F8;
-            --hover-bg: #ECECF1;
-        }
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
-        body { display: flex; height: 100vh; overflow: hidden; background-color: var(--main-bg); }
-
-        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; padding: 12px; transition: width 0.2s; }
-        .sidebar .new-chat { display: flex; align-items: center; padding: 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-size: 0.9em; white-space: nowrap; }
-        .sidebar .new-chat:hover { background-color: rgba(255,255,255,0.05); }
-        .sidebar .new-chat span { margin-right: 8px; }
-        .sidebar .chat-history { flex-grow: 1; margin-top: 24px; overflow-y: auto; scrollbar-width: thin; }
-        .sidebar .user-menu { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px; }
-        .user-menu ul, .chat-history ul { list-style: none; padding-right: 8px;}
-        .user-menu li, .chat-history li { display: flex; align-items: center; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 0.9em; white-space: nowrap; }
-        .user-menu li:hover, .chat-history li:hover { background-color: #343541; }
-        .user-menu li span, .chat-history li span { margin-right: 12px; }
-
-        .chat-area { flex-grow: 1; display: flex; flex-direction: column; position: relative; }
-        
-        #welcome-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; flex-grow: 1; text-align: center; padding-bottom: 150px; }
-        #welcome-screen h1 { font-size: 2.2em; color: #5E5E5E; margin-bottom: 40px; font-weight: 700; }
-        .suggestion-columns { display: flex; gap: 16px; width: 100%; max-width: 768px; }
-        .suggestion-column { flex: 1; }
-        .suggestion-column h2 { font-size: 1.1em; margin-bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 8px; color: var(--text-dark); }
-        .suggestion-item { background-color: var(--suggestion-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 0.9em; cursor: pointer; width: 100%; text-align: left; }
-        .suggestion-item:hover { background-color: var(--hover-bg); }
-        .suggestion-item.info { cursor: default; } .suggestion-item.info:hover { background-color: var(--suggestion-bg); }
-
-        #chat-log { display: none; flex-grow: 1; overflow-y: auto; padding: 0 10%; }
-        
-        /* ★★★ 1. 답변 스타일 개선: 실제 ChatGPT와 동일하게 구현 ★★★ */
-        .message { display: flex; gap: 20px; padding: 24px 0; line-height: 1.7; align-items: flex-start; }
-        .message.user { justify-content: flex-start; }
-        .message.bot { 
-            background-color: #F7F7F8; 
-            padding-left: 10%; /* 부모의 패딩과 동일하게 설정 */
-            padding-right: 10%; /* 부모의 패딩과 동일하게 설정 */
-            margin: 0 -10%; /* 부모의 패딩을 무시하고 가로 전체 차지 */
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-        .message.bot .message-inner {
-             display: flex; gap: 20px; align-items: flex-start; width: 100%; max-width: 728px; /* 실제 콘텐츠 최대 너비 제한 */ margin: 0 auto;
-        }
-        .avatar { width: 30px; height: 30px; border-radius: 4px; background-color: #10A37F; flex-shrink: 0; display: flex; justify-content: center; align-items: center; font-weight: bold; color: white; }
-        .message.bot .avatar { background-color: #9B59B6; }
-        .content { white-space: pre-wrap; color: var(--text-dark); padding-top: 2px; flex-grow: 1; }
-        
-        .chat-input-container { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 768px; padding: 0 20px; }
-        .chat-input-wrapper { position: relative; background-color: var(--main-bg); border: 1px solid #C5C5D2; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
-        .chat-input-wrapper textarea { width: 100%; padding: 16px 50px 16px 20px; border: none; outline: none; resize: none; border-radius: 16px; font-size: 1em; line-height: 1.5; max-height: 200px; background: transparent; }
-        .chat-input-wrapper button { position: absolute; right: 12px; bottom: 12px; background: #EBEBEB; border: none; cursor: pointer; color: #8E8EA0; border-radius: 8px; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; }
-        .chat-input-wrapper button:hover { background-color: #D7D7D7; }
-        .chat-input-wrapper textarea:valid + button { background-color: #10A37F; color: white; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>차단 알림</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-white text-black">
 
-    <aside class="sidebar"><!-- 이전과 동일 --></aside>
-    <main class="chat-area"><!-- 이전과 동일 --></main>
+  <section class="w-full mx-auto mb-8 px-4 lg:px-8 flex justify-center">
+    <div id="what-happened-section" class="w-full max-w-2xl">
+      <h2 class="text-3xl leading-tight font-normal mb-4 text-black-dark antialiased" data-translate="what_happened">
+        무슨 일이에요?
+      </h2>
+      <p>
+        이 웹사이트(tvwiki22.com)의 소유자가 귀하의 IP 주소(182.220.164.68)를 차단했습니다.
+      </p>
+      <p>
+        자세한 내용은 
+        <a 
+          rel="noopener noreferrer" 
+          href="https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1006/" 
+          target="_blank" 
+          class="text-blue-600 underline"
+        >
+          Cloudflare 지원 문서
+        </a>
+        를 참조하세요.
+      </p>
+    </div>
+  </section>
 
-    <script>
-        const API_KEY = ""; // 여기에 OpenAI API 키를 입력하세요
-
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const chatLog = document.getElementById('chat-log');
-        const chatInput = document.getElementById('chat-input');
-        const sendBtn = document.getElementById('send-btn');
-        const newChatBtn = document.querySelector('.new-chat');
-
-        let isApiConfigured = API_KEY && API_KEY !== "";
-        let conversationHistory = [{ role: "system", content: "You are a helpful assistant." }];
-        
-        // ★★★ 2. 예시 질문과 답변 목록을 이미지와 동일하게 확장 ★★★
-        const cannedResponses = {
-            "간단한 용어로 양자 컴퓨팅 설명해줘": "양자 컴퓨팅은 일반 컴퓨터가 정보를 '0' 또는 '1'로만 저장하는 것과 달리, '큐비트'라는 단위를 사용해 '0'이면서 동시에 '1'인 상태를 표현할 수 있습니다. 이 덕분에 특정 종류의 복잡한 문제들을 기존 컴퓨터보다 훨씬 빠르게 풀 수 있는 잠재력을 가진 차세대 컴퓨팅 기술입니다.",
-            "10살 생일을 위한 창의적인 아이디어 있어?": "물론이죠! 10살 생일 파티 아이디어 몇 가지를 제안해 드릴게요.\n1. **과학 실험 파티**: 간단한 슬라임 만들기, 화산 폭발 실험 등 아이들이 직접 참여하며 즐길 수 있는 과학 테마 파티입니다.\n2. **나만의 피자 만들기**: 각자 좋아하는 토핑으로 직접 피자를 만들어보는 요리 파티는 성취감과 재미를 동시에 줄 수 있습니다.\n3. **보물찾기 게임**: 집이나 공원에 숨겨진 단서들을 따라가며 최종 보물을 찾는 어드벤처 컨셉의 파티도 아이들이 아주 좋아합니다.",
-            "JavaScript에서 HTTP 요청을 하려면?": "JavaScript에서 HTTP 요청을 보내는 가장 현대적이고 간편한 방법은 `fetch()` 함수를 사용하는 것입니다. 다음은 간단한 GET 요청 예시 코드입니다.\n\n`코드 블록 영역`",
-            "분짜는 무엇인가?": "분짜(Bún chả)는 베트남 하노이 지역의 대표적인 국수 요리입니다. 숯불에 구운 돼지고기와 쌀국수(분)를 새콤달콤한 느억맘 소스에 적셔 먹는 음식으로, 신선한 허브와 채소를 곁들여 먹는 것이 특징입니다. 한국인의 입맛에도 잘 맞아 인기가 많습니다.",
-            "태극권소개": "태극권(太極拳)은 중국의 전통 무술이면서 심신 단련을 위한 운동입니다. 부드럽고 연속적인 동작을 통해 몸의 균형을 잡고 기의 흐름을 원활하게 하는 데 중점을 둡니다. 명상적인 효과도 있어 스트레스 해소와 건강 증진에 도움이 되는 것으로 알려져 있습니다."
-        };
-
-        const startChat = () => {
-            if (welcomeScreen.style.display !== 'none') {
-                welcomeScreen.style.display = 'none';
-                chatLog.style.display = 'block';
-            }
-        };
-
-        const sendMessage = async (messageText) => {
-            if (!messageText.trim()) return;
-            startChat();
-            appendMessage('user', messageText);
-            chatInput.value = '';
-            
-            // ★★★ 3. 예시 질문 직접 입력 시에도 기본 답변 출력 ★★★
-            if (!isApiConfigured && cannedResponses[messageText.trim()]) {
-                getBasicResponse(messageText.trim());
-            } else if (isApiConfigured) {
-                await getApiResponse(messageText);
-            } else {
-                getBasicResponse(messageText); // API 없을 때 기본 안내 메시지
-            }
-        };
-
-        const getBasicResponse = (userMessage) => {
-            const botThinkingMessage = appendMessage('bot', '...');
-            setTimeout(() => {
-                const response = cannedResponses[userMessage] || "API 키가 설정되지 않았습니다. 스크립트 파일의 `API_KEY` 변수에 유효한 OpenAI API 키를 입력하면 모든 질문에 답변할 수 있습니다.";
-                botThinkingMessage.querySelector('.content').innerHTML = response.replace(/\n/g, '<br>').replace(/``````/g, '</code></pre>');
-            }, 500);
-        };
-
-        const getApiResponse = async (userMessage) => {
-            // ... 이전과 동일한 API 로직 ...
-        };
-        
-        const appendMessage = (sender, text) => {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            
-            let innerHTML;
-            if (sender === 'bot') {
-                innerHTML = `<div class="message-inner"><div class="avatar">AI</div><div class="content">${text}</div></div>`;
-            } else {
-                innerHTML = `<div class="avatar">You</div><div class="content">${text}</div>`;
-            }
-
-            messageDiv.innerHTML = innerHTML;
-            chatLog.appendChild(messageDiv);
-            chatLog.scrollTop = chatLog.scrollHeight;
-            return messageDiv;
-        };
-        
-        // ★★★ 4. '새 채팅' 버튼 기능 ★★★
-        newChatBtn.addEventListener('click', () => {
-            chatLog.innerHTML = '';
-            conversationHistory = [{ role: "system", content: "You are a helpful assistant." }];
-            welcomeScreen.style.display = 'flex';
-            chatLog.style.display = 'none';
-        });
-
-        sendBtn.addEventListener('click', () => sendMessage(chatInput.value.trim()));
-        chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(chatInput.value.trim()); }
-        });
-        
-        document.querySelectorAll('.suggestion-item[onclick]').forEach(item => {
-             item.addEventListener('click', () => {
-                 const question = item.getAttribute('onclick').match(/'([^']+)'/)[1];
-                 sendMessage(question);
-             });
-        });
-    </script>
 </body>
 </html>
