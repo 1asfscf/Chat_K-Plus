@@ -206,30 +206,47 @@
     </div>
   </section>
 
-  <!-- Slider Section -->
-  <section class="section">
-    <h2>티빙에서 꼭 봐야하는 콘텐츠</h2>
-    <div class="slider">
-      <div class="arrow prev">
-        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+<!-- 추천 콘텐츠 섹션 -->
+<section class="section">
+  <h2>티빙에서 꼭 봐야하는 콘텐츠</h2>
+  <div class="slider">
+    <div class="arrow prev">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </div>
+    <div class="slider-track">
+      <!-- 1 -->
+      <div class="slide">
+        <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스">
+        <div class="title">해피니스</div>
       </div>
-      <div class="slider-track">
-        <!-- 6개 카드 그대로 -->
+      <!-- 2 -->
+      <div class="slide">
+        <img src="https://mblogthumb-phinf.pstatic.net/MjAyMjEyMjRfMTIg/MDAxNjcxODc1MTExMTQw.hY93feGxSlOUBR2gUU6guO6fk3rmKdXvsHDTihH31kMg.tXtkX6nBywMGdrfMpxB8OtgMpAxVoWMgiHprseFNE00g.PNG.hlogic72/20221224_010236.png?type=w800" alt="랜덤캐처">
+        <div class="title">랜덤캐처</div>
       </div>
-      <div class="arrow next">
-        <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      <!-- 3 -->
+      <div class="slide">
+        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="승부도시여자들">
+        <div class="title">승부도시여자들</div>
+      </div>
+      <!-- 4 -->
+      <div class="slide">
+        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="어른연습생">
+        <div class="title">어른연습생</div>
+      </div>
+      <!-- 5 -->
+      <div class="slide">
+        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="가족을 지키기만 하면 되는거였어">
+        <div class="title">가족을 지키기만 하면 되는거였어</div>
+      </div>
+      <!-- 6 -->
+      <div class="slide">
+        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="EMERGENCY">
+        <div class="title">EMERGENCY</div>
       </div>
     </div>
-  </section>
-
-  <script>
-    const track = document.querySelector('.slider-track');
-    document.querySelector('.next').addEventListener('click', () =>
-      track.scrollBy({ left: track.clientWidth * 0.6, behavior: 'smooth' })
-    );
-    document.querySelector('.prev').addEventListener('click', () =>
-      track.scrollBy({ left: -track.clientWidth * 0.6, behavior: 'smooth' })
-    );
-  </script>
-</body>
-</html>
+    <div class="arrow next">
+      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </div>
+  </div>
+</section>
