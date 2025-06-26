@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>OTT 다시보기 – 티빙 스타일</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -12,83 +12,71 @@
 
     /* 헤더 */
     header {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      padding: 1rem 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      position: absolute; top: 0; left: 0;
+      width: 100%; padding: 16px 5%;
+      display: flex; align-items: center;
       z-index: 20;
     }
-    header .logo img {
-      height: 1.5rem;
-    }
+    .logo img { height: 32px; }
     nav {
-      flex: 1;
-      margin: 0 2rem;
-    }
-    nav ul {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
+      margin-left: 40px;
+      display: flex; gap: 24px;
+      font-size: 14px; font-weight: 500;
     }
     nav a {
-      color: #fff;
-      font-weight: 500;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: color 0.2s;
+      color: #fff; text-decoration: none;
+      padding-bottom: 4px;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
     }
     nav a:hover { color: #e60012; }
+    nav a.active {
+      color: #e60012; border-color: #e60012;
+    }
 
     .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      margin-left: auto;
+      display: flex; align-items: center; gap: 20px;
     }
     .header-actions button,
-    .header-actions a {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .header-actions .profile {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
     }
-    .header-actions .search svg,
-    .header-actions .bookmark svg {
-      width: 1.2rem; height: 1.2rem; fill: #fff;
+    .header-actions .icon svg {
+      width: 20px; height: 20px; fill: #fff;
+      transition: fill 0.2s;
+    }
+    .header-actions .icon:hover svg {
+      fill: #e60012;
     }
     .header-actions .profile img {
-      width: 2rem; height: 2rem;
-      border-radius: 50%;
-      object-fit: cover;
+      width: 32px; height: 32px;
+      border-radius: 50%; object-fit: cover;
     }
 
     /* 배너 */
     .banner {
-      position: relative;
+      position: relative; margin-top: 64px;
       width: 100%; height: 60vh;
       background: url('img/jirisan-banner.jpg') center/cover no-repeat;
       filter: brightness(0.6);
     }
     .banner .overlay {
-      position:absolute; inset:0;
+      position: absolute; inset: 0;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
     }
     .banner .content {
-      position:absolute; left:5%; bottom:5%; max-width:50%;
+      position: absolute; left:5%; bottom:5%; max-width:50%;
     }
     .banner h1 {
-      font-size: 3rem; font-weight:700; margin-bottom:0.5rem;
+      font-size: 48px; font-weight:700; margin-bottom:8px;
     }
     .banner p.tagline {
-      font-size: 1.2rem; line-height:1.4; margin-bottom:1.5rem;
+      font-size: 18px; line-height:1.4; margin-bottom:24px;
     }
     .banner .btn {
-      display:inline-block; padding:0.8rem 1.8rem;
+      display:inline-block; padding:12px 28px;
       background:#e60012; color:#fff; font-weight:500;
       border-radius:4px; text-decoration:none;
       transition: background 0.2s;
@@ -96,16 +84,16 @@
     .banner .btn:hover { background:#ff1f3f; }
 
     /* 섹션 */
-    .section { padding:3rem 5%; }
+    .section { padding:48px 5%; }
     .section h2 {
-      font-size:1.8rem; font-weight:700; margin-bottom:1.5rem;
+      font-size:28px; font-weight:700; margin-bottom:24px;
     }
 
     /* 슬라이더 */
     .slider { position:relative; }
     .slider-track {
       display:flex; overflow-x:auto; scroll-behavior:smooth;
-      gap:1rem; padding-bottom:0.5rem;
+      gap:16px; padding-bottom:8px;
     }
     .slider-track::-webkit-scrollbar { height:6px; }
     .slider-track::-webkit-scrollbar-track { background:#111; }
@@ -121,24 +109,23 @@
       width:100%; display:block; border-radius:4px;
     }
     .slide .title {
-      margin-top:0.6rem; font-size:1rem;
+      margin-top:8px; font-size:16px;
       font-weight:500; white-space:nowrap;
       overflow:hidden; text-overflow:ellipsis;
     }
 
     /* 화살표 버튼 */
     .arrow {
-      position:absolute; top:50%;
-      transform:translateY(-50%);
-      width:2.5rem; height:2.5rem;
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:40px; height:40px;
       background:rgba(0,0,0,0.6); border-radius:50%;
       display:flex; align-items:center; justify-content:center;
       cursor:pointer; transition:background 0.2s; z-index:10;
     }
+    .arrow.prev { left:2%; }
+    .arrow.next { right:2%; }
     .arrow:hover { background:rgba(0,0,0,0.8); }
-    .arrow.prev { left:0.5%; }
-    .arrow.next { right:0.5%; }
-    .arrow svg { width:1.2rem; height:1.2rem; fill:#fff; }
+    .arrow svg { width:24px; height:24px; fill:#fff; }
   </style>
 </head>
 <body>
@@ -149,24 +136,21 @@
       <img src="img/tving-logo.svg" alt="티빙 로고">
     </div>
     <nav>
-      <ul>
-        <li><a href="#">홈</a></li>
-        <li><a href="#">실시간</a></li>
-        <li><a href="#">다시보기</a></li>
-        <li><a href="#">드라마</a></li>
-        <li><a href="#">영화</a></li>
-        <li><a href="#">키즈</a></li>
-      </ul>
+      <a href="#" class="tab">LIVE</a>
+      <a href="#" class="tab active">다시보기</a>
+      <a href="#" class="tab">테마</a>
+      <a href="#" class="tab">예능</a>
+      <a href="#" class="tab">드라마</a>
+      <a href="#" class="tab">영화</a>
+      <a href="#" class="tab">키즈</a>
     </nav>
     <div class="header-actions">
-      <button class="search" aria-label="검색">
-        <!-- 검색 아이콘 SVG -->
+      <button class="icon search" aria-label="검색">
         <svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 1 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0-2A8.5 8.5 0 1 0 18 9.5 8.5 8.5 0 0 0 9.5 1zm10.02 18.79L17 17.27a9.5 9.5 0 1 0-1.73 1.73l2.52 2.52 1.73-1.73z"/></svg>
       </button>
-      <a href="#" class="bookmark" aria-label="찜목록">
-        <!-- 찜 아이콘 SVG -->
+      <button class="icon bookmark" aria-label="찜목록">
         <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3 9.24 3 10.91 3.81 12 5.08 13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-      </a>
+      </button>
       <button class="profile" aria-label="프로필">
         <img src="img/profile.jpg" alt="프로필 사진">
       </button>
@@ -191,7 +175,36 @@
         <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
       </div>
       <div class="slider-track">
-        <!-- ...기존 6개 .slide 코드 그대로... -->
+        <!-- 1 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스">
+          <div class="title">해피니스</div>
+        </div>
+        <!-- 2 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="랜덤캐처">
+          <div class="title">랜덤캐처</div>
+        </div>
+        <!-- 3 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="승부도시여자들">
+          <div class="title">승부도시여자들</div>
+        </div>
+        <!-- 4 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="어른연습생">
+          <div class="title">어른연습생</div>
+        </div>
+        <!-- 5 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="가족을 지키기만 하면 되는거였어">
+          <div class="title">가족을 지키기만 하면 되는거였어</div>
+        </div>
+        <!-- 6 -->
+        <div class="slide">
+          <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="EMERGENCY">
+          <div class="title">EMERGENCY</div>
+        </div>
       </div>
       <div class="arrow next">
         <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
@@ -199,7 +212,7 @@
     </div>
   </section>
 
-  <!-- 스크립트 동일 -->
+  <!-- 3. 스크립트 -->
   <script>
     const track = document.querySelector('.slider-track');
     document.querySelector('.next').addEventListener('click', () => {
@@ -211,4 +224,3 @@
   </script>
 </body>
 </html>
-```
