@@ -8,84 +8,75 @@
   <style>
     /* Reset & 기본 세팅 */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width:100%; height:100%; background:#000; color:#fff; font-family:'Noto Sans KR',sans-serif; }
+    html, body { width:100%; background:#000; color:#fff; font-family:'Noto Sans KR',sans-serif; }
+    a, button { background:none; border:none; cursor:pointer; }
 
     /* 헤더 */
     header {
       position: absolute; top: 0; left: 0;
       width: 100%; padding: 16px 5%;
-      display: flex; align-items: center;
-      z-index: 20;
+      display: flex; align-items: center; z-index: 20;
     }
-    /* 텍스트 로고 */
     .logo-text {
-      font-size: 32px; font-weight: 700;
-      letter-spacing: -1px;
+      font-size: 32px; font-weight:700; letter-spacing:-1px;
     }
-    /* 네비게이션 */
     nav {
       margin-left: 40px;
       display: flex; gap: 24px;
-      font-size: 14px; font-weight: 500;
+      font-size: 14px; font-weight:500;
+    }
+    nav {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     nav a {
-      color: #fff; text-decoration: none;
-      padding-bottom: 4px;
-      border-bottom: 2px solid transparent;
-      transition: color 0.2s, border-color 0.2s;
+      color:#fff; text-decoration:none;
+      padding-bottom:4px;
+      border-bottom:2px solid transparent;
+      transition: .2s;
+      flex-shrink: 0;
     }
-    nav a:hover { color: #e60012; }
-    nav a.active {
-      color: #e60012; border-color: #e60012;
-    }
+    nav a:hover { color:#e60012; }
+    nav a.active { color:#e60012; border-color:#e60012; }
 
-    /* 우측 액션 아이콘 */
     .header-actions {
       margin-left: auto;
-      display: flex; align-items: center; gap: 20px;
-    }
-    .header-actions button,
-    .header-actions .profile {
-      background: none; border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; gap:20px;
     }
     .header-actions .icon svg {
-      width: 20px; height: 20px; fill: #fff;
-      transition: fill 0.2s;
+      width:20px; height:20px; fill:#fff;
+      transition: fill .2s;
     }
-    .header-actions .icon:hover svg {
-      fill: #e60012;
-    }
+    .header-actions .icon:hover svg { fill:#e60012; }
     .header-actions .profile img {
-      width: 32px; height: 32px;
-      border-radius: 50%; object-fit: cover;
+      width:32px; height:32px; border-radius:50%; object-fit:cover;
     }
 
     /* 배너 */
     .banner {
-      position: relative; margin-top: 64px;
-      width: 100%; height: 60vh;
-      background: url('img/jirisan-banner.jpg') center/cover no-repeat;
-      filter: brightness(0.6);
+      position: relative; margin-top:64px;
+      width:100%; height:60vh;
+      background:url('img/jirisan-banner.jpg') center/cover no-repeat;
+      filter:brightness(0.6);
     }
     .banner .overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
     }
     .banner .content {
-      position: absolute; left:5%; bottom:5%; max-width:50%;
+      position:absolute; left:5%; bottom:5%; max-width:50%;
     }
     .banner h1 {
-      font-size: 48px; font-weight:700; margin-bottom:8px;
+      font-size:48px; font-weight:700; margin-bottom:8px;
     }
     .banner p.tagline {
-      font-size: 18px; line-height:1.4; margin-bottom:24px;
+      font-size:18px; line-height:1.4; margin-bottom:24px;
     }
     .banner .btn {
       display:inline-block; padding:12px 28px;
       background:#e60012; color:#fff; font-weight:500;
       border-radius:4px; text-decoration:none;
-      transition: background 0.2s;
+      transition: background .2s;
     }
     .banner .btn:hover { background:#ff1f3f; }
 
@@ -108,16 +99,15 @@
     }
     .slide {
       flex:0 0 200px; cursor:pointer;
-      transition: transform 0.3s;
+      transition: transform .3s;
     }
     .slide:hover { transform:scale(1.05); }
     .slide img {
       width:100%; display:block; border-radius:4px;
     }
     .slide .title {
-      margin-top:8px; font-size:16px;
-      font-weight:500; white-space:nowrap;
-      overflow:hidden; text-overflow:ellipsis;
+      margin-top:8px; font-size:16px; font-weight:500;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
 
     /* 화살표 버튼 */
@@ -126,12 +116,36 @@
       width:40px; height:40px;
       background:rgba(0,0,0,0.6); border-radius:50%;
       display:flex; align-items:center; justify-content:center;
-      cursor:pointer; transition:background 0.2s; z-index:10;
+      cursor:pointer; transition: background .2s; z-index:10;
     }
     .arrow.prev { left:2%; }
     .arrow.next { right:2%; }
     .arrow:hover { background:rgba(0,0,0,0.8); }
     .arrow svg { width:24px; height:24px; fill:#fff; }
+
+    /* 반응형 */
+    @media (max-width:768px) {
+      header { padding:10px 5%; }
+      .logo-text { font-size:24px; }
+      nav { margin-left:20px; gap:12px; font-size:12px; }
+      .header-actions .icon svg { width:16px; height:16px; }
+      .header-actions .profile img { width:28px; height:28px; }
+
+      .banner { margin-top:56px; height:50vh; }
+      .banner h1 { font-size:32px; }
+      .banner p.tagline { font-size:14px; margin-bottom:16px; }
+      .banner .btn { padding:8px 20px; font-size:14px; }
+
+      .section { padding:32px 5%; }
+      .section h2 { font-size:22px; margin-bottom:16px; }
+
+      .slider-track { gap:12px; padding-bottom:6px; }
+      .slide { flex:0 0 150px; }
+      .slide .title { margin-top:6px; font-size:14px; }
+
+      .arrow { width:30px; height:30px; }
+      .arrow svg { width:16px; height:16px; }
+    }
   </style>
 </head>
 <body>
@@ -161,7 +175,7 @@
     </div>
   </header>
 
-  <!-- 1. 메인 배너 -->
+  <!-- 메인 배너 -->
   <section class="banner">
     <div class="overlay"></div>
     <div class="content">
@@ -171,7 +185,7 @@
     </div>
   </section>
 
-  <!-- 2. 추천 콘텐츠 섹션 -->
+  <!-- 추천 콘텐츠 섹션 -->
   <section class="section">
     <h2>티빙에서 꼭 봐야하는 콘텐츠</h2>
     <div class="slider">
@@ -184,7 +198,7 @@
           <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스">
           <div class="title">해피니스</div>
         </div>
-        <!-- 2 (이미지 변경) -->
+        <!-- 2 -->
         <div class="slide">
           <img src="https://mblogthumb-phinf.pstatic.net/MjAyMjEyMjRfMTIg/MDAxNjcxODc1MTExMTQw.hY93feGxSlOUBR2gUU6guO6fk3rmKdXvsHDTihH31kMg.tXtkX6nBywMGdrfMpxB8OtgMpAxVoWMgiHprseFNE00g.PNG.hlogic72/20221224_010236.png?type=w800" alt="랜덤캐처">
           <div class="title">랜덤캐처</div>
