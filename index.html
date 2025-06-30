@@ -1,252 +1,436 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>OTT 다시보기 – 티빙 스타일</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    /* Reset */
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; background:#000; color:#fff; font-family:'Noto Sans KR',sans-serif; overflow-x:hidden; }
-    a, button { background:none; border:none; cursor:pointer; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>티빙 스타일 OTT 다시보기</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
 
-    /* Animation */
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes slideDown{ from{opacity:0;transform:translateY(-100%)} to{opacity:1;transform:translateY(0)} }
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    background-color: #0a0a0a;
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+  }
 
-    /* Header 共通 */
-    header { position:absolute; top:0; left:0; width:100%; z-index:20; }
+  /* 상단 네비게이션 */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    z-index: 1000;
+  }
+  .logo {
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 4px;
+    margin-right: 50px;
+  }
+  nav {
+    display: flex;
+    gap: 40px;
+    flex-grow: 1;
+  }
+  nav a {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 8px 0;
+    position: relative;
+    color: #e5e5e5;
+    transition: color 0.3s;
+  }
+  nav a:hover,
+  nav a.active {
+    color: #ff1e1e;
+  }
+  nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #ff1e1e;
+    border-radius: 2px;
+  }
+  .search-icon {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+    cursor: pointer;
+  }
 
-    /* PC Header */
-    .header-desktop {
-      position:relative;
-      display:flex; align-items:center;
-      padding:16px 5%;
-      animation:fadeUp .6s ease-out;
-    }
-    .header-desktop .logo-text {
-      font-size:32px; font-weight:700; letter-spacing:-1px;
-    }
-    /* 중앙 Nav를 absolute로 띄워줌 */
-    .header-desktop nav {
-      position:absolute; left:50%; transform:translateX(-50%);
-      display:flex; gap:24px; font-size:14px; font-weight:500;
-      scroll-snap-type:x mandatory; overflow-x:auto; 
-    }
-    .header-desktop nav a {
-      flex-shrink:0; padding-bottom:4px; color:#fff; text-decoration:none;
-      border-bottom:2px solid transparent; transition:.2s;
-      scroll-snap-align:start;
-    }
-    .header-desktop nav a:hover { color:#e60012; }
-    .header-desktop nav a.active {
-      color:#e60012; border-color:#e60012;
-    }
-    .header-desktop .header-actions {
-      margin-left:auto; display:flex; gap:20px;
-    }
-    .header-desktop .icon svg {
-      width:20px; height:20px; fill:#fff; transition:fill .2s;
-    }
-    .header-desktop .icon:hover svg { fill:#e60012; }
+  /* 슬라이드 영역 */
+  .slider {
+    margin-top: 60px;
+    position: relative;
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+    background: #000;
+  }
+  .slides {
+    display: flex;
+    width: 300%;
+    height: 100%;
+    transition: transform 1s ease-in-out;
+  }
+  .slide {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 25%, transparent 75%);
+    z-index: 1;
+  }
+  .slide-content {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    z-index: 2;
+    max-width: 450px;
+  }
+  .slide-title {
+    font-size: 42px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+  }
+  .slide-subtitle {
+    font-size: 17px;
+    margin-bottom: 25px;
+    color: #ddd;
+    line-height: 1.3;
+  }
+  .btn-detail {
+    background-color: rgba(255,255,255,0.15);
+    border: 1.5px solid #fff;
+    color: #fff;
+    padding: 12px 28px;
+    font-weight: 700;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  .btn-detail:hover {
+    background-color: #ff1e1e;
+    border-color: #ff1e1e;
+  }
 
-    /* Mobile Header */
-    .header-mobile {
-      display:none;
-      justify-content:space-between; align-items:center;
-      padding:10px 5%; background:transparent;
-      animation:slideDown .4s ease-out;
-    }
-    .header-mobile .logo-text {
-      font-size:24px; font-weight:700;
-    }
-    .header-mobile .mobile-actions {
-      display:flex; gap:16px;
-    }
-    .header-mobile .icon svg {
-      width:24px; height:24px; fill:#fff; transition:fill .2s;
-    }
-    .header-mobile .icon:hover svg { fill:#e60012; }
+  /* 슬라이드 화살표 */
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 70px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    font-size: 36px;
+    line-height: 70px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    user-select: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  .arrow:hover {
+    background: rgba(255,30,30,0.8);
+  }
+  .arrow.left {
+    left: 25px;
+  }
+  .arrow.right {
+    right: 25px;
+  }
 
+  /* 슬라이드 점(dot) */
+  .dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+    z-index: 10;
+  }
+  .dot {
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .dot.active {
+    background: #ff1e1e;
+  }
 
-    /* Banner */
-    .banner {
-      position:relative; margin-top:64px;
-      width:100%; height:60vh;
-      background:url('https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg') center/cover no-repeat;
-      filter:brightness(0.6);
-      animation:fadeUp .8s ease-out .6s both;
-    }
-    .banner .overlay { position:absolute; inset:0;
-      background:linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%); }
-    .banner .content {
-      position:absolute; left:5%; bottom:5%; max-width:50%;
-      animation:fadeUp .8s ease-out .8s both;
-    }
-    .banner h1 { font-size:48px; font-weight:700; margin-bottom:8px; }
-    .banner p.tagline { font-size:18px; line-height:1.4; margin-bottom:24px; }
-    .banner .btn {
-      display:inline-block; padding:12px 28px; background:#e60012;
-      color:#fff; font-weight:500; border-radius:4px;
-      text-decoration:none; transition:background .2s;
-    }
-    .banner .btn:hover { background:#ff1f3f; }
+  /* 콘텐츠 섹션 */
+  .content-section {
+    margin: 50px 60px 100px;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+  .content-list {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  .content-item {
+    min-width: 150px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+  }
+  .content-item img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 2/3;
+  }
+  .content-label {
+    position: absolute;
+    bottom: 40px;
+    left: 10px;
+    background: #ff1e1e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    user-select: none;
+  }
+  .content-title {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .content-subtitle {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 3px;
+  }
 
-    /* Section Title */
-    .section { padding:48px 5%; }
-    .section h2 {
-      font-size:28px; font-weight:700; margin-bottom:24px;
-      animation:fadeUp .6s ease-out 1s both;
-    }
-
-    /* Slider */
-    .slider { position:relative; }
-    .slider-track {
-      display:flex; overflow-x:auto; scroll-behavior:smooth;
-      gap:16px; padding-bottom:8px; scroll-snap-type:x mandatory;
-      animation:fadeUp .6s ease-out 1.2s both;
-    }
-    .slider-track::-webkit-scrollbar { height:6px; }
-    .slider-track::-webkit-scrollbar-thumb { background:#444; border-radius:3px; }
-
-    .slide {
-      flex:0 0 200px; cursor:pointer; transition:transform .3s;
-      scroll-snap-align:start; animation:fadeUp .5s ease-out both;
-    }
-    .slide:hover { transform:scale(1.05); }
-    .slide img { width:100%; display:block; border-radius:4px; }
-    .slide .title {
-      margin-top:8px; font-size:16px; font-weight:500;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    }
-
-    /* Arrows */
-    .arrow {
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:40px; height:40px; background:rgba(0,0,0,0.6);
-      border-radius:50%; display:flex; align-items:center;
-      justify-content:center; cursor:pointer; transition:background .2s;
-      z-index:10; animation:fadeUp .6s ease-out 1.4s both;
-    }
-    .arrow.prev { left:2%; }
-    .arrow.next { right:2%; }
-    .arrow:hover { background:rgba(0,0,0,0.8); }
-    .arrow svg { width:24px; height:24px; fill:#fff; }
-
-    /* Responsive */
-    @media (max-width:768px) {
-      .header-desktop { display:none; }
-      .header-mobile  { display:flex; }
-
-      .banner { margin-top:56px; height:50vh; }
-      .banner h1 { font-size:32px; }
-      .banner p.tagline { font-size:14px; margin-bottom:16px; }
-      .banner .btn { padding:8px 20px; font-size:14px; }
-
-      .section { padding:32px 5%; }
-      .section h2 { font-size:22px; margin-bottom:16px; }
-
-      .slider-track { gap:12px; padding-bottom:6px; }
-      .slide { flex:0 0 150px; }
-      .slide .title { margin-top:6px; font-size:14px; }
-
-      .arrow { width:30px; height:30px; }
-      .arrow svg { width:16px; height:16px; }
-    }
-  </style>
+  /* 스크롤바 숨기기 */
+  .content-list::-webkit-scrollbar {
+    display: none;
+  }
+  .content-list {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <!-- PC Header -->
-    <div class="header-desktop">
-      <div class="logo-text">TVING</div>
-      <nav>
-        <a href="#">LIVE</a>
-        <a href="#" class="active">다시보기</a>
-        <a href="#">테마</a>
-        <a href="#">예능</a>
-        <a href="#">드라마</a>
-        <a href="#">영화</a>
-        <a href="#">키즈</a>
-      </nav>
-      <div class="header-actions">
-        <button class="icon search" aria-label="검색">
-          <!-- SVG 검색 -->
-        </button>
-        <button class="icon bookmark" aria-label="찜목록">
-          <!-- SVG 찜 -->
-        </button>
-        <!-- 프로필 버튼 제거 -->
-      </div>
-    </div>
+<header>
+  <div class="logo">TVING</div>
+  <nav>
+    <a href="#" class="active">실시간</a>
+    <a href="#">TV프로그램</a>
+    <a href="#">영화</a>
+    <a href="#">티빙룸</a>
+  </nav>
+  <svg class="search-icon" viewBox="0 0 24 24" aria-label="검색">
+    <path d="M21 21l-4.35-4.35M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</header>
 
-    <!-- Mobile Header -->
-    <div class="header-mobile">
-      <div class="logo-text">TVING</div>
-      <div class="mobile-actions">
-        <button class="icon community" aria-label="커뮤니티">
-          <!-- SVG 커뮤니티 -->
-        </button>
-        <button class="icon menu" aria-label="메뉴">
-          <!-- SVG 햄버거 -->
-        </button>
+<section class="slider" aria-label="메인 슬라이드">
+  <div class="slides">
+    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2022/10/20221020105128_0.jpg');" role="group" aria-roledescription="slide" aria-label="지리산">
+      <div class="slide-content">
+        <div class="slide-title">지리산</div>
+        <div class="slide-subtitle">하늘과 만나는 곳, 여수저 지속의 경계</div>
+        <button class="btn-detail" aria-label="지리산 자세히보기">자세히보기</button>
       </div>
     </div>
-  </header>
+    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2023/01/20230110123456_0.jpg');" role="group" aria-roledescription="slide" aria-label="두 번째 슬라이드">
+      <div class="slide-content">
+        <div class="slide-title">두 번째 슬라이드</div>
+        <div class="slide-subtitle">설명 문구가 들어갑니다</div>
+        <button class="btn-detail" aria-label="두 번째 슬라이드 자세히보기">자세히보기</button>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2023/02/20230210123456_0.jpg');" role="group" aria-roledescription="slide" aria-label="세 번째 슬라이드">
+      <div class="slide-content">
+        <div class="slide-title">세 번째 슬라이드</div>
+        <div class="slide-subtitle">추가 설명 문구</div>
+        <button class="btn-detail" aria-label="세 번째 슬라이드 자세히보기">자세히보기</button>
+      </div>
+    </div>
+  </div>
+  <div class="arrow left" role="button" aria-label="이전 슬라이드" tabindex="0">&#10094;</div>
+  <div class="arrow right" role="button" aria-label="다음 슬라이드" tabindex="0">&#10095;</div>
+  <div class="dots" role="tablist" aria-label="슬라이드 선택">
+    <div class="dot active" data-index="0" role="tab" tabindex="0" aria-selected="true" aria-controls="slide1"></div>
+    <div class="dot" data-index="1" role="tab" tabindex="-1" aria-selected="false" aria-controls="slide2"></div>
+    <div class="dot" data-index="2" role="tab" tabindex="-1" aria-selected="false" aria-controls="slide3"></div>
+  </div>
+</section>
 
-  <!-- Banner -->
-  <section class="banner">
-    <div class="overlay"></div>
-    <div class="content">
-      <h1>지리산</h1>
-      <p class="tagline">하늘과 만나는 곳, 이곳에 계곡의 관객</p>
-      <a href="#" class="btn">자세히 보기</a>
+<section class="content-section" aria-label="티빙에서 꼭 봐야하는 콘텐츠">
+  <h2 class="section-title">티빙에서 꼭 봐야하는 콘텐츠</h2>
+  <div class="content-list">
+    <div class="content-item" tabindex="0">
+      <img src="https://img.tving.com/uploaded_images/contents/2023/01/20230110123456_0.jpg" alt="해피니스" />
+      <div class="content-label">T ORIGINAL</div>
+      <div class="content-title">해피니스</div>
+      <div class="content-subtitle">무삭제판</div>
     </div>
-  </section>
-
-<!-- 추천 콘텐츠 섹션 -->
-<section class="section">
-  <h2>티빙에서 꼭 봐야하는 콘텐츠</h2>
-  <div class="slider">
-    <div class="arrow prev">
-      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    <div class="content-item" tabindex="0">
+      <img src="https://img.tving.com/uploaded_images/contents/2023/02/20230210123456_0.jpg" alt="러브캐처 인 서울" />
+      <div class="content-label">T ORIGINAL</div>
+      <div class="content-title">러브캐처 인 서울</div>
+      <div class="content-subtitle"></div>
     </div>
-    <div class="slider-track">
-      <!-- 1 -->
-      <div class="slide">
-        <img src="https://upload.wikimedia.org/wikipedia/ko/thumb/5/53/%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/500px-%ED%95%B4%ED%94%BC%EB%8B%88%EC%8A%A4_%28%EB%93%9C%EB%9D%BC%EB%A7%88%29_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg" alt="해피니스">
-        <div class="title">해피니스</div>
-      </div>
-      <!-- 2 -->
-      <div class="slide">
-        <img src="https://mblogthumb-phinf.pstatic.net/MjAyMjEyMjRfMTIg/MDAxNjcxODc1MTExMTQw.hY93feGxSlOUBR2gUU6guO6fk3rmKdXvsHDTihH31kMg.tXtkX6nBywMGdrfMpxB8OtgMpAxVoWMgiHprseFNE00g.PNG.hlogic72/20221224_010236.png?type=w800" alt="랜덤캐처">
-        <div class="title">랜덤캐처</div>
-      </div>
-      <!-- 3 -->
-      <div class="slide">
-        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="승부도시여자들">
-        <div class="title">승부도시여자들</div>
-      </div>
-      <!-- 4 -->
-      <div class="slide">
-        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="어른연습생">
-        <div class="title">어른연습생</div>
-      </div>
-      <!-- 5 -->
-      <div class="slide">
-        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="가족을 지키기만 하면 되는거였어">
-        <div class="title">가족을 지키기만 하면 되는거였어</div>
-      </div>
-      <!-- 6 -->
-      <div class="slide">
-        <img src="https://img.onnada.com/2024/1226/1994052142_ae426214_AADZs_.jpg" alt="EMERGENCY">
-        <div class="title">EMERGENCY</div>
-      </div>
+    <div class="content-item" tabindex="0">
+      <img src="https://img.tving.com/uploaded_images/contents/2023/03/20230310123456_0.jpg" alt="술꾼도시여자들" />
+      <div class="content-label">T ORIGINAL</div>
+      <div class="content-title">술꾼도시여자들</div>
+      <div class="content-subtitle"></div>
     </div>
-    <div class="arrow next">
-      <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    <div class="content-item" tabindex="0">
+      <img src="https://img.tving.com/uploaded_images/contents/2023/04/20230410123456_0.jpg" alt="어른연습생" />
+      <div class="content-label">T ORIGINAL</div>
+      <div class="content-title">어른연습생</div>
+      <div class="content-subtitle"></div>
+    </div>
+    <div class="content-item" tabindex="0">
+      <img src="https://img.tving.com/uploaded_images/contents/2023/05/20230510123456_0.jpg" alt="가상세계지만 스타가 되고 싶어" />
+      <div class="content-label">T ORIGINAL</div>
+      <div class="content-title">가상세계지만 스타가 되고 싶어</div>
+      <div class="content-subtitle"></div>
+    </div>
+    <div class="content-item" tabindex="0">
+      <img src="https://img.tving.com/uploaded_images/contents/2023/06/20230610123456_0.jpg" alt="EMERGENCY" />
+      <div class="content-label">T ORIGINAL</div>
+      <div class="content-title">EMERGENCY</div>
+      <div class="content-subtitle></div>
     </div>
   </div>
 </section>
+
+<script>
+  const slides = document.querySelector('.slides');
+  const dots = document.querySelectorAll('.dot');
+  const leftArrow = document.querySelector('.arrow.left');
+  const rightArrow = document.querySelector('.arrow.right');
+  const totalSlides = dots.length;
+  let currentIndex = 0;
+  let slideInterval;
+
+  function goToSlide(index) {
+    if(index < 0) index = totalSlides - 1;
+    if(index >= totalSlides) index = 0;
+    slides.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+      dot.setAttribute('aria-selected', i === index);
+      dot.tabIndex = i === index ? 0 : -1;
+    });
+    currentIndex = index;
+  }
+
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+
+  function prevSlide() {
+    goToSlide(currentIndex - 1);
+  }
+
+  function startAutoSlide() {
+    slideInterval = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(slideInterval);
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goToSlide(parseInt(dot.dataset.index));
+      stopAutoSlide();
+      startAutoSlide();
+    });
+    dot.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        goToSlide(parseInt(dot.dataset.index));
+        stopAutoSlide();
+        startAutoSlide();
+      }
+    });
+  });
+
+  rightArrow.addEventListener('click', () => {
+    nextSlide();
+    stopAutoSlide();
+    startAutoSlide();
+  });
+  rightArrow.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      nextSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    }
+  });
+
+  leftArrow.addEventListener('click', () => {
+    prevSlide();
+    stopAutoSlide();
+    startAutoSlide();
+  });
+  leftArrow.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      prevSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    }
+  });
+
+  // 초기 실행
+  goToSlide(0);
+  startAutoSlide();
+</script>
+
+</body>
+</html>
