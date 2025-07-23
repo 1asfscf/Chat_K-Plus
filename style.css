@@ -1,10 +1,11 @@
+/* style.css */
+
 /* Reset & 기본 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
   background: #000;
   color: #fff;
@@ -21,32 +22,31 @@ header {
   z-index: 1000;
   padding: 20px 40px;
 }
-
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
 .logo {
   font-size: 28px;
   font-weight: 900;
   color: #e50914;
 }
 
-nav a {
+/* 데스크탑 네비 */
+.desktop-nav a {
   margin: 0 12px;
   text-decoration: none;
   color: #ccc;
   font-weight: 600;
   font-size: 14px;
 }
-
-nav a.active,
-nav a:hover {
+.desktop-nav a.active,
+.desktop-nav a:hover {
   color: #e50914;
 }
 
+/* 로그인 버튼 */
 .login-btn {
   background: #e50914;
   border: none;
@@ -56,40 +56,36 @@ nav a:hover {
   cursor: pointer;
 }
 
-/* Top 콘텐츠 랭킹 */
+/* ------------------------------
+   Top 콘텐츠 랭킹 (그리드)
+   ------------------------------ */
 .top-ranking {
   padding: 100px 40px 40px;
 }
-
 .top-ranking h2 {
   font-size: 22px;
   margin-bottom: 16px;
 }
-
 .ranking-list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
-
 .rank-item {
   position: relative;
   overflow: hidden;
   aspect-ratio: 2/3;
   border-radius: 8px;
 }
-
 .rank-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
-
 .rank-number {
   position: absolute;
   top: 6px; left: 6px;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,0.6);
   color: #fff;
   font-weight: 700;
   padding: 2px 6px;
@@ -97,11 +93,10 @@ nav a:hover {
   font-size: 0.9rem;
   z-index: 2;
 }
-
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,7 +105,6 @@ nav a:hover {
   font-weight: 700;
   z-index: 1;
 }
-
 .watermark {
   position: absolute;
   bottom: 6px; right: 6px;
@@ -119,56 +113,53 @@ nav a:hover {
   z-index: 2;
 }
 
-/* 추천 콘텐츠 */
+/* ------------------------------
+   추천 콘텐츠 (7열 그리드)
+   ------------------------------ */
 .recommendation {
   padding: 40px;
 }
-
 .recommendation h2 {
   font-size: 22px;
   margin-bottom: 16px;
 }
-
 .recommend-list {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 12px;
 }
-
 .recommend-item img {
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
+  box-shadow: 0 0 8px rgba(229,9,20,0.6);
   display: block;
 }
 
-/* ─── 로그인 모달 ─── */
-/* 공통 백드롭 + 레이아웃 */
+/* ------------------------------
+   로그인 모달 (PC 중앙 팝업)
+   ------------------------------ */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
-  align-items: center; /* PC 기본 중앙 정렬 */
+  align-items: center;
   z-index: 2000;
 }
-
 .modal.hidden {
   display: none;
 }
-
 .modal-content {
   background: #111;
   padding: 32px;
   border-radius: 8px;
   width: 400px;
   max-width: 90%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.7);
   animation: fadeIn 0.2s ease-out;
   text-align: center;
 }
-
 .sns-btn {
   width: 100%;
   margin: 8px 0;
@@ -179,11 +170,9 @@ nav a:hover {
   cursor: pointer;
   font-size: 14px;
 }
-
 .kakao { background: #fee500; color: #000; }
 .naver  { background: #03c75a; color: #fff; }
 .apple  { background: #fff; color: #000; }
-
 .close-btn {
   margin-top: 12px;
   background: #e50914;
@@ -194,54 +183,78 @@ nav a:hover {
   border-radius: 4px;
 }
 
-/* PC 모달 등장 애니메이션 */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* ─── 모바일 전용: 바텀 시트 ─── */
-@media (max-width: 480px) {
-  .modal {
-    align-items: flex-end; /* 바텀 시트로 띄우기 */
-  }
-  .modal-content {
-    width: 100%;
-    max-width: 100%;
-    max-height: 80vh;
-    border-radius: 12px 12px 0 0;
-    padding: 20px;
-    animation: slideUp 0.3s ease-out;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.7);
-  }
-  .sns-btn, .close-btn {
-    font-size: 16px;
-    padding: 12px;
-  }
+/* ------------------------------
+   모바일 전용 UI (≤768px)
+   ------------------------------ */
+/* 햄버거 버튼 */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.hamburger span {
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  display: block;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
+/* 사이드 드로어 */
+.nav-drawer {
+  position: fixed;
+  top: 0; left: -100%;
+  width: 80%; height: 100%;
+  background: #111;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: left 0.3s ease;
+  z-index: 1500;
+}
+.nav-drawer.open {
+  left: 0;
 }
 
-/* 반응형 (랭킹·추천 캐러셀 전환) */
+/* 드로어 백드롭 */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1400;
+}
+.drawer-backdrop.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 랭킹·추천 리스트 캐러셀 전환 */
 @media (max-width: 768px) {
-  nav { display: none; }
+  .desktop-nav { display: none; }
+  .hamburger { display: flex; }
 
-  .ranking-list {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 16px;
-  }
-  .rank-item { min-width: 40%; }
-
+  .ranking-list,
   .recommend-list {
     display: flex;
     overflow-x: auto;
     gap: 8px;
     padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
   }
-  .recommend-item img { min-width: 140px; }
+  .rank-item,
+  .recommend-item {
+    scroll-snap-align: start;
+    min-width: 40%;
+  }
 }
