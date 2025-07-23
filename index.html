@@ -1,1 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>티빙</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    background-color: #0a0a0a;
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+  }
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    z-index: 1000;
+    border-bottom: 1px solid #222;
+  }
+  .logo {
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: #e50914;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  nav {
+    display: flex;
+    gap: 30px;
+    margin-left: 50px;
+    flex-grow: 1;
+  }
+  nav a {
+    font-size: 16px;
+    font-weight: 600;
+    color: #eee;
+    position: relative;
+    padding: 8px 0;
+    user-select: none;
+    transition: color 0.3s;
+  }
+  nav a.active,
+  nav a:hover {
+    color: #e50914;
+  }
+  nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #e50914;
+    border-radius: 2px;
+  }
+  main {
+    padding: 72px 40px 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    user-select: none;
+  }
+  .top20-list {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    scroll-behavior: smooth;
+  }
+  .top20-list::-webkit-scrollbar {
+    display: none;
+  }
+  .top20-item {
+    position: relative;
+    flex: 0 0 auto;
+    width: 140px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .top20-item img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+  }
+  .top20-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #e50914;
+  }
+  .rank {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 36px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+    user-select: none;
+  }
+  .label {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 4px;
+    user-select: none;
+  }
+  .label.new {
+    background-color: #e50914;
+    color: #fff;
+  }
+  .label.age {
+    background-color: #ff3b3b;
+    color: #fff;
+    left: 12px;
+    right: auto;
+  }
+  .label.only {
+    background-color: #00a8ff;
+    color: #fff;
+  }
+  /* 모바일 하단 메뉴바 */
+  .mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: #111;
+    border-top: 1px solid #222;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10000;
+  }
+  .bottom-nav-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.3s;
+  }
+  .bottom-nav-btn svg {
+    margin-bottom: 2px;
+  }
+  .bottom-nav-btn.active,
+  .bottom-nav-btn:hover {
+    color: #e50914;
+  }
+  /* 반응형 */
+  @media (max-width: 1024px) {
+    main {
+      padding: 72px 20px 30px;
+      max-width: 100%;
+    }
+    .top20-item {
+      width: 120px;
+    }
+    .rank {
+      font-size: 28px;
+    }
+  }
+  @media (max-width: 600px) {
+    nav {
+      display: none;
+    }
+    main {
+      padding: 72px 15px 72px; /* 하단 메뉴바 공간 확보 */
+    }
+    .top20-item {
+      width: 110px;
+    }
+    .rank {
+      font-size: 22px;
+    }
+    .mobile-bottom-nav {
+      display: flex;
+    }
+  }
+</style>
+<body>
+
+<header>
+  <div class="logo" aria-label="티빙 로고">TVING</div>
+  <nav>
+    <a href="#" class="active">실시간</a>
+    <a href="#">TV프로그램</a>
+    <a href="#">영화</a>
+    <a href="#">파라운트+</a>
+    <a href="#">키즈</a>
+  </nav>
+</header>
+
+<main>
+  <section class="top20" aria-label="오늘의 티빙 TOP 20">
+    <h2 class="section-title">오늘의 티빙 TOP 20</h2>
+    <div class="top20-list">
+      <div class="top20-item">
+        <span class="rank">1</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg" alt="대탈출" />
+        <span class="label new">NEW</span>
+        <span class="label age">18+</span>
+      </div>
+      <div class="top20-item">
+        <span class="rank">2</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg" alt="눈물의 여왕" />
+      </div>
+      <div class="top20-item">
+        <span class="rank">3</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg" alt="웨딩 임파서블" />
+        <span class="label only">ONLY</span>
+      </div>
+      <div class="top20-item">
+        <span class="rank">4</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123756_0.jpg" alt="나는 솔로" />
+        <span class="label new">NEW</span>
+      </div>
+      <div class="top20-item">
+        <span class="rank">5</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123856_0.jpg" alt="유퀴즈" />
+        <span class="label new">NEW</span>
+      </div>
+      <div class="top20-item">
+        <span class="rank">6</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성" />
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 모바일 하단 메뉴바 -->
+<nav class="mobile-bottom-nav" role="navigation" aria-label="모바일 하단 메뉴">
+  <button class="bottom-nav-btn active" aria-label="홈">
+    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg>
+    <span>홈</span>
+  </button>
+  <button class="bottom-nav-btn" aria-label="공개예정">
+    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>
+    <span>공개예정</span>
+  </button>
+  <button class="bottom-nav-btn" aria-label="검색">
+    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="white" stroke-width="2" fill="none"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="white" stroke-width="2"/></svg>
+    <span>검색</span>
+  </button>
+  <button class="bottom-nav-btn" aria-label="기록">
+    <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg>
+    <span>기록</span>
+  </button>
+</nav>
+
+</body>
+</html>
