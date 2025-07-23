@@ -258,3 +258,70 @@ header {
     min-width: 40%;
   }
 }
+/* 1) 모바일 전용 스타일 (.mobile-mode 클래스와 결합) */
+body.mobile-mode .desktop-nav {
+  display: none;
+}
+body.mobile-mode .hamburger {
+  display: flex;
+}
+
+/* 2) 햄버거 버튼 */
+.hamburger {
+  display: none;      /* PC에선 숨김 */
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.hamburger span {
+  width: 24px; height: 2px;
+  background: #fff;
+  display: block;
+}
+
+/* 3) 네비 드로어 */
+.nav-drawer {
+  position: fixed;
+  top: 0; left: -100%;
+  width: 80%; height: 100%;
+  background: #111;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: left 0.3s ease;
+  z-index: 1500;
+}
+.nav-drawer.open {
+  left: 0;
+}
+
+/* 4) 백드롭 */
+.drawer-backdrop {
+  position: fixed; inset:0;
+  background: rgba(0,0,0,0.5);
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1400;
+}
+.drawer-backdrop.visible {
+  opacity: 1; visibility: visible;
+}
+
+/* 5) 랭킹·추천 캐러셀 전환 (기존 미디어쿼리와 동일) */
+@media (max-width: 768px) {
+  .ranking-list,
+  .recommend-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+  }
+  .rank-item,
+  .recommend-item {
+    scroll-snap-align: start;
+    min-width: 40%;
+  }
