@@ -9,31 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* ─────────────── 변수 및 기본 설정 ─────────────── */
+/* ─────────────── 모바일 최적화 변수 ─────────────── */
 :root {
   --clr-bg: #0a0a0a;
   --clr-primary: #e50914;
   --clr-text: #eee;
-  --header-h: 56px;
-  --nav-gap: 30px;
-  --touch-target: 44px;
+  /* 모바일 표준에 맞춘 고정 크기 */
+  --header-h: 48px;                    /* 모바일 표준 헤더 높이 */
+  --touch-target: 44px;                /* iOS/Android 표준 터치 타겟 */
+  --hamburger-size: 48px;              /* 햄버거 버튼 최적 크기 */
+  --logo-size: 24px;                   /* 로고 텍스트 크기 */
+  --nav-font: 16px;                    /* 네비게이션 폰트 크기 */
   --hover-transition: 0.3s ease;
-}
-
-/* 터치 디바이스 전용 변수 오버라이드 */
-@media (pointer: coarse) {
-  :root {
-    --header-h: 60px;
-    --touch-target: 48px;
-    --nav-gap: 20px;
-  }
-}
-
-/* 고해상도 터치 디바이스 (스타일러스 등) */
-@media (pointer: fine) and (hover: none) {
-  :root {
-    --touch-target: 40px;
-  }
 }
 
 *,
@@ -49,50 +36,51 @@ body {
   color: var(--clr-text);
   font-family: 'Noto Sans KR', sans-serif;
   overflow-x: hidden;
-  /* 터치 디바이스 스크롤 최적화 */
   -webkit-overflow-scrolling: touch;
   touch-action: manipulation;
 }
 
-/* ─────────────── 헤더 ─────────────── */
+/* ─────────────── 고정 크기 헤더 ─────────────── */
 header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: var(--header-h);
+  height: var(--header-h);              /* 고정 높이 48px */
   display: flex;
   align-items: center;
-  gap: 40px;
-  padding: 0 20px 0 32px;
+  justify-content: space-between;
+  padding: 0 16px;
   background: #000;
   border-bottom: 1px solid #222;
   z-index: 1000;
 }
 
 .logo {
-  font: 900 28px/1 'Noto Sans KR';
-  letter-spacing: 4px;
+  font: 900 var(--logo-size)/1 'Noto Sans KR';
+  letter-spacing: 2px;
   color: var(--clr-primary);
   user-select: none;
-  /* 터치 디바이스에서 더 큰 타겟 영역 */
-  min-height: var(--touch-target);
+  height: var(--touch-target);
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
+/* PC 네비게이션 - 태블릿 이상에서만 표시 */
 .pc-nav {
-  display: flex;
-  gap: var(--nav-gap);
+  display: none;
+  gap: 24px;
   flex: 1;
+  justify-content: center;
 }
 
 .pc-nav a {
-  font: 600 16px/1 'Noto Sans KR';
+  font: 600 var(--nav-font)/1 'Noto Sans KR';
   color: var(--clr-text);
   position: relative;
-  padding: 8px 12px;
-  min-height: var(--touch-target);
+  padding: 12px 16px;
+  height: var(--touch-target);
   display: flex;
   align-items: center;
   transition: color var(--hover-transition);
@@ -100,7 +88,7 @@ header {
   border-radius: 4px;
 }
 
-/* 호버가 지원되는 디바이스에서만 호버 효과 적용 */
+/* 호버 효과 - 마우스 디바이스에서만 */
 @media (hover: hover) and (pointer: fine) {
   .pc-nav a:hover {
     color: var(--clr-primary);
@@ -110,22 +98,22 @@ header {
   .pc-nav a.active::after {
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: 4px;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;
-    height: 3px;
+    height: 2px;
     background: var(--clr-primary);
-    border-radius: 2px;
+    border-radius: 1px;
   }
 }
 
-/* 터치 디바이스에서는 액티브 상태로 피드백 */
+/* 터치 디바이스 피드백 */
 @media (hover: none) and (pointer: coarse) {
   .pc-nav a:active {
     color: var(--clr-primary);
     background: rgba(229, 9, 20, 0.2);
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
   
   .pc-nav a.active {
@@ -134,29 +122,31 @@ header {
   }
 }
 
-/* ── 햄버거 (모바일) ── */
+/* ── 햄버거 메뉴 (모바일) ── */
 .hamburger {
-  display: none;
+  display: block;
   background: none;
   border: 0;
   cursor: pointer;
-  padding: 12px;
-  min-width: var(--touch-target);
-  min-height: var(--touch-target);
+  padding: 8px;
+  width: var(--hamburger-size);
+  height: var(--hamburger-size);
   border-radius: 4px;
   transition: background var(--hover-transition);
+  flex-shrink: 0;
 }
 
 .hamburger span {
   display: block;
-  width: 24px;
+  width: 20px;
   height: 2px;
   background: #fff;
-  margin: 5px 0;
+  margin: 4px auto;
   transition: 0.3s;
+  border-radius: 1px;
 }
 
-/* 터치 디바이스 햄버거 피드백 */
+/* 햄버거 피드백 */
 @media (hover: none) and (pointer: coarse) {
   .hamburger:active {
     background: rgba(255, 255, 255, 0.1);
@@ -183,10 +173,9 @@ header {
   transition: transform 0.35s ease;
   display: flex;
   flex-direction: column;
-  padding: var(--header-h) 24px 24px;
+  padding: var(--header-h) 20px 20px;
   overflow-y: auto;
   z-index: 999;
-  /* 터치 스크롤 개선 */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -202,21 +191,10 @@ header {
   transition: all var(--hover-transition);
 }
 
-/* 터치 디바이스 네비게이션 피드백 */
-@media (hover: none) and (pointer: coarse) {
-  .mobile-nav-drawer a:active {
-    background: rgba(229, 9, 20, 0.1);
-    color: var(--clr-primary);
-    transform: translateX(8px);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .mobile-nav-drawer a:hover {
-    background: rgba(229, 9, 20, 0.1);
-    color: var(--clr-primary);
-    transform: translateX(8px);
-  }
+.mobile-nav-drawer a:active {
+  background: rgba(229, 9, 20, 0.1);
+  color: var(--clr-primary);
+  transform: translateX(8px);
 }
 
 .mobile-nav-drawer.open {
@@ -225,23 +203,22 @@ header {
 
 /* ─────────────── 본문 ─────────────── */
 main {
-  padding: calc(var(--header-h) + 16px) 40px 40px;
+  padding: calc(var(--header-h) + 16px) 16px 16px;
   max-width: 1280px;
   margin: 0 auto;
 }
 
 .section-title {
-  font: 700 20px/1.2 'Noto Sans KR';
-  margin-bottom: 20px;
+  font: 700 18px/1.2 'Noto Sans KR';
+  margin-bottom: 16px;
 }
 
 .top20-list {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding-bottom: 14px;
-  /* 터치 스크롤 개선 */
+  padding-bottom: 12px;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
 }
@@ -252,13 +229,12 @@ main {
 
 .top20-item {
   position: relative;
-  flex: 0 0 140px;
+  flex: 0 0 120px;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   transition: transform var(--hover-transition), box-shadow var(--hover-transition);
   scroll-snap-align: start;
-  /* 터치 디바이스에서 더 부드러운 탭 */
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -269,47 +245,41 @@ main {
   display: block;
 }
 
-/* 호버 지원 디바이스에서만 호버 효과 */
+/* 호버 효과 - 마우스 디바이스만 */
 @media (hover: hover) and (pointer: fine) {
   .top20-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 18px var(--clr-primary);
+    transform: scale(1.03);
+    box-shadow: 0 0 12px var(--clr-primary);
   }
 }
 
-/* 터치 디바이스에서는 탭 피드백 */
+/* 터치 피드백 */
 @media (hover: none) and (pointer: coarse) {
   .top20-item:active {
     transform: scale(0.98);
-    box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
-  }
-  
-  /* 터치 디바이스에서 포스터 크기 약간 증가 */
-  .top20-item {
-    flex: 0 0 160px;
+    box-shadow: 0 0 8px rgba(229, 9, 20, 0.5);
   }
 }
 
 .rank {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  font: 900 32px/1 'Noto Sans KR';
+  top: 8px;
+  left: 8px;
+  font: 900 20px/1 'Noto Sans KR';
   color: #fff;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
 }
 
 .label {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 4px 8px;
-  font: 700 12px/1 'Noto Sans KR';
-  border-radius: 4px;
+  top: 8px;
+  right: 8px;
+  padding: 3px 6px;
+  font: 700 10px/1 'Noto Sans KR';
+  border-radius: 3px;
   color: #fff;
   background: var(--clr-primary);
-  /* 터치 디바이스에서 더 큰 라벨 */
-  min-height: 24px;
+  min-height: 18px;
   display: flex;
   align-items: center;
 }
@@ -317,8 +287,8 @@ main {
 .label.age {
   background: #ff3b3b;
   right: auto;
-  left: 12px;
-  top: 50px;
+  left: 8px;
+  top: 36px;
 }
 
 .label.only {
@@ -331,13 +301,13 @@ main {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 56px;                         /* 고정 높이 */
   background: #111;
   border-top: 1px solid #222;
-  display: none;
+  display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 8px 0 env(safe-area-inset-bottom);
+  padding: 4px 0 env(safe-area-inset-bottom);
   z-index: 10000;
 }
 
@@ -345,22 +315,21 @@ main {
   background: none;
   border: 0;
   color: #888;
-  font-size: 0.75rem;
+  font-size: 11px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
   transition: all var(--hover-transition);
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
   min-width: var(--touch-target);
   min-height: var(--touch-target);
-  /* 터치 하이라이트 제거 */
   -webkit-tap-highlight-color: transparent;
 }
 
 .bottom-nav-btn svg {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   transition: transform var(--hover-transition);
 }
 
@@ -370,21 +339,18 @@ main {
   background: rgba(229, 9, 20, 0.1);
 }
 
-/* 터치 디바이스 하단 네비게이션 피드백 */
-@media (hover: none) and (pointer: coarse) {
-  .bottom-nav-btn:active {
-    transform: scale(0.95);
-  }
-  
-  .bottom-nav-btn:active svg {
-    transform: scale(1.1);
-  }
+.bottom-nav-btn:active {
+  transform: scale(0.95);
 }
 
-/* ─────────────── 디바이스별 최적화 ─────────────── */
+.bottom-nav-btn:active svg {
+  transform: scale(1.05);
+}
 
-/* 큰 터치 디바이스 (태블릿) */
-@media (pointer: coarse) and (min-width: 768px) {
+/* ─────────────── 반응형 최적화 ─────────────── */
+
+/* 태블릿 이상 - PC 네비게이션 표시 */
+@media (min-width: 768px) {
   .pc-nav {
     display: flex;
   }
@@ -398,30 +364,11 @@ main {
   }
   
   main {
-    padding: calc(var(--header-h) + 20px) 32px 32px;
-  }
-}
-
-/* 작은 터치 디바이스 (스마트폰) */
-@media (pointer: coarse) and (max-width: 767px) {
-  .pc-nav {
-    display: none;
+    padding: calc(var(--header-h) + 20px) 24px 20px;
   }
   
-  .hamburger {
-    display: block;
-  }
-  
-  .mobile-bottom-nav {
-    display: flex;
-  }
-  
-  main {
-    padding: calc(var(--header-h) + 12px) 16px calc(64px + env(safe-area-inset-bottom) + 12px);
-  }
-  
-  .section-title {
-    font-size: 18px;
+  .top20-item {
+    flex: 0 0 140px;
   }
   
   .rank {
@@ -429,30 +376,27 @@ main {
   }
 }
 
-/* 정밀한 포인터 디바이스 (마우스, 트랙패드) */
-@media (pointer: fine) {
-  .pc-nav {
-    display: flex;
+/* 작은 모바일 디바이스 */
+@media (max-width: 380px) {
+  .logo {
+    font-size: 20px;
+    letter-spacing: 1px;
   }
   
-  .hamburger {
-    display: none;
-  }
-  
-  .mobile-bottom-nav {
-    display: none;
-  }
-}
-
-/* 하이브리드 디바이스 (터치스크린 랩톱 등) */
-@media (any-pointer: coarse) and (any-pointer: fine) {
-  /* 두 입력 방식 모두 지원하는 경우의 최적화 */
   .top20-item {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex: 0 0 100px;
+  }
+  
+  .rank {
+    font-size: 16px;
+  }
+  
+  main {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom) + 16px);
   }
 }
 
-/* 접근성 개선 - 모션 감소 선호 사용자 */
+/* 접근성 - 모션 감소 선호 */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -465,11 +409,15 @@ main {
   }
 }
 
-/* 다크모드 지원 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --clr-bg: #000000;
-    --clr-text: #ffffff;
+/* 포커스 스타일링 */
+.top20-item:focus {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .top20-item:focus {
+    outline-width: 3px;
   }
 }
 </style>
@@ -549,25 +497,25 @@ main {
 <!-- ─────────────── 모바일 하단 메뉴바 ─────────────── -->
 <nav class="mobile-bottom-nav" role="navigation" aria-label="모바일 하단 메뉴">
   <button class="bottom-nav-btn active" aria-label="홈">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
       <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/>
     </svg>
     <span>홈</span>
   </button>
   <button class="bottom-nav-btn" aria-label="공개예정">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
       <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/>
     </svg>
     <span>공개예정</span>
   </button>
   <button class="bottom-nav-btn" aria-label="검색">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
       <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
     <span>검색</span>
   </button>
   <button class="bottom-nav-btn" aria-label="기록">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
       <path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/>
     </svg>
     <span>기록</span>
@@ -576,51 +524,13 @@ main {
 
 <!-- ─────────────── 향상된 스크립트 ─────────────── -->
 <script>
-// 자동화된 디바이스 감지 및 UI 최적화
-class AdaptiveUI {
+// 모바일 친화적 UI 관리 클래스
+class MobileFriendlyUI {
   constructor() {
-    this.initializeDeviceDetection();
     this.setupMobileNavigation();
     this.optimizeScrolling();
     this.enhanceAccessibility();
-  }
-
-  // 디바이스 특성 자동 감지
-  initializeDeviceDetection() {
-    // 터치 지원 감지
-    const hasTouch = window.matchMedia('(pointer: coarse)').matches;
-    const canHover = window.matchMedia('(hover: hover)').matches;
-    const isHighDPI = window.devicePixelRatio > 1;
-    
-    // Body에 디바이스 클래스 추가
-    document.body.classList.add(
-      hasTouch ? 'touch-device' : 'no-touch',
-      canHover ? 'can-hover' : 'no-hover',
-      isHighDPI ? 'high-dpi' : 'standard-dpi'
-    );
-
-    // 동적 입력 방식 감지
-    this.setupDynamicInputDetection();
-  }
-
-  // 동적 입력 방식 감지 (마우스와 터치 전환)
-  setupDynamicInputDetection() {
-    let lastTouchTime = 0;
-    
-    // 터치 이벤트 감지
-    document.addEventListener('touchstart', () => {
-      lastTouchTime = Date.now();
-      document.body.classList.add('using-touch');
-      document.body.classList.remove('using-mouse');
-    }, { passive: true });
-
-    // 마우스 이벤트 감지
-    document.addEventListener('mousemove', () => {
-      if (Date.now() - lastTouchTime > 500) {
-        document.body.classList.add('using-mouse');
-        document.body.classList.remove('using-touch');
-      }
-    }, { passive: true });
+    this.handleOrientationChanges();
   }
 
   // 모바일 네비게이션 설정
@@ -638,14 +548,14 @@ class AdaptiveUI {
       
       lines.forEach((line, index) => {
         line.style.transform = isOpen ? [
-          'rotate(45deg) translateY(8px)',
+          'rotate(45deg) translateY(6px)',
           'scale(0)',
-          'rotate(-45deg) translateY(-8px)'
+          'rotate(-45deg) translateY(-6px)'
         ][index] : '';
       });
     });
 
-    // 드로어 외부 클릭 시 닫기
+    // 외부 클릭 시 닫기
     document.addEventListener('click', (e) => {
       if (!drawer.contains(e.target) && !burger.contains(e.target)) {
         if (drawer.classList.contains('open')) {
@@ -656,7 +566,7 @@ class AdaptiveUI {
       }
     });
 
-    // ESC 키로 드로어 닫기
+    // ESC 키로 닫기
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && drawer.classList.contains('open')) {
         drawer.classList.remove('open');
@@ -672,15 +582,7 @@ class AdaptiveUI {
     const scrollContainer = document.querySelector('.top20-list');
     if (!scrollContainer) return;
 
-    // 터치 디바이스에서 스크롤 스냅 개선
-    if (window.matchMedia('(pointer: coarse)').matches) {
-      scrollContainer.style.scrollSnapType = 'x mandatory';
-      
-      // 스크롤 인디케이터 추가 (선택사항)
-      this.addScrollIndicator(scrollContainer);
-    }
-
-    // 스크롤 성능 최적화
+    // 터치 디바이스에서 스크롤 성능 향상
     let scrollTimeout;
     scrollContainer.addEventListener('scroll', () => {
       clearTimeout(scrollTimeout);
@@ -689,34 +591,6 @@ class AdaptiveUI {
       scrollTimeout = setTimeout(() => {
         scrollContainer.style.scrollBehavior = 'smooth';
       }, 150);
-    }, { passive: true });
-  }
-
-  // 스크롤 인디케이터 추가
-  addScrollIndicator(container) {
-    const indicator = document.createElement('div');
-    indicator.className = 'scroll-indicator';
-    indicator.innerHTML = '→';
-    indicator.style.cssText = `
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--clr-primary);
-      font-size: 24px;
-      pointer-events: none;
-      opacity: 0.7;
-      transition: opacity 0.3s;
-      z-index: 10;
-    `;
-    
-    container.parentElement.style.position = 'relative';
-    container.parentElement.appendChild(indicator);
-
-    // 스크롤 상태에 따라 인디케이터 표시/숨김
-    container.addEventListener('scroll', () => {
-      const isAtEnd = container.scrollLeft >= container.scrollWidth - container.clientWidth - 10;
-      indicator.style.opacity = isAtEnd ? '0' : '0.7';
     }, { passive: true });
   }
 
@@ -733,44 +607,31 @@ class AdaptiveUI {
         if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
           e.preventDefault();
           const direction = e.key === 'ArrowRight' ? 1 : -1;
-          const nextIndex = Math.max(0, Math.min(document.querySelectorAll('.top20-item').length - 1, index + direction));
-          document.querySelectorAll('.top20-item')[nextIndex].focus();
+          const items = document.querySelectorAll('.top20-item');
+          const nextIndex = Math.max(0, Math.min(items.length - 1, index + direction));
+          items[nextIndex].focus();
         }
       });
     });
+  }
 
-    // 포커스 표시 개선
-    const style = document.createElement('style');
-    style.textContent = `
-      .top20-item:focus {
-        outline: 2px solid var(--clr-primary);
-        outline-offset: 2px;
-      }
-      
-      @media (hover: none) and (pointer: coarse) {
-        .top20-item:focus {
-          outline-width: 3px;
+  // 화면 회전 처리
+  handleOrientationChanges() {
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        // 뷰포트 메타 태그 재설정
+        const viewport = document.querySelector('meta[name=viewport]');
+        if (viewport) {
+          viewport.content = 'width=device-width, initial-scale=1, maximum-scale=1';
         }
-      }
-    `;
-    document.head.appendChild(style);
+      }, 500);
+    });
   }
 }
 
-// 페이지 로드 시 적응형 UI 초기화
+// 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
-  new AdaptiveUI();
-});
-
-// 디바이스 방향 변경 시 재조정
-window.addEventListener('orientationchange', () => {
-  setTimeout(() => {
-    // 뷰포트 메타 태그 재설정으로 iOS 확대/축소 문제 해결
-    const viewport = document.querySelector('meta[name=viewport]');
-    if (viewport) {
-      viewport.content = 'width=device-width, initial-scale=1, maximum-scale=1';
-    }
-  }, 500);
+  new MobileFriendlyUI();
 });
 </script>
 
