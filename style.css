@@ -1,415 +1,185 @@
-/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
 
-/* Reset & 기본 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  background: #000;
-  color: #fff;
-  font-family: 'Noto Sans KR', sans-serif;
-  overflow-x: hidden;
-}
-
-/* 헤더 */
-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  background: #000;
-  border-bottom: 1px solid #222;
-  z-index: 1000;
-  padding: 20px 40px;
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.logo {
-  font-size: 28px;
-  font-weight: 900;
-  color: #e50914;
-}
-
-/* 데스크탑 네비 */
-.desktop-nav a {
-  margin: 0 12px;
-  text-decoration: none;
-  color: #ccc;
-  font-weight: 600;
-  font-size: 14px;
-}
-.desktop-nav a.active,
-.desktop-nav a:hover {
-  color: #e50914;
-}
-
-/* 로그인 버튼 */
-.login-btn {
-  background: #e50914;
-  border: none;
-  padding: 6px 16px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* ------------------------------
-   Top 콘텐츠 랭킹 (그리드)
-   ------------------------------ */
-.top-ranking {
-  padding: 100px 40px 40px;
-}
-.top-ranking h2 {
-  font-size: 22px;
-  margin-bottom: 16px;
-}
-.ranking-list {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);/* ─── 기존 PC 스타일 그대로 유지 ─── */
 * {
   margin: 0; padding: 0; box-sizing: border-box;
 }
 body {
-  background: #000;
+  background-color: #0a0a0a;
   color: #fff;
   font-family: 'Noto Sans KR', sans-serif;
   overflow-x: hidden;
 }
-/* header, nav, ranking, recommendation, modal 등 기존 스타일 생략… */
-
-/* ─── 모바일 전용 UI (≤768px) ─── */
-@media (max-width: 768px) {
-  /* PC 네비 숨기고 햄버거 보이기 */
-  .desktop-nav { display: none; }
-  .hamburger { display: flex; }
-
-  /* 배너 */
-  .mobile-banner {
-    margin-top: 56px; /* header 높이 만큼 */
-    height: 240px;
-    background: url('https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png') center/cover no-repeat;
-    position: relative;
-  }
-  .mobile-banner .banner-overlay {
-    position: absolute;
-    bottom: 16px; left: 16px;
-    color: #fff;
-    text-shadow: 0 0 6px rgba(0,0,0,0.8);
-  }
-  .mobile-banner .banner-overlay h1 {
-    font-size: 20px; font-weight: 900; margin-bottom: 4px;
-  }
-  .mobile-banner .banner-overlay p {
-    font-size: 12px; margin-bottom: 8px; line-height: 1.2;
-  }
-  .mobile-banner .banner-cta {
-    background: #e50914;
-    color: #fff;
-    font-size: 12px; font-weight: 700;
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-  }
-
-  /* 카테고리 탭 */
-  .mobile-categories {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding: 12px 16px;
-    background: #111;
-  }
-  .mobile-categories::-webkit-scrollbar { display: none; }
-  .mobile-category-item {
-    flex: 0 0 auto;
-    color: #ccc;
-    font-size: 14px;
-    padding-bottom: 4px;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-  }
-  .mobile-category-item.active {
-    color: #e50914;
-    border-bottom-color: #e50914;
-  }
-
-  /* 각 카테고리별 콘텐츠 섹션 숨김/보임 */
-  .category-section { display: none; }
-  .category-section.active { display: block; }
-
-  /* 랭킹·추천 캐러셀 (이미 구현된 부분) */
-  .ranking-list,
-  .recommend-list {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding: 16px;
-    scroll-snap-type: x mandatory;
-  }
-  .rank-item,
-  .recommend-item {
-    scroll-snap-align: start;
-    min-width: 40%;
-  }
-}
-
-  gap: 12px;
-}
-.rank-item {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 2/3;
-  border-radius: 8px;
-}
-.rank-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.rank-number {
-  position: absolute;
-  top: 6px; left: 6px;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  z-index: 2;
-}
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  background: #000;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #fff;
+  padding: 0 40px;
+  z-index: 1000;
+  border-bottom: 1px solid #222;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.logo {
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: #e50914;
+  user-select: none;
+  flex-shrink: 0;
+}
+nav {
+  display: flex;
+  gap: 30px;
+  margin-left: 50px;
+  flex-grow: 1;
+}
+nav a {
   font-size: 16px;
-  font-weight: 700;
-  z-index: 1;
+  font-weight: 600;
+  color: #eee;
+  position: relative;
+  padding: 8px 0;
+  user-select: none;
+  transition: color 0.3s;
 }
-.watermark {
+nav a.active,
+nav a:hover {
+  color: #e50914;
+}
+nav a.active::after {
+  content: '';
   position: absolute;
-  bottom: 6px; right: 6px;
-  width: 32px;
-  opacity: 0.7;
-  z-index: 2;
-}
-
-/* ------------------------------
-   추천 콘텐츠 (7열 그리드)
-   ------------------------------ */
-.recommendation {
-  padding: 40px;
-}
-.recommendation h2 {
-  font-size: 22px;
-  margin-bottom: 16px;
-}
-.recommend-list {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-}
-.recommend-item img {
+  bottom: -8px;
+  left: 0;
   width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(229,9,20,0.6);
-  display: block;
-}
-
-/* ------------------------------
-   로그인 모달 (PC 중앙 팝업)
-   ------------------------------ */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-.modal.hidden {
-  display: none;
-}
-.modal-content {
-  background: #111;
-  padding: 32px;
-  border-radius: 8px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.7);
-  animation: fadeIn 0.2s ease-out;
-  text-align: center;
-}
-.sns-btn {
-  width: 100%;
-  margin: 8px 0;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 14px;
-}
-.kakao { background: #fee500; color: #000; }
-.naver  { background: #03c75a; color: #fff; }
-.apple  { background: #fff; color: #000; }
-.close-btn {
-  margin-top: 12px;
+  height: 3px;
   background: #e50914;
-  color: #fff;
+  border-radius: 2px;
+}
+.search-btn, .cart-btn {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+  margin-left: 20px;
+}
+main {
+  padding: 72px 40px 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  user-select: none;
+}
+.top20-list, .free-list {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  scroll-behavior: smooth;
+}
+.top20-list::-webkit-scrollbar, .free-list::-webkit-scrollbar {
+  display: none;
+}
+.top20-item, .free-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 140px;
+  cursor: pointer;
+  user-select: none;
+}
+.top20-item img, .free-item img {
   width: 100%;
-  padding: 8px;
-  border: none;
+  border-radius: 10px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.top20-item:hover img, .free-item:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #e50914;
+}
+.rank {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 36px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  user-select: none;
+}
+.label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 3px;
+  user-select: none;
+}
+.label.new {
+  background-color: #e50914;
+  color: #fff;
+}
+.label.only {
+  background-color: #00a8ff;
+  color: #fff;
+}
+.label.free {
+  background-color: #00c73c;
+  color: #fff;
+}
+.label.original {
+  background-color: #e50914;
+  color: #fff;
+  bottom: 8px;
+  left: 8px;
+  top: auto;
+  padding: 3px 7px;
+  font-size: 12px;
   border-radius: 4px;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* ------------------------------
-   모바일 전용 UI (≤768px)
-   ------------------------------ */
-/* 햄버거 버튼 */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.hamburger span {
-  width: 24px;
-  height: 2px;
-  background: #fff;
-  display: block;
-}
-
-/* 사이드 드로어 */
-.nav-drawer {
-  position: fixed;
-  top: 0; left: -100%;
-  width: 80%; height: 100%;
-  background: #111;
-  padding: 60px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  transition: left 0.3s ease;
-  z-index: 1500;
-}
-.nav-drawer.open {
-  left: 0;
-}
-
-/* 드로어 백드롭 */
-.drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease;
-  z-index: 1400;
-}
-.drawer-backdrop.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* 랭킹·추천 리스트 캐러셀 전환 */
-@media (max-width: 768px) {
-  .desktop-nav { display: none; }
-  .hamburger { display: flex; }
-
-  .ranking-list,
-  .recommend-list {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 16px;
-    scroll-snap-type: x mandatory;
+@media (max-width: 1024px) {
+  main {
+    padding: 72px 20px 30px;
+    max-width: 100%;
   }
-  .rank-item,
-  .recommend-item {
-    scroll-snap-align: start;
-    min-width: 40%;
+  .top20-item, .free-item {
+    width: 120px;
+  }
+  .rank {
+    font-size: 28px;
   }
 }
-/* 1) 모바일 전용 스타일 (.mobile-mode 클래스와 결합) */
-body.mobile-mode .desktop-nav {
-  display: none;
-}
-body.mobile-mode .hamburger {
-  display: flex;
-}
-
-/* 2) 햄버거 버튼 */
-.hamburger {
-  display: none;      /* PC에선 숨김 */
-  flex-direction: column;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.hamburger span {
-  width: 24px; height: 2px;
-  background: #fff;
-  display: block;
-}
-
-/* 3) 네비 드로어 */
-.nav-drawer {
-  position: fixed;
-  top: 0; left: -100%;
-  width: 80%; height: 100%;
-  background: #111;
-  padding: 60px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  transition: left 0.3s ease;
-  z-index: 1500;
-}
-.nav-drawer.open {
-  left: 0;
-}
-
-/* 4) 백드롭 */
-.drawer-backdrop {
-  position: fixed; inset:0;
-  background: rgba(0,0,0,0.5);
-  opacity: 0; visibility: hidden;
-  transition: opacity 0.3s ease;
-  z-index: 1400;
-}
-.drawer-backdrop.visible {
-  opacity: 1; visibility: visible;
-}
-
-/* 5) 랭킹·추천 캐러셀 전환 (기존 미디어쿼리와 동일) */
-@media (max-width: 768px) {
-  .ranking-list,
-  .recommend-list {
-    display: flex;
-    overflow-x: auto;
-    gap: 8px;
-    padding-bottom: 16px;
-    scroll-snap-type: x mandatory;
+@media (max-width: 600px) {
+  header {
+    padding: 0 15px;
   }
-  .rank-item,
-  .recommend-item {
-    scroll-snap-align: start;
-    min-width: 40%;
+  nav {
+    display: none;
   }
+  .search-btn, .cart-btn {
+    margin-left: 10px;
+  }
+  main {
+    padding: 72px 15px 20px;
+  }
+  .top20-item, .free-item {
+    width: 110px;
+  }
+  .rank {
+    font-size: 22px;
+  }
+}
