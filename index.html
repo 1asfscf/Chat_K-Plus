@@ -3,48 +3,58 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>티빙 스타일 OTT 다시보기</title>
+<title>티빙</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header>
-  <div class="logo" aria-label="티빙 로고">TVING</div>
-  <nav>
-    <a href="#" class="active">실시간</a>
-    <a href="#">TV프로그램</a>
-    <a href="#">영화</a>
-    <a href="#">티빙룸</a>
-  </nav>
-  <button class="search-btn" aria-label="검색">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-      <circle cx="11" cy="11" r="7"></circle>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-    </svg>
-  </button>
+  <div class="header-inner">
+    <div class="logo" aria-label="티빙 로고">TVING</div>
+    <nav>
+      <a href="#" class="active">드라마</a>
+      <a href="#">예능</a>
+      <a href="#">영화</a>
+      <a href="#">스포츠</a>
+      <a href="#">애니</a>
+      <a href="#">뉴스</a>
+      <a href="#">라이브</a>
+    </nav>
+    <button class="search-btn" aria-label="검색">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </button>
+  </div>
 </header>
 
 <main>
-  <section class="slider" aria-label="메인 슬라이드">
-    <div class="slide active" style="background-image: url('https://img.tving.com/uploaded_images/contents/2022/10/20221020105128_0.jpg');" aria-label="지리산">
-      <div class="slide-text">
-        <h2>지리산</h2>
-        <p>하늘과 만나는 곳, 여수저 지속의 경계</p>
-        <button class="btn-detail">자세히보기</button>
+  <section class="main-slider" aria-label="메인 슬라이드">
+    <div class="slides">
+      <div class="slide active" style="background-image: url('https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg');" aria-label="대탈출 더 스토리">
+        <div class="slide-text">
+          <span class="original-label">V ORIGINAL</span>
+          <h2>대탈출 더 스토리</h2>
+          <p>새로운 탈출러들과 함께 스케일업!<br>차원이 다른 서스펜스 어드벤처!</p>
+          <button class="btn-detail">자세히보기</button>
+        </div>
       </div>
-    </div>
-    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2023/01/20230110123456_0.jpg');" aria-label="두 번째 슬라이드">
-      <div class="slide-text">
-        <h2>두 번째 슬라이드</h2>
-        <p>설명 문구가 들어갑니다</p>
-        <button class="btn-detail">자세히보기</button>
+      <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg');" aria-label="팬텀중계">
+        <div class="slide-text">
+          <span class="original-label">V ORIGINAL</span>
+          <h2>팬텀중계</h2>
+          <p>스포츠 중계의 새로운 패러다임!</p>
+          <button class="btn-detail">자세히보기</button>
+        </div>
       </div>
-    </div>
-    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2023/02/20230210123456_0.jpg');" aria-label="세 번째 슬라이드">
-      <div class="slide-text">
-        <h2>세 번째 슬라이드</h2>
-        <p>추가 설명 문구</p>
-        <button class="btn-detail">자세히보기</button>
+      <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg');" aria-label="UFC">
+        <div class="slide-text">
+          <span class="original-label">V ORIGINAL</span>
+          <h2>UFC</h2>
+          <p>세계 최고의 격투기 대전!</p>
+          <button class="btn-detail">자세히보기</button>
+        </div>
       </div>
     </div>
     <button class="arrow arrow-left" aria-label="이전 슬라이드">&#10094;</button>
@@ -56,39 +66,34 @@
     </div>
   </section>
 
-  <section class="content-section" aria-label="티빙에서 꼭 봐야하는 콘텐츠">
-    <h3>티빙에서 꼭 봐야하는 콘텐츠</h3>
-    <div class="content-list">
-      <article class="content-item" tabindex="0">
-        <img src="https://img.tving.com/uploaded_images/contents/2023/01/20230110123456_0.jpg" alt="해피니스" />
-        <span class="label">T ORIGINAL</span>
-        <h4>해피니스</h4>
-      </article>
-      <article class="content-item" tabindex="0">
-        <img src="https://img.tving.com/uploaded_images/contents/2023/02/20230210123456_0.jpg" alt="러브캐처 인 서울" />
-        <span class="label">T ORIGINAL</span>
-        <h4>러브캐처 인 서울</h4>
-      </article>
-      <article class="content-item" tabindex="0">
-        <img src="https://img.tving.com/uploaded_images/contents/2023/03/20230310123456_0.jpg" alt="술꾼도시여자들" />
-        <span class="label">T ORIGINAL</span>
-        <h4>술꾼도시여자들</h4>
-      </article>
-      <article class="content-item" tabindex="0">
-        <img src="https://img.tving.com/uploaded_images/contents/2023/04/20230410123456_0.jpg" alt="어른연습생" />
-        <span class="label">T ORIGINAL</span>
-        <h4>어른연습생</h4>
-      </article>
-      <article class="content-item" tabindex="0">
-        <img src="https://img.tving.com/uploaded_images/contents/2023/05/20230510123456_0.jpg" alt="가상세계지만 스타가 되고 싶어" />
-        <span class="label">T ORIGINAL</span>
-        <h4>가상세계지만 스타가 되고 싶어</h4>
-      </article>
-      <article class="content-item" tabindex="0">
-        <img src="https://img.tving.com/uploaded_images/contents/2023/06/20230610123456_0.jpg" alt="EMERGENCY" />
-        <span class="label">T ORIGINAL</span>
-        <h4>EMERGENCY</h4>
-      </article>
+  <section class="content-categories" aria-label="콘텐츠 카테고리">
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123756_0.jpg" alt="대탈출" />
+      <span>대탈출</span>
+    </div>
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123856_0.jpg" alt="팬텀중계" />
+      <span>팬텀중계</span>
+    </div>
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="Apple TV+" />
+      <span>Apple TV+</span>
+    </div>
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124056_0.jpg" alt="UFC" />
+      <span>UFC</span>
+    </div>
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124156_0.jpg" alt="테니스" />
+      <span>테니스</span>
+    </div>
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124256_0.jpg" alt="훅비엔 2023" />
+      <span>훅비엔 2023</span>
+    </div>
+    <div class="category-item">
+      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124356_0.jpg" alt="키즈" />
+      <span>키즈</span>
     </div>
   </section>
 </main>
