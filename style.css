@@ -9,22 +9,21 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
   overflow-x: hidden;
 }
-a, button {
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-}
 header {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: 60px;
-  background: #111;
+  height: 56px;
+  background: #000;
   display: flex;
   align-items: center;
   padding: 0 40px;
   z-index: 1000;
+  border-bottom: 1px solid #222;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 .logo {
   font-weight: 900;
@@ -36,12 +35,12 @@ header {
 }
 nav {
   display: flex;
-  gap: 40px;
+  gap: 30px;
   margin-left: 50px;
   flex-grow: 1;
 }
 nav a {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #eee;
   position: relative;
@@ -70,17 +69,22 @@ nav a.active::after {
   cursor: pointer;
 }
 main {
-  padding: 80px 60px 40px;
+  padding: 72px 40px 40px;
   max-width: 1280px;
   margin: 0 auto;
 }
-.slider {
+.main-slider {
   position: relative;
   height: 480px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 0 30px rgba(229, 9, 20, 0.7);
+  box-shadow: 0 0 40px rgba(229, 9, 20, 0.8);
   margin-bottom: 60px;
+}
+.slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 .slide {
   position: absolute;
@@ -93,6 +97,8 @@ main {
   align-items: flex-end;
   padding: 60px 60px 80px;
   border-radius: 12px;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0,0,0,0.9);
 }
 .slide.active {
   opacity: 1;
@@ -100,11 +106,17 @@ main {
 }
 .slide-text {
   max-width: 480px;
-  color: #fff;
-  text-shadow: 0 0 8px rgba(0,0,0,0.9);
+}
+.original-label {
+  font-weight: 900;
+  font-size: 14px;
+  color: #e50914;
+  margin-bottom: 12px;
+  display: inline-block;
+  letter-spacing: 1.5px;
 }
 .slide-text h2 {
-  font-size: 40px;
+  font-size: 44px;
   font-weight: 900;
   margin-bottom: 12px;
 }
@@ -174,78 +186,55 @@ main {
 .dot.active {
   background: #e50914;
 }
-.content-section h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 28px;
-  user-select: none;
-}
-.content-list {
+.content-categories {
   display: flex;
-  gap: 22px;
+  gap: 20px;
   overflow-x: auto;
   padding-bottom: 14px;
   scroll-behavior: smooth;
 }
-.content-list::-webkit-scrollbar {
+.content-categories::-webkit-scrollbar {
   display: none;
 }
-.content-item {
+.category-item {
   flex: 0 0 auto;
-  width: 160px;
+  width: 140px;
   cursor: pointer;
-  position: relative;
   user-select: none;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
 }
-.content-item img {
+.category-item img {
   width: 100%;
   border-radius: 10px;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
+  margin-bottom: 8px;
   box-shadow: 0 0 8px rgba(0,0,0,0.7);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.content-item:hover img {
+.category-item:hover img {
   transform: scale(1.05);
   box-shadow: 0 0 16px #e50914;
-}
-.label {
-  position: absolute;
-  bottom: 44px;
-  left: 12px;
-  background: #e50914;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 3px;
-  letter-spacing: 0.5px;
-  user-select: none;
-}
-.content-item h4 {
-  margin-top: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* 반응형 */
 @media (max-width: 1024px) {
   main {
-    padding: 80px 20px 30px;
+    padding: 72px 20px 30px;
     max-width: 100%;
   }
-  .content-item {
+  .category-item {
     width: 120px;
   }
   .slide-text {
     max-width: 320px;
-    padding: 40px 20px 60px;
+    padding-right: 20px;
   }
   .slide-text h2 {
-    font-size: 28px;
+    font-size: 32px;
   }
   .slide-text p {
     font-size: 14px;
@@ -264,16 +253,17 @@ main {
   main {
     padding: 72px 15px 20px;
   }
-  .content-item {
+  .category-item {
     width: 110px;
+    font-size: 12px;
   }
-  .slider {
+  .main-slider {
     height: 280px;
     border-radius: 0;
   }
   .slide-text {
     max-width: 90%;
-    padding: 20px 15px 40px;
+    padding-right: 10px;
   }
   .slide-text h2 {
     font-size: 22px;
