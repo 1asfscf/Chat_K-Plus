@@ -9,9 +9,6 @@
 <body>
 
 <header>
-  <div class="hamburger" aria-label="메뉴 열기" role="button" tabindex="0">
-    <span></span><span></span><span></span>
-  </div>
   <div class="logo" aria-label="티빙 로고">TVING</div>
   <nav>
     <a href="#" class="active">실시간</a>
@@ -19,55 +16,79 @@
     <a href="#">영화</a>
     <a href="#">티빙룸</a>
   </nav>
-  <svg class="search-icon" viewBox="0 0 24 24" aria-label="검색" role="button" tabindex="0">
-    <path d="M21 21l-4.35-4.35M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
+  <button class="search-btn" aria-label="검색">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  </button>
 </header>
 
 <main>
-  <section class="banner" aria-label="메인 배너 슬라이드">
-    <img src="https://img.tving.com/uploaded_images/contents/2022/10/20221020105128_0.jpg" alt="지리산" class="banner-img" />
-    <div class="banner-content">
-      <h2 class="banner-title">지리산</h2>
-      <p class="banner-desc">하늘과 만나는 곳, 여수저 지속의 경계</p>
-      <button class="btn-detail" aria-label="지리산 자세히보기">자세히보기</button>
+  <section class="slider" aria-label="메인 슬라이드">
+    <div class="slide active" style="background-image: url('https://img.tving.com/uploaded_images/contents/2022/10/20221020105128_0.jpg');" aria-label="지리산">
+      <div class="slide-text">
+        <h2>지리산</h2>
+        <p>하늘과 만나는 곳, 여수저 지속의 경계</p>
+        <button class="btn-detail">자세히보기</button>
+      </div>
     </div>
-    <div class="arrow left" role="button" aria-label="이전 배너" tabindex="0">&#10094;</div>
-    <div class="arrow right" role="button" aria-label="다음 배너" tabindex="0">&#10095;</div>
-    <div class="dots" role="tablist" aria-label="배너 선택">
-      <div class="dot active" data-index="0" role="tab" tabindex="0" aria-selected="true"></div>
-      <div class="dot" data-index="1" role="tab" tabindex="-1" aria-selected="false"></div>
-      <div class="dot" data-index="2" role="tab" tabindex="-1" aria-selected="false"></div>
+    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2023/01/20230110123456_0.jpg');" aria-label="두 번째 슬라이드">
+      <div class="slide-text">
+        <h2>두 번째 슬라이드</h2>
+        <p>설명 문구가 들어갑니다</p>
+        <button class="btn-detail">자세히보기</button>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2023/02/20230210123456_0.jpg');" aria-label="세 번째 슬라이드">
+      <div class="slide-text">
+        <h2>세 번째 슬라이드</h2>
+        <p>추가 설명 문구</p>
+        <button class="btn-detail">자세히보기</button>
+      </div>
+    </div>
+    <button class="arrow arrow-left" aria-label="이전 슬라이드">&#10094;</button>
+    <button class="arrow arrow-right" aria-label="다음 슬라이드">&#10095;</button>
+    <div class="dots" role="tablist" aria-label="슬라이드 선택">
+      <button class="dot active" data-index="0" role="tab" aria-selected="true"></button>
+      <button class="dot" data-index="1" role="tab" aria-selected="false"></button>
+      <button class="dot" data-index="2" role="tab" aria-selected="false"></button>
     </div>
   </section>
 
-  <section aria-label="티빙에서 꼭 봐야하는 콘텐츠">
-    <h3 class="section-title">티빙에서 꼭 봐야하는 콘텐츠</h3>
-    <div class="content-row" tabindex="0" aria-label="콘텐츠 리스트">
-      <div class="content-item" tabindex="0">
+  <section class="content-section" aria-label="티빙에서 꼭 봐야하는 콘텐츠">
+    <h3>티빙에서 꼭 봐야하는 콘텐츠</h3>
+    <div class="content-list">
+      <article class="content-item" tabindex="0">
         <img src="https://img.tving.com/uploaded_images/contents/2023/01/20230110123456_0.jpg" alt="해피니스" />
-        <div class="content-title">해피니스</div>
-      </div>
-      <div class="content-item" tabindex="0">
+        <span class="label">T ORIGINAL</span>
+        <h4>해피니스</h4>
+      </article>
+      <article class="content-item" tabindex="0">
         <img src="https://img.tving.com/uploaded_images/contents/2023/02/20230210123456_0.jpg" alt="러브캐처 인 서울" />
-        <div class="content-title">러브캐처 인 서울</div>
-      </div>
-      <div class="content-item" tabindex="0">
+        <span class="label">T ORIGINAL</span>
+        <h4>러브캐처 인 서울</h4>
+      </article>
+      <article class="content-item" tabindex="0">
         <img src="https://img.tving.com/uploaded_images/contents/2023/03/20230310123456_0.jpg" alt="술꾼도시여자들" />
-        <div class="content-title">술꾼도시여자들</div>
-      </div>
-      <div class="content-item" tabindex="0">
+        <span class="label">T ORIGINAL</span>
+        <h4>술꾼도시여자들</h4>
+      </article>
+      <article class="content-item" tabindex="0">
         <img src="https://img.tving.com/uploaded_images/contents/2023/04/20230410123456_0.jpg" alt="어른연습생" />
-        <div class="content-title">어른연습생</div>
-      </div>
-      <div class="content-item" tabindex="0">
+        <span class="label">T ORIGINAL</span>
+        <h4>어른연습생</h4>
+      </article>
+      <article class="content-item" tabindex="0">
         <img src="https://img.tving.com/uploaded_images/contents/2023/05/20230510123456_0.jpg" alt="가상세계지만 스타가 되고 싶어" />
-        <div class="content-title">가상세계지만 스타가 되고 싶어</div>
-      </div>
-      <div class="content-item" tabindex="0">
+        <span class="label">T ORIGINAL</span>
+        <h4>가상세계지만 스타가 되고 싶어</h4>
+      </article>
+      <article class="content-item" tabindex="0">
         <img src="https://img.tving.com/uploaded_images/contents/2023/06/20230610123456_0.jpg" alt="EMERGENCY" />
-        <div class="content-title">EMERGENCY</div>
-      </div>
+        <span class="label">T ORIGINAL</span>
+        <h4>EMERGENCY</h4>
+      </article>
     </div>
   </section>
 </main>
