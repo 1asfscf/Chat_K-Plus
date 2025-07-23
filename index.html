@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=, maximum-scale=1" />
   <title>티빙</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -19,7 +19,7 @@
       --logo-size-mobile: 24px;
       --nav-font: 16px;
       --hover-transition: 0.3s ease;
-      --card-elevate: translateY(-8px);
+      --card-elevate-y: -8px;
     }
     *, *::before, *::after {
       box-sizing: border-box;
@@ -98,12 +98,12 @@
     /* 카드 호버 및 클릭 애니메이션 */
     @media (hover: hover) and (pointer: fine) {
       .top20-item:hover {
-        transform: scale(1.03);
+        transform: translateY(var(--card-elevate-y)) scale(1.03);
         box-shadow: 0 8px 16px rgba(0,0,0,0.6);
       }
     }
     .top20-item:active {
-      transform: var(--card-elevate) scale(1.02);
+      transform: translateY(var(--card-elevate-y)) scale(1.02);
       box-shadow: 0 12px 24px rgba(0,0,0,0.7);
     }
     .top20-item img {
@@ -189,6 +189,7 @@
   </style>
 </head>
 <body>
+
   <header>
     <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -215,13 +216,51 @@
     <section class="top20" aria-label="오늘의 티빙 TOP 20">
       <h2 class="section-title">오늘의 티빙 TOP 20</h2>
       <div class="top20-list">
-        <!-- ... items 그대로 유지 ... -->
+        <div class="top20-item">
+          <span class="rank">1</span>
+          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg" alt="대탈출" loading="lazy" decoding="async">
+          <span class="label new">NEW</span><span class="label age">18+</span>
+        </div>
+        <div class="top20-item">
+          <span class="rank">2</span>
+          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg" alt="눈물의 여왕" loading="lazy" decoding="async">
+        </div>
+        <div class="top20-item">
+          <span class="rank">3</span>
+          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg" alt="웨딩 임파서블" loading="lazy" decoding="async">
+          <span class="label only">ONLY</span>
+        </div>
+        <div class="top20-item">
+          <span class="rank">4</span>
+          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123756_0.jpg" alt="나는 솔로" loading="lazy" decoding="async">
+          <span class="label new">NEW</span>
+        </div>
+        <div class="top20-item">
+          <span class="rank">5</span>
+          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123856_0.jpg" alt="유퀴즈" loading="lazy" decoding="async">
+          <span class="label new">NEW</span>
+        </div>
+        <div class="top20-item">
+          <span class="rank">6</span>
+          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성" loading="lazy" decoding="async">
+        </div>
       </div>
     </section>
   </main>
 
   <nav class="mobile-bottom-nav" role="navigation" aria-label="모바일 하단 메뉴">
-    <!-- ... buttons 그대로 유지 ... -->
+    <button class="bottom-nav-btn active" aria-label="홈">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg><span>홈</span>
+    </button>
+    <button class="bottom-nav-btn" aria-label="공개예정">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg><span>공개예정</span>
+    </button>
+    <button class="bottom-nav-btn" aria-label="검색">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>검색</span>
+    </button>
+    <button class="bottom-nav-btn" aria-label="기록">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg><span>기록</span>
+    </button>
   </nav>
 
   <script>
@@ -230,7 +269,6 @@
       const drawer = document.querySelector('.mobile-nav-drawer');
       const burger = document.querySelector('.hamburger');
       const lines  = burger.querySelectorAll('span');
-
       burger.addEventListener('click', () => {
         const open = drawer.classList.toggle('open');
         burger.setAttribute('aria-expanded', open);
