@@ -40,7 +40,7 @@ nav a.active {
 }
 
 .banner {
-  background: url('배너이미지.jpg') center/cover no-repeat;
+  background: url('https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png') center/cover no-repeat;
   height: 500px;
   display: flex;
   align-items: flex-end;
