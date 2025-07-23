@@ -1,3 +1,13 @@
-// 현재 UI는 슬라이드 없이 가로 스크롤 리스트 형태로 구성되어 있어
-// 별도의 슬라이드 스크립트는 필요하지 않습니다.
-// 필요 시 추가 요청 주세요.
+// 모바일 햄버거 메뉴 토글
+const hamburgerBtn = document.querySelector('.hamburger-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+
+hamburgerBtn.addEventListener('click', () => {
+  const expanded = hamburgerBtn.getAttribute('aria-expanded') === 'true' || false;
+  hamburgerBtn.setAttribute('aria-expanded', !expanded);
+  if (mobileMenu.hasAttribute('hidden')) {
+    mobileMenu.removeAttribute('hidden');
+  } else {
+    mobileMenu.setAttribute('hidden', '');
+  }
+});
