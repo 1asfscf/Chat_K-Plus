@@ -9,161 +9,468 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* ─────────────── 변수 • 기본 ─────────────── */
-:root{
-  --clr-bg:#0a0a0a;
-  --clr-primary:#e50914;
-  --clr-text:#eee;
-  --header-h:56px;
-  --nav-gap:30px;
+/* ─────────────── 변수 및 기본 설정 ─────────────── */
+:root {
+  --clr-bg: #0a0a0a;
+  --clr-primary: #e50914;
+  --clr-text: #eee;
+  --header-h: 56px;
+  --nav-gap: 30px;
+  --touch-target: 44px;
+  --hover-transition: 0.3s ease;
 }
-@media (max-width:1024px){:root{--nav-gap:18px}}
-@media (max-width:600px){:root{--header-h:50px}}
+
+/* 터치 디바이스 전용 변수 오버라이드 */
+@media (pointer: coarse) {
+  :root {
+    --header-h: 60px;
+    --touch-target: 48px;
+    --nav-gap: 20px;
+  }
+}
+
+/* 고해상도 터치 디바이스 (스타일러스 등) */
+@media (pointer: fine) and (hover: none) {
+  :root {
+    --touch-target: 40px;
+  }
+}
 
 *,
 *::before,
-*::after{box-sizing:border-box;margin:0;padding:0}
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-body{
-  background:var(--clr-bg);
-  color:var(--clr-text);
-  font-family:'Noto Sans KR',sans-serif;
-  overflow-x:hidden;
+body {
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+  /* 터치 디바이스 스크롤 최적화 */
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
 }
 
 /* ─────────────── 헤더 ─────────────── */
-header{
-  position:fixed;top:0;left:0;right:0;
-  height:var(--header-h);
-  display:flex;align-items:center;gap:40px;
-  padding:0 20px 0 32px;
-  background:#000;border-bottom:1px solid #222;
-  z-index:1000;
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 0 20px 0 32px;
+  background: #000;
+  border-bottom: 1px solid #222;
+  z-index: 1000;
 }
-.logo{
-  font:900 28px/1 'Noto Sans KR';
-  letter-spacing:4px;
-  color:var(--clr-primary);
-  user-select:none;
+
+.logo {
+  font: 900 28px/1 'Noto Sans KR';
+  letter-spacing: 4px;
+  color: var(--clr-primary);
+  user-select: none;
+  /* 터치 디바이스에서 더 큰 타겟 영역 */
+  min-height: var(--touch-target);
+  display: flex;
+  align-items: center;
 }
-.pc-nav{
-  display:flex;gap:var(--nav-gap);flex:1;
+
+.pc-nav {
+  display: flex;
+  gap: var(--nav-gap);
+  flex: 1;
 }
-.pc-nav a{
-  font:600 16px/1 'Noto Sans KR';
-  color:var(--clr-text);
-  position:relative;
-  padding:8px 0;
-  transition:color .3s;
+
+.pc-nav a {
+  font: 600 16px/1 'Noto Sans KR';
+  color: var(--clr-text);
+  position: relative;
+  padding: 8px 12px;
+  min-height: var(--touch-target);
+  display: flex;
+  align-items: center;
+  transition: color var(--hover-transition);
+  text-decoration: none;
+  border-radius: 4px;
 }
-.pc-nav a:hover,
-.pc-nav a.active{color:var(--clr-primary)}
-.pc-nav a.active::after{
-  content:'';
-  position:absolute;bottom:-6px;left:0;
-  width:100%;height:3px;
-  background:var(--clr-primary);border-radius:2px;
+
+/* 호버가 지원되는 디바이스에서만 호버 효과 적용 */
+@media (hover: hover) and (pointer: fine) {
+  .pc-nav a:hover {
+    color: var(--clr-primary);
+    background: rgba(229, 9, 20, 0.1);
+  }
+  
+  .pc-nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 3px;
+    background: var(--clr-primary);
+    border-radius: 2px;
+  }
+}
+
+/* 터치 디바이스에서는 액티브 상태로 피드백 */
+@media (hover: none) and (pointer: coarse) {
+  .pc-nav a:active {
+    color: var(--clr-primary);
+    background: rgba(229, 9, 20, 0.2);
+    transform: scale(0.95);
+  }
+  
+  .pc-nav a.active {
+    color: var(--clr-primary);
+    background: rgba(229, 9, 20, 0.15);
+  }
 }
 
 /* ── 햄버거 (모바일) ── */
-.hamburger{
-  display:none;background:none;border:0;cursor:pointer;padding:8px;
+.hamburger {
+  display: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 12px;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  border-radius: 4px;
+  transition: background var(--hover-transition);
 }
-.hamburger span{
-  display:block;width:24px;height:2px;
-  background:#fff;margin:5px 0;transition:.3s;
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  margin: 5px 0;
+  transition: 0.3s;
+}
+
+/* 터치 디바이스 햄버거 피드백 */
+@media (hover: none) and (pointer: coarse) {
+  .hamburger:active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.95);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hamburger:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* ── 모바일 드로어 ── */
-.mobile-nav-drawer{
-  position:fixed;top:0;bottom:0;right:0;
-  width:260px;max-width:80%;
-  background:#111;
-  transform:translateX(100%);
-  transition:transform .35s ease;
-  display:flex;flex-direction:column;
-  padding:var(--header-h) 24px 24px;
-  overflow-y:auto;z-index:999;
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 280px;
+  max-width: 85%;
+  background: #111;
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  padding: var(--header-h) 24px 24px;
+  overflow-y: auto;
+  z-index: 999;
+  /* 터치 스크롤 개선 */
+  -webkit-overflow-scrolling: touch;
 }
-.mobile-nav-drawer a{
-  color:#fff;font:600 1rem/2 'Noto Sans KR';
+
+.mobile-nav-drawer a {
+  color: #fff;
+  font: 600 18px/1.5 'Noto Sans KR';
+  padding: 16px 0;
+  text-decoration: none;
+  border-bottom: 1px solid #333;
+  min-height: var(--touch-target);
+  display: flex;
+  align-items: center;
+  transition: all var(--hover-transition);
 }
-.mobile-nav-drawer.open{transform:translateX(0)}
+
+/* 터치 디바이스 네비게이션 피드백 */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-nav-drawer a:active {
+    background: rgba(229, 9, 20, 0.1);
+    color: var(--clr-primary);
+    transform: translateX(8px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mobile-nav-drawer a:hover {
+    background: rgba(229, 9, 20, 0.1);
+    color: var(--clr-primary);
+    transform: translateX(8px);
+  }
+}
+
+.mobile-nav-drawer.open {
+  transform: translateX(0);
+}
 
 /* ─────────────── 본문 ─────────────── */
-main{
-  padding:calc(var(--header-h) + 16px) 40px 40px;
-  max-width:1280px;margin:0 auto;
-}
-.section-title{
-  font:700 20px/1 'Noto Sans KR';
-  margin-bottom:20px;
+main {
+  padding: calc(var(--header-h) + 16px) 40px 40px;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
-.top20-list{
-  display:flex;gap:16px;
-  overflow-x:auto;scroll-behavior:smooth;
-  padding-bottom:14px;
+.section-title {
+  font: 700 20px/1.2 'Noto Sans KR';
+  margin-bottom: 20px;
 }
-.top20-list::-webkit-scrollbar{display:none}
-.top20-item{
-  position:relative;flex:0 0 140px;
-  cursor:pointer;border-radius:12px;
-  overflow:hidden;
-  transition:transform .3s,box-shadow .3s;
+
+.top20-list {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 14px;
+  /* 터치 스크롤 개선 */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
-.top20-item img{
-  width:100%;aspect-ratio:2/3;object-fit:cover;display:block;
+
+.top20-list::-webkit-scrollbar {
+  display: none;
 }
-.top20-item:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 18px var(--clr-primary);
+
+.top20-item {
+  position: relative;
+  flex: 0 0 140px;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform var(--hover-transition), box-shadow var(--hover-transition);
+  scroll-snap-align: start;
+  /* 터치 디바이스에서 더 부드러운 탭 */
+  -webkit-tap-highlight-color: transparent;
 }
-.rank{
-  position:absolute;top:12px;left:12px;
-  font:900 32px/1 'Noto Sans KR';
-  color:#fff;text-shadow:0 0 6px rgba(0,0,0,.8);
+
+.top20-item img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
 }
-.label{
-  position:absolute;top:12px;right:12px;
-  padding:3px 8px;font:700 12px/1 'Noto Sans KR';
-  border-radius:4px;color:#fff;background:var(--clr-primary);
+
+/* 호버 지원 디바이스에서만 호버 효과 */
+@media (hover: hover) and (pointer: fine) {
+  .top20-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 18px var(--clr-primary);
+  }
 }
-.label.age{background:#ff3b3b;right:auto;left:12px}
-.label.only{background:#00a8ff}
+
+/* 터치 디바이스에서는 탭 피드백 */
+@media (hover: none) and (pointer: coarse) {
+  .top20-item:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.5);
+  }
+  
+  /* 터치 디바이스에서 포스터 크기 약간 증가 */
+  .top20-item {
+    flex: 0 0 160px;
+  }
+}
+
+.rank {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font: 900 32px/1 'Noto Sans KR';
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+
+.label {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 8px;
+  font: 700 12px/1 'Noto Sans KR';
+  border-radius: 4px;
+  color: #fff;
+  background: var(--clr-primary);
+  /* 터치 디바이스에서 더 큰 라벨 */
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.label.age {
+  background: #ff3b3b;
+  right: auto;
+  left: 12px;
+  top: 50px;
+}
+
+.label.only {
+  background: #00a8ff;
+}
 
 /* ─────────────── 하단 메뉴바 (모바일) ─────────────── */
-.mobile-bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;height:56px;
-  background:#111;border-top:1px solid #222;
-  display:none;justify-content:space-around;align-items:center;
-  padding-bottom:env(safe-area-inset-bottom);
-  z-index:10000;
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #111;
+  border-top: 1px solid #222;
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0 env(safe-area-inset-bottom);
+  z-index: 10000;
 }
-.bottom-nav-btn{
-  background:none;border:0;color:#888;
-  font-size:.75rem;display:flex;flex-direction:column;
-  align-items:center;cursor:pointer;transition:color .3s;
-}
-.bottom-nav-btn svg{margin-bottom:2px}
-.bottom-nav-btn.active,
-.bottom-nav-btn:hover{color:var(--clr-primary)}
 
-/* ─────────────── 반응형 ─────────────── */
-@media (max-width:1024px){
-  main{padding:calc(var(--header-h) + 12px) 20px 30px}
-  .top20-item{flex-basis:120px}
-  .rank{font-size:26px}
+.bottom-nav-btn {
+  background: none;
+  border: 0;
+  color: #888;
+  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all var(--hover-transition);
+  padding: 8px 12px;
+  border-radius: 8px;
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  /* 터치 하이라이트 제거 */
+  -webkit-tap-highlight-color: transparent;
 }
-@media (max-width:768px){
-  .pc-nav{display:none}
-  .hamburger{display:block}
+
+.bottom-nav-btn svg {
+  margin-bottom: 4px;
+  transition: transform var(--hover-transition);
 }
-@media (max-width:600px){
-  main{padding:calc(var(--header-h) + 12px) 16px calc(56px + env(safe-area-inset-bottom) + 12px)}
-  .top20-item{flex-basis:110px}
-  .rank{font-size:22px}
-  .mobile-bottom-nav{display:flex}
+
+.bottom-nav-btn.active,
+.bottom-nav-btn:active {
+  color: var(--clr-primary);
+  background: rgba(229, 9, 20, 0.1);
+}
+
+/* 터치 디바이스 하단 네비게이션 피드백 */
+@media (hover: none) and (pointer: coarse) {
+  .bottom-nav-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .bottom-nav-btn:active svg {
+    transform: scale(1.1);
+  }
+}
+
+/* ─────────────── 디바이스별 최적화 ─────────────── */
+
+/* 큰 터치 디바이스 (태블릿) */
+@media (pointer: coarse) and (min-width: 768px) {
+  .pc-nav {
+    display: flex;
+  }
+  
+  .hamburger {
+    display: none;
+  }
+  
+  .mobile-bottom-nav {
+    display: none;
+  }
+  
+  main {
+    padding: calc(var(--header-h) + 20px) 32px 32px;
+  }
+}
+
+/* 작은 터치 디바이스 (스마트폰) */
+@media (pointer: coarse) and (max-width: 767px) {
+  .pc-nav {
+    display: none;
+  }
+  
+  .hamburger {
+    display: block;
+  }
+  
+  .mobile-bottom-nav {
+    display: flex;
+  }
+  
+  main {
+    padding: calc(var(--header-h) + 12px) 16px calc(64px + env(safe-area-inset-bottom) + 12px);
+  }
+  
+  .section-title {
+    font-size: 18px;
+  }
+  
+  .rank {
+    font-size: 24px;
+  }
+}
+
+/* 정밀한 포인터 디바이스 (마우스, 트랙패드) */
+@media (pointer: fine) {
+  .pc-nav {
+    display: flex;
+  }
+  
+  .hamburger {
+    display: none;
+  }
+  
+  .mobile-bottom-nav {
+    display: none;
+  }
+}
+
+/* 하이브리드 디바이스 (터치스크린 랩톱 등) */
+@media (any-pointer: coarse) and (any-pointer: fine) {
+  /* 두 입력 방식 모두 지원하는 경우의 최적화 */
+  .top20-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+}
+
+/* 접근성 개선 - 모션 감소 선호 사용자 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .mobile-nav-drawer {
+    transition: none;
+  }
+}
+
+/* 다크모드 지원 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clr-bg: #000000;
+    --clr-text: #ffffff;
+  }
 }
 </style>
 </head>
@@ -200,22 +507,41 @@ main{
   <section class="top20" aria-label="오늘의 티빙 TOP 20">
     <h2 class="section-title">오늘의 티빙 TOP 20</h2>
     <div class="top20-list">
-      <div class="top20-item">
+      <div class="top20-item" tabindex="0" role="button" aria-label="대탈출 보기">
         <span class="rank">1</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg" alt="대탈출" loading="lazy" decoding="async"/>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg" 
+             alt="대탈출" loading="lazy" decoding="async"/>
         <span class="label new">NEW</span>
         <span class="label age">18+</span>
       </div>
-      <div class="top20-item">
+      <div class="top20-item" tabindex="0" role="button" aria-label="눈물의 여왕 보기">
         <span class="rank">2</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg" alt="눈물의 여왕" loading="lazy" decoding="async"/>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg" 
+             alt="눈물의 여왕" loading="lazy" decoding="async"/>
       </div>
-      <div class="top20-item">
+      <div class="top20-item" tabindex="0" role="button" aria-label="웨딩 임파서블 보기">
         <span class="rank">3</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg" alt="웨딩 임파서블" loading="lazy" decoding="async"/>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg" 
+             alt="웨딩 임파서블" loading="lazy" decoding="async"/>
         <span class="label only">ONLY</span>
       </div>
-      <!-- 필요에 따라 추가 -->
+      <div class="top20-item" tabindex="0" role="button" aria-label="나는 솔로 보기">
+        <span class="rank">4</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123756_0.jpg" 
+             alt="나는 솔로" loading="lazy" decoding="async"/>
+        <span class="label new">NEW</span>
+      </div>
+      <div class="top20-item" tabindex="0" role="button" aria-label="유퀴즈 보기">
+        <span class="rank">5</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123856_0.jpg" 
+             alt="유퀴즈" loading="lazy" decoding="async"/>
+        <span class="label new">NEW</span>
+      </div>
+      <div class="top20-item" tabindex="0" role="button" aria-label="한성 보기">
+        <span class="rank">6</span>
+        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" 
+             alt="한성" loading="lazy" decoding="async"/>
+      </div>
     </div>
   </section>
 </main>
@@ -223,38 +549,228 @@ main{
 <!-- ─────────────── 모바일 하단 메뉴바 ─────────────── -->
 <nav class="mobile-bottom-nav" role="navigation" aria-label="모바일 하단 메뉴">
   <button class="bottom-nav-btn active" aria-label="홈">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg>
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/>
+    </svg>
     <span>홈</span>
   </button>
   <button class="bottom-nav-btn" aria-label="공개예정">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/>
+    </svg>
     <span>공개예정</span>
   </button>
   <button class="bottom-nav-btn" aria-label="검색">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
     <span>검색</span>
   </button>
   <button class="bottom-nav-btn" aria-label="기록">
-    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg>
+    <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/>
+    </svg>
     <span>기록</span>
   </button>
 </nav>
 
-<!-- ─────────────── 스크립트 ─────────────── -->
+<!-- ─────────────── 향상된 스크립트 ─────────────── -->
 <script>
-const drawer = document.querySelector('.mobile-nav-drawer');
-const burger = document.querySelector('.hamburger');
-const lines  = burger.querySelectorAll('span');
+// 자동화된 디바이스 감지 및 UI 최적화
+class AdaptiveUI {
+  constructor() {
+    this.initializeDeviceDetection();
+    this.setupMobileNavigation();
+    this.optimizeScrolling();
+    this.enhanceAccessibility();
+  }
 
-burger.addEventListener('click', () => {
-  const open = drawer.classList.toggle('open');
-  burger.setAttribute('aria-expanded', open);
-  lines.forEach((l, i) => l.style.transform = open
-    ? ['rotate(45deg) translateY(8px)',
-       'scale(0)',
-       'rotate(-45deg) translateY(-8px)'][i]
-    : ''
-  );
+  // 디바이스 특성 자동 감지
+  initializeDeviceDetection() {
+    // 터치 지원 감지
+    const hasTouch = window.matchMedia('(pointer: coarse)').matches;
+    const canHover = window.matchMedia('(hover: hover)').matches;
+    const isHighDPI = window.devicePixelRatio > 1;
+    
+    // Body에 디바이스 클래스 추가
+    document.body.classList.add(
+      hasTouch ? 'touch-device' : 'no-touch',
+      canHover ? 'can-hover' : 'no-hover',
+      isHighDPI ? 'high-dpi' : 'standard-dpi'
+    );
+
+    // 동적 입력 방식 감지
+    this.setupDynamicInputDetection();
+  }
+
+  // 동적 입력 방식 감지 (마우스와 터치 전환)
+  setupDynamicInputDetection() {
+    let lastTouchTime = 0;
+    
+    // 터치 이벤트 감지
+    document.addEventListener('touchstart', () => {
+      lastTouchTime = Date.now();
+      document.body.classList.add('using-touch');
+      document.body.classList.remove('using-mouse');
+    }, { passive: true });
+
+    // 마우스 이벤트 감지
+    document.addEventListener('mousemove', () => {
+      if (Date.now() - lastTouchTime > 500) {
+        document.body.classList.add('using-mouse');
+        document.body.classList.remove('using-touch');
+      }
+    }, { passive: true });
+  }
+
+  // 모바일 네비게이션 설정
+  setupMobileNavigation() {
+    const drawer = document.querySelector('.mobile-nav-drawer');
+    const burger = document.querySelector('.hamburger');
+    const lines = burger?.querySelectorAll('span');
+
+    if (!drawer || !burger || !lines) return;
+
+    // 햄버거 메뉴 토글
+    burger.addEventListener('click', () => {
+      const isOpen = drawer.classList.toggle('open');
+      burger.setAttribute('aria-expanded', isOpen.toString());
+      
+      lines.forEach((line, index) => {
+        line.style.transform = isOpen ? [
+          'rotate(45deg) translateY(8px)',
+          'scale(0)',
+          'rotate(-45deg) translateY(-8px)'
+        ][index] : '';
+      });
+    });
+
+    // 드로어 외부 클릭 시 닫기
+    document.addEventListener('click', (e) => {
+      if (!drawer.contains(e.target) && !burger.contains(e.target)) {
+        if (drawer.classList.contains('open')) {
+          drawer.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+          lines.forEach(line => line.style.transform = '');
+        }
+      }
+    });
+
+    // ESC 키로 드로어 닫기
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+        drawer.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        lines.forEach(line => line.style.transform = '');
+        burger.focus();
+      }
+    });
+  }
+
+  // 스크롤 최적화
+  optimizeScrolling() {
+    const scrollContainer = document.querySelector('.top20-list');
+    if (!scrollContainer) return;
+
+    // 터치 디바이스에서 스크롤 스냅 개선
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      scrollContainer.style.scrollSnapType = 'x mandatory';
+      
+      // 스크롤 인디케이터 추가 (선택사항)
+      this.addScrollIndicator(scrollContainer);
+    }
+
+    // 스크롤 성능 최적화
+    let scrollTimeout;
+    scrollContainer.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollContainer.style.scrollBehavior = 'auto';
+      
+      scrollTimeout = setTimeout(() => {
+        scrollContainer.style.scrollBehavior = 'smooth';
+      }, 150);
+    }, { passive: true });
+  }
+
+  // 스크롤 인디케이터 추가
+  addScrollIndicator(container) {
+    const indicator = document.createElement('div');
+    indicator.className = 'scroll-indicator';
+    indicator.innerHTML = '→';
+    indicator.style.cssText = `
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--clr-primary);
+      font-size: 24px;
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+      z-index: 10;
+    `;
+    
+    container.parentElement.style.position = 'relative';
+    container.parentElement.appendChild(indicator);
+
+    // 스크롤 상태에 따라 인디케이터 표시/숨김
+    container.addEventListener('scroll', () => {
+      const isAtEnd = container.scrollLeft >= container.scrollWidth - container.clientWidth - 10;
+      indicator.style.opacity = isAtEnd ? '0' : '0.7';
+    }, { passive: true });
+  }
+
+  // 접근성 향상
+  enhanceAccessibility() {
+    // 키보드 네비게이션 개선
+    document.querySelectorAll('.top20-item').forEach((item, index) => {
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.click();
+        }
+        
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const direction = e.key === 'ArrowRight' ? 1 : -1;
+          const nextIndex = Math.max(0, Math.min(document.querySelectorAll('.top20-item').length - 1, index + direction));
+          document.querySelectorAll('.top20-item')[nextIndex].focus();
+        }
+      });
+    });
+
+    // 포커스 표시 개선
+    const style = document.createElement('style');
+    style.textContent = `
+      .top20-item:focus {
+        outline: 2px solid var(--clr-primary);
+        outline-offset: 2px;
+      }
+      
+      @media (hover: none) and (pointer: coarse) {
+        .top20-item:focus {
+          outline-width: 3px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+// 페이지 로드 시 적응형 UI 초기화
+document.addEventListener('DOMContentLoaded', () => {
+  new AdaptiveUI();
+});
+
+// 디바이스 방향 변경 시 재조정
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    // 뷰포트 메타 태그 재설정으로 iOS 확대/축소 문제 해결
+    const viewport = document.querySelector('meta[name=viewport]');
+    if (viewport) {
+      viewport.content = 'width=device-width, initial-scale=1, maximum-scale=1';
+    }
+  }, 500);
 });
 </script>
 
