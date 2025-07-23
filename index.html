@@ -1,102 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>티빙</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TVING 클론</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
-  <div class="header-inner">
-    <div class="logo" aria-label="티빙 로고">TVING</div>
-    <nav>
-      <a href="#" class="active">드라마</a>
-      <a href="#">예능</a>
-      <a href="#">영화</a>
-      <a href="#">스포츠</a>
-      <a href="#">애니</a>
-      <a href="#">뉴스</a>
-      <a href="#">라이브</a>
-    </nav>
-    <button class="search-btn" aria-label="검색">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-        <circle cx="11" cy="11" r="7"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-    </button>
-  </div>
+  <div class="logo">TVING</div>
+  <nav>
+    <a href="#" class="active">드라마</a>
+    <a href="#">예능</a>
+    <a href="#">영화</a>
+    <a href="#">스포츠</a>
+    <a href="#">애니</a>
+    <a href="#">뉴스</a>
+    <a href="#">라이브</a>
+  </nav>
+  <button class="login-btn">로그인</button>
 </header>
 
-<main>
-  <section class="main-slider" aria-label="메인 슬라이드">
-    <div class="slides">
-      <div class="slide active" style="background-image: url('https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg');" aria-label="대탈출 더 스토리">
-        <div class="slide-text">
-          <span class="original-label">V ORIGINAL</span>
-          <h2>대탈출 더 스토리</h2>
-          <p>새로운 탈출러들과 함께 스케일업!<br>차원이 다른 서스펜스 어드벤처!</p>
-          <button class="btn-detail">자세히보기</button>
-        </div>
-      </div>
-      <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg');" aria-label="팬텀중계">
-        <div class="slide-text">
-          <span class="original-label">V ORIGINAL</span>
-          <h2>팬텀중계</h2>
-          <p>스포츠 중계의 새로운 패러다임!</p>
-          <button class="btn-detail">자세히보기</button>
-        </div>
-      </div>
-      <div class="slide" style="background-image: url('https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg');" aria-label="UFC">
-        <div class="slide-text">
-          <span class="original-label">V ORIGINAL</span>
-          <h2>UFC</h2>
-          <p>세계 최고의 격투기 대전!</p>
-          <button class="btn-detail">자세히보기</button>
-        </div>
-      </div>
-    </div>
-    <button class="arrow arrow-left" aria-label="이전 슬라이드">&#10094;</button>
-    <button class="arrow arrow-right" aria-label="다음 슬라이드">&#10095;</button>
-    <div class="dots" role="tablist" aria-label="슬라이드 선택">
-      <button class="dot active" data-index="0" role="tab" aria-selected="true"></button>
-      <button class="dot" data-index="1" role="tab" aria-selected="false"></button>
-      <button class="dot" data-index="2" role="tab" aria-selected="false"></button>
-    </div>
-  </section>
+<section class="banner">
+  <div class="banner-text">
+    <span class="label">V ORIGINAL</span>
+    <h1>대탈출 더 스토리</h1>
+    <p>새로운 탈출러들과 함께 스케일업!<br>차원이 다른 서스펜스 어드벤처!</p>
+    <button class="cta">자세히 보기</button>
+  </div>
+</section>
 
-  <section class="content-categories" aria-label="콘텐츠 카테고리">
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123756_0.jpg" alt="대탈출" />
-      <span>대탈출</span>
-    </div>
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123856_0.jpg" alt="팬텀중계" />
-      <span>팬텀중계</span>
-    </div>
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="Apple TV+" />
-      <span>Apple TV+</span>
-    </div>
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124056_0.jpg" alt="UFC" />
-      <span>UFC</span>
-    </div>
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124156_0.jpg" alt="테니스" />
-      <span>테니스</span>
-    </div>
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124256_0.jpg" alt="훅비엔 2023" />
-      <span>훅비엔 2023</span>
-    </div>
-    <div class="category-item">
-      <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124356_0.jpg" alt="키즈" />
-      <span>키즈</span>
-    </div>
-  </section>
-</main>
+<section class="categories">
+  <div class="card"><img src="콘텐츠1.jpg" alt="대탈출"><span>대탈출</span></div>
+  <div class="card"><img src="콘텐츠2.jpg" alt="팬텀중계"><span>팬텀중계</span></div>
+  <div class="card"><img src="콘텐츠3.jpg" alt="UFC"><span>UFC</span></div>
+</section>
+
+<div class="modal hidden">
+  <div class="modal-content">
+    <h2>로그인</h2>
+    <button class="sns-btn kakao">카카오로 로그인</button>
+    <button class="sns-btn naver">네이버로 로그인</button>
+    <button class="sns-btn apple">Apple로 로그인</button>
+    <button class="close-btn">닫기</button>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
