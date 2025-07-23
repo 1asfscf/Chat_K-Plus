@@ -1,3 +1,4 @@
+// 모바일 햄버거 메뉴 토글
 const hamburgerBtn = document.querySelector('.hamburger-btn');
 const mobileMenu = document.getElementById('mobile-menu');
 
@@ -11,7 +12,7 @@ hamburgerBtn.addEventListener('click', () => {
   }
 });
 
-// 모바일 하단 메뉴 버튼 클릭 시 active 상태 토글 (필요시)
+// 모바일 하단 메뉴 버튼 활성화 토글
 const bottomNavButtons = document.querySelectorAll('.bottom-nav-btn');
 bottomNavButtons.forEach(btn => {
   btn.addEventListener('click', () => {
