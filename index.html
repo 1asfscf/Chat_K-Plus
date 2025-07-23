@@ -1,117 +1,199 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>티빙</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TVING 클론</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- 고정 헤더 -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">TVING</div>
+      <nav>
+        <a href="#" class="active">홈</a>
+        <a href="#">드라마</a>
+        <a href="#">예능</a>
+        <a href="#">영화</a>
+        <a href="#">스포츠</a>
+        <a href="#">애니</a>
+        <a href="#">라이브</a>
+      </nav>
+      <button class="login-btn">로그인</button>
+    </div>
+  </header>
 
-<header>
-  <div class="header-inner">
-    <div class="logo" aria-label="티빙 로고">TVING</div>
-    <nav>
-      <a href="#" class="active">시리즈</a>
-      <a href="#">영화</a>
-      <a href="#">라이브</a>
-      <a href="#">파라다운+</a>
-    </nav>
-    <button class="search-btn" aria-label="검색">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-        <circle cx="11" cy="11" r="7"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-    </button>
-    <button class="cart-btn" aria-label="장바구니">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-      </svg>
-    </button>
+  <main>
+    <!-- Top 콘텐츠 랭킹 (5×4 그리드) -->
+    <section class="top-ranking">
+      <h2>Top 20 콘텐츠 랭킹</h2>
+      <div class="ranking-list">
+        <!-- 1~20 반복 -->
+        <div class="rank-item">
+          <span class="rank-number">1</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 1" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">2</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 2" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">3</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 3" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">4</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 4" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">5</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 5" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">6</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 6" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">7</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 7" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">8</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 8" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">9</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 9" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">10</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 10" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">11</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 11" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">12</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 12" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">13</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 13" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">14</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 14" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">15</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 15" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">16</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 16" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">17</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 17" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">18</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 18" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">19</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 19" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">20</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 20" />
+          <div class="overlay">준비중</div>
+          <img class="watermark" src="watermark.png" alt="Ryucine 로고" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 추천 콘텐츠 7개 -->
+    <section class="recommendation">
+      <h2>추천 콘텐츠</h2>
+      <div class="recommend-list">
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 1">
+        </div>
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 2">
+        </div>
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 3">
+        </div>
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 4">
+        </div>
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 5">
+        </div>
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 6">
+        </div>
+        <div class="recommend-item">
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="추천 7">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 로그인 모달 -->
+  <div class="modal hidden">
+    <div class="modal-content">
+      <h3>로그인</h3>
+      <button class="sns-btn kakao">카카오로 계속하기</button>
+      <button class="sns-btn naver">네이버로 계속하기</button>
+      <button class="sns-btn apple">Apple로 계속하기</button>
+      <button class="close-btn">닫기</button>
+    </div>
   </div>
-</header>
 
-<main>
-  <section class="top20" aria-label="오늘의 티빙 TOP 20">
-    <h2 class="section-title">오늘의 티빙 TOP 20</h2>
-    <div class="top20-list">
-      <div class="top20-item">
-        <span class="rank">1</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123456_0.jpg" alt="대탈출" />
-        <span class="label new">NEW</span>
-        <span class="age">18+</span>
-      </div>
-      <div class="top20-item">
-        <span class="rank">2</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123556_0.jpg" alt="눈물의 여왕" />
-      </div>
-      <div class="top20-item">
-        <span class="rank">3</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123656_0.jpg" alt="웨딩 임파서블" />
-        <span class="label only">ONLY</span>
-      </div>
-      <div class="top20-item">
-        <span class="rank">4</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123756_0.jpg" alt="나는 솔로" />
-        <span class="label new">NEW</span>
-      </div>
-      <div class="top20-item">
-        <span class="rank">5</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123856_0.jpg" alt="유퀴즈" />
-        <span class="label new">NEW</span>
-      </div>
-      <div class="top20-item">
-        <span class="rank">6</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성" />
-      </div>
-      <!-- 추가 아이템은 필요에 따라 계속 -->
-    </div>
-  </section>
-
-  <section class="free-section" aria-label="누구나 무료">
-    <h2 class="section-title">누구나 무료</h2>
-    <div class="free-list">
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124056_0.jpg" alt="내과 박원장" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124156_0.jpg" alt="돼지왕" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124256_0.jpg" alt="서울 체크인" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124356_0.jpg" alt="제로섬 게임" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124456_0.jpg" alt="보물찾기" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124556_0.jpg" alt="개미가 타고 있어요" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-      <div class="free-item">
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724124656_0.jpg" alt="백두령의 사건" />
-        <span class="label free">무료</span>
-        <span class="label original">V ORIGINAL</span>
-      </div>
-    </div>
-  </section>
-</main>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
