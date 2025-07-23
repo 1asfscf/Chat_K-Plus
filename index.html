@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>티빙</title>
+  <title>티비 스포츠</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* ─────────────── 공통 변수 ─────────────── */
@@ -34,12 +34,11 @@
       overflow-x: hidden;
     }
 
-    /* ─────────────── PC 헤더 모던 업그레이드 ─────────────── */
+    /* ─────────────── 헤더 기본 스타일 (모바일 우선) ─────────────── */
     header {
       position: fixed; top: 0; left: 0; right: 0;
-      height: var(--header-h-pc);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 24px;
+      padding: 0 16px;
       background: rgba(0,0,0,0.85);
       backdrop-filter: saturate(180%) blur(10px);
       -webkit-backdrop-filter: saturate(180%) blur(10px);
@@ -48,12 +47,17 @@
       transition: height 0.3s ease;
     }
     .logo {
-      font: 900 var(--logo-size-pc)/1 'Noto Sans KR';
-      letter-spacing: 4px; color: var(--clr-primary);
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--clr-primary);
       user-select: none; flex-shrink: 0;
     }
+    
+    /* 햄버거 메뉴는 기본적으로 숨김 */
+    .hamburger { display: none; }
+    
+    /* PC 네비게이션은 기본적으로 표시 */
     .pc-nav {
-      display: flex; gap: 32px; flex: 1; justify-content: center;
+      display: flex; gap: 32px; flex: 1;
     }
     .pc-nav a {
       font: 600 var(--nav-font)/1 'Noto Sans KR';
@@ -64,7 +68,25 @@
       transition: color var(--hover-transition), background var(--hover-transition);
       text-decoration: none; border-radius: 6px;
     }
-    @media (hover: hover) and (pointer: fine) {
+
+    /* ─────────────── PC 전용 헤더 스타일 (중앙 정렬) ─────────────── */
+    @media (min-width: 768px) {
+      header {
+        height: var(--header-h-pc);
+        position: fixed; /* position: relative 대신 fixed 유지 */
+        justify-content: center; /* 내부 아이템을 중앙으로 모음 */
+      }
+      .logo {
+        position: absolute; /* 로고를 절대 위치로 분리 */
+        left: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: var(--logo-size-pc);
+        letter-spacing: 4px;
+      }
+      .pc-nav {
+        justify-content: center; /* 네비게이션 링크들을 중앙 정렬 */
+      }
       .pc-nav a:hover {
         color: var(--clr-primary);
         background: rgba(229,9,20,0.15);
@@ -79,9 +101,6 @@
       }
     }
     
-    /* 햄버거 메뉴는 기본적으로 숨김 */
-    .hamburger { display: none; }
-
     /* ─────────────── 배너 슬라이드 ─────────────── */
     .banner-container {
       position: relative;
@@ -92,43 +111,32 @@
     }
     .banner-slide {
       display: flex;
-      width: 200%; /* 배너 개수에 맞게 조정 (2개 = 200%) */
+      width: 200%; /* 배너 개수 2개 = 200% */
       height: 100%;
       transition: transform 0.6s ease-in-out;
     }
     .banner-item {
-      width: 50%; /* 100% / 배너 개수 */
+      width: 50%; /* 100% / 2개 */
       flex-shrink: 0;
     }
     .banner-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      width: 100%; height: 100%; object-fit: cover; display: block;
     }
     .banner-controls {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
+      position: absolute; bottom: 16px; left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
+      display: flex; gap: 8px;
     }
     .banner-dot {
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       background: rgba(255,255,255,0.6);
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.3s;
+      border-radius: 50%; cursor: pointer; transition: background 0.3s;
     }
-    .banner-dot.active {
-      background: var(--clr-primary);
-    }
+    .banner-dot.active { background: var(--clr-primary); }
 
     /* ─────────────── 본문 ─────────────── */
     main {
-      padding: 16px; /* 배너가 헤더 아래에 위치하므로 main의 top padding은 배너 높이와 무관하게 설정 */
+      padding: 16px;
       max-width: 1280px;
       margin: 0 auto;
     }
@@ -171,15 +179,17 @@
     .label.age { background:#ff3b3b; right:auto; left:8px; top:36px; }
     .label.only { background:#00a8ff; }
     
-    /* 모바일 드로어와 하단 네비는 기본적으로 숨김 */
     .mobile-nav-drawer, .mobile-bottom-nav { display: none; }
 
-    /* ─────────────── 모바일 전용 UI 복구 (모든 코드 포함) ─────────────── */
-    @media (pointer: coarse), (max-width: 767px) {
+    /* ─────────────── 모바일 전용 UI 복구 ─────────────── */
+    @media (max-width: 767px) {
       header {
         height: var(--header-h-mobile);
+        justify-content: space-between; /* 모바일에서는 양쪽 정렬 유지 */
       }
       .logo {
+        position: static; /* 모바일에서는 absolute 해제 */
+        transform: none;
         font-size: var(--logo-size-mobile);
         letter-spacing: 2px;
       }
@@ -192,7 +202,6 @@
       .hamburger span {
         display:block; width:20px; height:2px; background:#fff; margin:4px auto; transition:0.3s; border-radius:1px;
       }
-      .hamburger:active { background:rgba(255,255,255,0.1); transform:scale(0.95); }
       
       .banner-container {
         height: var(--banner-height-mobile);
@@ -210,9 +219,6 @@
         font:600 18px/1.5 'Noto Sans KR'; color:#fff;
         padding:16px 0; text-decoration:none; border-bottom:1px solid #333;
       }
-      .mobile-nav-drawer a:active {
-        background:rgba(229,9,20,0.1); color:var(--clr-primary); transform:translateX(8px);
-      }
       .mobile-nav-drawer.open { transform:translateX(0); }
       
       .mobile-bottom-nav {
@@ -229,13 +235,10 @@
         transition:all var(--hover-transition);
         cursor: pointer;
       }
-      .bottom-nav-btn svg { margin-bottom:2px; transition:transform var(--hover-transition); }
+      .bottom-nav-btn svg { margin-bottom:2px; }
       .bottom-nav-btn.active, .bottom-nav-btn:active {
-        color:var(--clr-primary); background:rgba(229,9,20,0.1);
+        color:var(--clr-primary);
       }
-      .bottom-nav-btn:active { transform:scale(0.95); }
-      .bottom-nav-btn:active svg { transform:scale(1.05); }
-
       main {
         padding-bottom: 72px; /* 하단 네비 공간 확보 */
       }
@@ -248,7 +251,7 @@
     <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
-    <div class="logo" aria-label="티빙 로고">TVING</div>
+    <div class="logo" aria-label="티비 스포츠 로고">티비 스포츠</div>
     <nav class="pc-nav" role="navigation" aria-label="주요 메뉴">
       <a href="#" class="active">실시간</a>
       <a href="#">TV프로그램</a>
@@ -332,66 +335,49 @@
   </nav>
 
   <script>
-    // 모바일 네비게이션 토글
     const initMobileNav = () => {
       const drawer = document.querySelector('.mobile-nav-drawer');
       const burger = document.querySelector('.hamburger');
-      const lines  = burger.querySelectorAll('span');
+      const lines  = burger?.querySelectorAll('span');
       if (!drawer || !burger) return;
-
       burger.addEventListener('click', () => {
         const isOpen = drawer.classList.toggle('open');
         burger.setAttribute('aria-expanded', isOpen.toString());
         lines.forEach((l,i) => {
-          l.style.transform = isOpen
-            ? ['rotate(45deg) translateY(6px)','scale(0)','rotate(-45deg) translateY(-6px)'][i]
-            : '';
+          l.style.transform = isOpen ? ['rotate(45deg) translateY(6px)','scale(0)','rotate(-45deg) translateY(-6px)'][i] : '';
         });
       });
     };
-
-    // 배너 슬라이드
     const initBannerSlide = () => {
       const slide = document.getElementById('bannerSlide');
       const dots = document.querySelectorAll('.banner-dot');
       if (!slide || dots.length === 0) return;
-
       let current = 0;
       let slideInterval;
-
       const goToSlide = (index) => {
-        slide.style.transform = `translateX(-${index * 50}%)`;
+        if (!dots[index]) return;
+        slide.style.transform = `translateX(-${index * (100 / dots.length)}%)`;
         dots.forEach(d => d.classList.remove('active'));
         dots[index].classList.add('active');
         current = index;
       };
-
       const startAutoSlide = () => {
+        stopAutoSlide();
         slideInterval = setInterval(() => {
-          const nextIndex = (current + 1) % dots.length;
-          goToSlide(nextIndex);
+          goToSlide((current + 1) % dots.length);
         }, 5000);
       };
-
-      const stopAutoSlide = () => {
-        clearInterval(slideInterval);
-      };
-
+      const stopAutoSlide = () => clearInterval(slideInterval);
       dots.forEach(dot => {
         dot.addEventListener('click', (e) => {
-          stopAutoSlide();
           goToSlide(Number(e.target.dataset.index));
           startAutoSlide();
         });
       });
-
       startAutoSlide();
     };
-
-    // DOM 로드 후 실행
     document.addEventListener('DOMContentLoaded', () => {
-      // 모바일 환경 체크 후 네비게이션 초기화
-      if (window.matchMedia('(pointer: coarse), (max-width: 767px)').matches) {
+      if (window.matchMedia('(max-width: 767px)').matches) {
         initMobileNav();
       }
       initBannerSlide();
