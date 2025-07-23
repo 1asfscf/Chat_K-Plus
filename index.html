@@ -1,53 +1,107 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TVING 클론</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">TVING</div>
+      <nav>
+        <a href="#" class="active">홈</a>
+        <a href="#">드라마</a>
+        <a href="#">예능</a>
+        <a href="#">영화</a>
+        <a href="#">스포츠</a>
+        <a href="#">애니</a>
+        <a href="#">라이브</a>
+      </nav>
+      <button class="login-btn">로그인</button>
+    </div>
+  </header>
 
-<header>
-  <div class="logo">TVING</div>
-  <nav>
-    <a href="#" class="active">드라마</a>
-    <a href="#">예능</a>
-    <a href="#">영화</a>
-    <a href="#">스포츠</a>
-    <a href="#">애니</a>
-    <a href="#">뉴스</a>
-    <a href="#">라이브</a>
-  </nav>
-  <button class="login-btn">로그인</button>
-</header>
+  <main>
+    <!-- Top 20 콘텐츠 랭킹 -->
+    <section class="top-ranking">
+      <h2>Top 20 콘텐츠 랭킹</h2>
+      <div class="ranking-list">
+        <!-- 반복: 1~20 -->
+        <!-- 예시로 5개만 넣었습니다 -->
+        <div class="rank-item">
+          <span class="rank-number">1</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 1" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">2</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 2" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">3</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 3" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">4</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 4" />
+        </div>
+        <div class="rank-item">
+          <span class="rank-number">5</span>
+          <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="콘텐츠 5" />
+        </div>
+        <!-- ... 6~20 -->
+      </div>
+    </section>
 
-<section class="banner">
-  <div class="banner-text">
-    <span class="label">V ORIGINAL</span>
-    <h1>대탈출 더 스토리</h1>
-    <p>새로운 탈출러들과 함께 스케일업!<br>차원이 다른 서스펜스 어드벤처!</p>
-    <button class="cta">자세히 보기</button>
+    <!-- 무료 콘텐츠 -->
+    <section class="free-content">
+      <h2>무료 콘텐츠</h2>
+      <div class="free-banner">
+        <img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="무료 배너" />
+        <button class="cta free-cta">지금 보기</button>
+      </div>
+      <div class="free-list">
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="무료 1" /></div>
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="무료 2" /></div>
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="무료 3" /></div>
+      </div>
+    </section>
+
+    <!-- 오리지널 콘텐츠 캐러셀 -->
+    <section class="carousel">
+      <h2>TVING ORIGINAL</h2>
+      <div class="cards">
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="오리지널 1" /></div>
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="오리지널 2" /></div>
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="오리지널 3" /></div>
+      </div>
+    </section>
+
+    <!-- 키즈 콘텐츠 캐러셀 -->
+    <section class="carousel">
+      <h2>키즈</h2>
+      <div class="cards">
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="키즈 1" /></div>
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="키즈 2" /></div>
+        <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="키즈 3" /></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 로그인 모달 -->
+  <div class="modal hidden">
+    <div class="modal-content">
+      <h3>로그인</h3>
+      <button class="sns-btn kakao">카카오로 계속하기</button>
+      <button class="sns-btn naver">네이버로 계속하기</button>
+      <button class="sns-btn apple">Apple로 계속하기</button>
+      <button class="close-btn">닫기</button>
+    </div>
   </div>
-</section>
 
-<section class="categories">
-  <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="대탈출"><span>대탈출</span></div>
-  <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="팬텀중계"><span>팬텀중계</span></div>
-  <div class="card"><img src="https://cdn.imweb.me/thumbnail/20220420/d49d76368207e.png" alt="UFC"><span>UFC</span></div>
-</section>
-
-<div class="modal hidden">
-  <div class="modal-content">
-    <h2>로그인</h2>
-    <button class="sns-btn kakao">카카오로 로그인</button>
-    <button class="sns-btn naver">네이버로 로그인</button>
-    <button class="sns-btn apple">Apple로 로그인</button>
-    <button class="close-btn">닫기</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
