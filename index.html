@@ -53,7 +53,7 @@
       user-select: none; flex-shrink: 0;
     }
     
-    .hamburger, .header-icons { display: none; } /* 모바일용 요소 기본 숨김 */
+    .hamburger, .header-icons { display: none; }
     
     .pc-nav {
       display: flex; gap: 32px; flex: 1;
@@ -133,51 +133,72 @@
       padding: 16px;
       max-width: 1280px; margin: 0 auto;
     }
-    /* 카테고리 필터 (기본 숨김) */
-    .category-filters { display: none; }
+    .category-filters, .mobile-nav-drawer, .mobile-bottom-nav { display: none; }
     
-    .section-title {
-      font: 700 18px/1.2 'Noto Sans KR'; margin-bottom: 16px;
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
     }
-    .top20-list {
+    .section-title {
+      font: 700 18px/1.2 'Noto Sans KR'; margin-bottom: 0;
+    }
+    .view-all {
+        color: var(--clr-text-secondary);
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .top20-list, .new-releases-list {
       display:flex; gap:12px; overflow-x:auto; scroll-behavior:smooth; padding-bottom:12px;
       -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
     }
-    .top20-list::-webkit-scrollbar { display: none; }
-    .top20-item {
-      position: relative; flex:0 0 120px; border-radius:8px; overflow:hidden;
+    .top20-list::-webkit-scrollbar, .new-releases-list::-webkit-scrollbar { display: none; }
+    .content-item {
+      position: relative; flex:0 0 120px; border-radius:8px;
       cursor:pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       scroll-snap-align:start; -webkit-tap-highlight-color:transparent;
     }
+    .content-item .poster {
+        border-radius:8px;
+        overflow: hidden;
+        position: relative;
+    }
     @media (hover: hover) and (pointer: fine) {
-      .top20-item:hover {
+      .content-item:hover {
         transform: translateY(var(--card-elevate-y)) scale(1.03);
         box-shadow: 0 8px 16px rgba(0,0,0,0.6);
       }
     }
-    .top20-item:active {
+    .content-item:active {
       transform: translateY(var(--card-elevate-y)) scale(1.02);
       box-shadow: 0 12px 24px rgba(0,0,0,0.7);
     }
-    .top20-item img {
+    .content-item img {
       width:100%; aspect-ratio:2/3; object-fit:cover; display:block;
     }
+    .card-title {
+        color: var(--clr-text);
+        font-size: 13px;
+        margin-top: 8px;
+        text-align: left;
+        padding: 0 2px;
+    }
     .rank {
-      position:absolute; top:8px; left:8px;
-      font:900 20px/1 'Noto Sans KR'; color:#fff;
+      position:absolute; top:4px; right:4px; padding:2px 5px;
+      font:900 14px/1 'Noto Sans KR'; color:#fff;
       text-shadow:0 0 4px rgba(0,0,0,0.8);
+      background-color: rgba(0,0,0,0.7);
+      border-radius: 4px;
     }
     .label {
-      position:absolute; top:8px; right:8px; padding:3px 6px;
+      position:absolute; top:8px; left:8px; padding:3px 6px;
       font:700 10px/1 'Noto Sans KR'; border-radius:3px; color:#fff; background:var(--clr-primary);
     }
-    .label.age { background:#ff3b3b; right:auto; left:8px; top:36px; }
     .label.only { background:#00a8ff; }
-    
-    .mobile-nav-drawer, .mobile-bottom-nav { display: none; }
 
-    /* ─────────────── 모바일 UI 복구 및 이미지 기반 업그레이드 ─────────────── */
+    /* ─────────────── 모바일 UI 업그레이드 ─────────────── */
     @media (max-width: 767px) {
       header {
         height: var(--header-h-mobile);
@@ -190,15 +211,11 @@
         font-size: var(--logo-size-mobile);
         letter-spacing: 2px;
       }
-      /* 가로 스크롤 메뉴로 변경 */
       .pc-nav {
-        display: flex;
-        flex: 1;
-        gap: 0;
+        display: flex; flex: 1; gap: 0;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+        -ms-overflow-style: none; scrollbar-width: none;
         margin: 0 8px;
       }
       .pc-nav::-webkit-scrollbar { display: none; }
@@ -219,8 +236,6 @@
         width: 40%; height: 2px;
         background: var(--clr-text);
       }
-
-      /* 헤더 우측 아이콘 */
       .header-icons {
         display: flex;
         align-items: center;
@@ -229,20 +244,16 @@
       .header-icons button {
         background: none; border: none; padding: 8px; color: var(--clr-text);
       }
-      
       .banner-container {
         height: var(--banner-height-mobile);
         margin-top: var(--header-h-mobile);
       }
-
-      /* 카테고리 필터 표시 및 스타일 */
       .category-filters {
         display: flex;
         gap: 8px;
         padding: 16px 0;
         overflow-x: auto;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+        -ms-overflow-style: none; scrollbar-width: none;
       }
       .category-filters::-webkit-scrollbar { display: none; }
       .category-filters .filter-btn {
@@ -255,8 +266,6 @@
         white-space: nowrap;
         flex-shrink: 0;
       }
-      
-      /* 모바일 네비 드로어 (햄버거 클릭 시) */
       .mobile-nav-drawer {
         display:flex; position:fixed; top:0; bottom:0; right:0;
         width:280px; max-width:85%; background:#111;
@@ -269,8 +278,6 @@
         padding:16px 0; text-decoration:none; border-bottom:1px solid #333;
       }
       .mobile-nav-drawer.open { transform:translateX(0); }
-      
-      /* 하단 네비게이션 */
       .mobile-bottom-nav {
         display:flex; position:fixed; bottom:0; left:0; right:0;
         height:56px; background:#111; border-top:1px solid #222;
@@ -285,12 +292,22 @@
         transition:all var(--hover-transition);
         cursor: pointer;
       }
-      .bottom-nav-btn svg { margin-bottom:2px; }
+      .bottom-nav-btn svg {
+          stroke: currentColor;
+          fill: none;
+          stroke-width: 1.5px;
+          transition: all 0.2s;
+      }
       .bottom-nav-btn.active {
-        color: var(--clr-text); /* 활성화 시 흰색 계열로 변경 */
+        color: var(--clr-text);
+        font-weight: 700;
+      }
+      .bottom-nav-btn.active.home-icon svg {
+        fill: currentColor;
+        stroke: none;
       }
       main {
-        padding-bottom: 72px; /* 하단 네비 공간 확보 */
+        padding-bottom: 72px;
       }
     }
   </style>
@@ -298,7 +315,6 @@
 <body>
 
   <header>
-    <!-- hamburger 버튼은 숨겨져 있지만, JS와의 연동을 위해 그대로 둡니다. -->
     <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -352,65 +368,93 @@
       <button class="filter-btn">애니메이션</button>
     </section>
     
-    <section class="top20" aria-label="오늘의 티빙 TOP 20">
-      <h2 class="section-title">오늘의 티빙 TOP 20</h2>
-      <div class="top20-list">
-        <div class="top20-item">
-          <span class="rank">1</span>
-          <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출" loading="lazy" decoding="async">
-          <span class="label new">NEW</span><span class="label age">18+</span>
+    <section class="top20" aria-label="님이 좋아할만한 프로그램">
+        <div class="section-header">
+            <h2 class="section-title">님이 좋아할만한 프로그램</h2>
         </div>
-        <div class="top20-item">
-          <span class="rank">2</span>
-          <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕" loading="lazy" decoding="async">
+        <div class="top20-list">
+            <div class="content-item">
+                <div class="poster">
+                    <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출" loading="lazy" decoding="async">
+                    <span class="label">NEW</span>
+                </div>
+                <div class="card-title">대방출</div>
+            </div>
+            <div class="content-item">
+                <div class="poster">
+                    <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕" loading="lazy" decoding="async">
+                </div>
+                <div class="card-title">눈물의 여왕</div>
+            </div>
+            <div class="content-item">
+                <div class="poster">
+                    <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블" loading="lazy" decoding="async">
+                    <span class="label only">ONLY</span>
+                    <span class="rank">19</span>
+                </div>
+                <div class="card-title">웨딩 임파서블</div>
+            </div>
+            <div class="content-item">
+                <div class="poster">
+                    <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250507/1456/P001492081.jpg/dims/resize/F_webp,400" alt="나는 솔로" loading="lazy" decoding="async">
+                </div>
+                <div class="card-title">나는 솔로</div>
+            </div>
         </div>
-        <div class="top20-item">
-          <span class="rank">3</span>
-          <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블" loading="lazy" decoding="async">
-          <span class="label only">ONLY</span>
+    </section>
+
+    <section class="new-releases" aria-label="새로 시작한 프로그램">
+        <div class="section-header">
+            <h2 class="section-title">새로 시작한 프로그램</h2>
+            <a href="#" class="view-all">전체보기 ></a>
         </div>
-        <div class="top20-item">
-          <span class="rank">4</span>
-          <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250507/1456/P001492081.jpg/dims/resize/F_webp,400" alt="나는 솔로" loading="lazy" decoding="async">
+        <div class="new-releases-list">
+            <div class="content-item">
+                <div class="poster">
+                    <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250622/1530/P001773168.jpg/dims/resize/F_webp,400" alt="오은영 스테이" loading="lazy" decoding="async">
+                    <span class="label">NEW</span>
+                </div>
+                <div class="card-title">오은영 스테이</div>
+            </div>
+            <div class="content-item">
+                <div class="poster">
+                    <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성" loading="lazy" decoding="async">
+                    <span class="label only">ONLY</span>
+                </div>
+                <div class="card-title">한성</div>
+            </div>
+            <!-- 필요에 따라 아이템 추가 -->
         </div>
-        <div class="top20-item">
-          <span class="rank">5</span>
-          <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250622/1530/P001773168.jpg/dims/resize/F_webp,400" alt="오은영 스테이" loading="lazy" decoding="async">
-        </div>
-        <div class="top20-item">
-          <span class="rank">6</span>
-          <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성" loading="lazy" decoding="async">
-        </div>
-      </div>
     </section>
   </main>
 
   <nav class="mobile-bottom-nav" role="navigation" aria-label="모바일 하단 메뉴">
-    <button class="bottom-nav-btn active" aria-label="홈">
-      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg><span>홈</span>
+    <button class="bottom-nav-btn active home-icon" aria-label="홈">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>홈</span>
     </button>
     <button class="bottom-nav-btn" aria-label="공개예정">
-      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg><span>공개예정</span>
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg><span>공개예정</span>
     </button>
     <button class="bottom-nav-btn" aria-label="검색">
-      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>검색</span>
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>검색</span>
     </button>
     <button class="bottom-nav-btn" aria-label="기록">
-      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg><span>기록</span>
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.47 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span>기록</span>
     </button>
   </nav>
 
   <script>
-    // JS 기능들은 그대로 유지됩니다.
     const initMobileNav = () => {
       // 햄버거 버튼이 없으므로 이 기능은 현재 UI에선 사용되지 않지만,
       // 코드 삭제 방지 요청에 따라 그대로 유지합니다.
       const drawer = document.querySelector('.mobile-nav-drawer');
       const burger = document.querySelector('.hamburger');
       if (!drawer || !burger) return;
-      burger.addEventListener('click', () => { /* ... */ });
+      burger.addEventListener('click', () => {
+          const isOpen = drawer.classList.toggle('open');
+          burger.setAttribute('aria-expanded', isOpen.toString());
+      });
     };
-
     const initBannerSlide = () => {
       const slide = document.getElementById('bannerSlide');
       const dots = document.querySelectorAll('.banner-dot');
@@ -439,9 +483,10 @@
       });
       startAutoSlide();
     };
-
     document.addEventListener('DOMContentLoaded', () => {
-      initMobileNav(); // 호출은 유지하되, UI에 햄버거가 없으므로 동작하지 않음
+      if (window.matchMedia('(max-width: 767px)').matches) {
+          initMobileNav();
+      }
       initBannerSlide();
     });
   </script>
