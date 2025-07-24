@@ -14,7 +14,7 @@
       --clr-text-secondary: #aaa;
       --header-h-pc: 56px;
       --header-h-mobile: 48px;
-      --mobile-top-nav-h: 44px; /* 모바일 상단 스크롤 메뉴 높이 */
+      --mobile-top-nav-h: 44px;
       --touch-target: 44px;
       --logo-size-pc: 28px;
       --logo-size-mobile: 24px;
@@ -39,7 +39,7 @@
       transition: height 0.3s ease;
     }
     .logo { color: var(--clr-primary); user-select: none; flex-shrink: 0; font-weight:900;}
-    .hamburger, .header-icons, .mobile-top-nav { display: none; } /* 모바일용 요소 기본 숨김 */
+    .hamburger, .header-icons, .mobile-top-nav { display: none; }
     
     .pc-nav { display: flex; gap: 32px; flex: 1; }
     .pc-nav a {
@@ -85,16 +85,20 @@
       -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
     }
     .top20-list::-webkit-scrollbar, .new-releases-list::-webkit-scrollbar { display: none; }
+    
+    /* --- 카드 크기 반응형 적용 --- */
     .content-item {
-      position: relative; flex:0 0 120px; border-radius:10px; cursor:pointer; background:#1a1a1a;
+      position: relative;
+      flex: 0 0 110px; /* 모바일 기본 크기 */
+      border-radius:10px; cursor:pointer; background:#1a1a1a;
       transition: transform 0.2s, box-shadow 0.2s;
       scroll-snap-align:start; -webkit-tap-highlight-color:transparent;
       display: flex; flex-direction: column;
     }
     .poster { border-radius:10px; overflow: hidden; position: relative;}
-    .caption { color:#fff; font: 500 14px/1.4 'Noto Sans KR'; padding: 4px 4px 8px 0;}
+    .caption { color:#fff; font: 500 13px/1.4 'Noto Sans KR'; padding: 6px 4px 8px 0;}
     .rank {
-      position:absolute; top:7px; left:7px; font:700 13px/1.2 'Noto Sans KR'; color:#eee; padding:1px 7px; background:rgba(30,30,30,0.7); border-radius:12px;
+      position:absolute; top:7px; left:7px; font:700 12px/1.2 'Noto Sans KR'; color:#eee; padding:1px 7px; background:rgba(30,30,30,0.7); border-radius:12px;
     }
     .label { position:absolute; top:7px; right:7px; padding:2px 7px; font:700 10px/1 'Noto Sans KR'; border-radius:13px; color:#fff; z-index:2;}
     .label.new { background:var(--clr-primary);}
@@ -106,39 +110,28 @@
     @media (max-width: 767px) {
       header { height:var(--header-h-mobile); justify-content:space-between; padding: 0 8px 0 16px; }
       .logo { position: static; transform:none; font-size:var(--logo-size-mobile); letter-spacing:2px; }
-      .pc-nav { display: none; } /* PC용 네비 숨김 */
+      .pc-nav { display: none; }
       .header-icons { display:flex; align-items:center; gap:8px;}
       .header-icons button{background:none; border:none; padding:8px; color:var(--clr-text);}
 
-      /* 모바일 전용 상단 스크롤 메뉴 */
       .mobile-top-nav {
-        display: flex;
-        position: fixed;
-        top: var(--header-h-mobile);
-        left: 0; right: 0;
-        height: var(--mobile-top-nav-h);
-        align-items: center;
-        background: var(--clr-bg);
-        padding: 0 16px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        -ms-overflow-style: none; scrollbar-width: none;
-        z-index: 999;
+        display: flex; position: fixed;
+        top: var(--header-h-mobile); left: 0; right: 0;
+        height: var(--mobile-top-nav-h); align-items: center;
+        background: var(--clr-bg); padding: 0 16px;
+        overflow-x: auto; -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none; scrollbar-width: none; z-index: 999;
       }
       .mobile-top-nav::-webkit-scrollbar { display: none; }
       .mobile-top-nav a {
-        padding: 8px 12px;
-        white-space: nowrap;
-        font-size: 14px;
-        color: var(--clr-text-secondary);
-        text-decoration: none;
-        position: relative;
+        padding: 8px 12px; white-space: nowrap; font-size: 14px;
+        color: var(--clr-text-secondary); text-decoration: none; position: relative;
       }
       .mobile-top-nav a.active { font-weight:700; color:var(--clr-text);}
       .mobile-top-nav a.active::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:40%; height:2px; background:var(--clr-text);}
       
       .banner-container {
-        margin-top: calc(var(--header-h-mobile) + var(--mobile-top-nav-h)); /* 헤더 + 상단메뉴 높이만큼 밀어내기 */
+        margin-top: calc(var(--header-h-mobile) + var(--mobile-top-nav-h));
         height: var(--banner-height-mobile);
       }
       .category-filters { display: flex; gap: 8px; margin: 20px 0 8px 0; overflow-x:auto;}
@@ -147,7 +140,6 @@
       
       .section-title{ font-size:16px;}
       .view-all{ font-size:12px;}
-      .content-item .caption{ font-size:13px; font-weight:500; margin-top:0;}
       
       .mobile-bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; height:56px; background:#151516;
         border-top:1px solid #222; justify-content:space-around; align-items:center; padding:0; box-shadow: 0 -1px 3px rgba(0,0,0,0.10);}
@@ -158,6 +150,17 @@
       .bottom-nav-btn.active svg { fill:#fff !important; stroke:#fff !important; }
       
       main { padding-bottom: 72px; }
+    }
+    
+    /* ─────────────── 태블릿/PC 카드 크기 조정 ─────────────── */
+    @media (min-width: 768px) {
+        .content-item { flex-basis: 150px; }
+        .caption { font-size: 14px; }
+        .rank { font-size: 13px; }
+    }
+    @media (min-width: 1024px) {
+        .content-item { flex-basis: 180px; }
+        .top20-list, .new-releases-list { gap: 16px; }
     }
   </style>
 </head>
@@ -245,8 +248,7 @@
 
   <script>
     const initMobileNav = () => {
-      // 햄버거 버튼이 모바일 UI에서 제거되었으므로, 관련 스크립트는 호출되어도 동작하지 않습니다.
-      // 코드 보존 요청에 따라 함수 자체는 유지합니다.
+      // 이 기능은 현재 UI에선 사용되지 않지만, 코드 보존을 위해 유지합니다.
     };
     const initBannerSlide = () => {
       const slide = document.getElementById('bannerSlide');
