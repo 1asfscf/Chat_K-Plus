@@ -6,6 +6,7 @@
   <title>티비 스포츠</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* ─────────────── 공통 변수 ─────────────── */
     :root {
       --clr-bg: #0a0a0a;
       --clr-primary: #e50914;
@@ -13,8 +14,8 @@
       --clr-text-secondary: #aaa;
       --header-h-pc: 56px;
       --header-h-mobile: 48px;
+      --mobile-top-nav-h: 44px; /* 모바일 상단 스크롤 메뉴 높이 */
       --touch-target: 44px;
-      --hamburger-size: 48px;
       --logo-size-pc: 28px;
       --logo-size-mobile: 24px;
       --nav-font: 16px;
@@ -28,6 +29,8 @@
       background: var(--clr-bg);  color: var(--clr-text);
       font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden;
     }
+
+    /* ─────────────── PC/공통 헤더 스타일 ─────────────── */
     header {
       position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center;
       padding: 0 16px; background: rgba(0,0,0,0.85);
@@ -36,12 +39,15 @@
       transition: height 0.3s ease;
     }
     .logo { color: var(--clr-primary); user-select: none; flex-shrink: 0; font-weight:900;}
-    .hamburger, .header-icons { display: none; }
+    .hamburger, .header-icons, .mobile-top-nav { display: none; } /* 모바일용 요소 기본 숨김 */
+    
     .pc-nav { display: flex; gap: 32px; flex: 1; }
     .pc-nav a {
       font: 600 var(--nav-font)/1 'Noto Sans KR'; color: var(--clr-text); position: relative;
       padding: 12px 16px; display: flex; align-items: center; text-decoration: none; border-radius: 6px;
     }
+
+    /* ─────────────── PC 전용 헤더 (중앙 정렬) ─────────────── */
     @media (min-width: 768px) {
       header { height: var(--header-h-pc); justify-content: center; }
       .logo { position: absolute; left: 24px; top: 50%; transform: translateY(-50%); font-size: var(--logo-size-pc); letter-spacing: 4px; }
@@ -52,6 +58,8 @@
         width:60%; height:2px; background: var(--clr-primary); border-radius:1px;
       }
     }
+    
+    /* ─────────────── 배너 슬라이드 (공통) ─────────────── */
     .banner-container {
       position: relative; margin-top: var(--header-h-pc);
       width: 100%; height: var(--banner-height-pc); overflow: hidden;
@@ -65,9 +73,11 @@
     }
     .banner-dot { width: 10px; height: 10px; background: rgba(255,255,255,0.6); border-radius: 50%; cursor: pointer; transition: background .3s;}
     .banner-dot.active { background: var(--clr-primary);}
+
+    /* ─────────────── 본문 (공통) ─────────────── */
     main { padding: 16px; max-width: 1280px; margin: 0 auto;}
-    .section-title { font: 700 18px/1.2 'Noto Sans KR'; margin-bottom: 0;}
     .section-header { display:flex; align-items: center; justify-content: space-between; margin-bottom:10px;}
+    .section-title { font: 700 18px/1.2 'Noto Sans KR'; margin-bottom: 0;}
     .view-all { color: var(--clr-text-secondary); font-size:13px; text-decoration:none; }
 
     .top20-list, .new-releases-list {
@@ -81,11 +91,7 @@
       scroll-snap-align:start; -webkit-tap-highlight-color:transparent;
       display: flex; flex-direction: column;
     }
-    @media (hover: hover) and (pointer: fine) {
-      .content-item:hover { transform: translateY(var(--card-elevate-y)) scale(1.03); box-shadow: 0 8px 16px rgba(0,0,0,0.6);}
-    }
-    .content-item:active { transform: translateY(var(--card-elevate-y)) scale(1.02); box-shadow: 0 12px 24px rgba(0,0,0,0.7);}
-    .poster { border-radius:10px; overflow: hidden; }
+    .poster { border-radius:10px; overflow: hidden; position: relative;}
     .caption { color:#fff; font: 500 14px/1.4 'Noto Sans KR'; padding: 4px 4px 8px 0;}
     .rank {
       position:absolute; top:7px; left:7px; font:700 13px/1.2 'Noto Sans KR'; color:#eee; padding:1px 7px; background:rgba(30,30,30,0.7); border-radius:12px;
@@ -94,48 +100,73 @@
     .label.new { background:var(--clr-primary);}
     .label.only { background:#00a8ff;}
     .label.age { background:#ff3b3b; right:auto; left:7px; top:28px;}
-    .category-filters { display: none; }
-    .mobile-nav-drawer, .mobile-bottom-nav { display: none; }
+    .category-filters, .mobile-nav-drawer, .mobile-bottom-nav { display: none; }
 
-    /* 모바일 UI 대폭 업그레이드 */
+    /* ─────────────── 모바일 UI 업그레이드 (767px 이하) ─────────────── */
     @media (max-width: 767px) {
-      header{ height:var(--header-h-mobile); justify-content:space-between;  }
-      .logo{ position: static; transform:none; font-size:var(--logo-size-mobile); letter-spacing:2px;}
-      .pc-nav{ display:flex; flex:1; gap:0; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 8px;}
-      .pc-nav a{padding:8px 12px; white-space:nowrap; font-size:14px; color:var(--clr-text-secondary);}
-      .pc-nav a.active{ font-weight:700; color:var(--clr-text);}
-      .pc-nav a.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:40%;height:2px;background:var(--clr-text);}
-      .header-icons{ display:flex; align-items:center; gap:8px;}
+      header { height:var(--header-h-mobile); justify-content:space-between; padding: 0 8px 0 16px; }
+      .logo { position: static; transform:none; font-size:var(--logo-size-mobile); letter-spacing:2px; }
+      .pc-nav { display: none; } /* PC용 네비 숨김 */
+      .header-icons { display:flex; align-items:center; gap:8px;}
       .header-icons button{background:none; border:none; padding:8px; color:var(--clr-text);}
-      .banner-container{ height:var(--banner-height-mobile); margin-top:var(--header-h-mobile);}
-      /* 카테고리 필터 UI */
-      .category-filters{ display: flex; gap: 8px; margin: 20px 0 8px 0; overflow-x:auto; -ms-overflow-style: none; scrollbar-width: none;}
+
+      /* 모바일 전용 상단 스크롤 메뉴 */
+      .mobile-top-nav {
+        display: flex;
+        position: fixed;
+        top: var(--header-h-mobile);
+        left: 0; right: 0;
+        height: var(--mobile-top-nav-h);
+        align-items: center;
+        background: var(--clr-bg);
+        padding: 0 16px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none; scrollbar-width: none;
+        z-index: 999;
+      }
+      .mobile-top-nav::-webkit-scrollbar { display: none; }
+      .mobile-top-nav a {
+        padding: 8px 12px;
+        white-space: nowrap;
+        font-size: 14px;
+        color: var(--clr-text-secondary);
+        text-decoration: none;
+        position: relative;
+      }
+      .mobile-top-nav a.active { font-weight:700; color:var(--clr-text);}
+      .mobile-top-nav a.active::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:40%; height:2px; background:var(--clr-text);}
+      
+      .banner-container {
+        margin-top: calc(var(--header-h-mobile) + var(--mobile-top-nav-h)); /* 헤더 + 상단메뉴 높이만큼 밀어내기 */
+        height: var(--banner-height-mobile);
+      }
+      .category-filters { display: flex; gap: 8px; margin: 20px 0 8px 0; overflow-x:auto;}
       .category-filters::-webkit-scrollbar{ display:none;}
       .category-filters .filter-btn{ background:#222;color:var(--clr-text);border:none; padding:8px 16px;border-radius:20px; font-size:14px; white-space:nowrap; flex-shrink:0;}
-      .section-header{margin-bottom:8px;}
-      /* 탑 타이틀 등 섹션 헤더 스타일 */
+      
       .section-title{ font-size:16px;}
       .view-all{ font-size:12px;}
-      /* 콘텐츠 카드 타이틀 모바일에서도 항상 노출 */
       .content-item .caption{ font-size:13px; font-weight:500; margin-top:0;}
-      /* 하단 네비 디자인 개선 */
-      .mobile-bottom-nav{ display:flex; position:fixed; bottom:0; left:0; right:0; height:56px; background:#151516;
+      
+      .mobile-bottom-nav { display:flex; position:fixed; bottom:0; left:0; right:0; height:56px; background:#151516;
         border-top:1px solid #222; justify-content:space-around; align-items:center; padding:0; box-shadow: 0 -1px 3px rgba(0,0,0,0.10);}
-      .bottom-nav-btn{background:none; border:0; color:#888; font-size:12px; display:flex;flex-direction:column;align-items:center;gap:2px;
+      .bottom-nav-btn { background:none; border:0; color:#888; font-size:12px; display:flex;flex-direction:column;align-items:center;gap:2px;
         padding:4px 2px; border-radius:6px; min-width:40px; min-height:38px; cursor:pointer; font-weight:500;}
-      .bottom-nav-btn svg{margin-bottom:1px;}
-      .bottom-nav-btn.active{color:#fff;font-weight:700;}
-      .bottom-nav-btn.active svg{fill:#fff !important; stroke:#fff !important;}
+      .bottom-nav-btn svg { margin-bottom:1px; }
+      .bottom-nav-btn.active { color:#fff; font-weight:700; }
+      .bottom-nav-btn.active svg { fill:#fff !important; stroke:#fff !important; }
+      
+      main { padding-bottom: 72px; }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false"><span></span><span></span><span></span></button>
     <div class="logo" aria-label="티비 스포츠 로고">티비 스포츠</div>
-    <nav class="pc-nav" role="navigation" aria-label="주요 메뉴">
+    <nav class="pc-nav" role="navigation" aria-label="PC 주요 메뉴">
       <a href="#">실시간</a>
       <a href="#" class="active">TV프로그램</a>
       <a href="#">영화</a>
@@ -147,27 +178,34 @@
       <button aria-label="프로필"><svg width="24" height="24" viewBox="0 0 24 24" fill="#e50914"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></button>
     </div>
   </header>
-  <nav class="mobile-nav-drawer" aria-label="모바일 메뉴">
+
+  <nav class="mobile-top-nav" aria-label="모바일 주요 메뉴">
+    <a href="#">실시간</a>
+    <a href="#" class="active">TV프로그램</a>
+    <a href="#">영화</a>
+    <a href="#">파라운트+</a>
+    <a href="#">키즈</a>
+  </nav>
+
+  <nav class="mobile-nav-drawer" aria-label="모바일 전체 메뉴">
     <a href="#" class="active">실시간</a>
     <a href="#">TV프로그램</a>
     <a href="#">영화</a>
     <a href="#">파라운트+</a>
     <a href="#">키즈</a>
   </nav>
+
   <div class="banner-container">
     <div class="banner-slide" id="bannerSlide">
-      <div class="banner-item">
-        <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="배너1">
-      </div>
-      <div class="banner-item">
-        <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="배너2">
-      </div>
+      <div class="banner-item"><img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="배너1"></div>
+      <div class="banner-item"><img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="배너2"></div>
     </div>
     <div class="banner-controls">
       <div class="banner-dot active" data-index="0"></div>
       <div class="banner-dot" data-index="1"></div>
     </div>
   </div>
+
   <main>
     <section class="category-filters" aria-label="콘텐츠 카테고리">
       <button class="filter-btn">드라마</button>
@@ -175,84 +213,40 @@
       <button class="filter-btn">해외시리즈</button>
       <button class="filter-btn">애니메이션</button>
     </section>
+    
     <section>
-      <div class="section-header"><div class="section-title">님이 좋아할만한 프로그램</div></div>
+      <div class="section-header"><h2 class="section-title">님이 좋아할만한 프로그램</h2></div>
       <div class="top20-list">
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출" loading="lazy" decoding="async"><span class="rank">1</span><span class="label new">NEW</span><span class="label age">18+</span></div>
-          <div class="caption">대방출</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕"><span class="rank">2</span></div>
-          <div class="caption">눈물의 여왕</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블"><span class="rank">3</span><span class="label only">ONLY</span></div>
-          <div class="caption">웨딩 임파서블</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250507/1456/P001492081.jpg/dims/resize/F_webp,400" alt="나는 솔로"><span class="rank">4</span></div>
-          <div class="caption">나는 솔로</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250622/1530/P001773168.jpg/dims/resize/F_webp,400" alt="오은영 스테이"><span class="rank">5</span></div>
-          <div class="caption">오은영 스테이</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성"><span class="rank">6</span></div>
-          <div class="caption">한성</div>
-        </div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출" loading="lazy" decoding="async"><span class="rank">1</span><span class="label new">NEW</span><span class="label age">18+</span></div><div class="caption">대방출</div></div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕" loading="lazy" decoding="async"><span class="rank">2</span></div><div class="caption">눈물의 여왕</div></div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블" loading="lazy" decoding="async"><span class="rank">3</span><span class="label only">ONLY</span></div><div class="caption">웨딩 임파서블</div></div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250507/1456/P001492081.jpg/dims/resize/F_webp,400" alt="나는 솔로" loading="lazy" decoding="async"><span class="rank">4</span></div><div class="caption">나는 솔로</div></div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250622/1530/P001773168.jpg/dims/resize/F_webp,400" alt="오은영 스테이" loading="lazy" decoding="async"><span class="rank">5</span></div><div class="caption">오은영 스테이</div></div>
+        <div class="content-item"><div class="poster"><img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성" loading="lazy" decoding="async"><span class="rank">6</span></div><div class="caption">한성</div></div>
       </div>
     </section>
+
     <section>
-      <div class="section-header"><div class="section-title">새로 시작한 프로그램</div><a href="#" class="view-all">전체보기 &gt;</a></div>
+      <div class="section-header"><h2 class="section-title">새로 시작한 프로그램</h2><a href="#" class="view-all">전체보기 &gt;</a></div>
       <div class="new-releases-list">
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출" loading="lazy" decoding="async"><span class="rank">1</span></div>
-          <div class="caption">대방출</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕"><span class="rank">2</span></div>
-          <div class="caption">눈물의 여왕</div>
-        </div>
-        <div class="content-item">
-          <div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블"><span class="rank">3</span></div>
-          <div class="caption">웨딩 임파서블</div>
-        </div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출" loading="lazy" decoding="async"><span class="rank">1</span></div><div class="caption">대방출</div></div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕" loading="lazy" decoding="async"><span class="rank">2</span></div><div class="caption">눈물의 여왕</div></div>
+        <div class="content-item"><div class="poster"><img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블" loading="lazy" decoding="async"><span class="rank">3</span></div><div class="caption">웨딩 임파서블</div></div>
       </div>
     </section>
   </main>
+
   <nav class="mobile-bottom-nav" role="navigation" aria-label="모바일 하단 메뉴">
-    <button class="bottom-nav-btn active" aria-label="홈">
-      <svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg>
-      <span>홈</span>
-    </button>
-    <button class="bottom-nav-btn" aria-label="공개예정">
-      <svg width="24" height="24" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
-      <span>공개예정</span>
-    </button>
-    <button class="bottom-nav-btn" aria-label="검색">
-      <svg width="24" height="24" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <span>검색</span>
-    </button>
-    <button class="bottom-nav-btn" aria-label="기록">
-      <svg width="24" height="24" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
-      <span>기록</span>
-    </button>
+    <button class="bottom-nav-btn active" aria-label="홈"><svg width="24" height="24" fill="#fff" stroke="#fff" stroke-width="0" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V9.5z"/></svg><span>홈</span></button>
+    <button class="bottom-nav-btn" aria-label="공개예정"><svg width="24" height="24" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg><span>공개예정</span></button>
+    <button class="bottom-nav-btn" aria-label="검색"><svg width="24" height="24" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>검색</span></button>
+    <button class="bottom-nav-btn" aria-label="기록"><svg width="24" height="24" fill="none" stroke="#aaa" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/></svg><span>기록</span></button>
   </nav>
+
   <script>
     const initMobileNav = () => {
-      const drawer = document.querySelector('.mobile-nav-drawer');
-      const burger = document.querySelector('.hamburger');
-      const lines  = burger?.querySelectorAll('span');
-      if (!drawer || !burger) return;
-      burger.addEventListener('click', () => {
-        const isOpen = drawer.classList.toggle('open');
-        burger.setAttribute('aria-expanded', isOpen.toString());
-        lines.forEach((l,i) => {
-          l.style.transform = isOpen ? ['rotate(45deg) translateY(6px)','scale(0)','rotate(-45deg) translateY(-6px)'][i] : '';
-        });
-      });
+      // 햄버거 버튼이 모바일 UI에서 제거되었으므로, 관련 스크립트는 호출되어도 동작하지 않습니다.
+      // 코드 보존 요청에 따라 함수 자체는 유지합니다.
     };
     const initBannerSlide = () => {
       const slide = document.getElementById('bannerSlide');
@@ -269,15 +263,10 @@
       };
       const startAutoSlide = () => {
         clearInterval(slideInterval);
-        slideInterval = setInterval(() => {
-          goToSlide((current + 1) % dots.length);
-        }, 5000);
+        slideInterval = setInterval(() => { goToSlide((current + 1) % dots.length); }, 5000);
       };
       dots.forEach(dot => {
-        dot.addEventListener('click', (e) => {
-          goToSlide(Number(e.target.dataset.index));
-          startAutoSlide();
-        });
+        dot.addEventListener('click', (e) => { goToSlide(Number(e.target.dataset.index)); startAutoSlide(); });
       });
       startAutoSlide();
     };
