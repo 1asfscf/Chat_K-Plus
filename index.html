@@ -95,7 +95,7 @@
     }
     .top20-list::-webkit-scrollbar, .new-releases-list::-webkit-scrollbar { display: none; }
     
-    /* 업그레이드: clamp()를 이용한 유연한 카드 크기 */
+    /* 업그레이드: clamp()를 이용한 유연한 카드 크기 (문제 해결) */
     .content-item {
       position: relative;
       flex: 0 0 clamp(120px, 18vw, 220px); /* 최소, 이상적, 최대 크기 */
@@ -246,7 +246,9 @@
   </nav>
 
   <script>
-    const initMobileNav = () => { /* 코드 보존을 위해 유지 */ };
+    const initMobileNav = () => {
+      // 코드 보존을 위해 유지
+    };
     const initBannerSlide = () => {
       const slide = document.getElementById('bannerSlide');
       const dots = document.querySelectorAll('.banner-dot');
@@ -255,7 +257,7 @@
       let slideInterval;
       const goToSlide = (index) => {
         if (!dots[index]) return;
-        slide.style.transform = `translateX(-${index * (100 / 2)}%)`;
+        slide.style.transform = `translateX(-${index * (100 / dots.length)}%)`;
         dots.forEach(d => d.classList.remove('active'));
         dots[index].classList.add('active');
         current = index;
@@ -270,40 +272,41 @@
       startAutoSlide();
     };
 
-    // 업그레이드: 부드러운 스크롤 제어
+    // 업그레이드: 부드러운 스크롤 JS
     const initSmoothScroll = () => {
-        document.querySelectorAll('.top20-list, .new-releases-list').forEach(list => {
+        const containers = document.querySelectorAll('.top20-list, .new-releases-list');
+        containers.forEach(container => {
             let isDown = false;
             let startX;
             let scrollLeft;
 
-            list.addEventListener('mousedown', (e) => {
+            container.addEventListener('mousedown', (e) => {
                 isDown = true;
-                list.style.cursor = 'grabbing';
-                startX = e.pageX - list.offsetLeft;
-                scrollLeft = list.scrollLeft;
+                container.style.cursor = 'grabbing';
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
             });
 
-            list.addEventListener('mouseleave', () => {
+            container.addEventListener('mouseleave', () => {
                 isDown = false;
-                list.style.cursor = 'grab';
+                container.style.cursor = 'grab';
             });
 
-            list.addEventListener('mouseup', () => {
+            container.addEventListener('mouseup', () => {
                 isDown = false;
-                list.style.cursor = 'grab';
+                container.style.cursor = 'grab';
             });
 
-            list.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
+            container.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
                 e.preventDefault();
-                const x = e.pageX - list.offsetLeft;
-                const walk = (x - startX) * 2; // 스크롤 속도 조절
-                list.scrollLeft = scrollLeft - walk;
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 2; // 스크롤 속도
+                container.scrollLeft = scrollLeft - walk;
             });
         });
-    };
-    
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initMobileNav();
       initBannerSlide();
