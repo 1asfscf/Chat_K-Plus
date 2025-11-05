@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>티비 스포츠</title>
+  <title>티비 스포츠 — 서버 점검중</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <!-- 기존 CSS 그대로 유지 -->
   <style>
-    /* 공통 변수 */
     :root {
       --clr-bg: #0a0a0a;
       --clr-primary: #e50914;
@@ -28,19 +28,11 @@
       --bottom-nav-height: 56px;
       --bottom-nav-btn-gap: 6px;
     }
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: var(--clr-bg);
-      color: var(--clr-text);
-      font-family: 'Noto Sans KR', sans-serif;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
+      background: var(--clr-bg); color: var(--clr-text);
+      font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; -webkit-overflow-scrolling: touch;
     }
-
-    /* ─────────────── PC 헤더 ─────────────── */
     header {
       position: fixed; top: 0; left: 0; right: 0;
       display: flex; align-items: center; justify-content: space-between;
@@ -52,404 +44,232 @@
       z-index: 1000;
       transition: height 0.3s ease;
     }
-    .logo {
-      font-family: 'Noto Sans KR', sans-serif;
-      color: var(--clr-primary);
-      user-select: none; flex-shrink: 0;
-    }
+    .logo { font-family: 'Noto Sans KR', sans-serif; color: var(--clr-primary); user-select: none; flex-shrink: 0; }
     .hamburger { display: none; }
-    .pc-nav {
-      display: flex; gap: 32px; flex: 1;
-    }
+    .pc-nav { display: flex; gap: 32px; flex: 1; }
     .pc-nav a {
-      font: 600 var(--nav-font)/1 'Noto Sans KR';
-      color: var(--clr-text);
-      position: relative;
-      padding: 12px 16px;
-      display: flex; align-items: center;
+      font: 600 var(--nav-font)/1 'Noto Sans KR'; color: var(--clr-text);
+      position: relative; padding: 12px 16px; display: flex; align-items: center;
       transition: color var(--hover-transition), background var(--hover-transition);
       text-decoration: none; border-radius: 6px;
     }
     @media (min-width: 768px) {
-      header {
-        height: var(--header-h-pc);
-        justify-content: center;
-      }
-      .logo {
-        position: absolute; left: 24px; top: 50%;
-        transform: translateY(-50%);
-        font-size: var(--logo-size-pc);
-        letter-spacing: 4px;
-      }
+      header { height: var(--header-h-pc); justify-content: center; }
+      .logo { position: absolute; left: 24px; top: 50%; transform: translateY(-50%); font-size: var(--logo-size-pc); letter-spacing: 4px; }
       .pc-nav { justify-content: center; }
-      .pc-nav a:hover {
-        color: var(--clr-primary);
-        background: rgba(229,9,20,0.15);
-      }
+      .pc-nav a:hover { color: var(--clr-primary); background: rgba(229,9,20,0.15); }
       .pc-nav a.active::after {
-        content: ''; position: absolute; bottom: 4px; left:50%;
-        transform: translateX(-50%);
-        width:60%; height:2px; background: var(--clr-primary);
-        border-radius:1px;
+        content: ''; position: absolute; bottom: 4px; left:50%; transform: translateX(-50%);
+        width:60%; height:2px; background: var(--clr-primary); border-radius:1px;
       }
     }
-
-    /* ─────────────── 배너 슬라이드 ─────────────── */
     .banner-container {
-      position: relative;
-      margin-top: var(--header-h-pc);
-      width: 100%;
-      height: var(--banner-height-pc);
-      overflow: hidden;
+      position: relative; margin-top: var(--header-h-pc); width: 100%; height: var(--banner-height-pc); overflow: hidden;
     }
-    .banner-slide {
-      display: flex;
-      width: 200%;
-      height: 100%;
-      transition: transform 0.6s ease-in-out;
-    }
-    .banner-item {
-      width: 50%;
-      flex-shrink: 0;
-    }
-    .banner-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .banner-controls {
-      position: absolute; bottom: 16px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 8px;
-    }
-    .banner-dot {
-      width: 10px;
-      height: 10px;
-      background: rgba(255,255,255,0.6);
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .banner-dot.active {
-      background: var(--clr-primary);
-    }
-
-    /* ─────────────── 본문 ─────────────── */
-    main {
-      padding: 16px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-    .section-title {
-      font: 700 18px/1.2 'Noto Sans KR'; margin-bottom: 16px;
-    }
-    .top20-list {
-      display:flex; gap:12px; overflow-x:auto; scroll-behavior:smooth; padding-bottom:12px;
-      -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;
-    }
+    .banner-slide { display: flex; width: 200%; height: 100%; transition: transform 0.6s ease-in-out; }
+    .banner-item { width: 50%; flex-shrink: 0; }
+    .banner-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .banner-controls { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+    .banner-dot { width: 10px; height: 10px; background: rgba(255,255,255,0.6); border-radius: 50%; cursor: pointer; transition: background 0.3s; }
+    .banner-dot.active { background: var(--clr-primary); }
+    main { padding: 16px; max-width: 1280px; margin: 0 auto; }
+    .section-title { font: 700 18px/1.2 'Noto Sans KR'; margin-bottom: 16px; }
+    .top20-list { display:flex; gap:12px; overflow-x:auto; scroll-behavior:smooth; padding-bottom:12px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
     .top20-list::-webkit-scrollbar { display: none; }
-    .top20-item {
-      position: relative; flex:0 0 120px; border-radius:var(--card-border-radius); overflow:hidden;
-      cursor:pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      scroll-snap-align:start;
-    }
-    .top20-item img {
-      width:100%; aspect-ratio:2/3; object-fit:cover; display:block;
-    }
+    .top20-item { position: relative; flex:0 0 120px; border-radius:var(--card-border-radius); overflow:hidden; cursor:pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; scroll-snap-align:start; }
+    .top20-item img { width:100%; aspect-ratio:2/3; object-fit:cover; display:block; }
     @media (hover: hover) and (pointer: fine) {
-      .top20-item:hover {
-        transform: translateY(var(--card-elevate-y)) scale(1.03);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.6);
-      }
+      .top20-item:hover { transform: translateY(var(--card-elevate-y)) scale(1.03); box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
     }
-    .top20-item:active {
-      transform: translateY(var(--card-elevate-y)) scale(1.02);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.7);
-    }
-    .rank {
-      position:absolute; top:8px; left:8px;
-      font:900 20px/1 'Noto Sans KR'; color:#fff;
-      text-shadow:0 0 4px rgba(0,0,0,0.8);
-    }
-    .label {
-      position:absolute; top:8px; right:8px; padding:4px 8px;
-      font:700 11px/1 'Noto Sans KR'; border-radius:20px;
-      color:#fff; background:var(--clr-primary);
-    }
+    .top20-item:active { transform: translateY(var(--card-elevate-y)) scale(1.02); box-shadow: 0 12px 24px rgba(0,0,0,0.7); }
+    .rank { position:absolute; top:8px; left:8px; font:900 20px/1 'Noto Sans KR'; color:#fff; text-shadow:0 0 4px rgba(0,0,0,0.8); }
+    .label { position:absolute; top:8px; right:8px; padding:4px 8px; font:700 11px/1 'Noto Sans KR'; border-radius:20px; color:#fff; background:var(--clr-primary); }
     .label.age { background:var(--clr-secondary); right:auto; left:8px; top:36px; }
     .label.only { background:#00a8ff; }
-
-    /* ─────────────── 모바일 UI 현대화 (크고 명료, 큰 패딩/간격, 부드러움 강조) ─────────────── */
     @media (max-width: 767px) {
-      :root {
-        --header-h-mobile: 52px;
-        --banner-height-mobile: 180px;
-        --card-border-radius: 14px;
-        --card-elevate-y: -6px;
-      }
-      body {
-        -webkit-overflow-scrolling: touch;
-      }
-      header {
-        height: var(--header-h-mobile);
-        background: rgba(0,0,0,0.9);
-        padding: 0 16px;
-      }
-      .logo {
-        font-weight: 900;
-        font-size: 22px;
-        color: var(--clr-primary);
-        flex-shrink: 0;
-      }
+      :root { --header-h-mobile: 52px; --banner-height-mobile: 180px; --card-border-radius: 14px; --card-elevate-y: -6px; }
+      header { height: var(--header-h-mobile); background: rgba(0,0,0,0.9); padding: 0 16px; }
+      .logo { font-weight: 900; font-size: 22px; color: var(--clr-primary); flex-shrink: 0; }
       .pc-nav { display: none; }
       .hamburger {
-        display: block;
-        background: none; border: none; outline: none;
+        display: block; background: none; border: none; outline: none;
         width: var(--hamburger-size); height: var(--hamburger-size);
-        padding: 14px; cursor: pointer;
-        flex-shrink: 0;
-        position: relative;
+        padding: 14px; cursor: pointer; flex-shrink: 0; position: relative;
       }
-      .hamburger span {
-        display: block; width: 22px; height: 2px;
-        background: var(--clr-text); border-radius: 1px;
-        margin: 5px 0; transition: transform 0.3s, opacity 0.3s;
-      }
-      .hamburger.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 6px);
-      }
+      .hamburger span { display: block; width: 22px; height: 2px; background: var(--clr-text); border-radius: 1px; margin: 5px 0; transition: transform 0.3s, opacity 0.3s; }
+      .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
       .hamburger.active span:nth-child(2) { opacity: 0; }
-      .hamburger.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -6px);
-      }
-      .banner-container {
-        height: var(--banner-height-mobile);
-        margin-top: var(--header-h-mobile);
-      }
-      .banner-dot {
-        width: 12px; height: 12px;
-      }
-      .top20-list {
-        gap: 14px;
-        padding: 4px 14px 16px;
-        margin: 0 -14px;
-      }
-      .top20-item {
-        flex: 0 0 130px;
-        border-radius: var(--card-border-radius);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        transition: transform 0.15s ease-out, box-shadow 0.2s ease;
-      }
-      .top20-item img {
-        border-radius: var(--card-border-radius);
-        transition: transform 0.2s;
-      }
-      .top20-item:active {
-        transform: translateY(var(--card-elevate-y));
-      }
-      .rank {
-        font-size: 24px;
-        top: 6px; left: 6px;
-      }
-      .label {
-        font-size: 12px;
-        padding: 3px 8px;
-        top: 6px; right: 6px;
-      }
-      .label.age, .label.only {
-        top: 36px; left: 6px;
-      }
-      .section-title {
-        font-size: 20px;
-        margin: 0 14px 18px;
-      }
+      .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+      .banner-container { height: var(--banner-height-mobile); margin-top: var(--header-h-mobile); }
+      .banner-dot { width: 12px; height: 12px; }
+      .top20-list { gap: 14px; padding: 4px 14px 16px; margin: 0 -14px; }
+      .top20-item { flex: 0 0 130px; border-radius: var(--card-border-radius); box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.15s ease-out, box-shadow 0.2s ease; }
+      .top20-item img { border-radius: var(--card-border-radius); transition: transform 0.2s; }
+      .top20-item:active { transform: translateY(var(--card-elevate-y)); }
+      .rank { font-size: 24px; top: 6px; left: 6px; }
+      .label { font-size: 12px; padding: 3px 8px; top: 6px; right: 6px; }
+      .label.age, .label.only { top: 36px; left: 6px; }
+      .section-title { font-size: 20px; margin: 0 14px 18px; }
       .mobile-nav-drawer {
         display: flex; position: fixed; top: 0; bottom: 0; right: 0;
-        width: 280px; max-width: 90%;
-        background: rgba(20,20,20,0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        transform: translateX(100%);
-        transition: transform 0.35s ease;
-        flex-direction: column;
-        padding: var(--header-h-mobile) 20px 32px;
-        z-index: 999;
-        overflow-y: auto;
+        width: 280px; max-width: 90%; background: rgba(20,20,20,0.9);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        transform: translateX(100%); transition: transform 0.35s ease;
+        flex-direction: column; padding: var(--header-h-mobile) 20px 32px;
+        z-index: 999; overflow-y: auto;
       }
       .mobile-nav-drawer.open { transform: translateX(0); }
       .mobile-nav-drawer a {
-        padding: 18px 0;
-        font: 600 18px/1.3 'Noto Sans KR';
-        color: #fff;
+        padding: 18px 0; font: 600 18px/1.3 'Noto Sans KR'; color: #fff;
         border-bottom: 1px solid rgba(255,255,255,0.08);
-        transition: color 0.25s, transform 0.2s;
-        text-decoration: none;
+        transition: color 0.25s, transform 0.2s; text-decoration: none;
       }
-      .mobile-nav-drawer a:active {
-        color: var(--clr-primary);
-        transform: translateX(8px);
-      }
+      .mobile-nav-drawer a:active { color: var(--clr-primary); transform: translateX(8px); }
       .mobile-bottom-nav {
         display: flex; position: fixed; bottom: 0; left: 0; right: 0;
-        height: var(--bottom-nav-height);
-        background: rgba(0,0,0,0.9);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        justify-content: space-around;
-        align-items: center;
+        height: var(--bottom-nav-height); background: rgba(0,0,0,0.9);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        justify-content: space-around; align-items: center;
         padding: 0 12px calc(env(safe-area-inset-bottom) + 0px);
-        gap: var(--bottom-nav-btn-gap);
-        z-index: 1001;
+        gap: var(--bottom-nav-btn-gap); z-index: 1001;
       }
       .bottom-nav-btn {
-        flex: 1;
-        max-width: 25%;
-        background: none; border: none; outline: none;
-        color: var(--clr-text-muted);
-        font-size: 12px;
-        font-family: 'Noto Sans KR', sans-serif;
-        font-weight: 600;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        min-height: var(--touch-target);
-        transition: color 0.25s, transform 0.1s;
-        cursor: pointer;
+        flex: 1; max-width: 25%; background: none; border: none; outline: none;
+        color: var(--clr-text-muted); font-size: 12px; font-family: 'Noto Sans KR', sans-serif;
+        font-weight: 600; display: flex; flex-direction: column; align-items: center;
+        justify-content: center; gap: 4px; min-height: var(--touch-target);
+        transition: color 0.25s, transform 0.1s; cursor: pointer;
       }
-      .bottom-nav-btn svg {
-        width: 22px; height: 22px;
-        margin-bottom: 2px;
-        fill: currentColor;
-      }
-      .bottom-nav-btn.active,
-      .bottom-nav-btn:active {
-        color: var(--clr-primary);
-      }
+      .bottom-nav-btn svg { width: 22px; height: 22px; margin-bottom: 2px; fill: currentColor; }
+      .bottom-nav-btn.active, .bottom-nav-btn:active { color: var(--clr-primary); }
       .bottom-nav-btn:active { transform: scale(0.95); }
     }
   </style>
 </head>
 <body>
-<header>
-  <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-  <div class="logo" aria-label="티비 스포츠">티비 스포츠</div>
-  <nav class="pc-nav" role="navigation" aria-label="주요 메뉴">
-    <a href="#" class="active">실시간</a>
-    <a href="#">TV프로그램</a>
-    <a href="#">영화</a>
-    <a href="#">파라운트+</a>
-    <a href="#">키즈</a>
+  <header>
+    <button class="hamburger" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo" aria-label="티비 스포츠">티비 스포츠</div>
+    <!-- PC 네비게이션은 비활성화 느낌만 유지 -->
+    <nav class="pc-nav" role="navigation" aria-label="주요 메뉴">
+      <a href="#" class="active" style="pointer-events:none; opacity:.6;">실시간</a>
+      <a href="#" style="pointer-events:none; opacity:.6;">TV프로그램</a>
+      <a href="#" style="pointer-events:none; opacity:.6;">영화</a>
+      <a href="#" style="pointer-events:none; opacity:.6;">파라운트+</a>
+      <a href="#" style="pointer-events:none; opacity:.6;">키즈</a>
+    </nav>
+  </header>
+
+  <!-- 모바일 드로어도 링크 비활성화 -->
+  <nav class="mobile-nav-drawer" aria-label="모바일 메뉴">
+    <a href="#" class="active" style="pointer-events:none; opacity:.7;">실시간</a>
+    <a href="#" style="pointer-events:none; opacity:.7;">TV프로그램</a>
+    <a href="#" style="pointer-events:none; opacity:.7;">영화</a>
+    <a href="#" style="pointer-events:none; opacity:.7;">파라운트+</a>
+    <a href="#" style="pointer-events:none; opacity:.7;">키즈</a>
   </nav>
-</header>
-<nav class="mobile-nav-drawer" aria-label="모바일 메뉴">
-  <a href="#" class="active">실시간</a>
-  <a href="#">TV프로그램</a>
-  <a href="#">영화</a>
-  <a href="#">파라운트+</a>
-  <a href="#">키즈</a>
-</nav>
-<div class="banner-container">
-  <div class="banner-slide" id="bannerSlide">
-    <div class="banner-item">
-      <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="배너1" loading="lazy">
+
+  <!-- 배너는 어두운 배경 연출로 유지 -->
+  <div class="banner-container" style="filter: grayscale(20%) contrast(90%);">
+    <div class="banner-slide" id="bannerSlide">
+      <div class="banner-item">
+        <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="점검 배너1" loading="lazy">
+      </div>
+      <div class="banner-item">
+        <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="점검 배너2" loading="lazy">
+      </div>
     </div>
-    <div class="banner-item">
-      <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="배너2" loading="lazy">
+    <div class="banner-controls" style="pointer-events:none; opacity:.4;">
+      <div class="banner-dot active" data-index="0"></div>
+      <div class="banner-dot" data-index="1"></div>
     </div>
   </div>
-  <div class="banner-controls">
-    <div class="banner-dot active" data-index="0"></div>
-    <div class="banner-dot" data-index="1"></div>
-  </div>
-</div>
-<main>
-  <section class="top20" aria-label="오늘의 티빙 TOP 20">
-    <h2 class="section-title">오늘의 TOP 20</h2>
-    <div class="top20-list">
-      <div class="top20-item">
-        <span class="rank">1</span>
-        <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20231116/0710/P000587159.jpg/dims/resize/F_webp,400" alt="대방출">
-        <span class="label new">NEW</span>
-        <span class="label age">18+</span>
+
+  <!-- 점검 메시지 섹션 -->
+  <main aria-live="polite">
+    <section class="maintenance" aria-label="서버 점검 안내" style="min-height: calc(100vh - var(--header-h-pc) - var(--bottom-nav-height) - var(--banner-height-pc)); display:flex; align-items:center; justify-content:center; text-align:center;">
+      <div style="max-width: 680px; margin: 0 auto;">
+        <h1 style="font: 900 28px/1.2 'Noto Sans KR'; letter-spacing: 1px; color: #fff; margin-bottom: 12px;">서버 점검중입니다</h1>
+        <p style="font: 400 16px/1.7 'Noto Sans KR'; color: var(--clr-text-muted); margin-bottom: 18px;">
+          더 빠르고 안정적인 서비스를 위해 잠시 점검을 진행하고 있습니다.<br />
+          점검 완료 후 자동으로 홈으로 돌아갑니다.
+        </p>
+        <div style="display:inline-flex; align-items:center; gap:10px; color: var(--clr-primary); font-weight:700;">
+          <span>상태</span>
+          <span aria-label="진행중" style="display:inline-flex; gap:6px;">
+            <i style="width:8px; height:8px; background:var(--clr-primary); border-radius:50%; display:inline-block; opacity:.3;"></i>
+            <i style="width:8px; height:8px; background:var(--clr-primary); border-radius:50%; display:inline-block; opacity:.6;"></i>
+            <i style="width:8px; height:8px; background:var(--clr-primary); border-radius:50%; display:inline-block; opacity:1;"></i>
+          </span>
+        </div>
+        <div style="margin-top:22px;">
+          <button type="button" style="background: rgba(229,9,20,0.2); color: #fff; border: 1px solid rgba(229,9,20,0.5); border-radius: 10px; padding: 12px 18px; font: 700 15px/1 'Noto Sans KR'; cursor: not-allowed;">
+            새로고침
+          </button>
+        </div>
       </div>
-      <div class="top20-item">
-        <span class="rank">2</span>
-        <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240307/0930/P001753352.jpg/dims/resize/F_webp,400" alt="눈물의 여왕">
-      </div>
-      <div class="top20-item">
-        <span class="rank">3</span>
-        <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20240124/0226/P001752535.jpg/dims/resize/F_webp,400" alt="웨딩 임파서블">
-        <span class="label only">ONLY</span>
-      </div>
-      <div class="top20-item">
-        <span class="rank">4</span>
-        <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250507/1456/P001492081.jpg/dims/resize/F_webp,400" alt="나는 솔로">
-      </div>
-      <div class="top20-item">
-        <span class="rank">5</span>
-        <img src="https://image.tving.com/ntgs/contents/CTC/caip/CAIP0900/ko/20250622/1530/P001773168.jpg/dims/resize/F_webp,400" alt="오은영 스테이">
-      </div>
-      <div class="top20-item">
-        <span class="rank">6</span>
-        <img src="https://img.tving.com/uploaded_images/contents/2024/07/20240724123956_0.jpg" alt="한성">
-      </div>
-    </div>
-  </section>
-</main>
-<nav class="mobile-bottom-nav" role="tablist" aria-label="모바일 하단 메뉴">
-  <button class="bottom-nav-btn active" aria-label="홈" role="tab">
-    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9.5L12 2l9 7.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/></svg>
-    <span>홈</span>
-  </button>
-  <button class="bottom-nav-btn" aria-label="공개예정" role="tab">
-    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>
-    <span>공개예정</span>
-  </button>
-  <button class="bottom-nav-btn" aria-label="검색" role="tab">
-    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="16" y2="16"/></svg>
-    <span>검색</span>
-  </button>
-  <button class="bottom-nav-btn" aria-label="기록" role="tab">
-    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg>
-    <span>기록</span>
-  </button>
-</nav>
-<script>
-  (() => {
-    // 햄버거 메뉴 토글 (모바일에서만 동작)
-    const hamburger = document.querySelector('.hamburger');
-    const drawer = document.querySelector('.mobile-nav-drawer');
-    if (hamburger && drawer) {
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        drawer.classList.toggle('open');
-        hamburger.setAttribute('aria-expanded', drawer.classList.contains('open'));
-      });
-    }
-    // 배너 슬라이드
-    const bannerSlide = document.getElementById('bannerSlide');
-    const dots = document.querySelectorAll('.banner-dot');
-    if (bannerSlide && dots.length) {
-      let current = 0;
-      const goToSlide = (idx) => {
-        bannerSlide.style.transform = `translateX(-${idx * 50}%)`;
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        current = idx;
-      };
-      let interval = setInterval(() => goToSlide((current + 1) % 2), 5000);
-      dots.forEach((d, i) => d.addEventListener('click', () => {
-        clearInterval(interval);
-        goToSlide(i);
-        interval = setInterval(() => goToSlide((current + 1) % 2), 5000);
-      }));
-    }
-  })();
-</script>
+    </section>
+  </main>
+
+  <!-- 하단 네비는 시각적만 유지, 비활성화 -->
+  <nav class="mobile-bottom-nav" role="tablist" aria-label="모바일 하단 메뉴">
+    <button class="bottom-nav-btn active" aria-label="홈" role="tab" style="pointer-events:none;">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9.5L12 2l9 7.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/></svg>
+      <span>홈</span>
+    </button>
+    <button class="bottom-nav-btn" aria-label="공개예정" role="tab" style="pointer-events:none; opacity:.6;">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-6h2zm0-8h-2V7h2z"/></svg>
+      <span>공개예정</span>
+    </button>
+    <button class="bottom-nav-btn" aria-label="검색" role="tab" style="pointer-events:none; opacity:.6;">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="16" y2="16"/></svg>
+      <span>검색</span>
+    </button>
+    <button class="bottom-nav-btn" aria-label="기록" role="tab" style="pointer-events:none; opacity:.6;">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3zm0 4h18v2H3z"/></svg>
+      <span>기록</span>
+    </button>
+  </nav>
+
+  <script>
+    (() => {
+      // 모바일 햄버거: 열기/닫기만 유지, 링크는 비활성화
+      const hamburger = document.querySelector('.hamburger');
+      const drawer = document.querySelector('.mobile-nav-drawer');
+      if (hamburger && drawer) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          drawer.classList.toggle('open');
+          hamburger.setAttribute('aria-expanded', drawer.classList.contains('open'));
+        });
+      }
+
+      // 배너 슬라이드: 유지(배경 느낌)
+      const bannerSlide = document.getElementById('bannerSlide');
+      const dots = document.querySelectorAll('.banner-dot');
+      if (bannerSlide && dots.length) {
+        let current = 0;
+        const goToSlide = (idx) => {
+          bannerSlide.style.transform = `translateX(-${idx * 50}%)`;
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+          current = idx;
+        };
+        let interval = setInterval(() => goToSlide((current + 1) % 2), 5000);
+        // 점검 중이므로 도트 클릭 비활성화
+        dots.forEach((d) => {
+          d.style.pointerEvents = 'none';
+          d.style.cursor = 'default';
+        });
+      }
+
+      // 자동 홈 복귀(예: 60초 후 새로고침) — 필요시 조정
+      setTimeout(() => {
+        // 실제 점검 종료 시 서버에서 200 응답으로 돌아오면 새로고침이 홈을 보여줄 것
+        location.reload();
+      }, 60000);
+    })();
+  </script>
 </body>
 </html>
