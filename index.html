@@ -19,18 +19,17 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     body{background:var(--clr-bg);color:var(--clr-text);font-family:'Noto Sans KR',sans-serif;}
 
-    /* 헤더 */
+    /* 헤더 (수정된 부분: scrolled의 추가 transform/box-shadow 제거, 로고 변형 제거) */
     header{
       position:fixed;top:0;left:0;right:0;
       display:flex;align-items:center;justify-content:space-between;
       padding:0 24px;height:var(--header-h-pc);
       background:rgba(0,0,0,0.85);border-bottom:1px solid rgba(255,255,255,0.1);
       z-index:1000;
-      /* 더 느리고 부드럽게: 800ms로 조정 */
+      /* 느리면서도 부드러운 인/아웃 트랜지션 */
       transition:
-        transform 800ms cubic-bezier(.22,.9,.35,1),
-        box-shadow 600ms ease,
-        background 600ms ease;
+        transform 600ms cubic-bezier(.22,.9,.35,1),
+        background 420ms ease;
       will-change:transform;
     }
     /* 완전 사라짐 (아웃) */
@@ -38,19 +37,19 @@
       transform:translateY(-120%);
       pointer-events:none;
     }
-    /* 고정 느낌(그림자/어두워짐) */
+    /* scrolled: 배경 어두워짐만 처리 (더 이상 transform/box-shadow 없음) */
     header.scrolled{
       background:rgba(0,0,0,0.96);
-      box-shadow:0 14px 36px rgba(0,0,0,0.65);
     }
 
     .logo{
       font-weight:900;font-size:24px;color:var(--clr-primary);letter-spacing:2px;user-select:none;
-      /* 로고 애니메이션도 일관성 있게 느리게 */
-      transition: transform 600ms cubic-bezier(.22,.9,.35,1), opacity 520ms ease;
+      /* 로고에 더 이상의 이동/스케일 효과 없음 — 단순한 opacity transition만 남김 */
+      transition: opacity 360ms ease;
     }
+    /* header.hidden시 로고의 미세 이동/스케일 제거 — 걸리는 효과 완전 해제 */
     header.hidden .logo{
-      transform: translateY(-8px) scale(0.985);opacity:0.95;
+      opacity:0.98;
     }
 
     /* 배너 */
@@ -81,8 +80,7 @@
     .refresh-btn{
       background:rgba(229,9,20,0.18);color:#fff;border:1px solid rgba(229,9,20,0.45);
       border-radius:10px;padding:10px 16px;font:700 14px/1 'Noto Sans KR';
-      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
-      transition: transform .08s ease, box-shadow .15s ease;
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition: transform .08s ease, box-shadow .15s ease;
     }
     .refresh-btn:active{transform:scale(0.98);}
     .refresh-icon{width:18px;height:18px;position:relative;display:inline-block;}
@@ -142,41 +140,43 @@
   </main>
 
   <script>
-    // 헤더 인/아웃 개선 (더 느리고 자연스럽게)
+    // 헤더 인/아웃: scrolled에서 추가 transform/그림자 제거하여 "걸림" 현상 해소
     (function(){
       const header = document.querySelector('header');
       let lastScroll = window.scrollY || 0;
       let ticking = false;
 
-      // 조정값: 더 느리고 안정적으로 동작하도록
-      const DEADZONE = 12;         // 노이즈 무시(픽셀)
-      const MIN_DELTA_SHOW = -6;   // 위로 소폭 이동 시에도 복귀 허용
+      // 민감도 및 토글 쿨타임 (너무 잦은 토글 방지)
+      const DEADZONE = 12;
+      const MIN_DELTA_SHOW = -6;
       let isHidden = false;
       let lastToggle = 0;
-      const MIN_TOGGLE_GAP = 200;  // ms, 토글 최소 간격을 늘려 잦은 토글 방지
+      const MIN_TOGGLE_GAP = 200; // ms
 
       function updateHeader(current, delta){
         const now = performance.now();
 
-        // 아래로 충분히 스크롤하면 헤더 숨김
+        // 아래로 충분히 스크롤하면 헤더 숨김 (인/아웃은 transform으로만 처리)
         if (delta > DEADZONE && current > 80 && !isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
           header.classList.add('hidden');
+          // scrolled 클래스는 배경만 담당하므로 제거
           header.classList.remove('scrolled');
           isHidden = true;
           lastToggle = now;
           return;
         }
 
-        // 위로 스크롤하면 헤더 보이기
+        // 위로 스크롤하면 헤더 보임
         if (delta < MIN_DELTA_SHOW && isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
           header.classList.remove('hidden');
+          // 배경 불투명도 보정만 수행
           if (current > 40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
           isHidden = false;
           lastToggle = now;
           return;
         }
 
-        // 아주 작은 움직임이나 정체 상태일 땐 scrolled만 업데이트
+        // 정체 또는 약한 움직임일 때는 scrolled만 토글 (오직 배경 불투명도)
         if (!isHidden){
           if (current > 40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
         }
@@ -192,14 +192,12 @@
               updateHeader(current, delta);
               lastScroll = current;
             } else {
-              // 최상단 근처이면 무조건 복구
               if (current <= 8 && isHidden){
                 header.classList.remove('hidden');
                 header.classList.remove('scrolled');
                 isHidden = false;
               }
             }
-
             ticking = false;
           });
           ticking = true;
@@ -212,19 +210,18 @@
       if ((window.scrollY || 0) > 40) header.classList.add('scrolled');
     })();
 
-    // 새로고침 버튼 동작 (시각 피드백 후 새로고침)
+    // 새로고침 버튼 동작
     (function(){
       const refreshBtn = document.getElementById('refreshBtn');
       const refreshIcon = document.getElementById('refreshIcon');
       if (!refreshBtn) return;
       refreshBtn.addEventListener('click', () => {
         refreshIcon.classList.add('active');
-        // 헤더 트랜지션과 간섭 없게 충분한 딜레이
-        setTimeout(()=>{ location.reload(true); }, 760);
+        setTimeout(()=>{ location.reload(true); }, 520);
       });
     })();
 
-    // 배너 자동 전환 (원래 동작 유지)
+    // 배너 자동 전환 (변경 없음)
     (function(){
       const bannerSlide = document.getElementById('bannerSlide');
       if (!bannerSlide) return;
