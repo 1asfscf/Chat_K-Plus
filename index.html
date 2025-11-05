@@ -28,8 +28,8 @@
       background:rgba(0,0,0,0.85);
       border-bottom:1px solid rgba(255,255,255,0.1);
       z-index:1000;
-      /* transform moves header fully out/in; will toggle .hidden */
-      transition: transform 200ms cubic-bezier(.2,.9,.2,1), background 200ms ease, box-shadow 200ms ease;
+      /* 속도 변경: 이전 200ms에서 더 느리고 부드럽게 420ms로 조정 */
+      transition: transform 420ms cubic-bezier(.2,.9,.2,1), background 420ms ease, box-shadow 420ms ease;
       will-change: transform;
     }
     /* "완전하게 사라짐" 상태 */
@@ -49,8 +49,8 @@
       color:var(--clr-primary);
       letter-spacing:2px;
       user-select:none;
-      /* 로고에 약간의 입/아웃 변형(보조) */
-      transition: transform 180ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+      /* 로고 속도 변경: 이전 180ms에서 360ms로 조정 */
+      transition: transform 360ms cubic-bezier(.2,.9,.2,1), opacity 360ms ease;
     }
     /* header.hidden 일 때 로고도 함께 미세 이동(일관성) */
     header.hidden .logo {
@@ -164,12 +164,12 @@
   </main>
 
   <script>
-    // 헤더 인/아웃 (스크롤 방향 기반)
+    // 헤더 인/아웃 (스크롤 방향 기반) — 속도만 조정된 상태에 맞음
     (function() {
       const header = document.querySelector('header');
       let lastScroll = window.scrollY || 0;
       let ticking = false;
-      const DEADZONE = 20; // 약간의 노이즈 무시
+      const DEADZONE = 20;
 
       function onScroll() {
         if (!ticking) {
@@ -177,23 +177,18 @@
             const current = window.scrollY || 0;
             const delta = current - lastScroll;
 
-            // 스크롤이 충분히 이동했을 때만 반응
             if (Math.abs(delta) > DEADZONE) {
               if (delta > 0 && current > 40) {
-                // 아래로 스크롤 -> 헤더 아웃
                 header.classList.add('hidden');
                 header.classList.remove('scrolled');
               } else {
-                // 위로 스크롤 -> 헤더 인
                 header.classList.remove('hidden');
-                // 고정 느낌 줄 때만 scrolled 적용
                 if (current > 30) header.classList.add('scrolled');
                 else header.classList.remove('scrolled');
               }
               lastScroll = current;
             }
 
-            // 마이너한 스크롤일 경우 헤더 상태 보정
             if (current <= 10) {
               header.classList.remove('hidden');
               header.classList.remove('scrolled');
@@ -207,7 +202,6 @@
 
       window.addEventListener('scroll', onScroll, { passive: true });
 
-      // 초기 상태: 스크롤 위치에 따라 scrolled 설정
       if ((window.scrollY || 0) > 30) header.classList.add('scrolled');
     })();
 
@@ -218,12 +212,11 @@
       if (!refreshBtn) return;
       refreshBtn.addEventListener('click', () => {
         refreshIcon.classList.add('active');
-        // 짧은 피드백 후 새로고침
-        setTimeout(() => { location.reload(true); }, 220);
+        setTimeout(() => { location.reload(true); }, 420); // 애니메이션 속도에 맞춰 딜레이도 동기화
       });
     })();
 
-    // (선택) 배너 슬라이드 자동 전환 유지 — 기존과 동일한 느낌
+    // 배너 자동 전환 유지
     (function(){
       const bannerSlide = document.getElementById('bannerSlide');
       if (!bannerSlide) return;
