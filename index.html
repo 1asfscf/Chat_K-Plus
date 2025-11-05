@@ -6,132 +6,108 @@
   <title>티비 스포츠 — 서버 점검중</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --clr-bg: #0a0a0a;
-      --clr-primary: #e50914;
-      --clr-text: #eee;
-      --clr-text-muted: #aaa;
-      --header-h-pc: 56px;
-      --header-h-mobile: 64px;
-      --banner-height-pc: 260px;
-      --banner-height-mobile: 180px;
+    :root{
+      --clr-bg:#0a0a0a;
+      --clr-primary:#e50914;
+      --clr-text:#eee;
+      --clr-text-muted:#aaa;
+      --header-h-pc:56px;
+      --header-h-mobile:64px;
+      --banner-height-pc:260px;
+      --banner-height-mobile:180px;
     }
-    * {margin:0; padding:0; box-sizing:border-box;}
-    body {background:var(--clr-bg); color:var(--clr-text); font-family:'Noto Sans KR',sans-serif;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--clr-bg);color:var(--clr-text);font-family:'Noto Sans KR',sans-serif;}
 
     /* 헤더 */
-    header {
-      position:fixed; top:0; left:0; right:0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 24px;
-      height:var(--header-h-pc);
-      background:rgba(0,0,0,0.85);
-      border-bottom:1px solid rgba(255,255,255,0.1);
+    header{
+      position:fixed;top:0;left:0;right:0;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;height:var(--header-h-pc);
+      background:rgba(0,0,0,0.85);border-bottom:1px solid rgba(255,255,255,0.1);
       z-index:1000;
-      /* 부드럽고 충분히 느린 트랜지션으로 자연스러움 강화 */
+      /* 더 느리고 부드럽게: 800ms로 조정 */
       transition:
-        transform 600ms cubic-bezier(.22,.9,.35,1),
-        box-shadow 450ms ease,
-        background 450ms ease;
-      will-change: transform;
+        transform 800ms cubic-bezier(.22,.9,.35,1),
+        box-shadow 600ms ease,
+        background 600ms ease;
+      will-change:transform;
     }
-    /* 완전하게 사라짐 (아웃) */
-    header.hidden {
-      transform: translateY(-110%);
-      pointer-events: none;
+    /* 완전 사라짐 (아웃) */
+    header.hidden{
+      transform:translateY(-120%);
+      pointer-events:none;
     }
-    /* 스크롤 고정 느낌(그림자 등) */
-    header.scrolled {
-      background: rgba(0,0,0,0.95);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+    /* 고정 느낌(그림자/어두워짐) */
+    header.scrolled{
+      background:rgba(0,0,0,0.96);
+      box-shadow:0 14px 36px rgba(0,0,0,0.65);
     }
 
-    .logo {
-      font-weight:900;
-      font-size:24px;
-      color:var(--clr-primary);
-      letter-spacing:2px;
-      user-select:none;
-      /* 로고 변형도 헤더와 비슷한 속도로 */
-      transition: transform 420ms cubic-bezier(.22,.9,.35,1), opacity 380ms ease;
+    .logo{
+      font-weight:900;font-size:24px;color:var(--clr-primary);letter-spacing:2px;user-select:none;
+      /* 로고 애니메이션도 일관성 있게 느리게 */
+      transition: transform 600ms cubic-bezier(.22,.9,.35,1), opacity 520ms ease;
     }
-    header.hidden .logo {
-      transform: translateY(-6px) scale(0.985);
-      opacity: 0.96;
+    header.hidden .logo{
+      transform: translateY(-8px) scale(0.985);opacity:0.95;
     }
 
     /* 배너 */
-    .banner-container {
+    .banner-container{
       margin-top:var(--header-h-pc);
-      height:var(--banner-height-pc);
-      overflow:hidden;
-      filter:grayscale(15%) contrast(92%);
+      height:var(--banner-height-pc);overflow:hidden;filter:grayscale(15%) contrast(92%);
     }
-    .banner-slide {display:flex; width:200%; height:100%; transition:transform .6s;}
-    .banner-item {width:50%;}
-    .banner-item img {width:100%; height:100%; object-fit:cover;}
+    .banner-slide{display:flex;width:200%;height:100%;transition:transform .6s;}
+    .banner-item{width:50%;}
+    .banner-item img{width:100%;height:100%;object-fit:cover;}
 
     /* 메인 안내 */
-    main {padding:20px; max-width:960px; margin:0 auto;}
-    .maintenance {
+    main{padding:20px;max-width:960px;margin:0 auto;}
+    .maintenance{
       min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc));
-      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
     }
-    .maintenance h1 {font:900 28px/1.3 'Noto Sans KR'; margin-bottom:14px; color:#fff;}
-    .maintenance p {font:400 16px/1.6 'Noto Sans KR'; color:var(--clr-text-muted); margin-bottom:20px;}
+    .maintenance h1{font:900 28px/1.3 'Noto Sans KR';margin-bottom:14px;color:#fff;}
+    .maintenance p{font:400 16px/1.6 'Noto Sans KR';color:var(--clr-text-muted);margin-bottom:20px;}
 
     /* 상태 + 새로고침 */
-    .loading {display:inline-flex; align-items:center; gap:12px; margin-bottom:16px; color:var(--clr-primary);}
-    .spinner {
-      width:20px; height:20px; border-radius:50%;
-      border:2px solid rgba(229,9,20,0.28); border-top-color:var(--clr-primary);
-      animation:spin 1s linear infinite;
-    }
-    .dots {display:inline-flex; gap:6px;}
-    .dot {width:8px; height:8px; background:var(--clr-primary); border-radius:50%; animation:pulse 1.2s ease-in-out infinite;}
+    .loading{display:inline-flex;align-items:center;gap:12px;margin-bottom:16px;color:var(--clr-primary);}
+    .spinner{width:20px;height:20px;border-radius:50%;border:2px solid rgba(229,9,20,0.28);border-top-color:var(--clr-primary);animation:spin 1s linear infinite;}
+    .dots{display:inline-flex;gap:6px;}
+    .dot{width:8px;height:8px;background:var(--clr-primary);border-radius:50%;animation:pulse 1.2s ease-in-out infinite;}
     .dot:nth-child(2){animation-delay:.12s;} .dot:nth-child(3){animation-delay:.24s;}
 
-    .refresh-btn {
-      background:rgba(229,9,20,0.18);
-      color:#fff;
-      border:1px solid rgba(229,9,20,0.45);
-      border-radius:10px;
-      padding:10px 16px;
-      font:700 14px/1 'Noto Sans KR';
-      display:inline-flex; align-items:center; gap:8px;
-      cursor:pointer;
+    .refresh-btn{
+      background:rgba(229,9,20,0.18);color:#fff;border:1px solid rgba(229,9,20,0.45);
+      border-radius:10px;padding:10px 16px;font:700 14px/1 'Noto Sans KR';
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
       transition: transform .08s ease, box-shadow .15s ease;
     }
-    .refresh-btn:active { transform:scale(0.98); }
-    .refresh-icon { width:18px; height:18px; position:relative; display:inline-block; }
-    .refresh-icon::before, .refresh-icon::after {
-      content:''; position:absolute; inset:0;
-      border:2px solid rgba(255,255,255,0.2);
-      border-top-color:#fff; border-radius:50%;
-    }
-    .refresh-icon.active::before { animation:spin .9s linear infinite; }
-    .refresh-icon.active::after { animation:spinReverse 1.6s linear infinite; opacity:.36; }
+    .refresh-btn:active{transform:scale(0.98);}
+    .refresh-icon{width:18px;height:18px;position:relative;display:inline-block;}
+    .refresh-icon::before,.refresh-icon::after{content:'';position:absolute;inset:0;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;}
+    .refresh-icon.active::before{animation:spin .9s linear infinite;}
+    .refresh-icon.active::after{animation:spinReverse 1.6s linear infinite;opacity:.36;}
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes spinReverse { to { transform: rotate(-360deg); } }
-    @keyframes pulse { 0%,100%{ transform:scale(1); opacity:.36; } 50%{ transform:scale(1.35); opacity:1; } }
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @keyframes spinReverse{to{transform:rotate(-360deg);}}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:.36;}50%{transform:scale(1.35);opacity:1;}}
 
     /* 모바일 */
     @media(max-width:767px){
-      header{height:var(--header-h-mobile); padding:0 16px;}
+      header{height:var(--header-h-mobile);padding:0 16px;}
       .logo{font-size:20px;}
-      .banner-container{height:var(--banner-height-mobile); margin-top:var(--header-h-mobile);}
-      .maintenance{min-height:calc(100vh - var(--header-h-mobile) - var(--banner-height-mobile)); padding:20px;}
+      .banner-container{height:var(--banner-height-mobile);margin-top:var(--header-h-mobile);}
+      .maintenance{min-height:calc(100vh - var(--header-h-mobile) - var(--banner-height-mobile));padding:20px;}
       .maintenance h1{font-size:22px;}
       .maintenance p{font-size:15px;}
     }
 
     /* 접근성: 모션 최소화 */
-    @media (prefers-reduced-motion: reduce) {
-      .spinner, .dot, .refresh-icon.active::before, .refresh-icon.active::after {
-        animation: none !important;
-      }
-      header, .logo { transition: none !important; }
+    @media (prefers-reduced-motion: reduce){
+      .spinner,.dot,.refresh-icon.active::before,.refresh-icon.active::after{animation:none!important;}
+      header,.logo{transition:none!important;}
     }
   </style>
 </head>
@@ -166,24 +142,24 @@
   </main>
 
   <script>
-    // 헤더 인/아웃 개선: 더 자연스럽고 느리게 사라졌다 나타나도록
-    (function() {
+    // 헤더 인/아웃 개선 (더 느리고 자연스럽게)
+    (function(){
       const header = document.querySelector('header');
       let lastScroll = window.scrollY || 0;
       let ticking = false;
-      const DEADZONE = 10;        // 민감도: 작게 하면 더 민감
-      const MIN_DELTA_SHOW = -5;  // 위로 살짝 올릴 때도 반응하도록 작은 음수 허용
 
-      // 상태 추적: hidden 여부, 마지막 토글 시간
+      // 조정값: 더 느리고 안정적으로 동작하도록
+      const DEADZONE = 12;         // 노이즈 무시(픽셀)
+      const MIN_DELTA_SHOW = -6;   // 위로 소폭 이동 시에도 복귀 허용
       let isHidden = false;
       let lastToggle = 0;
-      const MIN_TOGGLE_GAP = 120; // ms 최소 토글 간격(잦은 토글 방지)
+      const MIN_TOGGLE_GAP = 200;  // ms, 토글 최소 간격을 늘려 잦은 토글 방지
 
-      function updateHeader(current, delta) {
+      function updateHeader(current, delta){
         const now = performance.now();
 
-        // 아래로 빠르게 스크롤하면 숨김 (아웃)
-        if (delta > DEADZONE && current > 60 && !isHidden && (now - lastToggle) > MIN_TOGGLE_GAP) {
+        // 아래로 충분히 스크롤하면 헤더 숨김
+        if (delta > DEADZONE && current > 80 && !isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
           header.classList.add('hidden');
           header.classList.remove('scrolled');
           isHidden = true;
@@ -191,41 +167,39 @@
           return;
         }
 
-        // 위로 스크롤하면 나타남 (인)
-        if (delta < MIN_DELTA_SHOW && isHidden && (now - lastToggle) > MIN_TOGGLE_GAP) {
+        // 위로 스크롤하면 헤더 보이기
+        if (delta < MIN_DELTA_SHOW && isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
           header.classList.remove('hidden');
-          // scrolled 상태는 위치에 따라 보정
-          if (current > 30) header.classList.add('scrolled');
-          else header.classList.remove('scrolled');
+          if (current > 40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
           isHidden = false;
           lastToggle = now;
           return;
         }
 
-        // 약한 움직임일 때는 scrolled만 토글 (그림자/어두워짐)
-        if (!isHidden) {
-          if (current > 30) header.classList.add('scrolled');
-          else header.classList.remove('scrolled');
+        // 아주 작은 움직임이나 정체 상태일 땐 scrolled만 업데이트
+        if (!isHidden){
+          if (current > 40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
         }
       }
 
-      function onScroll() {
-        if (!ticking) {
+      function onScroll(){
+        if (!ticking){
           window.requestAnimationFrame(() => {
             const current = window.scrollY || 0;
             const delta = current - lastScroll;
-            // 반응: delta가 작아도 위로 올릴 때는 보여주기 위해 조건 설정
-            if (Math.abs(delta) > DEADZONE || (delta < 0 && Math.abs(delta) > 2)) {
+
+            if (Math.abs(delta) > DEADZONE || (delta < 0 && Math.abs(delta) > 3)){
               updateHeader(current, delta);
               lastScroll = current;
             } else {
-              // 아주 작은 위치일 때는 헤더 복구
-              if (current <= 10 && isHidden) {
+              // 최상단 근처이면 무조건 복구
+              if (current <= 8 && isHidden){
                 header.classList.remove('hidden');
                 header.classList.remove('scrolled');
                 isHidden = false;
               }
             }
+
             ticking = false;
           });
           ticking = true;
@@ -234,31 +208,28 @@
 
       window.addEventListener('scroll', onScroll, { passive: true });
 
-      // 초기 상태 적용
-      if ((window.scrollY || 0) > 30) header.classList.add('scrolled');
+      // 초기 상태
+      if ((window.scrollY || 0) > 40) header.classList.add('scrolled');
     })();
 
-    // 새로고침 버튼 동작 (시각적 피드백 후 새로고침)
-    (function() {
+    // 새로고침 버튼 동작 (시각 피드백 후 새로고침)
+    (function(){
       const refreshBtn = document.getElementById('refreshBtn');
       const refreshIcon = document.getElementById('refreshIcon');
       if (!refreshBtn) return;
       refreshBtn.addEventListener('click', () => {
         refreshIcon.classList.add('active');
-        // 새로고침 지연을 헤더 트랜지션과 충돌 안 나게 충분히 줌
-        setTimeout(() => { location.reload(true); }, 520);
+        // 헤더 트랜지션과 간섭 없게 충분한 딜레이
+        setTimeout(()=>{ location.reload(true); }, 760);
       });
     })();
 
-    // 배너 자동 전환 유지
+    // 배너 자동 전환 (원래 동작 유지)
     (function(){
       const bannerSlide = document.getElementById('bannerSlide');
       if (!bannerSlide) return;
       let idx = 0;
-      setInterval(() => {
-        idx = (idx + 1) % 2;
-        bannerSlide.style.transform = `translateX(-${idx * 50}%)`;
-      }, 5000);
+      setInterval(()=>{ idx = (idx + 1) % 2; bannerSlide.style.transform = `translateX(-${idx * 50}%)`; }, 5000);
     })();
   </script>
 </body>
