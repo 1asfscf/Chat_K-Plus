@@ -12,9 +12,9 @@
       --clr-text: #eee;
       --clr-text-muted: #aaa;
       --header-h-pc: 56px;
-      --header-h-mobile: 52px;
-      --banner-height-pc: 300px;
-      --banner-height-mobile: 200px;
+      --header-h-mobile: 64px;
+      --banner-height-pc: 260px;
+      --banner-height-mobile: 180px;
     }
     * {margin:0; padding:0; box-sizing:border-box;}
     body {background:var(--clr-bg); color:var(--clr-text); font-family:'Noto Sans KR',sans-serif;}
@@ -23,19 +23,20 @@
     header {
       position:fixed; top:0; left:0; right:0;
       display:flex; align-items:center; justify-content:space-between;
-      padding:0 24px; background:rgba(0,0,0,0.85);
+      padding:0 24px;
+      height:var(--header-h-pc);
+      background:rgba(0,0,0,0.85);
       border-bottom:1px solid rgba(255,255,255,0.1);
       z-index:1000;
-      height:var(--header-h-pc);
+      transition: transform 0.25s ease, background 0.25s ease;
     }
-    .logo {
-      font-weight:900;
-      font-size:24px;
-      color:var(--clr-primary);
-      letter-spacing:2px;
-      user-select:none;
+    header .logo {
+      font-weight:900; font-size:24px; color:var(--clr-primary);
+      letter-spacing:2px; user-select:none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
     }
-    .pc-nav {display:none;} /* 메뉴는 비활성화 */
+    header.scrolled {background:rgba(0,0,0,0.95); transform:translateY(-4px);}
+    header.scrolled .logo {transform:scale(0.92); opacity:0.85;}
 
     /* 배너 */
     .banner-container {
@@ -135,6 +136,22 @@
   </main>
 
   <script>
+    // 헤더 스크롤 애니메이션
+    (() => {
+      const header = document.querySelector('header');
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const current = window.scrollY;
+        if (current > lastScroll && current > 20) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        lastScroll = current;
+      });
+    })();
+
+    // 새로고침 버튼
     const refreshBtn = document.getElementById('refreshBtn');
     const refreshIcon = document.getElementById('refreshIcon');
     if(refreshBtn){
