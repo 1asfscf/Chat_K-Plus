@@ -28,15 +28,35 @@
       background:rgba(0,0,0,0.85);
       border-bottom:1px solid rgba(255,255,255,0.1);
       z-index:1000;
-      transition: transform 0.25s ease, background 0.25s ease;
+      /* transform moves header fully out/in; will toggle .hidden */
+      transition: transform 200ms cubic-bezier(.2,.9,.2,1), background 200ms ease, box-shadow 200ms ease;
+      will-change: transform;
     }
-    header .logo {
-      font-weight:900; font-size:24px; color:var(--clr-primary);
-      letter-spacing:2px; user-select:none;
-      transition: transform 0.25s ease, opacity 0.25s ease;
+    /* "완전하게 사라짐" 상태 */
+    header.hidden {
+      transform: translateY(-100%);
+      pointer-events: none;
     }
-    header.scrolled {background:rgba(0,0,0,0.95); transform:translateY(-4px);}
-    header.scrolled .logo {transform:scale(0.92); opacity:0.85;}
+    /* 살짝 축소/어두워지는 상태 (스크롤 중/고정 느낌) */
+    header.scrolled {
+      background: rgba(0,0,0,0.95);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    }
+
+    .logo {
+      font-weight:900;
+      font-size:24px;
+      color:var(--clr-primary);
+      letter-spacing:2px;
+      user-select:none;
+      /* 로고에 약간의 입/아웃 변형(보조) */
+      transition: transform 180ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+    }
+    /* header.hidden 일 때 로고도 함께 미세 이동(일관성) */
+    header.hidden .logo {
+      transform: translateY(-6px) scale(0.98);
+      opacity: 0.95;
+    }
 
     /* 배너 */
     .banner-container {
@@ -59,40 +79,40 @@
     .maintenance p {font:400 16px/1.6 'Noto Sans KR'; color:var(--clr-text-muted); margin-bottom:20px;}
 
     /* 상태 + 새로고침 */
-    .loading {display:inline-flex; align-items:center; gap:12px; margin-bottom:20px; color:var(--clr-primary);}
+    .loading {display:inline-flex; align-items:center; gap:12px; margin-bottom:16px; color:var(--clr-primary);}
     .spinner {
-      width:22px; height:22px; border-radius:50%;
-      border:2px solid rgba(229,9,20,0.35); border-top-color:var(--clr-primary);
+      width:20px; height:20px; border-radius:50%;
+      border:2px solid rgba(229,9,20,0.28); border-top-color:var(--clr-primary);
       animation:spin 1s linear infinite;
     }
     .dots {display:inline-flex; gap:6px;}
     .dot {width:8px; height:8px; background:var(--clr-primary); border-radius:50%; animation:pulse 1.2s ease-in-out infinite;}
-    .dot:nth-child(2){animation-delay:.15s;} .dot:nth-child(3){animation-delay:.3s;}
+    .dot:nth-child(2){animation-delay:.12s;} .dot:nth-child(3){animation-delay:.24s;}
 
     .refresh-btn {
-      background:rgba(229,9,20,0.2);
+      background:rgba(229,9,20,0.18);
       color:#fff;
-      border:1px solid rgba(229,9,20,0.5);
+      border:1px solid rgba(229,9,20,0.45);
       border-radius:10px;
-      padding:12px 18px;
-      font:700 15px/1 'Noto Sans KR';
-      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 16px;
+      font:700 14px/1 'Noto Sans KR';
+      display:inline-flex; align-items:center; gap:8px;
       cursor:pointer;
-      transition:transform .06s ease, background .25s ease, border-color .25s ease;
+      transition: transform .08s ease, box-shadow .15s ease;
     }
-    .refresh-btn:active {transform:scale(0.97);}
-    .refresh-icon {width:18px; height:18px; position:relative;}
+    .refresh-btn:active { transform:scale(0.98); }
+    .refresh-icon { width:18px; height:18px; position:relative; display:inline-block; }
     .refresh-icon::before, .refresh-icon::after {
       content:''; position:absolute; inset:0;
-      border:2px solid rgba(255,255,255,0.25);
+      border:2px solid rgba(255,255,255,0.2);
       border-top-color:#fff; border-radius:50%;
     }
-    .refresh-icon.active::before {animation:spin .9s linear infinite;}
-    .refresh-icon.active::after {animation:spinReverse 1.6s linear infinite; opacity:.4;}
+    .refresh-icon.active::before { animation:spin .9s linear infinite; }
+    .refresh-icon.active::after { animation:spinReverse 1.6s linear infinite; opacity:.36; }
 
-    @keyframes spin {to{transform:rotate(360deg);}}
-    @keyframes spinReverse {to{transform:rotate(-360deg);}}
-    @keyframes pulse {0%,100%{transform:scale(1);opacity:.35;}50%{transform:scale(1.35);opacity:1;}}
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spinReverse { to { transform: rotate(-360deg); } }
+    @keyframes pulse { 0%,100%{ transform:scale(1); opacity:.36; } 50%{ transform:scale(1.35); opacity:1; } }
 
     /* 모바일 */
     @media(max-width:767px){
@@ -103,6 +123,14 @@
       .maintenance h1{font-size:22px;}
       .maintenance p{font-size:15px;}
     }
+
+    /* 접근성: 모션 최소화 */
+    @media (prefers-reduced-motion: reduce) {
+      .spinner, .dot, .refresh-icon.active::before, .refresh-icon.active::after {
+        animation: none !important;
+      }
+      header, .logo { transition: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -111,7 +139,7 @@
   </header>
 
   <div class="banner-container">
-    <div class="banner-slide">
+    <div class="banner-slide" id="bannerSlide">
       <div class="banner-item"><img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="점검 배너1"></div>
       <div class="banner-item"><img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="점검 배너2"></div>
     </div>
@@ -122,44 +150,89 @@
       <h1>서버 점검중입니다</h1>
       <p>더 나은 서비스를 위해 현재 점검을 진행하고 있습니다.<br>잠시 후 다시 접속해 주세요.</p>
 
-      <div class="loading">
-        <div class="spinner"></div>
+      <div class="loading" aria-hidden="false">
+        <div class="spinner" role="img" aria-hidden="true"></div>
         <span>상태</span>
-        <span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>
+        <span class="dots" aria-hidden="true"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>
       </div>
 
-      <button type="button" class="refresh-btn" id="refreshBtn">
-        <span class="refresh-icon" id="refreshIcon"></span>
+      <button type="button" class="refresh-btn" id="refreshBtn" aria-label="새로고침">
+        <span class="refresh-icon" id="refreshIcon" aria-hidden="true"></span>
         <span>새로고침</span>
       </button>
     </section>
   </main>
 
   <script>
-    // 헤더 스크롤 애니메이션
-    (() => {
+    // 헤더 인/아웃 (스크롤 방향 기반)
+    (function() {
       const header = document.querySelector('header');
-      let lastScroll = 0;
-      window.addEventListener('scroll', () => {
-        const current = window.scrollY;
-        if (current > lastScroll && current > 20) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
+      let lastScroll = window.scrollY || 0;
+      let ticking = false;
+      const DEADZONE = 20; // 약간의 노이즈 무시
+
+      function onScroll() {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            const current = window.scrollY || 0;
+            const delta = current - lastScroll;
+
+            // 스크롤이 충분히 이동했을 때만 반응
+            if (Math.abs(delta) > DEADZONE) {
+              if (delta > 0 && current > 40) {
+                // 아래로 스크롤 -> 헤더 아웃
+                header.classList.add('hidden');
+                header.classList.remove('scrolled');
+              } else {
+                // 위로 스크롤 -> 헤더 인
+                header.classList.remove('hidden');
+                // 고정 느낌 줄 때만 scrolled 적용
+                if (current > 30) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
+              }
+              lastScroll = current;
+            }
+
+            // 마이너한 스크롤일 경우 헤더 상태 보정
+            if (current <= 10) {
+              header.classList.remove('hidden');
+              header.classList.remove('scrolled');
+            }
+
+            ticking = false;
+          });
+          ticking = true;
         }
-        lastScroll = current;
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // 초기 상태: 스크롤 위치에 따라 scrolled 설정
+      if ((window.scrollY || 0) > 30) header.classList.add('scrolled');
+    })();
+
+    // 새로고침 버튼 동작
+    (function() {
+      const refreshBtn = document.getElementById('refreshBtn');
+      const refreshIcon = document.getElementById('refreshIcon');
+      if (!refreshBtn) return;
+      refreshBtn.addEventListener('click', () => {
+        refreshIcon.classList.add('active');
+        // 짧은 피드백 후 새로고침
+        setTimeout(() => { location.reload(true); }, 220);
       });
     })();
 
-    // 새로고침 버튼
-    const refreshBtn = document.getElementById('refreshBtn');
-    const refreshIcon = document.getElementById('refreshIcon');
-    if(refreshBtn){
-      refreshBtn.addEventListener('click',()=>{
-        refreshIcon.classList.add('active');
-        setTimeout(()=>{ location.reload(true); },200);
-      });
-    }
+    // (선택) 배너 슬라이드 자동 전환 유지 — 기존과 동일한 느낌
+    (function(){
+      const bannerSlide = document.getElementById('bannerSlide');
+      if (!bannerSlide) return;
+      let idx = 0;
+      setInterval(() => {
+        idx = (idx + 1) % 2;
+        bannerSlide.style.transform = `translateX(-${idx * 50}%)`;
+      }, 5000);
+    })();
   </script>
 </body>
 </html>
