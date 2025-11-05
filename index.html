@@ -9,114 +9,91 @@
     :root {
       --clr-bg: #0a0a0a;
       --clr-primary: #e50914;
-      --clr-secondary: #3a5b9a;
       --clr-text: #eee;
       --clr-text-muted: #aaa;
       --header-h-pc: 56px;
       --header-h-mobile: 64px; /* 모바일 헤더 크기 키움 */
-      --banner-height-pc: 300px;
-      --banner-height-mobile: 200px;
-      --bottom-nav-height: 56px;
+      --banner-height-pc: 260px;
+      --banner-height-mobile: 180px;
     }
     * {margin:0; padding:0; box-sizing:border-box;}
     body {background:var(--clr-bg); color:var(--clr-text); font-family:'Noto Sans KR',sans-serif;}
 
     header {
       position:fixed; top:0; left:0; right:0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 24px; background:rgba(0,0,0,0.85);
+      display:flex; align-items:center; justify-content:center;
+      height:var(--header-h-pc);
+      background:rgba(0,0,0,0.85);
       border-bottom:1px solid rgba(255,255,255,0.1);
       z-index:1000;
     }
-    .logo {color:var(--clr-primary); font-weight:900;}
-    .hamburger {display:none;}
-    .pc-nav {display:flex; gap:32px;}
-    .pc-nav a {color:var(--clr-text); text-decoration:none; padding:12px 16px;}
+    .logo {color:var(--clr-primary); font-weight:900; font-size:24px; letter-spacing:2px;}
 
-    .banner-container {margin-top:var(--header-h-pc); height:var(--banner-height-pc); overflow:hidden;}
+    .banner-container {
+      margin-top:var(--header-h-pc);
+      height:var(--banner-height-pc);
+      overflow:hidden;
+      filter:grayscale(15%) contrast(92%);
+    }
     .banner-slide {display:flex; width:200%; height:100%; transition:transform .6s;}
     .banner-item {width:50%;}
     .banner-item img {width:100%; height:100%; object-fit:cover;}
 
-    main {padding:16px; max-width:1280px; margin:0 auto;}
-    .section-title {font:700 18px/1.2 'Noto Sans KR'; margin-bottom:16px;}
+    main {padding:20px; max-width:960px; margin:0 auto;}
+    .maintenance {
+      min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc));
+      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    }
+    .maintenance h1 {font:900 28px/1.3 'Noto Sans KR'; margin-bottom:14px; color:#fff;}
+    .maintenance p {font:400 16px/1.6 'Noto Sans KR'; color:var(--clr-text-muted);}
 
-    .maintenance {min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc)); display:flex; align-items:center; justify-content:center; text-align:center;}
-    .maintenance h1 {font:900 28px/1.2 'Noto Sans KR'; margin-bottom:12px;}
-    .maintenance p {color:var(--clr-text-muted);}
+    /* 로딩 애니메이션 */
+    .loading {display:inline-flex; align-items:center; gap:12px; margin-top:20px; color:var(--clr-primary);}
+    .spinner {
+      width:22px; height:22px; border-radius:50%;
+      border:2px solid rgba(229,9,20,0.35); border-top-color:var(--clr-primary);
+      animation:spin 1s linear infinite;
+    }
+    .dots {display:inline-flex; gap:6px;}
+    .dot {width:8px; height:8px; background:var(--clr-primary); border-radius:50%; animation:pulse 1.2s ease-in-out infinite;}
+    .dot:nth-child(2){animation-delay:.15s;} .dot:nth-child(3){animation-delay:.3s;}
 
-    /* 모바일 전용 처리 */
-    @media (max-width:767px){
-      /* PC 전용 요소 숨김 */
-      .pc-nav,
-      .banner-container,
-      .top20,
-      .mobile-nav-drawer,
-      .mobile-bottom-nav,
-      .hamburger {display:none !important;}
+    @keyframes spin {to{transform:rotate(360deg);}}
+    @keyframes pulse {0%,100%{transform:scale(1);opacity:.35;}50%{transform:scale(1.35);opacity:1;}}
 
-      /* 모바일 안내문만 표시 */
-      .maintenance {
-        min-height:calc(100vh - var(--header-h-mobile));
-        padding:20px;
-      }
-      .maintenance h1 {font-size:22px;}
-      .maintenance p {font-size:15px;}
-      header {height:var(--header-h-mobile);}
+    /* 모바일 */
+    @media(max-width:767px){
+      header{height:var(--header-h-mobile);}
+      .logo{font-size:20px;}
+      .banner-container{height:var(--banner-height-mobile); margin-top:var(--header-h-mobile);}
+      .maintenance{min-height:calc(100vh - var(--header-h-mobile) - var(--banner-height-mobile)); padding:20px;}
+      .maintenance h1{font-size:22px;}
+      .maintenance p{font-size:15px;}
     }
   </style>
 </head>
 <body>
   <header>
-    <button class="hamburger"><span></span><span></span><span></span></button>
     <div class="logo">티비 스포츠</div>
-    <nav class="pc-nav">
-      <a href="#" class="active">실시간</a>
-      <a href="#">TV프로그램</a>
-      <a href="#">영화</a>
-      <a href="#">파라운트+</a>
-      <a href="#">키즈</a>
-    </nav>
   </header>
 
-  <nav class="mobile-nav-drawer">
-    <a href="#" class="active">실시간</a>
-    <a href="#">TV프로그램</a>
-    <a href="#">영화</a>
-    <a href="#">파라운트+</a>
-    <a href="#">키즈</a>
-  </nav>
-
   <div class="banner-container">
-    <div class="banner-slide" id="bannerSlide">
-      <div class="banner-item"><img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="배너1"></div>
-      <div class="banner-item"><img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="배너2"></div>
+    <div class="banner-slide">
+      <div class="banner-item"><img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png" alt="점검 배너1"></div>
+      <div class="banner-item"><img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg" alt="점검 배너2"></div>
     </div>
   </div>
 
   <main>
-    <section class="top20">
-      <h2 class="section-title">오늘의 TOP 20</h2>
-      <div class="top20-list">
-        <div class="top20-item"><span class="rank">1</span><img src="..." alt="대방출"></div>
-        <div class="top20-item"><span class="rank">2</span><img src="..." alt="눈물의 여왕"></div>
-      </div>
-    </section>
-
-    <!-- 점검 안내 -->
     <section class="maintenance">
-      <div>
-        <h1>서버 점검중입니다</h1>
-        <p>더 나은 서비스를 위해 현재 점검을 진행하고 있습니다.<br>잠시 후 다시 접속해 주세요.</p>
+      <h1>서버 점검중입니다</h1>
+      <p>더 나은 서비스를 위해 현재 점검을 진행하고 있습니다.<br>잠시 후 다시 접속해 주세요.</p>
+      <div class="loading">
+        <div class="spinner"></div>
+        <span>상태</span>
+        <span class="dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>
       </div>
     </section>
   </main>
-
-  <nav class="mobile-bottom-nav">
-    <button class="bottom-nav-btn active"><span>홈</span></button>
-    <button class="bottom-nav-btn"><span>공개예정</span></button>
-    <button class="bottom-nav-btn"><span>검색</span></button>
-    <button class="bottom-nav-btn"><span>기록</span></button>
-  </nav>
 </body>
 </html>
