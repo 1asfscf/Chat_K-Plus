@@ -1,3 +1,4 @@
+<!-- 생략 없이 전체 HTML 코드입니다 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,81 +7,99 @@
   <title>티비 스포츠 — 서버 점검중</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --clr-bg:#0a0a0a;
-      --clr-primary:#e50914;
-      --clr-text:#eee;
-      --clr-text-muted:#aaa;
-      --header-h-pc:56px;
-      --header-h-mobile:64px;
-      --banner-height-pc:260px;
-      --banner-height-mobile:180px;
+    :root {
+      --clr-bg: #0a0a0a;
+      --clr-primary: #e50914;
+      --clr-text: #eee;
+      --clr-text-muted: #aaa;
+      --header-h-pc: 56px;
+      --banner-height-pc: 260px;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{background:var(--clr-bg);color:var(--clr-text);font-family:'Noto Sans KR',sans-serif;}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--clr-bg); color: var(--clr-text); font-family: 'Noto Sans KR', sans-serif; }
 
-    header{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;
-      padding:0 24px;height:var(--header-h-pc);background:rgba(0,0,0,0.85);border-bottom:1px solid rgba(255,255,255,0.1);
-      z-index:1000;transition:transform 280ms cubic-bezier(.22,.9,.35,1),background 220ms ease,box-shadow 220ms ease;}
-    header.hidden{transform:translateY(-110%);}
-    header.scrolled{background:rgba(0,0,0,0.96);box-shadow:0 6px 18px rgba(0,0,0,0.45);}
-    .logo{font-weight:900;font-size:24px;color:var(--clr-primary);letter-spacing:2px;}
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: var(--header-h-pc);
+      background: rgba(0,0,0,0.85); border-bottom: 1px solid rgba(255,255,255,0.1);
+      z-index: 1000;
+    }
+    .logo { font-weight: 900; font-size: 24px; color: var(--clr-primary); letter-spacing: 2px; }
 
-    .banner-container{margin:calc(var(--header-h-pc) + 16px) auto 0;width:1024px;height:415px;max-width:100%;overflow:hidden;background:#000;}
-    .banner-slide{display:flex;height:100%;transition:transform 700ms cubic-bezier(.22,.9,.35,1);}
-    .banner-item{flex-shrink:0;width:100%;height:100%;}
-    .banner-item img{width:100%;height:100%;object-fit:cover;}
-    .banner-caption{position:absolute;left:24px;bottom:18px;color:#fff;font-weight:700;font-size:14px;background:rgba(0,0,0,0.4);padding:8px 12px;border-radius:8px;}
+    .banner-container {
+      margin: calc(var(--header-h-pc) + 16px) auto 0;
+      width: 1024px; height: 415px; max-width: 100%;
+      overflow: hidden; background: #000;
+    }
+    .banner-slide { display: flex; height: 100%; transition: transform 700ms ease; }
+    .banner-item { flex-shrink: 0; width: 100%; height: 100%; position: relative; }
+    .banner-item img { width: 100%; height: 100%; object-fit: cover; }
+    .banner-caption {
+      position: absolute; left: 24px; bottom: 18px;
+      color: #fff; font-weight: 700; font-size: 14px;
+      background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px;
+    }
 
-    main{padding:20px;max-width:960px;margin:0 auto;}
+    main { padding: 20px; max-width: 960px; margin: 0 auto; }
 
     /* 상태 배지 */
-    .status-wrap{
-      display:flex;align-items:center;gap:14px;
-      background:rgba(255,255,255,0.05);
-      padding:16px 20px;border-radius:16px;
-      border:1px solid rgba(255,255,255,0.1);
-      box-shadow:0 8px 24px rgba(0,0,0,0.5);
-      backdrop-filter:blur(12px) saturate(140%);
+    .status-wrap {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.05);
+      padding: 16px 20px; border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      backdrop-filter: blur(12px) saturate(140%);
     }
 
     /* 현대식 로딩 인디케이터 */
-    .status-indicator{
-      width:64px;height:64px;display:flex;align-items:center;justify-content:center;
-      border-radius:50%;background:linear-gradient(180deg,#1a1a1a,#0d0d0d);
-      position:relative;
+    .status-indicator {
+      width: 64px; height: 64px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: linear-gradient(180deg,#1a1a1a,#0d0d0d);
+      position: relative;
     }
-    .status-indicator::before{
-      content:"";position:absolute;width:100%;height:100%;border-radius:50%;
-      border:3px solid rgba(229,9,20,0.4);border-top-color:var(--clr-primary);
-      animation:spin 1.2s linear infinite;
+    .status-indicator::before {
+      content: ""; position: absolute; width: 100%; height: 100%; border-radius: 50%;
+      border: 3px solid rgba(229,9,20,0.4); border-top-color: var(--clr-primary);
+      animation: spin 1.2s linear infinite;
     }
-    .status-indicator::after{
-      content:"";position:absolute;width:80%;height:80%;border-radius:50%;
-      background:rgba(229,9,20,0.15);
-      animation:pulse 1.8s ease-in-out infinite;
+    .status-indicator::after {
+      content: ""; position: absolute; width: 80%; height: 80%; border-radius: 50%;
+      background: rgba(229,9,20,0.15);
+      animation: pulse 1.8s ease-in-out infinite;
     }
 
-    @keyframes spin{to{transform:rotate(360deg);}}
-    @keyframes pulse{0%,100%{transform:scale(0.95);opacity:0.7;}50%{transform:scale(1.05);opacity:1;}}
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
 
-    .status-text{text-align:left;display:flex;flex-direction:column;gap:4px;}
-    .status-text .label{font:700 15px/1 'Noto Sans KR';color:#fff;}
-    .status-text .meta{font:400 13px/1.4 'Noto Sans KR';color:var(--clr-text-muted);}
+    .status-text {
+      text-align: left; display: flex; flex-direction: column; gap: 4px;
+    }
+    .status-text .label { font: 700 15px/1 'Noto Sans KR'; color: #fff; }
+    .status-text .meta { font: 400 13px/1.4 'Noto Sans KR'; color: var(--clr-text-muted); }
 
     /* 새로고침 버튼 */
-    .refresh-btn{
-      background:linear-gradient(180deg,rgba(229,9,20,0.16),rgba(229,9,20,0.08));
-      color:#fff;border:1px solid rgba(229,9,20,0.45);border-radius:12px;
-      padding:12px 18px;font:700 14px/1 'Noto Sans KR';display:inline-flex;align-items:center;gap:10px;cursor:pointer;
-      transition:transform .12s ease,box-shadow .12s ease;
+    .controls-row { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
+    .refresh-btn {
+      background: linear-gradient(180deg, rgba(229,9,20,0.16), rgba(229,9,20,0.08));
+      color: #fff; border: 1px solid rgba(229,9,20,0.45); border-radius: 12px;
+      padding: 12px 18px; font: 700 14px/1 'Noto Sans KR';
+      display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    .refresh-btn:active{transform:scale(.97);}
-    .refresh-btn.loading .refresh-icon::before{
-      content:"";width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;
-      display:inline-block;animation:spin .9s linear infinite;
+    .refresh-btn:active { transform: scale(.97); }
+    .refresh-btn.loading .refresh-icon::before {
+      content: ""; width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+      border-radius: 50%; display: inline-block;
+      animation: spin .9s linear infinite;
     }
-    .hint{font:400 13px/1 'Noto Sans KR';color:var(--clr-text-muted);}
+    .hint { font: 400 13px/1 'Noto Sans KR'; color: var(--clr-text-muted); }
   </style>
 </head>
 <body>
@@ -99,7 +118,7 @@
         </div>
       </div>
 
-      <div class="controls-row" style="margin-top:12px;">
+      <div class="controls-row">
         <button id="refreshBtn" class="refresh-btn" type="button">
           <span class="refresh-icon"></span>
           <span>새로고침</span>
@@ -110,12 +129,12 @@
   </main>
 
   <script>
-    const refreshBtn=document.getElementById('refreshBtn');
-    const refreshHint=document.getElementById('refreshHint');
-    refreshBtn.addEventListener('click',()=>{
+    const refreshBtn = document.getElementById('refreshBtn');
+    const refreshHint = document.getElementById('refreshHint');
+    refreshBtn.addEventListener('click', () => {
       refreshBtn.classList.add('loading');
-      refreshHint.textContent='새로고침 요청 중…';
-      setTimeout(()=>{location.reload();},1000);
+      refreshHint.textContent = '새로고침 요청 중…';
+      setTimeout(() => { location.reload(); }, 1000);
     });
   </script>
 </body>
