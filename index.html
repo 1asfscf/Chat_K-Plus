@@ -1,141 +1,545 @@
-<!-- 생략 없이 전체 HTML 코드입니다 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>티비 스포츠 — 서버 점검중</title>
+  <title>티비 스포캠 — 서버점검중</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --clr-bg: #0a0a0a;
-      --clr-primary: #e50914;
-      --clr-text: #eee;
-      --clr-text-muted: #aaa;
-      --header-h-pc: 56px;
-      --banner-height-pc: 260px;
+    :root{
+      --clr-bg:#0a0a0a;
+      --clr-primary:#e50914;
+      --clr-text:#eee;
+      --clr-text-muted:#aaa;
+      --header-h-pc:56px;
+      --header-h-mobile:64px;
+      --banner-height-pc:260px;
+      --banner-height-mobile:180px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--clr-bg); color: var(--clr-text); font-family: 'Noto Sans KR', sans-serif; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--clr-bg);color:var(--clr-text);font-family:'Noto Sans KR',sans-serif;}
 
-    header {
-      position: fixed; top: 0; left: 0; right: 0;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 24px; height: var(--header-h-pc);
-      background: rgba(0,0,0,0.85); border-bottom: 1px solid rgba(255,255,255,0.1);
-      z-index: 1000;
+    /* HEADER */
+    header{
+      position:fixed;top:0;left:0;right:0;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;height:var(--header-h-pc);
+      background:rgba(0,0,0,0.85);border-bottom:1px solid rgba(255,255,255,0.1);
+      z-index:1000;
+      transition:
+        transform 280ms cubic-bezier(.22,.9,.35,1),
+        background 220ms ease,
+        box-shadow 220ms ease;
+      will-change:transform;
     }
-    .logo { font-weight: 900; font-size: 24px; color: var(--clr-primary); letter-spacing: 2px; }
+    header.hidden{ transform:translateY(-110%); pointer-events:none; }
+    header.scrolled{ background:rgba(0,0,0,0.96); box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
 
+    .logo{ font-weight:900; font-size:24px; color:var(--clr-primary); letter-spacing:2px; user-select:none; transition:opacity 220ms ease, transform 220ms ease; }
+    header.hidden .logo{ transform: translateY(-6px) scale(.985); opacity:.96; }
+
+    /* banner */
     .banner-container {
-      margin: calc(var(--header-h-pc) + 16px) auto 0;
-      width: 1024px; height: 415px; max-width: 100%;
-      overflow: hidden; background: #000;
-    }
-    .banner-slide { display: flex; height: 100%; transition: transform 700ms ease; }
-    .banner-item { flex-shrink: 0; width: 100%; height: 100%; position: relative; }
-    .banner-item img { width: 100%; height: 100%; object-fit: cover; }
-    .banner-caption {
-      position: absolute; left: 24px; bottom: 18px;
-      color: #fff; font-weight: 700; font-size: 14px;
-      background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px;
-    }
-
-    main { padding: 20px; max-width: 960px; margin: 0 auto; }
-
-    /* 상태 배지 */
-    .status-wrap {
-      display: flex; align-items: center; gap: 14px;
-      background: rgba(255,255,255,0.05);
-      padding: 16px 20px; border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      backdrop-filter: blur(12px) saturate(140%);
-    }
-
-    /* 현대식 로딩 인디케이터 */
-    .status-indicator {
-      width: 64px; height: 64px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 50%; background: linear-gradient(180deg,#1a1a1a,#0d0d0d);
       position: relative;
+      margin: calc(var(--header-h-pc) + 16px) auto 0;
+      width: 1024px;
+      height: 415px;
+      max-width: 100%;
+      overflow: hidden;
+      background: #000;
+      filter: grayscale(12%) contrast(95%);
     }
-    .status-indicator::before {
-      content: ""; position: absolute; width: 100%; height: 100%; border-radius: 50%;
-      border: 3px solid rgba(229,9,20,0.4); border-top-color: var(--clr-primary);
-      animation: spin 1.2s linear infinite;
-    }
-    .status-indicator::after {
-      content: ""; position: absolute; width: 80%; height: 80%; border-radius: 50%;
-      background: rgba(229,9,20,0.15);
-      animation: pulse 1.8s ease-in-out infinite;
+    .banner-inner { position: relative; width:100%; height:100%; }
+
+    .banner-slide {
+      display:flex;
+      height:100%;
+      width: 100%;
+      transform: translateX(0);
+      transition: transform 700ms cubic-bezier(.22,.9,.35,1);
+      will-change: transform;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulse {
-      0%, 100% { transform: scale(0.95); opacity: 0.7; }
-      50% { transform: scale(1.05); opacity: 1; }
+    .banner-item {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.12));
+    }
+
+    .banner-item img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+      transform: translateZ(0);
+      backface-visibility:hidden;
+    }
+
+    .banner-caption {
+      position:absolute;
+      left:24px;
+      bottom:18px;
+      color:#fff;
+      font-weight:700;
+      font-size:14px;
+      background:linear-gradient(90deg, rgba(0,0,0,0.36), rgba(0,0,0,0.12));
+      padding:8px 12px;
+      border-radius:8px;
+      pointer-events:none;
+      user-select:none;
+      opacity:0.98;
+    }
+
+    /* controls */
+    .banner-controls {
+      position:absolute;
+      left:0; right:0; bottom:12px;
+      display:flex; align-items:center; justify-content:center; gap:12px;
+      pointer-events:none;
+    }
+    .banner-arrow {
+      --size:48px;
+      width:var(--size); height:var(--size);
+      margin:0 6px;
+      border-radius:12px;
+      background:rgba(0,0,0,0.45);
+      border:none; pointer-events:auto; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition: transform .12s ease, background .18s ease, box-shadow .12s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+    }
+    .banner-arrow svg { width:20px; height:20px; display:block; fill: none; stroke: #fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .banner-arrow:hover { transform: translateY(-3px); background: rgba(0,0,0,0.6); box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+    .banner-arrow:active { transform: translateY(-1px) scale(.98); }
+    .banner-arrow:focus { outline: 3px solid rgba(229,9,20,0.22); outline-offset: 3px; }
+
+    .banner-arrow.prev { position: absolute; left: 12px; bottom: 18px; border-radius:10px; }
+    .banner-arrow.next { position: absolute; right: 12px; bottom: 18px; border-radius:10px; }
+
+    .banner-dots { display:flex; gap:8px; pointer-events:auto; align-items:center; }
+    .banner-dot {
+      width:10px; height:10px; border-radius:50%;
+      background: rgba(255,255,255,0.42);
+      border:none; cursor:pointer; padding:0;
+      transition: background .22s ease, transform .12s ease;
+    }
+    .banner-dot.active { background: var(--clr-primary); transform: scale(1.08); }
+    .banner-dot:focus { outline: 2px solid rgba(229,9,20,0.24); outline-offset:3px; border-radius:50%; }
+
+    @media (max-width:1024px){
+      .banner-container {
+        width: 100%;
+        height: calc(100vw * 415 / 1024);
+        margin-top: var(--header-h-pc);
+      }
+    }
+
+    @media (max-width:767px){
+      header{ height:var(--header-h-mobile); padding:0 16px; }
+      .logo{ font-size:20px; }
+      .banner-container { height: var(--banner-height-mobile); margin-top: var(--header-h-mobile); }
+      .banner-caption { left:12px; bottom:12px; font-size:13px; padding:6px 10px; }
+      .banner-arrow { --size:40px; }
+      .banner-dot { width:12px; height:12px; }
+    }
+
+    main{ padding:20px; max-width:960px; margin:0 auto; }
+
+    /* maintenance content */
+    .maintenance{
+      min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc));
+      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+      gap:18px;
+    }
+    .maintenance h1{
+      font:900 30px/1.15 'Noto Sans KR';
+      color:#fff;
+      letter-spacing:-0.02em;
+      margin-bottom:4px;
+    }
+    .maintenance p{
+      max-width:680px;
+      color:var(--clr-text-muted);
+      font:400 16px/1.7 'Noto Sans KR';
+      margin:0;
+      opacity:0.95;
+    }
+
+    .status-wrap{
+      display:flex; align-items:center; gap:14px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:12px 16px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+    }
+
+    .status-indicator{
+      width:64px; height:64px; min-width:64px;
+      border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.12));
+      box-shadow: inset 0 -6px 18px rgba(0,0,0,0.25);
+    }
+
+    .status-indicator svg { width:40px; height:40px; display:block; stroke:#fff; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; fill:none; opacity:0.98; }
+    .status--maintenance .status-indicator { background: linear-gradient(180deg,#131313,#0b0b0b); box-shadow: 0 10px 28px rgba(229,9,20,0.08), inset 0 -6px 16px rgba(0,0,0,0.35); }
+    .status--maintenance .status-indicator .gear { stroke: rgba(229,9,20,0.98); }
+    .status--maintenance .status-indicator .wrench { stroke: #fff; stroke-opacity:0.98; }
+
+    .status-indicator .gear { transform-origin: center; animation:gear-spin 2.4s linear infinite; }
+    @keyframes gear-spin { from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
+
+    @media (prefers-reduced-motion: reduce) {
+      .status-indicator .gear { animation: none !important; }
     }
 
     .status-text {
-      text-align: left; display: flex; flex-direction: column; gap: 4px;
+      text-align:left;
+      display:flex; flex-direction:column; gap:2px;
     }
-    .status-text .label { font: 700 15px/1 'Noto Sans KR'; color: #fff; }
-    .status-text .meta { font: 400 13px/1.4 'Noto Sans KR'; color: var(--clr-text-muted); }
+    .status-text .label { font:700 14px/1 'Noto Sans KR'; color:#fff; }
+    .status-text .meta  { font:400 13px/1 'Noto Sans KR'; color:var(--clr-text-muted); }
 
-    /* 새로고침 버튼 */
-    .controls-row { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
-    .refresh-btn {
-      background: linear-gradient(180deg, rgba(229,9,20,0.16), rgba(229,9,20,0.08));
-      color: #fff; border: 1px solid rgba(229,9,20,0.45); border-radius: 12px;
-      padding: 12px 18px; font: 700 14px/1 'Noto Sans KR';
-      display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
-      transition: transform .12s ease, box-shadow .12s ease;
+    .controls-row{ display:flex; gap:12px; align-items:center; }
+
+    .refresh-btn{
+      --pad-x:18px;
+      background:linear-gradient(180deg, rgba(229,9,20,0.16), rgba(229,9,20,0.08));
+      color:#fff;
+      border:1px solid rgba(229,9,20,0.45);
+      border-radius:12px;
+      padding:12px var(--pad-x);
+      font:700 14px/1 'Noto Sans KR';
+      display:inline-flex; align-items:center; gap:10px;
+      cursor:pointer;
+      box-shadow: 0 8px 28px rgba(229,9,20,0.06);
+      transition: transform .12s cubic-bezier(.2,.9,.2,1), box-shadow .12s ease, filter .12s ease;
     }
-    .refresh-btn:active { transform: scale(.97); }
-    .refresh-btn.loading .refresh-icon::before {
-      content: ""; width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
-      border-radius: 50%; display: inline-block;
-      animation: spin .9s linear infinite;
+    .refresh-btn:active{ transform:translateY(1px) scale(.995); box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+    .refresh-btn .refresh-icon{ width:18px; height:18px; position:relative; display:inline-block; }
+    .refresh-btn .refresh-icon::before,
+    .refresh-btn .refresh-icon::after{
+      content:''; position:absolute; inset:0; border:2px solid rgba(255,255,255,0.18); border-top-color:#fff; border-radius:50%;
+      opacity:0.95;
     }
-    .hint { font: 400 13px/1 'Noto Sans KR'; color: var(--clr-text-muted); }
+    .refresh-btn.loading .refresh-icon::before{ animation:spin .9s linear infinite; }
+    .refresh-btn.loading .refresh-icon::after{ animation:spinReverse 1.6s linear infinite; opacity:.36; transform-origin:center; }
+
+    .hint { font:400 13px/1 'Noto Sans KR'; color:var(--clr-text-muted); opacity:0.95; }
+
+    @keyframes spin{ to{ transform:rotate(360deg); } }
+    @keyframes spinReverse{ to{ transform:rotate(-360deg); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .spinner, .dot, .refresh-icon.active::before, .refresh-icon.active::after { animation: none !important; }
+      header, .logo { transition: none !important; }
+      .banner-slide { transition: none !important; }
+      .banner-arrow, .banner-dot { transition: none !important; }
+      .refresh-btn.loading .refresh-icon::before,
+      .refresh-btn.loading .refresh-icon::after { animation: none !important; }
+    }
   </style>
 </head>
 <body>
-  <header><div class="logo">티비 스포츠</div></header>
+  <header>
+    <div class="logo">티비 스포캠</div>
+  </header>
+
+  <!-- Banner / Carousel -->
+  <div class="banner-container" aria-roledescription="carousel">
+    <div class="banner-inner">
+      <div class="banner-slide" id="bannerSlide" aria-live="off">
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="1">
+          <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png"
+               alt="서브롤 점검 이미지 1" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">대타출 3</figcaption>
+        </figure>
+
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="2">
+          <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg"
+               alt="서브롤 점검 이미지 2" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">알수없음</figcaption>
+        </figure>
+
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="3">
+          <img src="https://teppenthegame.com/wp-content/uploads/2020/06/20200701ATH_81Q0MXdo7IyBDZn-1024x415.png"
+               alt="추가 배너 이미지" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">앵글리</figcaption>
+        </figure>
+
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="4">
+          <img src="https://tse1.mm.bing.net/th/id/OIP._vi5yVPpAwcOEYZN7mMO2QHaEy?rs=1&pid=ImgDetMain&o=7&rm=3"
+               alt="추가 요약 배너" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">여백의교실</figcaption>
+        </figure>
+      </div>
+
+      <button class="banner-arrow prev" aria-label="이전 배너" type="button" id="bannerPrev">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="banner-controls" aria-hidden="false">
+        <div class="banner-dots" role="tablist" aria-label="배너 전환" id="bannerDots">
+          <!-- dots inserted by JS -->
+        </div>
+      </div>
+
+      <button class="banner-arrow next" aria-label="다음 배너" type="button" id="bannerNext">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
 
   <main>
-    <section class="maintenance">
-      <h1>서버 점검 안내</h1>
-      <p>안정적 서비스 제공을 위해 시스템 점검을 진행하고 있습니다.<br>빠른 복구를 위해 최선을 다하고 있습니다.</p>
+    <section class="maintenance" aria-labelledby="maintTitle" aria-describedby="maintDesc">
+      <h1 id="maintTitle">서브롤 점검 안내</h1>
 
-      <div class="status-wrap status--maintenance">
-        <div class="status-indicator"></div>
+      <p id="maintDesc">
+        안내: 일정 때문에 시스템 점검을 진행하고 있습니다.
+        점검 중 일부 기능은 제한될 수 있으며, 빠른 복구를 위해 최선을 다하고 있습니다.
+        불편을 드려 죄송합니다. 조금만 기다려 주세요.
+      </p>
+
+      <div class="status-wrap status--maintenance" role="status" aria-live="polite" aria-atomic="true">
+        <div class="status-indicator" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img" aria-hidden="true" focusable="false">
+            <g class="gear" transform="translate(24,24)">
+              <path class="gear" d="M14 0 L17 4 L22 6 L22 11 L26 14 L24 18 L24 24 L20 26 L20 31 L15 33 L12 36 L8 34 L3 36 L2 31 L-2 29 L-2 24 L-6 20 L-4 16 L-6 12 L-2 9 L-2 4 L3 2 L6 0 L10 2 z" transform="scale(.9) rotate(0) translate(-14,-14)"/>
+            </g>
+            <g class="wrench" transform="translate(6,6)">
+              <path class="wrench" d="M36 14c0-3-2.2-5.5-5-6.1-0.6 0.8-1.4 1.5-2.3 2.1-1.6 1.1-3.5 1.6-5.5 1.6-6 0-10.9-4.9-10.9-10.9 0-2 0.5-3.9 1.6-5.5 0.6-0.9 1.3-1.7 2.1-2.3C19.5 2.2 17 0 14 0 6.8 0 1 5.8 1 13c0 7.2 5.8 13 13 13 0 3 2.2 5.5 5 6.1 0.8-0.8 1.5-1.6 2.1-2.5 1.1-1.8 1.6-3.8 1.6-5.9 0-6 4.9-10.9 10.9-10.9 2.1 0 4.1 0.5 5.9 1.6 0.9 0.6 1.7 1.4 2.5 2.2z"/>
+              <path class="wrench" d="M29 19 l8 8" stroke-linecap="round" stroke-width="2.4"/>
+            </g>
+          </svg>
+        </div>
+
         <div class="status-text">
           <div class="label">점검 진행중</div>
           <div class="meta">다음 업데이트 후 정상화 예정 — 상태는 곧 갱신됩니다</div>
         </div>
       </div>
 
-      <div class="controls-row">
-        <button id="refreshBtn" class="refresh-btn" type="button">
-          <span class="refresh-icon"></span>
-          <span>새로고침</span>
-        </button>
-        <div class="hint" id="refreshHint">새로고침 시 최신 상태를 확인합니다</div>
+      <div class="controls-row" style="margin-top:6px;">
+        <div class="controls-row" role="group" aria-label="상태 조작">
+          <button id="refreshBtn" class="refresh-btn" type="button" aria-live="polite" aria-pressed="false">
+            <span class="refresh-icon" id="refreshIcon" aria-hidden="true"></span>
+            <span>새로고침</span>
+          </button>
+
+          <div class="hint" id="refreshHint" role="note">새로고침 시 최신 상태를 확인합니다</div>
+        </div>
       </div>
     </section>
   </main>
 
   <script>
-    const refreshBtn = document.getElementById('refreshBtn');
-    const refreshHint = document.getElementById('refreshHint');
-    refreshBtn.addEventListener('click', () => {
-      refreshBtn.classList.add('loading');
-      refreshHint.textContent = '새로고침 요청 중…';
-      setTimeout(() => { location.reload(); }, 1000);
-    });
+    // HEADER scroll hide/show
+    (function(){
+      const header = document.querySelector('header');
+      let lastScroll = window.scrollY || 0;
+      let ticking = false;
+      const DEADZONE = 6;
+      const MIN_DELTA_SHOW = -3;
+      let isHidden = false;
+      let lastToggle = 0;
+      const MIN_TOGGLE_GAP = 120;
+
+      function updateHeader(current, delta){
+        const now = performance.now();
+        if (delta > DEADZONE && current > 60 && !isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
+          header.classList.add('hidden');
+          header.classList.remove('scrolled');
+          isHidden = true; lastToggle = now; return;
+        }
+        if (delta < MIN_DELTA_SHOW && isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
+          header.classList.remove('hidden');
+          if (current > 24) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+          isHidden = false; lastToggle = now; return;
+        }
+        if (!isHidden){
+          if (current > 24) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+        }
+      }
+
+      function onScroll(){
+        if (!ticking){
+          window.requestAnimationFrame(() => {
+            const current = window.scrollY || 0;
+            const delta = current - lastScroll;
+            if (Math.abs(delta) > DEADZONE || (delta < 0 && Math.abs(delta) > 2)){
+              updateHeader(current, delta);
+              lastScroll = current;
+            } else {
+              if (current <= 8 && isHidden){
+                header.classList.remove('hidden');
+                header.classList.remove('scrolled');
+                isHidden = false;
+              }
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      if ((window.scrollY || 0) > 24) header.classList.add('scrolled');
+    })();
+
+    // Refresh button behavior
+    (function(){
+      const refreshBtn = document.getElementById('refreshBtn');
+      const refreshIcon = document.getElementById('refreshIcon');
+      const refreshHint = document.getElementById('refreshHint');
+      if (!refreshBtn) return;
+
+      function setButtonLoading(loading){
+        if (loading){
+          refreshBtn.classList.add('loading');
+          refreshBtn.setAttribute('aria-pressed','true');
+          refreshHint.textContent = '새로고침 요청 중…';
+        } else {
+          refreshBtn.classList.remove('loading');
+          refreshBtn.setAttribute('aria-pressed','false');
+          refreshHint.textContent = '새로고침 시 최신 상태를 확인합니다';
+        }
+      }
+
+      refreshBtn.addEventListener('click', () => {
+        setButtonLoading(true);
+        const DELAY = 700;
+        setTimeout(() => {
+          try { location.reload(true); } catch (e) { location.reload(); }
+        }, DELAY);
+      });
+
+      refreshBtn.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          refreshBtn.click();
+        }
+      });
+    })();
+
+    // Carousel (responsive, keyboard, touch, dots)
+    (function(){
+      const slide = document.getElementById('bannerSlide');
+      const prevBtn = document.getElementById('bannerPrev');
+      const nextBtn = document.getElementById('bannerNext');
+      const dotsContainer = document.getElementById('bannerDots');
+      if (!slide) return;
+
+      const items = Array.from(slide.querySelectorAll('.banner-item'));
+      const total = items.length || 1;
+      let current = 0;
+      let interval = null;
+      const AUTO_MS = 5000;
+      const transitionTime = 700;
+
+      function applyLayout(){
+        slide.style.width = `${100 * total}%`;
+        items.forEach(item => { item.style.width = `${100 / total}%`; });
+      }
+
+      function createDots(){
+        dotsContainer.innerHTML = '';
+        for (let i=0;i<total;i++){
+          const btn = document.createElement('button');
+          btn.className = 'banner-dot' + (i===0 ? ' active' : '');
+          btn.type = 'button';
+          btn.setAttribute('data-index', String(i));
+          btn.setAttribute('role','tab');
+          btn.setAttribute('aria-selected', i===0 ? 'true' : 'false');
+          btn.setAttribute('aria-controls','bannerSlide');
+          btn.addEventListener('click', () => { goTo(i); stopAuto(); startAuto(); });
+          btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
+          dotsContainer.appendChild(btn);
+        }
+      }
+
+      function updateDots(){
+        const dots = Array.from(dotsContainer.querySelectorAll('.banner-dot'));
+        dots.forEach((d,i) => {
+          d.classList.toggle('active', i === current);
+          d.setAttribute('aria-selected', i === current ? 'true' : 'false');
+        });
+      }
+
+      function goTo(idx, instant = false){
+        idx = (idx + total) % total;
+        current = idx;
+        slide.style.transition = instant ? 'none' : `transform ${transitionTime}ms cubic-bezier(.22,.9,.35,1)`;
+        const percent = (idx * 100) / total;
+        slide.style.transform = `translateX(-${percent}%)`;
+        updateDots();
+      }
+
+      function next(){ goTo(current + 1); }
+      function prev(){ goTo(current - 1); }
+
+      function startAuto(){ stopAuto(); interval = setInterval(next, AUTO_MS); }
+      function stopAuto(){ if (interval){ clearInterval(interval); interval = null; } }
+
+      // touch
+      let startX = 0, deltaX = 0, touching = false;
+      slide.addEventListener('touchstart', (e) => {
+        stopAuto();
+        touching = true;
+        startX = e.touches[0].clientX;
+        slide.style.transition = 'none';
+      }, { passive: true });
+
+      slide.addEventListener('touchmove', (e) => {
+        if (!touching) return;
+        deltaX = e.touches[0].clientX - startX;
+        const px = (deltaX / slide.clientWidth) * 100;
+        slide.style.transform = `translateX(calc(-${(current * 100) / total}% + ${px}%))`;
+      }, { passive: true });
+
+      slide.addEventListener('touchend', () => {
+        touching = false;
+        if (Math.abs(deltaX) > 40) {
+          if (deltaX < 0) next(); else prev();
+        } else {
+          goTo(current);
+        }
+        deltaX = 0;
+        startAuto();
+      });
+
+      // keyboard
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { prev(); stopAuto(); startAuto(); }
+        if (e.key === 'ArrowRight') { next(); stopAuto(); startAuto(); }
+      });
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => { prev(); stopAuto(); startAuto(); });
+        prevBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prevBtn.click(); } });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => { next(); stopAuto(); startAuto(); });
+        nextBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nextBtn.click(); } });
+      }
+
+      // init
+      applyLayout();
+      createDots();
+      goTo(0, true);
+      startAuto();
+      document.addEventListener('visibilitychange', () => { if (document.hidden) stopAuto(); else startAuto(); });
+
+      window.addEventListener('resize', () => { applyLayout(); goTo(current, true); });
+    })();
   </script>
 </body>
 </html>
