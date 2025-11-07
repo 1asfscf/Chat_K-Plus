@@ -38,12 +38,13 @@
     .logo{ font-weight:900; font-size:24px; color:var(--clr-primary); letter-spacing:2px; user-select:none; transition:opacity 220ms ease, transform 220ms ease; }
     header.hidden .logo{ transform: translateY(-6px) scale(.985); opacity:.96; }
 
-    /* 배너 (기존 유지 + 화살표/컨트롤 스타일 확장) */
+    /* 배너: 고정 크기 1024x415 유지, 중앙 정렬, overflow 유지 */
     .banner-container {
       position: relative;
-      margin-top: var(--header-h-pc);
-      width: 100%;
-      height: var(--banner-height-pc);
+      margin: calc(var(--header-h-pc) + 16px) auto 0;
+      width: 1024px;
+      height: 415px;
+      max-width: 100%;
       overflow: hidden;
       background: #000;
       filter: grayscale(12%) contrast(95%);
@@ -101,7 +102,6 @@
       pointer-events:none;
     }
 
-    /* 화살표 버튼: 터치 타깃 확보(44-48px), SVG 아이콘 사용, focus 스타일, 키보드 접근성 */
     .banner-arrow {
       --size:48px;
       width:var(--size); height:var(--size);
@@ -118,11 +118,9 @@
     .banner-arrow:active { transform: translateY(-1px) scale(.98); }
     .banner-arrow:focus { outline: 3px solid rgba(229,9,20,0.22); outline-offset: 3px; }
 
-    /* 위치별 세부: prev / next */
     .banner-arrow.prev { position: absolute; left: 12px; bottom: 18px; border-radius:10px; }
     .banner-arrow.next { position: absolute; right: 12px; bottom: 18px; border-radius:10px; }
 
-    /* 도트 그룹: 중앙, pointer-events 허용 */
     .banner-dots { display:flex; gap:8px; pointer-events:auto; align-items:center; }
     .banner-dot {
       width:10px; height:10px; border-radius:50%;
@@ -133,7 +131,15 @@
     .banner-dot.active { background: var(--clr-primary); transform: scale(1.08); }
     .banner-dot:focus { outline: 2px solid rgba(229,9,20,0.24); outline-offset:3px; border-radius:50%; }
 
-    /* 모바일 대응 */
+    /* 모바일 대응: 화면이 좁을 땐 폭을 100%로 하고 높이는 비율로 축소 */
+    @media (max-width:1024px){
+      .banner-container {
+        width: 100%;
+        height: calc(100vw * 415 / 1024); /* 유지비율로 축소 */
+        margin-top: var(--header-h-pc);
+      }
+    }
+
     @media (max-width:767px){
       header{ height:var(--header-h-mobile); padding:0 16px; }
       .logo{ font-size:20px; }
@@ -143,7 +149,6 @@
       .banner-dot { width:12px; height:12px; }
     }
 
-    /* 메인/유지된 스타일들 */
     main{ padding:20px; max-width:960px; margin:0 auto; }
     .maintenance{
       min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc));
@@ -182,26 +187,24 @@
     <div class="logo">티비 스포츠</div>
   </header>
 
-  <!-- 개선된 배너 -->
+  <!-- 개선된 배너 (고정 1024x415, 반응형 축소 포함) -->
   <div class="banner-container" aria-roledescription="carousel">
     <div class="banner-inner">
       <div class="banner-slide" id="bannerSlide" aria-live="off">
-   <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="1 / 2">
-  <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png"
-       alt="서버 점검 이미지 1" loading="lazy" decoding="async" />
-  <figcaption class="banner-caption">대탈출 시즌 3 하이라이트</figcaption>
-</figure>
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="1 / 2">
+          <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png"
+               alt="서버 점검 이미지 1" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">티빙 컨텐츠 다시보기</figcaption>
+        </figure>
 
-<figure class="banner-item" role="group" aria-roledescription="slide" aria-label="2 / 2">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY5421QtEroO2bZgC-WMvpUZOs7O6A_sw_Gw&s"
-       alt="서버 점검 이미지 2" loading="lazy" decoding="async" />
-  <figcaption class="banner-caption">티비 스포츠 추천 콘텐츠</figcaption>
-</figure>
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="2 / 2">
+          <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg"
+               alt="서버 점검 이미지 2" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">대탈출 3</figcaption>
+        </figure>
       </div>
 
-      <!-- 좌우 화살표 (전면 개편된 UI) -->
       <button class="banner-arrow prev" aria-label="이전 배너" type="button" id="bannerPrev">
-        <!-- left chevron SVG -->
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
@@ -215,7 +218,6 @@
       </div>
 
       <button class="banner-arrow next" aria-label="다음 배너" type="button" id="bannerNext">
-        <!-- right chevron SVG -->
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
@@ -248,17 +250,15 @@
       let lastScroll = window.scrollY || 0;
       let ticking = false;
 
-      // 민감도를 높여 '조금만 스크롤돼도' 반응하도록 조정
-      const DEADZONE = 6;          // 움직임 인식 최소값 (픽셀)
-      const MIN_DELTA_SHOW = -3;   // 위로 스크롤할 때 복귀 민감도
+      const DEADZONE = 6;
+      const MIN_DELTA_SHOW = -3;
       let isHidden = false;
       let lastToggle = 0;
-      const MIN_TOGGLE_GAP = 120;  // 토글 쿨다운(ms) — 너무 잦은 토글 방지
+      const MIN_TOGGLE_GAP = 120;
 
       function updateHeader(current, delta){
         const now = performance.now();
 
-        // 아래로 빠르게 스크롤하면 숨김
         if (delta > DEADZONE && current > 60 && !isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
           header.classList.add('hidden');
           header.classList.remove('scrolled');
@@ -267,7 +267,6 @@
           return;
         }
 
-        // 위로 조금이라도 스크롤하면 즉시 보이게
         if (delta < MIN_DELTA_SHOW && isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
           header.classList.remove('hidden');
           if (current > 24) header.classList.add('scrolled'); else header.classList.remove('scrolled');
@@ -276,7 +275,6 @@
           return;
         }
 
-        // 숨겨져 있지 않다면 스크롤 위치에 따라 scrolled 클래스 토글
         if (!isHidden){
           if (current > 24) header.classList.add('scrolled'); else header.classList.remove('scrolled');
         }
@@ -288,18 +286,17 @@
             const current = window.scrollY || 0;
             const delta = current - lastScroll;
 
-            // 더 작은 움직임에도 반응하도록 조건 완화
             if (Math.abs(delta) > DEADZONE || (delta < 0 && Math.abs(delta) > 2)){
               updateHeader(current, delta);
               lastScroll = current;
             } else {
-              // 페이지 최상단에 가깝다면 확실히 보이게
               if (current <= 8 && isHidden){
                 header.classList.remove('hidden');
                 header.classList.remove('scrolled');
                 isHidden = false;
               }
             }
+
             ticking = false;
           });
           ticking = true;
@@ -307,7 +304,6 @@
       }
 
       window.addEventListener('scroll', onScroll, { passive: true });
-      // 초기 상태 결정 (스크롤이 조금이라도 있으면 scrolled 부여)
       if ((window.scrollY || 0) > 24) header.classList.add('scrolled');
     })();
 
@@ -332,7 +328,7 @@
 
       let current = 0;
       const total = dots.length;
-      const SLIDE_WIDTH_PERCENT = 50; // 2슬라이드 기준
+      const SLIDE_WIDTH_PERCENT = 50;
       let interval = null;
       const AUTO_MS = 5000;
       const transitionTime = 700;
@@ -366,10 +362,15 @@
         });
       });
 
-      if (prevBtn) { prevBtn.addEventListener('click', () => { prev(); stopAuto(); startAuto(); }); prevBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prevBtn.click(); } }); }
-      if (nextBtn) { nextBtn.addEventListener('click', () => { next(); stopAuto(); startAuto(); }); nextBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nextBtn.click(); } }); }
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => { prev(); stopAuto(); startAuto(); });
+        prevBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prevBtn.click(); } });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => { next(); stopAuto(); startAuto(); });
+        nextBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nextBtn.click(); } });
+      }
 
-      // 터치 스와이프 지원
       let startX = 0, deltaX = 0, touching = false;
       slide.addEventListener('touchstart', (e) => {
         stopAuto();
@@ -396,13 +397,11 @@
         startAuto();
       });
 
-      // 키보드 좌우 화살표로 슬라이드 이동
       window.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') { prev(); stopAuto(); startAuto(); }
         if (e.key === 'ArrowRight') { next(); stopAuto(); startAuto(); }
       });
 
-      // 초기화 및 가시성 제어
       goTo(0, true);
       startAuto();
       document.addEventListener('visibilitychange', () => {
@@ -412,10 +411,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
