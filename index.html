@@ -151,7 +151,7 @@
     main{ padding:20px; max-width:960px; margin:0 auto; }
 
     /* -------------------------------
-       메인: 서버 점검 영역 (현대식 개선)
+       메인: 서버 점검 영역
        ------------------------------- */
     .maintenance{
       min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc));
@@ -159,7 +159,6 @@
       gap:18px;
     }
 
-    /* 제목 스타일: 명확하고 시각적 강조 */
     .maintenance h1{
       font:900 30px/1.15 'Noto Sans KR';
       color:#fff;
@@ -167,7 +166,6 @@
       margin-bottom:4px;
     }
 
-    /* 설명: 가독성 좋은 폭과 부드러운 컬러 */
     .maintenance p{
       max-width:680px;
       color:var(--clr-text-muted);
@@ -176,7 +174,7 @@
       opacity:0.95;
     }
 
-    /* 상태 배지: 아이콘 + 텍스트, 애니 포함 */
+    /* 상태 배지 */
     .status-wrap{
       display:flex; align-items:center; gap:14px;
       background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
@@ -194,13 +192,11 @@
       box-shadow: inset 0 -6px 18px rgba(0,0,0,0.25);
     }
 
-    /* 개선된 아이콘 스타일 (기어 회전 + 렌치 겹침) */
     .status-indicator svg { width:40px; height:40px; display:block; stroke:#fff; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; fill:none; opacity:0.98; }
     .status--maintenance .status-indicator { background: linear-gradient(180deg,#131313,#0b0b0b); box-shadow: 0 10px 28px rgba(229,9,20,0.08), inset 0 -6px 16px rgba(0,0,0,0.35); }
     .status--maintenance .status-indicator .gear { stroke: rgba(229,9,20,0.98); }
     .status--maintenance .status-indicator .wrench { stroke: #fff; stroke-opacity:0.98; }
 
-    /* 기어 회전 애니메이션 (접근성 고려) */
     .status-indicator .gear { transform-origin: center; animation:gear-spin 2.4s linear infinite; }
     @keyframes gear-spin { from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
 
@@ -215,7 +211,7 @@
     .status-text .label { font:700 14px/1 'Noto Sans KR'; color:#fff; }
     .status-text .meta  { font:400 13px/1 'Noto Sans KR'; color:var(--clr-text-muted); }
 
-    /* 새로고침 버튼: 현대식 토글 + 액션 피드백 */
+    /* 새로고침 버튼 */
     .controls-row{ display:flex; gap:12px; align-items:center; }
 
     .refresh-btn{
@@ -247,12 +243,12 @@
     @keyframes spinReverse{ to{ transform:rotate(-360deg); } }
 
     @media (prefers-reduced-motion: reduce) {
-      .spinner, .dot, .refresh-icon.active::before, .refresh-icon.active::after { animation: none !important; }
-      header, .logo { transition: none !important; }
-      .banner-slide { transition: none !important; }
-      .banner-arrow, .banner-dot { transition: none !important; }
+      .spinner, .dot, .refresh-icon.active::before, .refresh-icon.active::after { animation: none !重要; }
+      header, .logo { transition: none !重要; }
+      .banner-slide { transition: none !重要; }
+      .banner-arrow, .banner-dot { transition: none !重要; }
       .refresh-btn.loading .refresh-icon::before,
-      .refresh-btn.loading .refresh-icon::after { animation: none !important; }
+      .refresh-btn.loading .refresh-icon::after { animation: none !重要; }
     }
   </style>
 </head>
@@ -261,32 +257,30 @@
     <div class="logo">티비 스포츠</div>
   </header>
 
-  <!-- 개선된 배너 (4장: 기존 3장 + 요청하신 이미지 1장 추가) -->
   <div class="banner-container" aria-roledescription="carousel">
     <div class="banner-inner">
       <div class="banner-slide" id="bannerSlide" aria-live="off">
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="1">
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="1 / 4">
           <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png"
-               alt="서버 점검 이미지 1" loading="lazy" decoding="async" />
+               alt="서버 점검 관련 이미지: 대탈출 3" loading="lazy" decoding="async" />
           <figcaption class="banner-caption">대탈출 3</figcaption>
         </figure>
 
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="2">
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="2 / 4">
           <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg"
-               alt="서버 점검 이미지 2" loading="lazy" decoding="async" />
+               alt="서버 점검 관련 이미지: 알수없음" loading="lazy" decoding="async" />
           <figcaption class="banner-caption">알수없음</figcaption>
         </figure>
 
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="3">
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="3 / 4">
           <img src="https://teppenthegame.com/wp-content/uploads/2020/06/20200701ATH_81Q0MXdo7IyBDZn-1024x415.png"
-               alt="추가 배너 이미지" loading="lazy" decoding="async" />
-          <figcaption class="banner-caption">앵그리 </figcaption>
+               alt="추가 배너 이미지: 앵그리" loading="lazy" decoding="async" />
+          <figcaption class="banner-caption">앵그리</figcaption>
         </figure>
 
-        <!-- 요청하신 배너 이미지 추가 (네 번째) -->
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="4">
+        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="4 / 4">
           <img src="https://tse1.mm.bing.net/th/id/OIP._vi5yVPpAwcOEYZN7mMO2QHaEy?rs=1&pid=ImgDetMain&o=7&rm=3"
-               alt="추가 요청 배너" loading="lazy" decoding="async" />
+               alt="추가 요청 배너: 여왕의 교실" loading="lazy" decoding="async" />
           <figcaption class="banner-caption">여왕의교실</figcaption>
         </figure>
       </div>
@@ -323,13 +317,10 @@
 
       <div class="status-wrap status--maintenance" role="status" aria-live="polite" aria-atomic="true">
         <div class="status-indicator" aria-hidden="true">
-          <!-- 개선된 아이콘: 기어(회전) + 렌치 오버레이 -->
           <svg viewBox="0 0 48 48" role="img" aria-hidden="true" focusable="false">
-            <!-- 기어 (빨간) -->
             <g class="gear" transform="translate(24,24)">
               <path class="gear" d="M14 0 L17 4 L22 6 L22 11 L26 14 L24 18 L24 24 L20 26 L20 31 L15 33 L12 36 L8 34 L3 36 L2 31 L-2 29 L-2 24 L-6 20 L-4 16 L-6 12 L-2 9 L-2 4 L3 2 L6 0 L10 2 z" transform="scale(.9) rotate(0) translate(-14,-14)"/>
             </g>
-            <!-- 렌치 (흰색) -->
             <g class="wrench" transform="translate(6,6)">
               <path class="wrench" d="M36 14c0-3-2.2-5.5-5-6.1-0.6 0.8-1.4 1.5-2.3 2.1-1.6 1.1-3.5 1.6-5.5 1.6-6 0-10.9-4.9-10.9-10.9 0-2 0.5-3.9 1.6-5.5 0.6-0.9 1.3-1.7 2.1-2.3C19.5 2.2 17 0 14 0 6.8 0 1 5.8 1 13c0 7.2 5.8 13 13 13 0 3 2.2 5.5 5 6.1 0.8-0.8 1.5-1.6 2.1-2.5 1.1-1.8 1.6-3.8 1.6-5.9 0-6 4.9-10.9 10.9-10.9 2.1 0 4.1 0.5 5.9 1.6 0.9 0.6 1.7 1.4 2.5 2.2z" />
               <path class="wrench" d="M29 19 l8 8" stroke-linecap="round" stroke-width="2.4"/>
@@ -357,7 +348,7 @@
   </main>
 
   <script>
-    // HEADER 스크롤 동작 (기존 로직 유지)
+    // HEADER 스크롤 동작
     (function(){
       const header = document.querySelector('header');
       let lastScroll = window.scrollY || 0;
@@ -410,14 +401,12 @@
       if ((window.scrollY || 0) > 24) header.classList.add('scrolled');
     })();
 
-    // 새로고침 버튼: 시각적 피드백(로딩) 후 페이지 새로고침
+    // 새로고침 버튼
     (function(){
       const refreshBtn = document.getElementById('refreshBtn');
-      const refreshIcon = document.getElementById('refreshIcon');
       const refreshHint = document.getElementById('refreshHint');
       if (!refreshBtn) return;
 
-      // 접근성: 버튼 상태 업데이트 함수
       function setButtonLoading(loading){
         if (loading){
           refreshBtn.classList.add('loading');
@@ -431,21 +420,13 @@
       }
 
       refreshBtn.addEventListener('click', () => {
-        // 시각적 로딩 표시
         setButtonLoading(true);
-
-        // 실제 새로고침 전 잠깐 딜레이를 줘서 피드백이 보이게 함
         const DELAY = 700;
         setTimeout(() => {
-          try {
-            location.reload(true);
-          } catch (e) {
-            location.reload();
-          }
+          try { location.reload(true); } catch (e) { location.reload(); }
         }, DELAY);
       });
 
-      // 버튼에 키보드 접근성 보강 (Enter / Space)
       refreshBtn.addEventListener('keydown', (e) => {
         if (e.key === ' ' || e.key === 'Enter') {
           e.preventDefault();
@@ -454,7 +435,7 @@
       });
     })();
 
-    // 배너 슬라이드 제어: 동적으로 슬라이드 너비 계산, 도트 자동 생성, 접근성 지원
+    // 배너 슬라이드
     (function(){
       const slide = document.getElementById('bannerSlide');
       const prevBtn = document.getElementById('bannerPrev');
@@ -469,7 +450,6 @@
       const AUTO_MS = 5000;
       const transitionTime = 700;
 
-      // 레이아웃: 슬라이드 전체 너비를 항목 수에 따라 설정하고 각 항목 폭을 맞춤
       function applyLayout(){
         slide.style.width = `${100 * total}%`;
         items.forEach(item => {
@@ -477,7 +457,6 @@
         });
       }
 
-      // 도트 생성
       function createDots(){
         dotsContainer.innerHTML = '';
         for (let i=0;i<total;i++){
