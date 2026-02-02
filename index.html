@@ -208,11 +208,145 @@
     }
     .hud-label::before { content: ''; width: 8px; height: 8px; background: var(--hud-border); display: block; transform: rotate(45deg); }
 
-    /* Top Status Bar (Spans full width visually inside grid) */
-    .hud-header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; }
-    .sys-status { font-family: 'Teko', sans-serif; font-size: 32px; color: var(--hud-alert); text-shadow: 0 0 10px var(--hud-alert); display: flex; align-items: center; gap: 12px; }
-    .blink { animation: hud-blink 1s infinite; }
-    @keyframes hud-blink { 50% { opacity: 0.3; } }
+    /* --- REDESIGNED INFRASTRUCTURE MONITORING HEADER --- */
+    .hud-header {
+      grid-column: 1 / -1; 
+      display: grid; 
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 20px 30px;
+      background: linear-gradient(90deg, 
+        rgba(0, 240, 255, 0.05) 0%, 
+        rgba(0, 240, 255, 0.1) 50%, 
+        rgba(0, 240, 255, 0.05) 100%);
+      border: 1px solid var(--hud-border);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hud-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--hud-border), transparent);
+      animation: scanline 3s linear infinite;
+    }
+
+    @keyframes scanline {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .cluster-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cluster-main {
+      font-family: 'Teko', sans-serif;
+      font-size: 24px;
+      color: var(--hud-text-main);
+      letter-spacing: 3px;
+      text-shadow: 0 0 10px var(--hud-border);
+    }
+
+    .cluster-details {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px;
+      color: var(--hud-text-dim);
+      display: flex;
+      gap: 20px;
+    }
+
+    .cluster-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--hud-ok);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .maintenance-badge {
+      background: var(--hud-alert);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: 'Teko', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(255, 0, 60, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 20px rgba(255, 0, 60, 0.3); }
+      to { box-shadow: 0 0 30px rgba(255, 0, 60, 0.6); }
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 12px;
+      color: var(--hud-text-dim);
+    }
+
+    .status-light {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--hud-alert);
+      animation: blink 1s infinite;
+      box-shadow: 0 0 10px var(--hud-alert);
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
+    }
+
+    .time-display {
+      text-align: right;
+    }
+
+    .timestamp {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: var(--hud-text-main);
+      margin-bottom: 4px;
+    }
+
+    .uptime {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px;
+      color: var(--hud-text-dim);
+    }
 
     /* Left Column: Vertical Metrics */
     .col-metrics { display: flex; flex-direction: column; gap: 24px; }
@@ -269,7 +403,7 @@
       .hud-container { grid-template-columns: 1fr; grid-template-rows: auto; }
       .col-metrics, .col-nodes { flex-direction: row; flex-wrap: wrap; }
       .tech-box { width: 100%; }
-      .hud-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .hud-header { grid-template-columns: 1fr; gap: 15px; text-align: center; }
     }
     @media (max-width: 768px) {
       .nav-desktop { display: none; }
@@ -277,6 +411,9 @@
       .col-metrics { flex-direction: column; }
       .col-nodes { flex-direction: column; }
       .v-metric { justify-content: flex-start; gap: 20px; }
+      .hud-header { padding: 15px; }
+      .cluster-main { font-size: 20px; }
+      .maintenance-badge { font-size: 16px; padding: 6px 12px; }
     }
 
     /* FOOTER (Same as before) */
@@ -430,14 +567,36 @@
   <section class="dashboard-section">
     <div class="container hud-container">
       
-      <!-- Header -->
-      <div class="tech-box hud-header">
-        <div>
-          <div class="hud-label" style="border:none; margin:0;">INFRASTRUCTURE MONITORING</div>
-          <div style="font-family:'Roboto Mono'; font-size:12px; color:var(--hud-text-dim); margin-top:4px;">CLUSTER: TVSP-AWS-PRD-01 // REGION: AP-NORTHEAST-2</div>
+      <!-- REDESIGNED INFRASTRUCTURE MONITORING HEADER -->
+      <div class="hud-header">
+        <div class="cluster-info">
+          <div class="cluster-main">INFRASTRUCTURE MONITORING</div>
+          <div class="cluster-details">
+            <div class="cluster-detail-item">
+              <div class="detail-dot"></div>
+              <span>CLUSTER: TVSP-AWS-PRD-01</span>
+            </div>
+            <div class="cluster-detail-item">
+              <div class="detail-dot"></div>
+              <span>REGION: AP-NORTHEAST-2</span>
+            </div>
+          </div>
         </div>
-        <div class="sys-status">
-          <span class="blink">■</span> MAINTENANCE MODE
+
+        <div class="status-center">
+          <div class="maintenance-badge">
+            <div class="status-light"></div>
+            MAINTENANCE MODE
+          </div>
+          <div class="status-indicator">
+            <span>SYSTEM STATUS:</span>
+            <span style="color: var(--hud-alert);">CRITICAL</span>
+          </div>
+        </div>
+
+        <div class="time-display">
+          <div class="timestamp" id="currentTime">--:--:-- UTC</div>
+          <div class="uptime">UPTIME: 87.3%</div>
         </div>
       </div>
 
@@ -579,7 +738,16 @@
       lastScroll = currentScroll;
     });
 
-    // 3. HUD Logic
+    // 3. Real-time Clock
+    function updateClock() {
+      const now = new Date();
+      const timeString = now.toISOString().substr(11, 8) + ' UTC';
+      document.getElementById('currentTime').textContent = timeString;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 4. HUD Logic
     const logData = [
       "Initiating maintenance protocol v2.4...",
       "Detaching load balancer [LB-PRD]...",
