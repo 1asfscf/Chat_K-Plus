@@ -2,544 +2,636 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>티비 스포캠 — 서버점검중</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>티비 스포캠 — Sports Reimagined</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --clr-bg:#0a0a0a;
-      --clr-primary:#e50914;
-      --clr-text:#eee;
-      --clr-text-muted:#aaa;
-      --header-h-pc:56px;
-      --header-h-mobile:64px;
-      --banner-height-pc:260px;
-      --banner-height-mobile:180px;
+    :root {
+      /* Design Tokens */
+      --bg-deep: #050505;
+      --bg-surface: #121212;
+      --bg-surface-trans: rgba(18, 18, 18, 0.85);
+      --primary: #E50914; /* Signature Red */
+      --primary-glow: rgba(229, 9, 20, 0.4);
+      --accent: #3b82f6; /* Modern Blue accent */
+      --text-main: #ffffff;
+      --text-muted: #a1a1aa;
+      --border: rgba(255, 255, 255, 0.08);
+      --header-h: 70px;
+      --radius-md: 12px;
+      --radius-lg: 24px;
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{background:var(--clr-bg);color:var(--clr-text);font-family:'Noto Sans KR',sans-serif;}
+
+    /* Reset & Base */
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: 'Noto Sans KR', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    /* LOADER */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg-deep);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    
+    .spinner-box {
+      position: relative; width: 80px; height: 80px;
+      margin-bottom: 24px;
+    }
+    .spinner-circle {
+      position: absolute; inset: 0; border-radius: 50%;
+      border: 4px solid transparent; border-top-color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+    .spinner-circle::before {
+      content: ''; position: absolute; inset: 8px; border-radius: 50%;
+      border: 4px solid transparent; border-top-color: var(--text-main);
+      animation: spin 2s linear infinite reverse;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .loader-text { font-weight: 700; letter-spacing: 2px; font-size: 14px; opacity: 0; animation: fadeIn 0.5s ease 0.3s forwards; }
+    @keyframes fadeIn { to { opacity: 1; } }
 
     /* HEADER */
-    header{
-      position:fixed;top:0;left:0;right:0;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 24px;height:var(--header-h-pc);
-      background:rgba(0,0,0,0.85);border-bottom:1px solid rgba(255,255,255,0.1);
-      z-index:1000;
-      transition:
-        transform 280ms cubic-bezier(.22,.9,.35,1),
-        background 220ms ease,
-        box-shadow 220ms ease;
-      will-change:transform;
+    header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      z-index: 1000;
+      background: transparent;
+      transition: var(--transition-smooth);
+      border-bottom: 1px solid transparent;
     }
-    header.hidden{ transform:translateY(-110%); pointer-events:none; }
-    header.scrolled{ background:rgba(0,0,0,0.96); box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+    header.scrolled {
+      background: var(--bg-surface-trans);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transform: translateY(0);
+    }
+    header.hidden { transform: translateY(-100%); }
 
-    .logo{ font-weight:900; font-size:24px; color:var(--clr-primary); letter-spacing:2px; user-select:none; transition:opacity 220ms ease, transform 220ms ease; }
-    header.hidden .logo{ transform: translateY(-6px) scale(.985); opacity:.96; }
+    .logo {
+      font-weight: 900; font-size: 24px; color: var(--primary);
+      letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;
+    }
+    .logo span { color: #fff; font-weight: 300; }
 
-    /* banner */
-    .banner-container {
+    nav { display: flex; gap: 32px; }
+    nav a {
+      text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 15px;
+      transition: color 0.3s; position: relative;
+    }
+    nav a:hover, nav a.active { color: #fff; }
+    nav a.active::after {
+      content: ''; position: absolute; bottom: -24px; left: 0; width: 100%; height: 3px;
+      background: var(--primary); box-shadow: 0 -2px 10px var(--primary);
+    }
+
+    .btn-header {
+      background: #fff; color: #000; padding: 8px 20px; border-radius: 20px;
+      font-weight: 700; font-size: 14px; border: none; cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn-header:hover { background: #e0e0e0; transform: scale(1.05); }
+
+    /* HERO SECTION */
+    .hero {
       position: relative;
-      margin: calc(var(--header-h-pc) + 16px) auto 0;
-      width: 1024px;
-      height: 415px;
-      max-width: 100%;
+      height: 100vh;
+      display: flex; align-items: center; justify-content: center;
       overflow: hidden;
+      margin-top: calc(var(--header-h) * -1); /* Pull behind header */
+      padding-top: var(--header-h);
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      background: url('https://picsum.photos/seed/sports/1920/1080') no-repeat center/cover;
+      filter: brightness(0.4);
+      transform: scale(1.1);
+      animation: slowZoom 20s infinite alternate;
+      z-index: 1;
+    }
+    @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+    .hero-content {
+      position: relative; z-index: 2; text-align: center;
+      max-width: 800px; padding: 0 20px;
+    }
+
+    .hero-badge {
+      display: inline-block; padding: 6px 16px; background: rgba(229, 9, 20, 0.2);
+      border: 1px solid rgba(229, 9, 20, 0.5); color: var(--primary);
+      border-radius: 30px; font-size: 13px; font-weight: 700; margin-bottom: 24px;
+      text-transform: uppercase; letter-spacing: 1px;
+      box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px); font-weight: 900; line-height: 1.1;
+      margin-bottom: 24px; text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+      background: linear-gradient(to right, #fff, #b4b4b4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px; color: #d1d1d1; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;
+    }
+
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--primary); color: #fff; padding: 16px 40px; border-radius: 8px;
+      font-weight: 700; font-size: 18px; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 10px; transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(229, 9, 20, 0.5); }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1); color: #fff; padding: 16px 40px; border-radius: 8px;
+      font-weight: 600; font-size: 18px; border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer; backdrop-filter: blur(5px); transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+
+    /* MAIN CONTENT */
+    main { padding: 80px 5%; max-width: 1600px; margin: 0 auto; position: relative; z-index: 5; }
+
+    .section-header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: end; }
+    .section-title { font-size: 28px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+    .section-title::before { content: ''; width: 6px; height: 28px; background: var(--primary); border-radius: 2px; display: block; }
+    .section-link { color: var(--text-muted); font-size: 14px; text-decoration: none; transition: color 0.2s; cursor: pointer;}
+    .section-link:hover { color: #fff; }
+
+    /* CAROUSEL 2.0 */
+    .carousel-container {
+      position: relative; width: 100%; overflow: hidden;
+      border-radius: var(--radius-md); aspect-ratio: 16/6.5; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    
+    .carousel-track {
+      display: flex; height: 100%; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .carousel-slide {
+      min-width: 100%; height: 100%; position: relative;
+    }
+    .carousel-slide img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .slide-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+      display: flex; flex-direction: column; justify-content: center; padding: 0 60px;
+    }
+    .slide-title { font-size: 32px; font-weight: 700; margin-bottom: 12px; transform: translateY(20px); opacity: 0; transition: 0.5s 0.2s; }
+    .slide-desc { color: #ddd; max-width: 500px; font-size: 15px; transform: translateY(20px); opacity: 0; transition: 0.5s 0.3s; }
+    
+    .carousel-slide.active .slide-title, .carousel-slide.active .slide-desc { transform: translateY(0); opacity: 1; }
+
+    .carousel-nav {
+      position: absolute; bottom: 20px; right: 30px; display: flex; gap: 10px;
+    }
+    .c-nav-btn {
+      width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: 0.2s;
+    }
+    .c-nav-btn:hover { background: var(--primary); border-color: var(--primary); }
+
+    /* STATUS DASHBOARD (Redesigned Maintenance) */
+    .status-section {
+      background: linear-gradient(145deg, #0f0f0f, #0a0a0a);
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 40px; display: grid; grid-template-columns: 1fr 2fr; gap: 40px;
+      margin-top: 100px; position: relative; overflow: hidden;
+    }
+    /* Ambient Glow */
+    .status-section::before {
+      content: ''; position: absolute; top: -50%; left: -20%; width: 50%; height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .status-info h3 { font-size: 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .status-indicator {
+      width: 12px; height: 12px; background: #22c55e; border-radius: 50%;
+      box-shadow: 0 0 10px #22c55e; animation: pulse 2s infinite;
+    }
+    .status-indicator.maintenance { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    .status-desc { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+    .status-visual {
+      background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 20px;
+      border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .server-metric { text-align: center; flex: 1; position: relative; }
+    .server-metric:not(:last-child)::after {
+      content: ''; position: absolute; right: 0; top: 20%; height: 60%; width: 1px; background: rgba(255,255,255,0.1);
+    }
+    .metric-label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 8px; }
+    .metric-value { font-size: 18px; font-weight: 700; font-family: monospace; }
+    .metric-bar { width: 60px; height: 4px; background: #333; margin: 8px auto 0; border-radius: 2px; overflow: hidden; }
+    .metric-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1s ease 0.5s; }
+
+    .refresh-control {
+      display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 10px;
+    }
+    .refresh-btn {
+      background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+      padding: 8px 16px; border-radius: 6px; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }
+    .refresh-btn:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.05); }
+    .refresh-btn svg { width: 14px; height: 14px; transition: transform 0.5s; }
+    .refresh-btn.spinning svg { animation: spin 1s linear infinite; }
+    .refresh-hint { font-size: 11px; color: var(--text-muted); opacity: 0.7; }
+
+    /* GRID CONTENT */
+    .grid-section { margin-top: 80px; }
+    .card-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
+    }
+    .card {
+      background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden;
+      transition: var(--transition-smooth); border: 1px solid transparent; cursor: pointer;
+      position: relative; group: card;
+    }
+    .card:hover { transform: translateY(-8px); border-color: var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    
+    .card-thumb {
+      aspect-ratio: 16/9; overflow: hidden; position: relative;
+    }
+    .card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .card:hover .card-thumb img { transform: scale(1.1); }
+    
+    .card-badge {
+      position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7);
+      color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 4px; backdrop-filter: blur(4px);
+    }
+
+    .card-body { padding: 16px; }
+    .card-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
+
+    /* FOOTER */
+    footer {
+      margin-top: 120px; border-top: 1px solid var(--border); padding: 60px 5%;
       background: #000;
-      filter: grayscale(12%) contrast(95%);
     }
-    .banner-inner { position: relative; width:100%; height:100%; }
-
-    .banner-slide {
-      display:flex;
-      height:100%;
-      width: 100%;
-      transform: translateX(0);
-      transition: transform 700ms cubic-bezier(.22,.9,.35,1);
-      will-change: transform;
+    .footer-content {
+      max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px;
     }
+    .footer-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .footer-logo { font-size: 20px; font-weight: 900; color: #fff; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+    .copyright { color: #555; font-size: 13px; }
 
-    .banner-item {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      flex-shrink: 0;
-      overflow: hidden;
-      background: linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.12));
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      header { padding: 0 20px; background: var(--bg-surface); }
+      nav { display: none; } /* Hide nav on mobile for simplicity */
+      .hero h1 { font-size: 40px; }
+      .carousel-container { aspect-ratio: 16/9; }
+      .status-section { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
-
-    .banner-item img {
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      object-position:center;
-      display:block;
-      transform: translateZ(0);
-      backface-visibility:hidden;
-    }
-
-    .banner-caption {
-      position:absolute;
-      left:24px;
-      bottom:18px;
-      color:#fff;
-      font-weight:700;
-      font-size:14px;
-      background:linear-gradient(90deg, rgba(0,0,0,0.36), rgba(0,0,0,0.12));
-      padding:8px 12px;
-      border-radius:8px;
-      pointer-events:none;
-      user-select:none;
-      opacity:0.98;
-    }
-
-    /* controls */
-    .banner-controls {
-      position:absolute;
-      left:0; right:0; bottom:12px;
-      display:flex; align-items:center; justify-content:center; gap:12px;
-      pointer-events:none;
-    }
-    .banner-arrow {
-      --size:48px;
-      width:var(--size); height:var(--size);
-      margin:0 6px;
-      border-radius:12px;
-      background:rgba(0,0,0,0.45);
-      border:none; pointer-events:auto; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      transition: transform .12s ease, background .18s ease, box-shadow .12s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.28);
-    }
-    .banner-arrow svg { width:20px; height:20px; display:block; fill: none; stroke: #fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-    .banner-arrow:hover { transform: translateY(-3px); background: rgba(0,0,0,0.6); box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
-    .banner-arrow:active { transform: translateY(-1px) scale(.98); }
-    .banner-arrow:focus { outline: 3px solid rgba(229,9,20,0.22); outline-offset: 3px; }
-
-    .banner-arrow.prev { position: absolute; left: 12px; bottom: 18px; border-radius:10px; }
-    .banner-arrow.next { position: absolute; right: 12px; bottom: 18px; border-radius:10px; }
-
-    .banner-dots { display:flex; gap:8px; pointer-events:auto; align-items:center; }
-    .banner-dot {
-      width:10px; height:10px; border-radius:50%;
-      background: rgba(255,255,255,0.42);
-      border:none; cursor:pointer; padding:0;
-      transition: background .22s ease, transform .12s ease;
-    }
-    .banner-dot.active { background: var(--clr-primary); transform: scale(1.08); }
-    .banner-dot:focus { outline: 2px solid rgba(229,9,20,0.24); outline-offset:3px; border-radius:50%; }
-
-    @media (max-width:1024px){
-      .banner-container {
-        width: 100%;
-        height: calc(100vw * 415 / 1024);
-        margin-top: var(--header-h-pc);
-      }
-    }
-
-    @media (max-width:767px){
-      header{ height:var(--header-h-mobile); padding:0 16px; }
-      .logo{ font-size:20px; }
-      .banner-container { height: var(--banner-height-mobile); margin-top: var(--header-h-mobile); }
-      .banner-caption { left:12px; bottom:12px; font-size:13px; padding:6px 10px; }
-      .banner-arrow { --size:40px; }
-      .banner-dot { width:12px; height:12px; }
-    }
-
-    main{ padding:20px; max-width:960px; margin:0 auto; }
-
-    /* maintenance content */
-    .maintenance{
-      min-height:calc(100vh - var(--header-h-pc) - var(--banner-height-pc));
-      display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
-      gap:18px;
-    }
-    .maintenance h1{
-      font:900 30px/1.15 'Noto Sans KR';
-      color:#fff;
-      letter-spacing:-0.02em;
-      margin-bottom:4px;
-    }
-    .maintenance p{
-      max-width:680px;
-      color:var(--clr-text-muted);
-      font:400 16px/1.7 'Noto Sans KR';
-      margin:0;
-      opacity:0.95;
-    }
-
-    .status-wrap{
-      display:flex; align-items:center; gap:14px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      padding:12px 16px; border-radius:12px;
-      border:1px solid rgba(255,255,255,0.04);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
-      backdrop-filter: blur(6px);
-    }
-
-    .status-indicator{
-      width:64px; height:64px; min-width:64px;
-      border-radius:14px;
-      display:flex; align-items:center; justify-content:center;
-      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.12));
-      box-shadow: inset 0 -6px 18px rgba(0,0,0,0.25);
-    }
-
-    .status-indicator svg { width:40px; height:40px; display:block; stroke:#fff; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; fill:none; opacity:0.98; }
-    .status--maintenance .status-indicator { background: linear-gradient(180deg,#131313,#0b0b0b); box-shadow: 0 10px 28px rgba(229,9,20,0.08), inset 0 -6px 16px rgba(0,0,0,0.35); }
-    .status--maintenance .status-indicator .gear { stroke: rgba(229,9,20,0.98); }
-    .status--maintenance .status-indicator .wrench { stroke: #fff; stroke-opacity:0.98; }
-
-    .status-indicator .gear { transform-origin: center; animation:gear-spin 2.4s linear infinite; }
-    @keyframes gear-spin { from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
-
-    @media (prefers-reduced-motion: reduce) {
-      .status-indicator .gear { animation: none !important; }
-    }
-
-    .status-text {
-      text-align:left;
-      display:flex; flex-direction:column; gap:2px;
-    }
-    .status-text .label { font:700 14px/1 'Noto Sans KR'; color:#fff; }
-    .status-text .meta  { font:400 13px/1 'Noto Sans KR'; color:var(--clr-text-muted); }
-
-    .controls-row{ display:flex; gap:12px; align-items:center; }
-
-    .refresh-btn{
-      --pad-x:18px;
-      background:linear-gradient(180deg, rgba(229,9,20,0.16), rgba(229,9,20,0.08));
-      color:#fff;
-      border:1px solid rgba(229,9,20,0.45);
-      border-radius:12px;
-      padding:12px var(--pad-x);
-      font:700 14px/1 'Noto Sans KR';
-      display:inline-flex; align-items:center; gap:10px;
-      cursor:pointer;
-      box-shadow: 0 8px 28px rgba(229,9,20,0.06);
-      transition: transform .12s cubic-bezier(.2,.9,.2,1), box-shadow .12s ease, filter .12s ease;
-    }
-    .refresh-btn:active{ transform:translateY(1px) scale(.995); box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
-    .refresh-btn .refresh-icon{ width:18px; height:18px; position:relative; display:inline-block; }
-    .refresh-btn .refresh-icon::before,
-    .refresh-btn .refresh-icon::after{
-      content:''; position:absolute; inset:0; border:2px solid rgba(255,255,255,0.18); border-top-color:#fff; border-radius:50%;
-      opacity:0.95;
-    }
-    .refresh-btn.loading .refresh-icon::before{ animation:spin .9s linear infinite; }
-    .refresh-btn.loading .refresh-icon::after{ animation:spinReverse 1.6s linear infinite; opacity:.36; transform-origin:center; }
-
-    .hint { font:400 13px/1 'Noto Sans KR'; color:var(--clr-text-muted); opacity:0.95; }
-
-    @keyframes spin{ to{ transform:rotate(360deg); } }
-    @keyframes spinReverse{ to{ transform:rotate(-360deg); } }
-
-    @media (prefers-reduced-motion: reduce) {
-      .spinner, .dot, .refresh-icon.active::before, .refresh-icon.active::after { animation: none !important; }
-      header, .logo { transition: none !important; }
-      .banner-slide { transition: none !important; }
-      .banner-arrow, .banner-dot { transition: none !important; }
-      .refresh-btn.loading .refresh-icon::before,
-      .refresh-btn.loading .refresh-icon::after { animation: none !important; }
-    }
+    
+    /* Utilities for JS Animations */
+    .reveal-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal-up.visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">티비 스포캠</div>
-  </header>
 
-  <!-- Banner / Carousel -->
-  <div class="banner-container" aria-roledescription="carousel">
-    <div class="banner-inner">
-      <div class="banner-slide" id="bannerSlide" aria-live="off">
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="1">
-          <img src="https://t1.daumcdn.net/brunch/service/user/7onF/image/-UOqf4TxgKFINfDx34hOWbrQpL4.png"
-               alt="서브롤 점검 이미지 1" loading="lazy" decoding="async" />
-          <figcaption class="banner-caption">대타출 3</figcaption>
-        </figure>
-
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="2">
-          <img src="https://i.ytimg.com/vi/e3usuzCDe4k/mqdefault.jpg"
-               alt="서브롤 점검 이미지 2" loading="lazy" decoding="async" />
-          <figcaption class="banner-caption">알수없음</figcaption>
-        </figure>
-
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="3">
-          <img src="https://teppenthegame.com/wp-content/uploads/2020/06/20200701ATH_81Q0MXdo7IyBDZn-1024x415.png"
-               alt="추가 배너 이미지" loading="lazy" decoding="async" />
-          <figcaption class="banner-caption">앵글리</figcaption>
-        </figure>
-
-        <figure class="banner-item" role="group" aria-roledescription="slide" aria-label="4">
-          <img src="https://tse1.mm.bing.net/th/id/OIP._vi5yVPpAwcOEYZN7mMO2QHaEy?rs=1&pid=ImgDetMain&o=7&rm=3"
-               alt="추가 요약 배너" loading="lazy" decoding="async" />
-          <figcaption class="banner-caption">여백의교실</figcaption>
-        </figure>
-      </div>
-
-      <button class="banner-arrow prev" aria-label="이전 배너" type="button" id="bannerPrev">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
-
-      <div class="banner-controls" aria-hidden="false">
-        <div class="banner-dots" role="tablist" aria-label="배너 전환" id="bannerDots">
-          <!-- dots inserted by JS -->
-        </div>
-      </div>
-
-      <button class="banner-arrow next" aria-label="다음 배너" type="button" id="bannerNext">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
+  <!-- LOADING OVERLAY -->
+  <div id="loader">
+    <div class="spinner-box">
+      <div class="spinner-circle"></div>
     </div>
+    <div class="loader-text">티비 스포캠 로딩 중...</div>
   </div>
 
+  <!-- HEADER -->
+  <header id="mainHeader">
+    <div class="logo">
+      TV<span>SPOTCAM</span>
+    </div>
+    <nav>
+      <a href="#" class="active">홈</a>
+      <a href="#">라이브</a>
+      <a href="#">하이라이트</a>
+      <a href="#">커뮤니티</a>
+      <a href="#">이벤트</a>
+    </nav>
+    <button class="btn-header">로그인</button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <span class="hero-badge">System Check Complete</span>
+      <h1>모든 순간을<br>생생하게 기록하다</h1>
+      <p>티비 스포캠은 팬들에게 가장 가까운 거리에서 스포츠의 감동을 전달합니다.<br>새로워진 UI로 만나보세요.</p>
+      <div class="hero-btns">
+        <button class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          시청하기
+        </button>
+        <button class="btn-secondary">자세히 보기</button>
+      </div>
+    </div>
+  </section>
+
   <main>
-    <section class="maintenance" aria-labelledby="maintTitle" aria-describedby="maintDesc">
-      <h1 id="maintTitle">서브롤 점검 안내</h1>
+    <!-- FEATURED CAROUSEL -->
+    <section class="section-header reveal-up">
+      <div class="section-title">주요 하이라이트</div>
+      <div class="section-link">더보기 &gt;</div>
+    </section>
 
-      <p id="maintDesc">
-        안내: 일정 때문에 시스템 점검을 진행하고 있습니다.
-        점검 중 일부 기능은 제한될 수 있으며, 빠른 복구를 위해 최선을 다하고 있습니다.
-        불편을 드려 죄송합니다. 조금만 기다려 주세요.
-      </p>
-
-      <div class="status-wrap status--maintenance" role="status" aria-live="polite" aria-atomic="true">
-        <div class="status-indicator" aria-hidden="true">
-          <svg viewBox="0 0 48 48" role="img" aria-hidden="true" focusable="false">
-            <g class="gear" transform="translate(24,24)">
-              <path class="gear" d="M14 0 L17 4 L22 6 L22 11 L26 14 L24 18 L24 24 L20 26 L20 31 L15 33 L12 36 L8 34 L3 36 L2 31 L-2 29 L-2 24 L-6 20 L-4 16 L-6 12 L-2 9 L-2 4 L3 2 L6 0 L10 2 z" transform="scale(.9) rotate(0) translate(-14,-14)"/>
-            </g>
-            <g class="wrench" transform="translate(6,6)">
-              <path class="wrench" d="M36 14c0-3-2.2-5.5-5-6.1-0.6 0.8-1.4 1.5-2.3 2.1-1.6 1.1-3.5 1.6-5.5 1.6-6 0-10.9-4.9-10.9-10.9 0-2 0.5-3.9 1.6-5.5 0.6-0.9 1.3-1.7 2.1-2.3C19.5 2.2 17 0 14 0 6.8 0 1 5.8 1 13c0 7.2 5.8 13 13 13 0 3 2.2 5.5 5 6.1 0.8-0.8 1.5-1.6 2.1-2.5 1.1-1.8 1.6-3.8 1.6-5.9 0-6 4.9-10.9 10.9-10.9 2.1 0 4.1 0.5 5.9 1.6 0.9 0.6 1.7 1.4 2.5 2.2z"/>
-              <path class="wrench" d="M29 19 l8 8" stroke-linecap="round" stroke-width="2.4"/>
-            </g>
-          </svg>
+    <div class="carousel-container reveal-up">
+      <div class="carousel-track" id="track">
+        <!-- Slide 1 -->
+        <div class="carousel-slide active">
+          <img src="https://picsum.photos/seed/soccer/1200/600" alt="Soccer">
+          <div class="slide-overlay">
+            <h2 class="slide-title">프리미어리그 라운드 32</h2>
+            <p class="slide-desc">역전 드라마의 현장, 결승골 순간을 다시 감상하세요.</p>
+          </div>
         </div>
-
-        <div class="status-text">
-          <div class="label">점검 진행중</div>
-          <div class="meta">다음 업데이트 후 정상화 예정 — 상태는 곧 갱신됩니다</div>
+        <!-- Slide 2 -->
+        <div class="carousel-slide">
+          <img src="https://picsum.photos/seed/basketball/1200/600" alt="Basketball">
+          <div class="slide-overlay">
+            <h2 class="slide-title">NBA 플레이오프 하이라이트</h2>
+            <p class="slide-desc">버저비터 슛의 기적, 농구의 매력에 빠져보세요.</p>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-slide">
+          <img src="https://picsum.photos/seed/baseball/1200/600" alt="Baseball">
+          <div class="slide-overlay">
+            <h2 class="slide-title">한국 시리즈 맞대결</h2>
+            <p class="slide-desc">타격의 왕, 불펜의 핵심 경기를 집중 분석합니다.</p>
+          </div>
         </div>
       </div>
+      <div class="carousel-nav">
+        <button class="c-nav-btn" id="prevBtn">&larr;</button>
+        <button class="c-nav-btn" id="nextBtn">&rarr;</button>
+      </div>
+    </div>
 
-      <div class="controls-row" style="margin-top:6px;">
-        <div class="controls-row" role="group" aria-label="상태 조작">
-          <button id="refreshBtn" class="refresh-btn" type="button" aria-live="polite" aria-pressed="false">
-            <span class="refresh-icon" id="refreshIcon" aria-hidden="true"></span>
-            <span>새로고침</span>
+    <!-- LATEST VIDEOS GRID -->
+    <section class="grid-section">
+      <div class="section-header reveal-up">
+        <div class="section-title">최신 영상</div>
+      </div>
+      
+      <div class="card-grid" id="videoGrid">
+        <!-- Cards will be populated by JS for cleaner code, but here are placeholders -->
+        <div class="card reveal-up">
+          <div class="card-thumb">
+            <span class="card-badge">03:45</span>
+            <img src="https://picsum.photos/seed/v1/400/225" alt="Video 1">
+          </div>
+          <div class="card-body">
+            <div class="card-title">손흥민 멀티골 장면 모음</div>
+            <div class="card-meta"><span>축구</span><span>2시간 전</span></div>
+          </div>
+        </div>
+        <div class="card reveal-up">
+          <div class="card-thumb">
+            <span class="card-badge">LIVE</span>
+            <img src="https://picsum.photos/seed/v2/400/225" alt="Video 2">
+          </div>
+          <div class="card-body">
+            <div class="card-title">2023 롯데 자이언츠 시범경기</div>
+            <div class="card-meta"><span>야구</span><span>실시간</span></div>
+          </div>
+        </div>
+        <div class="card reveal-up">
+          <div class="card-thumb">
+            <span class="card-badge">12:20</span>
+            <img src="https://picsum.photos/seed/v3/400/225" alt="Video 3">
+          </div>
+          <div class="card-body">
+            <div class="card-title">e스포츠 결승전 풀영상</div>
+            <div class="card-meta"><span>게임</span><span>5시간 전</span></div>
+          </div>
+        </div>
+        <div class="card reveal-up">
+          <div class="card-thumb">
+            <span class="card-badge">05:12</span>
+            <img src="https://picsum.photos/seed/v4/400/225" alt="Video 4">
+          </div>
+          <div class="card-body">
+            <div class="card-title">골프 스윙 분석 클래스</div>
+            <div class="card-meta"><span>골프</span><span>1일 전</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SYSTEM STATUS (Redesigned Maintenance Section) -->
+    <section class="status-section reveal-up">
+      <div class="status-info">
+        <h3>
+          <span class="status-indicator maintenance"></span>
+          현재 시스템 점검 중
+        </h3>
+        <p class="status-desc">
+          더 나은 서비스 제공을 위해 서버 점검 및 데이터 최적화 작업이 진행 중입니다.<br>
+          라이브 스트리밍은 일시적으로 지연될 수 있으며, VOD 서비스는 정상 작동 중입니다.
+        </p>
+        <div class="refresh-control">
+          <button id="refreshBtn" class="refresh-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            상태 갱신
           </button>
-
-          <div class="hint" id="refreshHint" role="note">새로고침 시 최신 상태를 확인합니다</div>
+          <span class="refresh-hint" id="refreshHint">마지막 확인: 방금 전</span>
+        </div>
+      </div>
+      <div class="status-visual">
+        <div class="server-metric">
+          <span class="metric-label">서버 부하</span>
+          <div class="metric-value">34%</div>
+          <div class="metric-bar"><div class="metric-fill" style="width: 34%"></div></div>
+        </div>
+        <div class="server-metric">
+          <span class="metric-label">API 지연 시간</span>
+          <div class="metric-value">24ms</div>
+          <div class="metric-bar"><div class="metric-fill" style="width: 15%"></div></div>
+        </div>
+        <div class="server-metric">
+          <span class="metric-label">Uptime</span>
+          <div class="metric-value">99.9%</div>
+          <div class="metric-bar"><div class="metric-fill" style="width: 99%"></div></div>
         </div>
       </div>
     </section>
   </main>
 
+  <footer>
+    <div class="footer-content">
+      <div class="footer-top">
+        <div class="footer-logo">TV SPOTCAM</div>
+        <div class="footer-links">
+          <a href="#">회사 소개</a>
+          <a href="#">이용약관</a>
+          <a href="#">개인정보처리방침</a>
+          <a href="#">고객센터</a>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2023 TV SpotCam. All rights reserved. This is a redesigned UI concept.
+      </div>
+    </div>
+  </footer>
+
   <script>
-    // HEADER scroll hide/show
-    (function(){
-      const header = document.querySelector('header');
-      let lastScroll = window.scrollY || 0;
-      let ticking = false;
-      const DEADZONE = 6;
-      const MIN_DELTA_SHOW = -3;
-      let isHidden = false;
-      let lastToggle = 0;
-      const MIN_TOGGLE_GAP = 120;
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. LOADER
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.classList.add('hidden');
+      }, 1200); // 1.2초 후 로딩 완료
 
-      function updateHeader(current, delta){
-        const now = performance.now();
-        if (delta > DEADZONE && current > 60 && !isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
-          header.classList.add('hidden');
-          header.classList.remove('scrolled');
-          isHidden = true; lastToggle = now; return;
-        }
-        if (delta < MIN_DELTA_SHOW && isHidden && (now - lastToggle) > MIN_TOGGLE_GAP){
-          header.classList.remove('hidden');
-          if (current > 24) header.classList.add('scrolled'); else header.classList.remove('scrolled');
-          isHidden = false; lastToggle = now; return;
-        }
-        if (!isHidden){
-          if (current > 24) header.classList.add('scrolled'); else header.classList.remove('scrolled');
-        }
-      }
-
-      function onScroll(){
-        if (!ticking){
-          window.requestAnimationFrame(() => {
-            const current = window.scrollY || 0;
-            const delta = current - lastScroll;
-            if (Math.abs(delta) > DEADZONE || (delta < 0 && Math.abs(delta) > 2)){
-              updateHeader(current, delta);
-              lastScroll = current;
-            } else {
-              if (current <= 8 && isHidden){
-                header.classList.remove('hidden');
-                header.classList.remove('scrolled');
-                isHidden = false;
-              }
-            }
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      if ((window.scrollY || 0) > 24) header.classList.add('scrolled');
-    })();
-
-    // Refresh button behavior
-    (function(){
-      const refreshBtn = document.getElementById('refreshBtn');
-      const refreshIcon = document.getElementById('refreshIcon');
-      const refreshHint = document.getElementById('refreshHint');
-      if (!refreshBtn) return;
-
-      function setButtonLoading(loading){
-        if (loading){
-          refreshBtn.classList.add('loading');
-          refreshBtn.setAttribute('aria-pressed','true');
-          refreshHint.textContent = '새로고침 요청 중…';
+      // 2. HEADER SCROLL EFFECT
+      const header = document.getElementById('mainHeader');
+      let lastScroll = 0;
+      
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        // Background blur add
+        if (currentScroll > 50) {
+          header.classList.add('scrolled');
         } else {
-          refreshBtn.classList.remove('loading');
-          refreshBtn.setAttribute('aria-pressed','false');
-          refreshHint.textContent = '새로고침 시 최신 상태를 확인합니다';
+          header.classList.remove('scrolled');
         }
-      }
 
-      refreshBtn.addEventListener('click', () => {
-        setButtonLoading(true);
-        const DELAY = 700;
-        setTimeout(() => {
-          try { location.reload(true); } catch (e) { location.reload(); }
-        }, DELAY);
+        // Hide/Show logic
+        if (currentScroll > lastScroll && currentScroll > 200) {
+          header.classList.add('hidden'); // Scroll down -> Hide
+        } else {
+          header.classList.remove('hidden'); // Scroll up -> Show
+        }
+        lastScroll = currentScroll;
       });
 
-      refreshBtn.addEventListener('keydown', (e) => {
-        if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault();
-          refreshBtn.click();
-        }
-      });
-    })();
+      // 3. CAROUSEL LOGIC
+      const track = document.getElementById('track');
+      const slides = Array.from(track.children);
+      const nextBtn = document.getElementById('nextBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      let currentSlideIndex = 0;
 
-    // Carousel (responsive, keyboard, touch, dots)
-    (function(){
-      const slide = document.getElementById('bannerSlide');
-      const prevBtn = document.getElementById('bannerPrev');
-      const nextBtn = document.getElementById('bannerNext');
-      const dotsContainer = document.getElementById('bannerDots');
-      if (!slide) return;
-
-      const items = Array.from(slide.querySelectorAll('.banner-item'));
-      const total = items.length || 1;
-      let current = 0;
-      let interval = null;
-      const AUTO_MS = 5000;
-      const transitionTime = 700;
-
-      function applyLayout(){
-        slide.style.width = `${100 * total}%`;
-        items.forEach(item => { item.style.width = `${100 / total}%`; });
-      }
-
-      function createDots(){
-        dotsContainer.innerHTML = '';
-        for (let i=0;i<total;i++){
-          const btn = document.createElement('button');
-          btn.className = 'banner-dot' + (i===0 ? ' active' : '');
-          btn.type = 'button';
-          btn.setAttribute('data-index', String(i));
-          btn.setAttribute('role','tab');
-          btn.setAttribute('aria-selected', i===0 ? 'true' : 'false');
-          btn.setAttribute('aria-controls','bannerSlide');
-          btn.addEventListener('click', () => { goTo(i); stopAuto(); startAuto(); });
-          btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
-          dotsContainer.appendChild(btn);
-        }
-      }
-
-      function updateDots(){
-        const dots = Array.from(dotsContainer.querySelectorAll('.banner-dot'));
-        dots.forEach((d,i) => {
-          d.classList.toggle('active', i === current);
-          d.setAttribute('aria-selected', i === current ? 'true' : 'false');
+      function updateCarousel() {
+        const width = track.getBoundingClientRect().width;
+        track.style.transform = 'translateX(-' + (width * currentSlideIndex) + 'px)';
+        
+        slides.forEach((slide, index) => {
+          if(index === currentSlideIndex) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
         });
       }
 
-      function goTo(idx, instant = false){
-        idx = (idx + total) % total;
-        current = idx;
-        slide.style.transition = instant ? 'none' : `transform ${transitionTime}ms cubic-bezier(.22,.9,.35,1)`;
-        const percent = (idx * 100) / total;
-        slide.style.transform = `translateX(-${percent}%)`;
-        updateDots();
-      }
-
-      function next(){ goTo(current + 1); }
-      function prev(){ goTo(current - 1); }
-
-      function startAuto(){ stopAuto(); interval = setInterval(next, AUTO_MS); }
-      function stopAuto(){ if (interval){ clearInterval(interval); interval = null; } }
-
-      // touch
-      let startX = 0, deltaX = 0, touching = false;
-      slide.addEventListener('touchstart', (e) => {
-        stopAuto();
-        touching = true;
-        startX = e.touches[0].clientX;
-        slide.style.transition = 'none';
-      }, { passive: true });
-
-      slide.addEventListener('touchmove', (e) => {
-        if (!touching) return;
-        deltaX = e.touches[0].clientX - startX;
-        const px = (deltaX / slide.clientWidth) * 100;
-        slide.style.transform = `translateX(calc(-${(current * 100) / total}% + ${px}%))`;
-      }, { passive: true });
-
-      slide.addEventListener('touchend', () => {
-        touching = false;
-        if (Math.abs(deltaX) > 40) {
-          if (deltaX < 0) next(); else prev();
-        } else {
-          goTo(current);
-        }
-        deltaX = 0;
-        startAuto();
+      nextBtn.addEventListener('click', () => {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+        updateCarousel();
       });
 
-      // keyboard
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') { prev(); stopAuto(); startAuto(); }
-        if (e.key === 'ArrowRight') { next(); stopAuto(); startAuto(); }
+      prevBtn.addEventListener('click', () => {
+        currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+        updateCarousel();
       });
 
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => { prev(); stopAuto(); startAuto(); });
-        prevBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); prevBtn.click(); } });
-      }
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => { next(); stopAuto(); startAuto(); });
-        nextBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nextBtn.click(); } });
-      }
+      // Auto play
+      setInterval(() => {
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+        updateCarousel();
+      }, 6000);
 
-      // init
-      applyLayout();
-      createDots();
-      goTo(0, true);
-      startAuto();
-      document.addEventListener('visibilitychange', () => { if (document.hidden) stopAuto(); else startAuto(); });
+      // Resize handler
+      window.addEventListener('resize', updateCarousel);
 
-      window.addEventListener('resize', () => { applyLayout(); goTo(current, true); });
-    })();
+      // 4. SCROLL REVEAL ANIMATION
+      const revealElements = document.querySelectorAll('.reveal-up');
+      
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+
+      // 5. REFRESH BUTTON LOGIC
+      const refreshBtn = document.getElementById('refreshBtn');
+      const refreshHint = document.getElementById('refreshHint');
+      const metricFills = document.querySelectorAll('.metric-fill');
+      const metricValues = document.querySelectorAll('.metric-value');
+
+      refreshBtn.addEventListener('click', () => {
+        refreshBtn.classList.add('spinning');
+        refreshHint.textContent = '상태 확인 중...';
+        
+        // Simulate Network Request
+        setTimeout(() => {
+          refreshBtn.classList.remove('spinning');
+          refreshHint.textContent = '상태가 업데이트되었습니다.';
+          
+          // Randomize Metrics for visual effect
+          metricFills.forEach(fill => {
+            const randomWidth = Math.floor(Math.random() * 80) + 10;
+            fill.style.width = randomWidth + '%';
+            // Add color change based on value
+            if(randomWidth > 80) fill.style.background = '#E50914'; // High load red
+            else fill.style.background = '#3b82f6'; // Normal blue
+          });
+          
+          metricValues[0].textContent = (Math.floor(Math.random() * 40) + 20) + '%'; // Load
+          metricValues[1].textContent = (Math.floor(Math.random() * 40) + 10) + 'ms'; // Latency
+
+          setTimeout(() => {
+            refreshHint.textContent = '마지막 확인: 방금 전';
+          }, 3000);
+
+        }, 1000);
+      });
+    });
   </script>
 </body>
 </html>
