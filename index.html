@@ -413,13 +413,20 @@
             <small data-lang-key="lunch_break">(점심시간 12:00 - 13:00, 주말/공휴일 휴무)</small>
           </div>
         </div>
-        <div class="footer-col">
-          <h4 data-lang-key="newsletter">뉴스레터 구독</h4>
-          <p data-lang-key="newsletter_desc">최신 소식과 이벤트 정보를 가장 먼저 받아보세요.</p>
-          <form class="subscribe-form" onsubmit="event.preventDefault(); alert('구독되었습니다!');">
-            <input type="email" class="subscribe-input" data-lang-key="email_placeholder" placeholder="이메일 주소 입력" required />
-            <button type="submit" class="subscribe-btn" data-lang-key="subscribe_btn">구독</button>
-          </form>
+        <!-- 뉴스레터 구독 폼 부분만 수정 -->
+<form class="subscribe-form" onsubmit="event.preventDefault(); alert('구독되었습니다!');">
+  <input type="email" 
+         id="newsletterEmail" 
+         name="email" 
+         class="subscribe-input" 
+         data-lang-key="email_placeholder" 
+         placeholder="이메일 주소 입력" 
+         required />
+  <button type="submit" 
+          id="subscribeBtn" 
+          class="subscribe-btn" 
+          data-lang-key="subscribe_btn">구독</button>
+        </form>
         </div>
       </div>
       <div class="footer-bottom">
@@ -436,3 +443,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
