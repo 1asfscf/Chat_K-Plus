@@ -619,3 +619,7 @@ footer { background: #000; border-top: 1px solid var(--border); padding: 0 0 40p
   color: var(--hud-text-main);
   padding: 4px 8px;
   border-radius: 4px;
+  font-size: 10px; /* 추가 속성 */
+  cursor: pointer; /* 추가 속성 */
+  transition: 0.2s; /* 추가 속성 */
+}
