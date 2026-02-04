@@ -65,4 +65,300 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   
   document.querySelectorAll('[data-lang-key]').forEach(el => {
-    const key = el
+    const key = el.getAttribute('data-lang-key');
+    if (translations[lang] && translations[lang][key]) {
+      // HTML 태그가 포함된 경우 innerHTML 사용, 아니면 textContent
+      if (translations[lang][key].includes('<') || el.hasAttribute('data-html-allowed')) {
+        el.innerHTML = translations[lang][key];
+      } else {
+        el.textContent = translations[lang][key];
+      }
+    }
+  });
+  
+  localStorage.setItem('selectedLanguage', lang);
+  const sel = document.getElementById('langSelect');
+  if (sel) sel.value = lang;
+}
+
+// 2. 모바일 헤더 및 메뉴 기능
+function initMobileFeatures() {
+  const header = document.getElementById('header');
+  const mobileToggle = document.getElementById('mobileMenuToggle');
+  const navMobile = document.getElementById('navMobile');
+  let lastScroll = 0;
+  let isHidden = false;
+
+  // 스크롤에 따른 헤더 숨김/표시
+  window.addEventListener('scroll', () => {
+    const current = window.pageYOffset;
+    
+    if (current > 50) {
+      header.classList.add('scrolled');
+      if (current > 200 && current > lastScroll && !navMobile.classList.contains('active')) {
+        header.classList.add('hidden');
+        isHidden = true;
+      } else {
+        header.classList.remove('hidden');
+        isHidden = false;
+      }
+    } else {
+      header.classList.remove('scrolled', 'hidden');
+      isHidden = false;
+    }
+    lastScroll = current;
+  });
+
+  // 모바일 메뉴 토글
+  if (mobileToggle && navMobile) {
+    mobileToggle.addEventListener('click', () => {
+      mobileToggle.classList.toggle('active');
+      navMobile.classList.toggle('active');
+      
+      // 메뉴 열릴 때 헤더는 보이게
+      if (navMobile.classList.contains('active')) {
+        header.classList.remove('hidden');
+      }
+    });
+
+    // 모바일 메뉴 링크 클릭 시 닫기
+    navMobile.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileToggle.classList.remove('active');
+        navMobile.classList.remove('active');
+      });
+    });
+  }
+}
+
+// 3. 서비스 의존성 탭 기능
+function initServiceDepsTabs() {
+  const tabs = document.querySelectorAll('.view-controls .view-btn');
+  const serviceMap = document.getElementById('serviceMap');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // 활성 탭 전환
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // 뷰 모드 변경 (시각적 피드백)
+      const viewMode = tab.getAttribute('data-view');
+      if (serviceMap) {
+        serviceMap.setAttribute('data-view', viewMode);
+        
+        // 애니메이션 효과
+        serviceMap.style.opacity = '0.5';
+        setTimeout(() => {
+          serviceMap.style.opacity = '1';
+        }, 200);
+      }
+    });
+  });
+}
+
+// 4. 실시간 시계
+function updateClock() {
+  const now = new Date();
+  const timeString = now.toISOString().slice(11, 19) + ' UTC';
+  const currentTimeEl = document.getElementById('currentTime');
+  if (currentTimeEl) {
+    currentTimeEl.textContent = timeString;
+  }
+}
+
+// 5. 대시보드 메트릭 업데이트
+function updateMetrics() {
+  // CPU (20-60% 사이 랜덤)
+  const cpu = Math.floor(20 + Math.random() * 40);
+  const cpuEl = document.getElementById('cpuValue');
+  const cpuBar = document.getElementById('cpuBar');
+  if (cpuEl) cpuEl.textContent = cpu + '%';
+  if (cpuBar) cpuBar.style.width = cpu + '%';
+  
+  // Memory (40-80% 사이 랜덤)
+  const memory = Math.floor(40 + Math.random() * 40);
+  const memEl = document.getElementById('memoryValue');
+  const memBar = document.getElementById('memoryBar');
+  if (memEl) memEl.textContent = memory + '%';
+  if (memBar) memBar.style.width = memory + '%';
+  
+  // Network (0.5-2.0 GB/s)
+  const network = (0.5 + Math.random() * 1.5).toFixed(1);
+  const netEl = document.getElementById('networkValue');
+  const netBar = document.getElementById('networkBar');
+  if (netEl) netEl.textContent = network + ' GB/s';
+  if (netBar) netBar.style.width = (network / 2 * 100) + '%';
+  
+  // Disk (100-400 MB/s)
+  const disk = Math.floor(100 + Math.random() * 300);
+  const diskEl = document.getElementById('diskValue');
+  const diskBar = document.getElementById('diskBar');
+  if (diskEl) diskEl.textContent = disk + ' MB/s';
+  if (diskBar) diskBar.style.width = (disk / 500 * 100) + '%';
+  
+  // Request/sec (2000-3500)
+  const reqs = Math.floor(2000 + Math.random() * 1500);
+  const reqEl = document.getElementById('reqPerSec');
+  if (reqEl) reqEl.textContent = reqs.toLocaleString();
+  
+  // Latency (20-80ms)
+  const latency = Math.floor(20 + Math.random() * 60);
+  const latEl = document.getElementById('latencyValue');
+  if (latEl) latEl.textContent = latency + 'ms';
+  
+  // Uptime (99.9-99.99%)
+  const uptime = (99.9 + Math.random() * 0.09).toFixed(2);
+  const upEl = document.getElementById('uptimeValue');
+  if (upEl) upEl.textContent = uptime + '%';
+  
+  // Maintenance progress (천천히 증가)
+  const progressEl = document.getElementById('maintenanceProgress');
+  const progressPercentEl = document.getElementById('maintenancePercent');
+  if (progressEl && progressPercentEl) {
+    let currentProgress = parseInt(progressEl.style.width) || 73;
+    if (currentProgress < 100 && Math.random() > 0.7) {
+      currentProgress += 1;
+      progressEl.style.width = currentProgress + '%';
+      progressPercentEl.textContent = currentProgress + '%';
+    }
+  }
+}
+
+// 6. 로그 스트림 기능
+const logServices = ['API', 'DB', 'CDN', 'AUTH', 'CACHE', 'WORKER'];
+const logMessages = [
+  'Health check passed',
+  'Request processed successfully',
+  'Cache invalidated',
+  'Database query optimized',
+  'User authentication successful',
+  'Load balancer redistributed traffic',
+  'SSL certificate renewed',
+  'Backup completed',
+  'Memory garbage collection executed'
+];
+
+function addRandomLog() {
+  if (isLogsPaused) return;
+  
+  const logContent = document.getElementById('logContent');
+  if (!logContent) return;
+  
+  const now = new Date();
+  const time = now.toISOString().slice(11, 19);
+  const service = logServices[Math.floor(Math.random() * logServices.length)];
+  const message = logMessages[Math.floor(Math.random() * logMessages.length)];
+  
+  const logEntry = document.createElement('div');
+  logEntry.className = 'log-entry';
+  logEntry.innerHTML = `
+    <span class="log-time">${time}</span>
+    <span class="log-service">${service}</span>
+    <span class="log-message">${message}</span>
+  `;
+  
+  logContent.insertBefore(logEntry, logContent.firstChild);
+  
+  // 최대 50개 로그 유지
+  while (logContent.children.length > 50) {
+    logContent.removeChild(logContent.lastChild);
+  }
+}
+
+function initLogStream() {
+  const pauseBtn = document.getElementById('pauseLogs');
+  if (pauseBtn) {
+    pauseBtn.addEventListener('click', () => {
+      isLogsPaused = !isLogsPaused;
+      pauseBtn.textContent = isLogsPaused ? 'RESUME' : 'PAUSE';
+      pauseBtn.style.background = isLogsPaused ? 'var(--hud-warn)' : 'rgba(255,255,255,0.1)';
+    });
+  }
+}
+
+// 7. 스크롤 애니메이션
+function initScrollEffects() {
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+  
+  // 카드에 애니메이션 적용
+  document.querySelectorAll('.video-card, .metric-card, .service-node, .alert-item').forEach((el, index) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+    observer.observe(el);
+  });
+}
+
+// 8. HUD 초기화
+function initHud() {
+  updateMetrics();
+  setInterval(() => {
+    updateMetrics();
+    addRandomLog();
+  }, 2000);
+  
+  initLogStream();
+}
+
+// 9. 전체 초기화
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('TV SpotCam initialized');
+  
+  // 언어 설정
+  const savedLang = localStorage.getItem('selectedLanguage') || 'ko';
+  setLanguage(savedLang);
+  
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) {
+    langSelect.addEventListener('change', (e) => setLanguage(e.target.value));
+  }
+  
+  // 모바일 기능 초기화
+  initMobileFeatures();
+  
+  // 서비스 탭 초기화
+  initServiceDepsTabs();
+  
+  // 로더 제거 및 초기화
+  const loader = document.getElementById('loader');
+  if (loader) {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      initScrollEffects();
+      updateClock();
+      setInterval(updateClock, 1000);
+      initHud();
+    }, 1200);
+  } else {
+    // 로더가 없는 경우 바로 초기화
+    initScrollEffects();
+    updateClock();
+    setInterval(updateClock, 1000);
+    initHud();
+  }
+  
+  // 성능 측정
+  if ('performance' in window) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const perf = performance.getEntriesByType('navigation')[0];
+        if (perf?.loadEventEnd && perf?.navigationStart) {
+          console.log(`Page load time: ${Math.round(perf.loadEventEnd - perf.navigationStart)}ms`);
+        }
+      }, 0);
+    });
+  }
+});
