@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TV SpotCam</title>
+  <title>TV SpotCam - 티비 스포캠</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- 인라인 스타일 제거 - 외부 CSS에서 모두 관리 -->
 </head>
 <body>
   <!-- 로더 -->
@@ -170,25 +169,26 @@
       </div>
     </section>
 
-    <!-- 인프라 모니터링 대시보드 -->
+    <!-- 인프라 모니터링 대시보드 - 한국어로 수정 -->
     <section class="infra-dashboard">
       <div class="container">
         <div class="infra-header">
           <div class="header-grid">
             <div class="system-info">
-              <h2 class="infra-title" data-lang-key="infra_title">INFRASTRUCTURE MONITORING</h2>
+              <!-- 한국어로 변경 -->
+              <h2 class="infra-title" data-lang-key="infra_title">인프라 모니터링</h2>
               <div class="cluster-details">
                 <div class="cluster-item">
-                  <span class="cluster-label" data-lang-key="cluster_label">CLUSTER:</span>
+                  <span class="cluster-label" data-lang-key="cluster_label">클러스터:</span>
                   <span class="cluster-value">production-kr-01</span>
                 </div>
                 <div class="cluster-item">
-                  <span class="cluster-label" data-lang-key="region_label">REGION:</span>
+                  <span class="cluster-label" data-lang-key="region_label">지역:</span>
                   <span class="cluster-value">KR-Seoul</span>
                 </div>
                 <div class="cluster-item">
-                  <span class="cluster-label" data-lang-key="status_label">STATUS:</span>
-                  <span class="status-badge maintenance" data-lang-key="maintenance_status">MAINTENANCE MODE</span>
+                  <span class="cluster-label" data-lang-key="status_label">상태:</span>
+                  <span class="status-badge maintenance" data-lang-key="maintenance_status">점검 모드</span>
                 </div>
               </div>
             </div>
@@ -196,7 +196,7 @@
             <div class="status-center">
               <div class="uptime-display">
                 <div class="uptime-value" id="uptimeValue">99.97%</div>
-                <div class="uptime-label" data-lang-key="uptime_label">UPTIME</div>
+                <div class="uptime-label" data-lang-key="uptime_label">가동 시간</div>
               </div>
               <div class="health-indicators">
                 <div class="health-item">
@@ -219,11 +219,11 @@
               <div class="quick-stats">
                 <div class="stat">
                   <span class="stat-value" id="reqPerSec">2,847</span>
-                  <span class="stat-label" data-lang-key="req_per_sec">REQ/S</span>
+                  <span class="stat-label" data-lang-key="req_per_sec">요청/초</span>
                 </div>
                 <div class="stat">
                   <span class="stat-value" id="latencyValue">45ms</span>
-                  <span class="stat-label" data-lang-key="latency_label">LATENCY</span>
+                  <span class="stat-label" data-lang-key="latency_label">지연 시간</span>
                 </div>
               </div>
             </div>
@@ -231,7 +231,7 @@
 
           <div class="maintenance-progress">
             <div class="progress-label">
-              <span data-lang-key="maintenance_in_progress">SYSTEM MAINTENANCE IN PROGRESS</span>
+              <span data-lang-key="maintenance_in_progress">시스템 점검 진행 중</span>
               <span class="progress-percent" id="maintenancePercent">73%</span>
             </div>
             <div class="progress-bar">
@@ -241,16 +241,16 @@
         </div>
 
         <div class="dashboard-grid">
-          <!-- 시스템 메트릭 패널 -->
+          <!-- 시스템 메트릭 패널 - 한국어로 수정 -->
           <div class="metrics-panel">
             <div class="panel-header">
-              <h3 data-lang-key="system_metrics">SYSTEM METRICS</h3>
-              <span class="update-time" data-lang-key="updated_just_now">Updated just now</span>
+              <h3 data-lang-key="system_metrics">시스템 메트릭</h3>
+              <span class="update-time" data-lang-key="updated_just_now">방금 업데이트됨</span>
             </div>
             <div class="metric-cards">
               <div class="metric-card">
                 <div class="metric-info">
-                  <span class="metric-label" data-lang-key="cpu_util">CPU UTILIZATION</span>
+                  <span class="metric-label" data-lang-key="cpu_util">CPU 사용률</span>
                   <span class="metric-value" id="cpuValue">45%</span>
                 </div>
                 <div class="metric-bar">
@@ -259,7 +259,7 @@
               </div>
               <div class="metric-card">
                 <div class="metric-info">
-                  <span class="metric-label" data-lang-key="memory_usage">MEMORY USAGE</span>
+                  <span class="metric-label" data-lang-key="memory_usage">메모리 사용량</span>
                   <span class="metric-value" id="memoryValue">62%</span>
                 </div>
                 <div class="metric-bar">
@@ -268,7 +268,7 @@
               </div>
               <div class="metric-card">
                 <div class="metric-info">
-                  <span class="metric-label" data-lang-key="network_io">NETWORK I/O</span>
+                  <span class="metric-label" data-lang-key="network_io">네트워크 I/O</span>
                   <span class="metric-value" id="networkValue">1.2 GB/s</span>
                 </div>
                 <div class="metric-bar">
@@ -277,7 +277,7 @@
               </div>
               <div class="metric-card">
                 <div class="metric-info">
-                  <span class="metric-label" data-lang-key="disk_io">DISK I/O</span>
+                  <span class="metric-label" data-lang-key="disk_io">디스크 I/O</span>
                   <span class="metric-value" id="diskValue">234 MB/s</span>
                 </div>
                 <div class="metric-bar">
@@ -287,93 +287,93 @@
             </div>
           </div>
 
-          <!-- 서비스 맵 패널 -->
+          <!-- 서비스 맵 패널 - 한국어로 수정 -->
           <div class="service-map-panel">
             <div class="panel-header">
-              <h3 data-lang-key="service_deps">SERVICE DEPENDENCIES</h3>
+              <h3 data-lang-key="service_deps">서비스 의존성</h3>
               <div class="view-controls">
-                <button class="view-btn active" data-view="live" data-lang-key="live">LIVE</button>
-                <button class="view-btn" data-view="health" data-lang-key="health">HEALTH</button>
-                <button class="view-btn" data-view="perf" data-lang-key="perf">PERF</button>
+                <button class="view-btn active" data-view="live" data-lang-key="live">실시간</button>
+                <button class="view-btn" data-view="health" data-lang-key="health">상태</button>
+                <button class="view-btn" data-view="perf" data-lang-key="perf">성능</button>
               </div>
             </div>
             <div class="service-map" id="serviceMap">
               <div class="service-node primary">
                 <div class="node-icon">⚡</div>
                 <div class="node-info">
-                  <div class="node-name">API Gateway</div>
-                  <div class="node-status ok" data-lang-key="healthy_status">Healthy</div>
+                  <div class="node-name">API 게이트웨이</div>
+                  <div class="node-status ok" data-lang-key="healthy_status">정상</div>
                 </div>
               </div>
               <div class="service-connection"></div>
               <div class="service-node">
                 <div class="node-icon">🗄️</div>
                 <div class="node-info">
-                  <div class="node-name" data-lang-key="db_label">Database</div>
-                  <div class="node-status ok" data-lang-key="healthy_status">Healthy</div>
+                  <div class="node-name" data-lang-key="db_label">데이터베이스</div>
+                  <div class="node-status ok" data-lang-key="healthy_status">정상</div>
                 </div>
               </div>
               <div class="service-connection"></div>
               <div class="service-node">
                 <div class="node-icon">🚀</div>
                 <div class="node-info">
-                  <div class="node-name" data-lang-key="cdn_label">CDN</div>
-                  <div class="node-status warn" data-lang-key="degraded_status">Degraded</div>
+                  <div class="node-name" data-lang-key="cdn_label">콘텐츠 전송망</div>
+                  <div class="node-status warn" data-lang-key="degraded_status">성능 저하</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 알림 패널 -->
+          <!-- 알림 패널 - 한국어로 수정 -->
           <div class="alerts-panel">
             <div class="panel-header">
-              <h3 data-lang-key="recent_alerts">RECENT ALERTS</h3>
+              <h3 data-lang-key="recent_alerts">최근 알림</h3>
               <span class="alert-count">3</span>
             </div>
             <div class="alert-list">
               <div class="alert-item critical">
                 <span class="alert-icon">🔴</span>
                 <div class="alert-content">
-                  <div class="alert-title" data-lang-key="alert1_title">High CPU Load on worker-03</div>
-                  <div class="alert-time" data-lang-key="alert1_time">2 minutes ago</div>
+                  <div class="alert-title" data-lang-key="alert1_title">worker-03 높은 CPU 부하</div>
+                  <div class="alert-time" data-lang-key="alert1_time">2분 전</div>
                 </div>
               </div>
               <div class="alert-item warning">
                 <span class="alert-icon">🟡</span>
                 <div class="alert-content">
-                  <div class="alert-title" data-lang-key="alert2_title">Database connection pool 80% full</div>
-                  <div class="alert-time" data-lang-key="alert2_time">15 minutes ago</div>
+                  <div class="alert-title" data-lang-key="alert2_title">데이터베이스 연결 풀 80% 사용</div>
+                  <div class="alert-time" data-lang-key="alert2_time">15분 전</div>
                 </div>
               </div>
               <div class="alert-item info">
                 <span class="alert-icon">🔵</span>
                 <div class="alert-content">
-                  <div class="alert-title" data-lang-key="alert3_title">Scheduled maintenance started</div>
-                  <div class="alert-time" data-lang-key="alert3_time">1 hour ago</div>
+                  <div class="alert-title" data-lang-key="alert3_title">예정된 점검 시작됨</div>
+                  <div class="alert-time" data-lang-key="alert3_time">1시간 전</div>
                 </div>
               </div>
             </div>
             
             <div class="log-stream">
               <div class="panel-header" style="margin-bottom: 0; padding: 12px 16px;">
-                <h3 style="font-size: 12px;" data-lang-key="live_logs">LIVE LOGS</h3>
-                <button class="log-control" id="pauseLogs" data-lang-key="pause_btn">PAUSE</button>
+                <h3 style="font-size: 12px;" data-lang-key="live_logs">실시간 로그</h3>
+                <button class="log-control" id="pauseLogs" data-lang-key="pause_btn">일시정지</button>
               </div>
               <div class="log-content" id="logContent">
                 <div class="log-entry">
                   <span class="log-time">14:23:01</span>
                   <span class="log-service">API</span>
-                  <span class="log-message">Health check passed</span>
+                  <span class="log-message">상태 확인 완료</span>
                 </div>
                 <div class="log-entry">
                   <span class="log-time">14:23:00</span>
                   <span class="log-service">AUTH</span>
-                  <span class="log-message">User session created</span>
+                  <span class="log-message">사용자 세션 생성됨</span>
                 </div>
                 <div class="log-entry">
                   <span class="log-time">14:22:58</span>
                   <span class="log-service">DB</span>
-                  <span class="log-message">Query optimization completed</span>
+                  <span class="log-message">쿼리 최적화 완료</span>
                 </div>
               </div>
             </div>
@@ -383,7 +383,7 @@
     </section>
   </main>
 
-  <!-- 푸터 -->
+  <!-- 푸터 - 한국어로 수정 -->
   <footer>
     <div class="container footer-container-wrapper">
       <div class="footer-top">
@@ -391,9 +391,9 @@
           <div class="logo">TV<span>SPOTCAM</span></div>
           <p data-lang-key="footer_desc">스포츠의 모든 순간을 당신의 눈앞에 선명하게 전합니다.</p>
           <div class="social-links">
-            <a href="#" class="social-icon" aria-label="YouTube">📺</a>
-            <a href="#" class="social-icon" aria-label="Instagram">📷</a>
-            <a href="#" class="social-icon" aria-label="Twitter">🐦</a>
+            <a href="#" class="social-icon" aria-label="유튜브">📺</a>
+            <a href="#" class="social-icon" aria-label="인스타그램">📷</a>
+            <a href="#" class="social-icon" aria-label="트위터">🐦</a>
           </div>
         </div>
         <div class="footer-col">
