@@ -1,1 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>티비 스포캠 — Sports Reimagined</title>
+  <!-- Favicon 추가 (404 에러 방지) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚽</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="logo" style="font-size: 32px;">TV<span>SPOTCAM</span></div>
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="container header-inner">
+      <div class="logo">TV<span>SPOTCAM</span></div>
+      <nav class="nav-desktop">
+        <a href="#" class="nav-link active">홈</a>
+        <a href="#" class="nav-link">라이브</a>
+        <a href="#" class="nav-link">VOD</a>
+        <a href="#" class="nav-link">커뮤니티</a>
+        <a href="#" class="nav-link">이벤트</a>
+      </nav>
+      <div class="user-actions">
+        <div class="search-wrapper">
+          <input type="text" class="search-input" placeholder="검색어를 입력하세요...">
+          <button class="btn-icon search-icon-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+        </div>
+        <button class="btn-icon" title="알림">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        </button>
+        <button class="btn btn-primary">로그인</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <h1>모든 경기를<br>완벽하게 담다</h1>
+      <p>티비 스포캠은 팬을 위해 탄생했습니다. 4K 고화질 영상, 실시간 스코어, 그리고 분석된 데이터까지. 스포츠 감동을 놓치지 마세요.</p>
+      <div style="display: flex; gap: 16px;">
+        <button class="btn btn-primary" style="height: 48px; font-size: 16px;">지금 시청하기</button>
+        <button class="btn" style="height: 48px; background: rgba(255,255,255,0.1); color: #fff; border:1px solid rgba(255,255,255,0.2);">더 알아보기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+    <section>
+      <div class="section-head">
+        <div class="section-title">최신 업데이트</div>
+        <div class="view-all">전체 보기 &rarr;</div>
+      </div>
+      <div class="video-grid">
+        <!-- Card 1 -->
+        <div class="video-card">
+          <div class="card-thumb">
+            
+            <div class="card-overlay"><div class="play-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+            <span class="duration-badge">12:45</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta"><span class="meta-tag">축구</span><span class="meta-tag">하이라이트</span></div>
+            <h3 class="card-title">손흥민 시즌 20호 골 모음. 드디어 득점왕 등극!</h3>
+            <div class="card-info"><span>조회수 1.2만</span><span>2시간 전</span></div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="video-card">
+          <div class="card-thumb">
+            
+            <div class="card-overlay"><div class="play-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+            <span class="duration-badge">45:20</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta"><span class="meta-tag" style="background:#E50914; color:white;">LIVE</span><span class="meta-tag">야구</span></div>
+            <h3 class="card-title">2023 KBO Korean Series Game 5 - 롯데 vs KIA</h3>
+            <div class="card-info"><span>실시간 시청자 3.4천</span><span>지금</span></div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="video-card">
+          <div class="card-thumb">
+            
+            <div class="card-overlay"><div class="play-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+            <span class="duration-badge">08:12</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta"><span class="meta-tag">분석</span><span class="meta-tag">NBA</span></div>
+            <h3 class="card-title">르브론 제임스의 경기 운영 패턴 완벽 분석</h3>
+            <div class="card-info"><span>조회수 8,921</span><span>어제</span></div>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="video-card">
+          <div class="card-thumb">
+            
+            <div class="card-overlay"><div class="play-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+            <span class="duration-badge">15:33</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta"><span class="meta-tag">인터뷰</span><span class="meta-tag">축구</span></div>
+            <h3 class="card-title">감독 인터뷰: "다음 경기는 반드시 이기겠다"</h3>
+            <div class="card-info"><span>조회수 5,400</span><span>2일 전</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- INFRASTRUCTURE MONITORING DASHBOARD -->
+  <section class="infra-dashboard">
+    <div class="container">
+      <div class="infra-header">
+        <div class="header-grid">
+          <div class="system-info">
+            <div class="infra-title">INFRASTRUCTURE MONITORING</div>
+            <div class="cluster-details">
+              <div class="cluster-item">
+                <span class="cluster-label">CLUSTER:</span>
+                <span class="cluster-value">TVSP-AWS-PRD-01</span>
+              </div>
+              <div class="cluster-item">
+                <span class="cluster-label">REGION:</span>
+                <span class="cluster-value">AP-NORTHEAST-2</span>
+              </div>
+              <div class="cluster-item">
+                <span class="cluster-label">STATUS:</span>
+                <span class="status-badge maintenance">MAINTENANCE MODE</span>
+              </div>
+            </div>
+          </div>
+          <div class="status-center">
+            <div class="uptime-display">
+              <div class="uptime-value">99.87%</div>
+              <div class="uptime-label">UPTIME</div>
+            </div>
+            <div class="health-indicators">
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span>API</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot warn"></div>
+                <span>DB</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span>CDN</span>
+              </div>
+            </div>
+          </div>
+          <div class="time-metrics">
+            <div class="current-time" id="currentTime">--:--:-- UTC</div>
+            <div class="quick-stats">
+              <div class="stat">
+                <span class="stat-value">2.4K</span>
+                <span class="stat-label">REQ/S</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">128ms</span>
+                <span class="stat-label">LATENCY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="maintenance-progress">
+          <div class="progress-label">
+            <span>SYSTEM MAINTENANCE IN PROGRESS</span>
+            <span class="progress-percent">45%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 45%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="metrics-panel">
+          <div class="panel-header">
+            <h3>SYSTEM METRICS</h3>
+            <span class="update-time">Updated just now</span>
+          </div>
+          <div class="metric-cards">
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">CPU UTILIZATION</span>
+                <span class="metric-value">24%</span>
+              </div>
+              <div class="metric-bar">
+                <div class="bar-fill cpu" style="width: 24%"></div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">MEMORY USAGE</span>
+                <span class="metric-value">68%</span>
+              </div>
+              <div class="metric-bar">
+                <div class="bar-fill memory" style="width: 68%"></div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">NETWORK I/O</span>
+                <span class="metric-value">2.1 Gbps</span>
+              </div>
+              <div class="metric-bar">
+                <div class="bar-fill network" style="width: 42%"></div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-info">
+                <span class="metric-label">DISK I/O</span>
+                <span class="metric-value">540 MB/s</span>
+              </div>
+              <div class="metric-bar">
+                <div class="bar-fill disk" style="width: 27%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="service-map-panel">
+          <div class="panel-header">
+            <h3>SERVICE DEPENDENCIES</h3>
+            <div class="view-controls">
+              <button class="view-btn active">LIVE</button>
+              <button class="view-btn">HEALTH</button>
+              <button class="view-btn">PERF</button>
+            </div>
+          </div>
+          <div class="service-map">
+            <div class="service-node primary">
+              <div class="node-icon">🌐</div>
+              <div class="node-info">
+                <div class="node-name">API Gateway</div>
+                <div class="node-status ok">Healthy</div>
+              </div>
+            </div>
+            <div class="service-connection"></div>
+            <div class="service-node">
+              <div class="node-icon">⚡</div>
+              <div class="node-info">
+                <div class="node-name">Auth Service</div>
+                <div class="node-status ok">Healthy</div>
+              </div>
+            </div>
+            <div class="service-connection"></div>
+            <div class="service-node">
+              <div class="node-icon">🎥</div>
+              <div class="node-info">
+                <div class="node-name">Streaming</div>
+                <div class="node-status warn">Degraded</div>
+              </div>
+            </div>
+            <div class="service-connection"></div>
+            <div class="service-node">
+              <div class="node-icon">💾</div>
+              <div class="node-info">
+                <div class="node-name">Database</div>
+                <div class="node-status ok">Healthy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="alerts-panel">
+          <div class="panel-header">
+            <h3>RECENT ALERTS</h3>
+            <span class="alert-count">3 Active</span>
+          </div>
+          <div class="alert-list">
+            <div class="alert-item critical">
+              <div class="alert-icon">🚨</div>
+              <div class="alert-content">
+                <div class="alert-title">High CPU Load on worker-03</div>
+                <div class="alert-time">2 minutes ago</div>
+              </div>
+            </div>
+            <div class="alert-item warning">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-content">
+                <div class="alert-title">Database connection pool 80% full</div>
+                <div class="alert-time">15 minutes ago</div>
+              </div>
+            </div>
+            <div class="alert-item info">
+              <div class="alert-icon">ℹ️</div>
+              <div class="alert-content">
+                <div class="alert-title">Scheduled maintenance started</div>
+                <div class="alert-time">1 hour ago</div>
+              </div>
+            </div>
+          </div>
+          <div class="log-stream">
+            <div class="panel-header">
+              <h3>LIVE LOGS</h3>
+              <button class="log-control">PAUSE</button>
+            </div>
+            <div class="log-content">
+              <div class="log-entry">
+                <span class="log-time">14:23:01</span>
+                <span class="log-service">[API]</span>
+                <span class="log-message">Health check passed</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-time">14:22:58</span>
+                <span class="log-service">[AUTH]</span>
+                <span class="log-message">User session created: user_88472</span>
+              </div>
+              <div class="log-entry">
+                <span class="log-time">14:22:55</span>
+                <span class="log-service">[DB]</span>
+                <span class="log-message">Query optimization completed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-container-wrapper">
+      <div class="footer-top">
+        <div class="footer-col">
+          <div class="logo">TV<span>SPOTCAM</span></div>
+          <p>스포츠의 모든 순간을 당신의 눈앞에 선명하게 전합니다.<br>전 세계 팬들을 위해 설계된 최고의 스포츠 플랫폼.</p>
+          <div class="social-links">
+            <a href="#" class="social-icon" title="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg></a>
+            <a href="#" class="social-icon" title="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+            <a href="#" class="social-icon" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>바로가기</h4>
+          <ul class="footer-links"><li><a href="#">이용약관</a></li><li><a href="#">개인정보처리방침</a></li><li><a href="#">청소년보호정책</a></li><li><a href="#">이벤트 당첨자 발표</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>고객센터</h4>
+          <div class="support-info"><p style="font-weight:700; color:var(--text-white);">1588-0000</p><p>평일 09:00 - 18:00</p><small>(점심시간 12:00 - 13:00, 주말/공휴일 휴무)</small><p style="margin-top:12px;">help@tvspotcam.com</p></div>
+        </div>
+        <div class="footer-col">
+          <h4>뉴스레터 구독</h4>
+          <p style="font-size:13px; margin-bottom:12px;">최신 소식과 이벤트 정보를 가장 먼저 받아보세요.</p>
+          <form class="subscribe-form" onsubmit="event.preventDefault(); alert('구독이 신청되었습니다.');"><input type="email" class="subscribe-input" placeholder="이메일 주소 입력" required><button type="submit" class="subscribe-btn">구독</button></form>
+        </div>
+      </div>
+      <div class="footer-bottom"><div class="copyright">&copy; 2023 TV SpotCam Inc. All Rights Reserved.</div><div class="legal-links"><a href="#">사업자정보</a><a href="#">제휴문의</a><a href="#">이용가이드</a></div></div>
+    </div>
+  </footer>
+
+  <!-- JS 파일 연결 -->
+  <script src="script.js"></script>
+</body>
+</html>
