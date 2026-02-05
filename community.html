@@ -1,1 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>커뮤니티 - TV SpotCam</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* 커뮤니티 전용 스타일 - Neon Cyberpunk Theme */
+    .community-hero {
+      position: relative;
+      padding: 100px 0 40px;
+      margin-top: calc(var(--header-h) * -1);
+      padding-top: calc(var(--header-h) + 100px);
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0e12 0%, #0f172a 50%, #1e293b 100%);
+    }
+    
+    .community-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 60px;
+      align-items: center;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      border-radius: 20px;
+      font-size: 13px;
+      color: #0ea5e9;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .hero-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: #0ea5e9;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #0ea5e9;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .community-hero h1 {
+      font-size: 56px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .community-hero p {
+      color: #64748b;
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 480px;
+    }
+    
+    /* Stats Cards - Glassmorphism */
+    .community-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .stat-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px 32px;
+      min-width: 160px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(14, 165, 233, 0.3);
+      box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.2);
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+    
+    .stat-card.posts::before { background: linear-gradient(90deg, transparent, #0ea5e9, transparent); }
+    .stat-card.comments::before { background: linear-gradient(90deg, transparent, #8b5cf6, transparent); }
+    .stat-card.online::before { background: linear-gradient(90deg, transparent, #22c55e, transparent); }
+    
+    .stat-card .number {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .stat-card.posts .number { color: #0ea5e9; text-shadow: 0 0 20px rgba(14, 165, 233, 0.3); }
+    .stat-card.comments .number { color: #8b5cf6; text-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+    .stat-card.online .number { color: #22c55e; text-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+    
+    .stat-card .label {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Filter Tabs - 일반 흐름으로 변경 (sticky 제거) */
+    .filter-section {
+      background: var(--bg-deep);
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      /* sticky 제거 - position: relative로 변경 */
+      position: relative;
+      z-index: 10;
+    }
+    
+    .filter-tabs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #64748b;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .filter-tab::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .filter-tab:hover {
+      border-color: rgba(14, 165, 233, 0.5);
+      color: #94a3b8;
+      transform: translateY(-2px);
+    }
+    
+    .filter-tab.active {
+      border-color: transparent;
+      color: white;
+      font-weight: 600;
+    }
+    
+    .filter-tab.active::before {
+      opacity: 1;
+    }
+    
+    .filter-tab span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Write Section */
+    .write-section {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .write-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+    }
+    
+    .write-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .write-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .write-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group select,
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-white);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+    
+    .form-group select:focus,
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+    
+    .form-group textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    
+    /* Post Cards */
+    .post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .post-card {
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: 16px;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .post-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #0ea5e9, #8b5cf6);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .post-card:hover {
+      background: rgba(30, 41, 59, 0.6);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateX(4px);
+    }
+    
+    .post-card:hover::before {
+      opacity: 1;
+    }
+    
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    
+    .author-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+    }
+    
+    .author-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .author-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #e2e8f0;
+    }
+    
+    .post-time {
+      font-size: 13px;
+      color: #475569;
+    }
+    
+    .post-category {
+      padding: 6px 14px;
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      color: #0ea5e9;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .post-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      color: #f1f5f9;
+    }
+    
+    .post-content {
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .post-footer {
+      display: flex;
+      gap: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .post-action {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    
+    .post-action:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #94a3b8;
+    }
+    
+    .post-action.liked {
+      color: #ec4899;
+      background: rgba(236, 72, 153, 0.1);
+    }
+    
+    /* Login Prompt */
+    .login-prompt {
+      text-align: center;
+      padding: 80px 40px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border-radius: 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .login-prompt::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+    }
+    
+    .login-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 24px;
+      box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.3);
+    }
+    
+    .login-prompt h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    
+    .login-prompt p {
+      color: #64748b;
+      margin-bottom: 28px;
+      font-size: 16px;
+      position: relative;
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 48px;
+    }
+    
+    .page-btn {
+      min-width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #64748b;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    
+    .page-btn:hover {
+      border-color: #0ea5e9;
+      color: #0ea5e9;
+    }
+    
+    .page-btn.active {
+      background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 100px 20px;
+      color: #475569;
+    }
+    
+    .empty-state-icon {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      margin: 0 auto 24px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .community-stats {
+        flex-direction: row;
+        justify-content: center;
+      }
+      
+      .stat-card {
+        min-width: 140px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .community-hero h1 {
+        font-size: 36px;
+      }
+      
+      .community-stats {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .stat-card {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .stat-card .number {
+        font-size: 28px;
+      }
+      
+      .filter-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+      }
+      
+      .filter-tab {
+        white-space: nowrap;
+      }
+      
+      .post-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .form-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 로더 -->
+  <div id="loader">
+    <div class="logo">TV<span>SPOTCAM</span></div>
+    <div class="loader-bar">
+      <div class="loader-progress"></div>
+    </div>
+  </div>
 
+  <!-- 헤더 - 기존과 동일한 구조 -->
+  <header id="header">
+    <div class="container header-inner">
+      <div class="logo" onclick="location.href='index.html'">TV<span>SPOTCAM</span></div>
+      
+      <nav class="nav-desktop">
+        <a href="index.html" class="nav-link" data-lang-key="nav_home">홈</a>
+        <a href="#" class="nav-link" data-lang-key="nav_live">라이브</a>
+        <a href="#" class="nav-link" data-lang-key="nav_vod">VOD</a>
+        <a href="community.html" class="nav-link active" data-lang-key="nav_community">커뮤니티</a>
+        <a href="#" class="nav-link" data-lang-key="nav_event">이벤트</a>
+      </nav>
+
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="메뉴 열기">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="user-actions">
+        <div class="search-wrapper">
+          <input type="text" 
+                 id="searchInput"
+                 name="search"
+                 class="search-input" 
+                 placeholder="검색어를 입력하세요..."
+                 autocomplete="off" />
+          <button class="search-icon-btn btn-icon" aria-label="검색">🔍</button>
+        </div>
+        <select id="langSelect" class="lang-select">
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+        </select>
+        <button class="btn btn-primary" id="loginBtn" data-lang-key="login">로그인</button>
+        <div class="user-profile" id="userProfile" style="display: none;">
+          <span class="username" id="username"></span>
+          <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-mobile" id="navMobile">
+      <a href="index.html" class="nav-link" data-lang-key="nav_home">홈</a>
+      <a href="#" class="nav-link" data-lang-key="nav_live">라이브</a>
+      <a href="#" class="nav-link" data-lang-key="nav_vod">VOD</a>
+      <a href="community.html" class="nav-link active" data-lang-key="nav_community">커뮤니티</a>
+      <a href="#" class="nav-link" data-lang-key="nav_event">이벤트</a>
+    </nav>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <main>
+    <!-- 히어로 섹션 -->
+    <section class="community-hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="hero-badge">Fan Community</div>
+            <h1>스포츠 팬들의<br>커뮤니티</h1>
+            <p>같은 팀을 응원하는 팬들과 함께 이야기 나눠보세요. 실시간 경기 토론부터 일상 이야기까지, 당신의 스포츠 라이프를 공유하세요.</p>
+          </div>
+          
+          <!-- Glassmorphism Stats Cards -->
+          <div class="community-stats">
+            <div class="stat-card posts">
+              <div class="number" id="totalPosts">0</div>
+              <div class="label">전체 글</div>
+            </div>
+            <div class="stat-card comments">
+              <div class="number" id="totalComments">0</div>
+              <div class="label">댓글</div>
+            </div>
+            <div class="stat-card online">
+              <div class="number" id="onlineUsers">128</div>
+              <div class="label">온라인</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Section - sticky 제거, 일반 흐름 -->
+    <div class="filter-section">
+      <div class="container">
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-category="all"><span>전체</span></button>
+          <button class="filter-tab" data-category="soccer"><span>축구</span></button>
+          <button class="filter-tab" data-category="baseball"><span>야구</span></button>
+          <button class="filter-tab" data-category="basketball"><span>농구</span></button>
+          <button class="filter-tab" data-category="free"><span>자유</span></button>
+        </div>
+      </div>
+    </div>
+
+    <section class="community-content" style="padding: 40px 0 80px;">
+      <div class="container">
+        <!-- 글쓰기 폼 -->
+        <div class="write-section" id="writeSection" style="display: none;">
+          <div class="write-header">
+            <div class="write-icon">✨</div>
+            <h3 class="write-title">새 글 작성</h3>
+          </div>
+          
+          <div class="form-group">
+            <select id="postCategory">
+              <option value="soccer">축구 토론</option>
+              <option value="baseball">야구 토론</option>
+              <option value="basketball">농구 토론</option>
+              <option value="free">자유 주제</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="text" id="postTitle" placeholder="제목을 입력하세요" />
+          </div>
+          <div class="form-group">
+            <textarea id="postContent" placeholder="내용을 입력하세요. 스포츠 팬들과 나누고 싶은 이야기를 자유롭게 적어주세요."></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" onclick="clearForm()">취소</button>
+            <button class="btn btn-primary" onclick="submitPost()">등록하기</button>
+          </div>
+        </div>
+
+        <!-- 로그인 필요 -->
+        <div class="login-prompt" id="loginPrompt">
+          <div class="login-icon">🔐</div>
+          <h3>로그인이 필요합니다</h3>
+          <p>글을 작성하고 다른 팬들과 소통하려면 로그인해주세요</p>
+          <button class="btn btn-primary btn-lg" onclick="showLoginModal()">로그인하기</button>
+        </div>
+
+        <!-- 게시글 목록 -->
+        <div class="post-list" id="postList"></div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination" id="pagination">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">4</button>
+          <button class="page-btn">5</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 푸터 -->
+  <footer>
+    <div class="container footer-container-wrapper">
+      <div class="footer-top">
+        <div class="footer-col">
+          <div class="logo">TV<span>SPOTCAM</span></div>
+          <p>스포츠의 모든 순간을 당신의 눈앞에 선명하게 전합니다.</p>
+          <div class="social-links">
+            <a href="#" class="social-icon" aria-label="유튜브">📺</a>
+            <a href="#" class="social-icon" aria-label="인스타그램">📷</a>
+            <a href="#" class="social-icon" aria-label="트위터">🐦</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>바로가기</h4>
+          <ul class="footer-links">
+            <li><a href="#">이용약관</a></li>
+            <li><a href="#">개인정보처리방침</a></li>
+            <li><a href="#">청소년보호정책</a></li>
+            <li><a href="#">이벤트 당첨자 발표</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>고객센터</h4>
+          <div class="support-info">
+            <p>1588-1234</p>
+            <small>평일 09:00 - 18:00</small><br>
+            <small>(점심시간 12:00 - 13:00, 주말/공휴일 휴무)</small>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>뉴스레터 구독</h4>
+          <p>최신 소식과 이벤트 정보를 가장 먼저 받아보세요.</p>
+          <form class="subscribe-form" onsubmit="event.preventDefault(); alert('구독되었습니다!');">
+            <input type="email" 
+                   id="newsletterEmail" 
+                   name="email" 
+                   class="subscribe-input" 
+                   placeholder="이메일 주소 입력" 
+                   autocomplete="email"
+                   required />
+            <button type="submit" class="subscribe-btn">구독</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">© 2023 TV SpotCam Inc. All Rights Reserved.</p>
+        <div class="legal-links">
+          <a href="#">사업자정보</a>
+          <a href="#">제휴문의</a>
+          <a href="#">이용가이드</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // ======================
+    // 커뮤니티 JavaScript
+    // ======================
+
+    const dummyPosts = [
+      {
+        id: 1,
+        title: "손흥민 이번 시즌 진짜 미쳤다",
+        content: "어제 경기 보신 분 계신가요? 골 결정력이 예전 같지 않아서 걱정했는데, 어제는 진짜 레전드였습니다. 토트넘 팬들 모여주세요!",
+        author: "SpursFan",
+        category: "soccer",
+        date: "2023-11-15 14:30",
+        likes: 42,
+        comments: 15,
+        views: 1205
+      },
+      {
+        id: 2,
+        title: "KBO FA시장 예상",
+        content: "이번 FA 최대어는 누구라고 보시나요? 개인적으로는 에이스 투수가 가장 중요하다고 봅니다. 구단별 필요 포지션 분석해봤어요.",
+        author: "야구박사",
+        category: "baseball",
+        date: "2023-11-15 12:15",
+        likes: 28,
+        comments: 32,
+        views: 892
+      },
+      {
+        id: 3,
+        title: "NBA 중계 시간대 개선 필요",
+        content: "미국 시간이라 새벽에만 볼 수 있는 게 너무 힘듭니다. 하이라이트라도 제때 올려주면 좋겠어요. 다른 분들은 어떻게 보고 계세요?",
+        author: "농구매니아",
+        category: "basketball",
+        date: "2023-11-15 09:45",
+        likes: 67,
+        comments: 41,
+        views: 2341
+      },
+      {
+        id: 4,
+        title: "이번 주말 같이 축구 볼 사람?",
+        content: "강남 쪽 스포츠바에서 같이 볼 분 구합니다. 맨유 경기 예정이에요. 맥주 한잔 하면서 응원해요!",
+        author: "맨유서포터",
+        category: "free",
+        date: "2023-11-14 18:20",
+        likes: 12,
+        comments: 8,
+        views: 445
+      },
+      {
+        id: 5,
+        title: "우리 팀 유니폼 공동구매 합니다",
+        content: "해외 직구로 유니폼 구매하실 분 10명 모집합니다. 배송비 나누면 개당 8만원 정도 예상됩니다. 댓글로 신청해주세요.",
+        author: "구매대행",
+        category: "free",
+        date: "2023-11-14 11:00",
+        likes: 35,
+        comments: 23,
+        views: 1567
+      }
+    ];
+
+    let currentUser = null;
+    let posts = [];
+    let currentCategory = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 800);
+
+      checkLoginStatus();
+      loadPosts();
+
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentCategory = tab.dataset.category;
+          renderPosts();
+        });
+      });
+
+      initMobileMenu();
+    });
+
+    function checkLoginStatus() {
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showLoggedInState();
+      } else {
+        showLoggedOutState();
+      }
+    }
+
+    function showLoggedInState() {
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('userProfile').style.display = 'flex';
+      document.getElementById('username').textContent = currentUser.name;
+      document.getElementById('writeSection').style.display = 'block';
+      document.getElementById('loginPrompt').style.display = 'none';
+    }
+
+    function showLoggedOutState() {
+      document.getElementById('loginBtn').style.display = 'block';
+      document.getElementById('userProfile').style.display = 'none';
+      document.getElementById('writeSection').style.display = 'none';
+      document.getElementById('loginPrompt').style.display = 'block';
+    }
+
+    function showLoginModal() {
+      const name = prompt('닉네임을 입력하세요:');
+      if (name && name.trim()) {
+        currentUser = { name: name.trim(), id: Date.now() };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showLoggedInState();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      currentUser = null;
+      showLoggedOutState();
+    }
+
+    function loadPosts() {
+      const savedPosts = localStorage.getItem('communityPosts');
+      posts = savedPosts ? JSON.parse(savedPosts) : dummyPosts;
+      if (!savedPosts) savePosts();
+      updateStats();
+      renderPosts();
+    }
+
+    function savePosts() {
+      localStorage.setItem('communityPosts', JSON.stringify(posts));
+    }
+
+    function updateStats() {
+      document.getElementById('totalPosts').textContent = posts.length.toLocaleString();
+      const totalComments = posts.reduce((sum, p) => sum + p.comments, 0);
+      document.getElementById('totalComments').textContent = totalComments.toLocaleString();
+    }
+
+    function renderPosts() {
+      const list = document.getElementById('postList');
+      const filtered = currentCategory === 'all' ? posts : posts.filter(p => p.category === currentCategory);
+      
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>아직 게시글이 없습니다. 첫 글을 작성해보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(post => `
+        <article class="post-card" onclick="viewPost(${post.id})">
+          <div class="post-header">
+            <div class="post-meta">
+              <div class="author-avatar">${post.author.charAt(0)}</div>
+              <div class="author-info">
+                <span class="author-name">${escapeHtml(post.author)}</span>
+                <span class="post-time">${post.date}</span>
+              </div>
+            </div>
+            <span class="post-category">${getCategoryName(post.category)}</span>
+          </div>
+          <h3 class="post-title">${escapeHtml(post.title)}</h3>
+          <p class="post-content">${escapeHtml(post.content)}</p>
+          <div class="post-footer">
+            <span class="post-action ${post.likedBy?.includes(currentUser?.id) ? 'liked' : ''}" onclick="event.stopPropagation(); likePost(${post.id})">
+              👍 ${post.likes.toLocaleString()}
+            </span>
+            <span class="post-action">
+              💬 ${post.comments.toLocaleString()}
+            </span>
+            <span class="post-action">
+              👁️ ${post.views.toLocaleString()}
+            </span>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function getCategoryName(cat) {
+      const names = { soccer: '축구', baseball: '야구', basketball: '농구', free: '자유' };
+      return names[cat] || cat;
+    }
+
+    function submitPost() {
+      const title = document.getElementById('postTitle').value.trim();
+      const content = document.getElementById('postContent').value.trim();
+      const category = document.getElementById('postCategory').value;
+
+      if (!title || !content) {
+        alert('제목과 내용을 모두 입력해주세요.');
+        return;
+      }
+
+      const newPost = {
+        id: Date.now(),
+        title, content, author: currentUser.name, category,
+        date: new Date().toLocaleString('ko-KR'),
+        likes: 0, comments: 0, views: 0, likedBy: []
+      };
+
+      posts.unshift(newPost);
+      savePosts();
+      updateStats();
+      renderPosts();
+      clearForm();
+      alert('글이 등록되었습니다!');
+    }
+
+    function clearForm() {
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postContent').value = '';
+    }
+
+    function likePost(postId) {
+      if (!currentUser) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      const post = posts.find(p => p.id === postId);
+      if (!post) return;
+      if (!post.likedBy) post.likedBy = [];
+      
+      const userIndex = post.likedBy.indexOf(currentUser.id);
+      if (userIndex > -1) {
+        post.likedBy.splice(userIndex, 1);
+        post.likes--;
+      } else {
+        post.likedBy.push(currentUser.id);
+        post.likes++;
+      }
+
+      savePosts();
+      renderPosts();
+    }
+
+    function viewPost(postId) {
+      const post = posts.find(p => p.id === postId);
+      if (post) {
+        post.views++;
+        savePosts();
+        renderPosts();
+        alert(`[${post.title}]\n\n${post.content}\n\n작성자: ${post.author}\n조회수: ${post.views}`);
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function initMobileMenu() {
+      const toggle = document.getElementById('mobileMenuToggle');
+      const nav = document.getElementById('navMobile');
+      
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        nav.classList.toggle('active');
+      });
+    }
+  </script>
+</body>
+</html>
