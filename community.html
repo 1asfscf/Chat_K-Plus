@@ -156,12 +156,11 @@
       letter-spacing: 0.5px;
     }
     
-    /* Filter Tabs - 일반 흐름으로 변경 (sticky 제거) */
+    /* Filter Tabs - 일반 흐름으로 변경 */
     .filter-section {
       background: var(--bg-deep);
       padding: 32px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      /* sticky 제거 - position: relative로 변경 */
       position: relative;
       z-index: 10;
     }
@@ -614,7 +613,7 @@
     </div>
   </div>
 
-  <!-- 헤더 - 기존과 동일한 구조 -->
+  <!-- 헤더 -->
   <header id="header">
     <div class="container header-inner">
       <div class="logo" onclick="location.href='index.html'">TV<span>SPOTCAM</span></div>
@@ -671,39 +670,38 @@
       <div class="container">
         <div class="hero-grid">
           <div class="hero-content">
-            <div class="hero-badge">Fan Community</div>
-            <h1>스포츠 팬들의<br>커뮤니티</h1>
-            <p>같은 팀을 응원하는 팬들과 함께 이야기 나눠보세요. 실시간 경기 토론부터 일상 이야기까지, 당신의 스포츠 라이프를 공유하세요.</p>
+            <div class="hero-badge" data-lang-key="community_badge">Fan Community</div>
+            <h1 data-lang-key="community_title">스포츠 팬들의<br>커뮤니티</h1>
+            <p data-lang-key="community_desc">같은 팀을 응원하는 팬들과 함께 이야기 나눠보세요. 실시간 경기 토론부터 일상 이야기까지, 당신의 스포츠 라이프를 공유하세요.</p>
           </div>
           
-          <!-- Glassmorphism Stats Cards -->
           <div class="community-stats">
             <div class="stat-card posts">
               <div class="number" id="totalPosts">0</div>
-              <div class="label">전체 글</div>
+              <div class="label" data-lang-key="stat_posts">전체 글</div>
             </div>
             <div class="stat-card comments">
               <div class="number" id="totalComments">0</div>
-              <div class="label">댓글</div>
+              <div class="label" data-lang-key="stat_comments">댓글</div>
             </div>
             <div class="stat-card online">
               <div class="number" id="onlineUsers">128</div>
-              <div class="label">온라인</div>
+              <div class="label" data-lang-key="stat_online">온라인</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Filter Section - sticky 제거, 일반 흐름 -->
+    <!-- Filter Section -->
     <div class="filter-section">
       <div class="container">
         <div class="filter-tabs">
-          <button class="filter-tab active" data-category="all"><span>전체</span></button>
-          <button class="filter-tab" data-category="soccer"><span>축구</span></button>
-          <button class="filter-tab" data-category="baseball"><span>야구</span></button>
-          <button class="filter-tab" data-category="basketball"><span>농구</span></button>
-          <button class="filter-tab" data-category="free"><span>자유</span></button>
+          <button class="filter-tab active" data-category="all"><span data-lang-key="filter_all">전체</span></button>
+          <button class="filter-tab" data-category="soccer"><span data-lang-key="filter_soccer">축구</span></button>
+          <button class="filter-tab" data-category="baseball"><span data-lang-key="filter_baseball">야구</span></button>
+          <button class="filter-tab" data-category="basketball"><span data-lang-key="filter_basketball">농구</span></button>
+          <button class="filter-tab" data-category="free"><span data-lang-key="filter_free">자유</span></button>
         </div>
       </div>
     </div>
@@ -714,35 +712,35 @@
         <div class="write-section" id="writeSection" style="display: none;">
           <div class="write-header">
             <div class="write-icon">✨</div>
-            <h3 class="write-title">새 글 작성</h3>
+            <h3 class="write-title" data-lang-key="write_title">새 글 작성</h3>
           </div>
           
           <div class="form-group">
             <select id="postCategory">
-              <option value="soccer">축구 토론</option>
-              <option value="baseball">야구 토론</option>
-              <option value="basketball">농구 토론</option>
-              <option value="free">자유 주제</option>
+              <option value="soccer" data-lang-key="cat_soccer">축구 토론</option>
+              <option value="baseball" data-lang-key="cat_baseball">야구 토론</option>
+              <option value="basketball" data-lang-key="cat_basketball">농구 토론</option>
+              <option value="free" data-lang-key="cat_free">자유 주제</option>
             </select>
           </div>
           <div class="form-group">
-            <input type="text" id="postTitle" placeholder="제목을 입력하세요" />
+            <input type="text" id="postTitle" data-lang-key="placeholder_title" placeholder="제목을 입력하세요" />
           </div>
           <div class="form-group">
-            <textarea id="postContent" placeholder="내용을 입력하세요. 스포츠 팬들과 나누고 싶은 이야기를 자유롭게 적어주세요."></textarea>
+            <textarea id="postContent" data-lang-key="placeholder_content" placeholder="내용을 입력하세요. 스포츠 팬들과 나누고 싶은 이야기를 자유롭게 적어주세요."></textarea>
           </div>
           <div class="form-actions">
-            <button class="btn btn-outline" onclick="clearForm()">취소</button>
-            <button class="btn btn-primary" onclick="submitPost()">등록하기</button>
+            <button class="btn btn-outline" onclick="clearForm()" data-lang-key="btn_cancel">취소</button>
+            <button class="btn btn-primary" onclick="submitPost()" data-lang-key="btn_submit">등록하기</button>
           </div>
         </div>
 
         <!-- 로그인 필요 -->
         <div class="login-prompt" id="loginPrompt">
           <div class="login-icon">🔐</div>
-          <h3>로그인이 필요합니다</h3>
-          <p>글을 작성하고 다른 팬들과 소통하려면 로그인해주세요</p>
-          <button class="btn btn-primary btn-lg" onclick="showLoginModal()">로그인하기</button>
+          <h3 data-lang-key="login_title">로그인이 필요합니다</h3>
+          <p data-lang-key="login_desc">글을 작성하고 다른 팬들과 소통하려면 로그인해주세요</p>
+          <button class="btn btn-primary btn-lg" onclick="showLoginModal()" data-lang-key="btn_login">로그인하기</button>
         </div>
 
         <!-- 게시글 목록 -->
@@ -766,7 +764,7 @@
       <div class="footer-top">
         <div class="footer-col">
           <div class="logo">TV<span>SPOTCAM</span></div>
-          <p>스포츠의 모든 순간을 당신의 눈앞에 선명하게 전합니다.</p>
+          <p data-lang-key="footer_desc">스포츠의 모든 순간을 당신의 눈앞에 선명하게 전합니다.</p>
           <div class="social-links">
             <a href="#" class="social-icon" aria-label="유튜브">📺</a>
             <a href="#" class="social-icon" aria-label="인스타그램">📷</a>
@@ -774,43 +772,44 @@
           </div>
         </div>
         <div class="footer-col">
-          <h4>바로가기</h4>
+          <h4 data-lang-key="quick_links">바로가기</h4>
           <ul class="footer-links">
-            <li><a href="#">이용약관</a></li>
-            <li><a href="#">개인정보처리방침</a></li>
-            <li><a href="#">청소년보호정책</a></li>
-            <li><a href="#">이벤트 당첨자 발표</a></li>
+            <li><a href="#" data-lang-key="terms">이용약관</a></li>
+            <li><a href="#" data-lang-key="privacy">개인정보처리방침</a></li>
+            <li><a href="#" data-lang-key="youth">청소년보호정책</a></li>
+            <li><a href="#" data-lang-key="winners">이벤트 당첨자 발표</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>고객센터</h4>
+          <h4 data-lang-key="support">고객센터</h4>
           <div class="support-info">
             <p>1588-1234</p>
-            <small>평일 09:00 - 18:00</small><br>
-            <small>(점심시간 12:00 - 13:00, 주말/공휴일 휴무)</small>
+            <small data-lang-key="support_hours">평일 09:00 - 18:00</small><br>
+            <small data-lang-key="lunch_break">(점심시간 12:00 - 13:00, 주말/공휴일 휴무)</small>
           </div>
         </div>
         <div class="footer-col">
-          <h4>뉴스레터 구독</h4>
-          <p>최신 소식과 이벤트 정보를 가장 먼저 받아보세요.</p>
+          <h4 data-lang-key="newsletter">뉴스레터 구독</h4>
+          <p data-lang-key="newsletter_desc">최신 소식과 이벤트 정보를 가장 먼저 받아보세요.</p>
           <form class="subscribe-form" onsubmit="event.preventDefault(); alert('구독되었습니다!');">
             <input type="email" 
                    id="newsletterEmail" 
                    name="email" 
                    class="subscribe-input" 
+                   data-lang-key="email_placeholder" 
                    placeholder="이메일 주소 입력" 
                    autocomplete="email"
                    required />
-            <button type="submit" class="subscribe-btn">구독</button>
+            <button type="submit" class="subscribe-btn" data-lang-key="subscribe_btn">구독</button>
           </form>
         </div>
       </div>
       <div class="footer-bottom">
-        <p class="copyright">© 2023 TV SpotCam Inc. All Rights Reserved.</p>
+        <p class="copyright" data-lang-key="copyright">© 2023 TV SpotCam Inc. All Rights Reserved.</p>
         <div class="legal-links">
-          <a href="#">사업자정보</a>
-          <a href="#">제휴문의</a>
-          <a href="#">이용가이드</a>
+          <a href="#" data-lang-key="business_info">사업자정보</a>
+          <a href="#" data-lang-key="partnership">제휴문의</a>
+          <a href="#" data-lang-key="guide">이용가이드</a>
         </div>
       </div>
     </div>
@@ -819,8 +818,170 @@
   <script src="script.js"></script>
   <script>
     // ======================
-    // 커뮤니티 JavaScript
+    // 커뮤니티 JavaScript + 언어 설정
     // ======================
+
+    const communityTranslations = {
+      ko: {
+        community_badge: "Fan Community",
+        community_title: "스포츠 팬들의<br>커뮤니티",
+        community_desc: "같은 팀을 응원하는 팬들과 함께 이야기 나눠보세요. 실시간 경기 토론부터 일상 이야기까지, 당신의 스포츠 라이프를 공유하세요.",
+        stat_posts: "전체 글",
+        stat_comments: "댓글",
+        stat_online: "온라인",
+        filter_all: "전체",
+        filter_soccer: "축구",
+        filter_baseball: "야구",
+        filter_basketball: "농구",
+        filter_free: "자유",
+        write_title: "새 글 작성",
+        cat_soccer: "축구 토론",
+        cat_baseball: "야구 토론",
+        cat_basketball: "농구 토론",
+        cat_free: "자유 주제",
+        placeholder_title: "제목을 입력하세요",
+        placeholder_content: "내용을 입력하세요. 스포츠 팬들과 나누고 싶은 이야기를 자유롭게 적어주세요.",
+        btn_cancel: "취소",
+        btn_submit: "등록하기",
+        login_title: "로그인이 필요합니다",
+        login_desc: "글을 작성하고 다른 팬들과 소통하려면 로그인해주세요",
+        btn_login: "로그인하기"
+      },
+      en: {
+        community_badge: "Fan Community",
+        community_title: "Sports Fan<br>Community",
+        community_desc: "Share your thoughts with fans who support the same team. From live game discussions to daily stories, share your sports life.",
+        stat_posts: "Posts",
+        stat_comments: "Comments",
+        stat_online: "Online",
+        filter_all: "All",
+        filter_soccer: "Soccer",
+        filter_baseball: "Baseball",
+        filter_basketball: "Basketball",
+        filter_free: "Free",
+        write_title: "Write Post",
+        cat_soccer: "Soccer Talk",
+        cat_baseball: "Baseball Talk",
+        cat_basketball: "Basketball Talk",
+        cat_free: "Free Topic",
+        placeholder_title: "Enter title",
+        placeholder_content: "Enter content. Feel free to share your stories with sports fans.",
+        btn_cancel: "Cancel",
+        btn_submit: "Submit",
+        login_title: "Login Required",
+        login_desc: "Please login to write posts and communicate with other fans",
+        btn_login: "Login"
+      }
+    };
+
+    // 기존 translations와 병합
+    const allTranslations = {
+      ko: { ...communityTranslations.ko },
+      en: { ...communityTranslations.en }
+    };
+
+    let currentUser = null;
+    let posts = [];
+    let currentCategory = 'all';
+    let currentLang = 'ko';
+
+    // 언어 설정 함수
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      localStorage.setItem('selectedLanguage', lang);
+      
+      // 모든 data-lang-key 요소 처리
+      document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        const translated = allTranslations[lang][key];
+        
+        if (translated) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            el.placeholder = translated;
+          } else {
+            el.innerHTML = translated;
+          }
+        }
+      });
+      
+      // select 박스 동기화
+      const langSelect = document.getElementById('langSelect');
+      if (langSelect) langSelect.value = lang;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 로더 제거
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 800);
+
+      // 저장된 언어 불러오기
+      const savedLang = localStorage.getItem('selectedLanguage') || 'ko';
+      setLanguage(savedLang);
+
+      // 언어 선택기 이벤트
+      const langSelect = document.getElementById('langSelect');
+      if (langSelect) {
+        langSelect.addEventListener('change', (e) => {
+          setLanguage(e.target.value);
+        });
+      }
+
+      checkLoginStatus();
+      loadPosts();
+
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentCategory = tab.dataset.category;
+          renderPosts();
+        });
+      });
+
+      initMobileMenu();
+    });
+
+    function checkLoginStatus() {
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showLoggedInState();
+      } else {
+        showLoggedOutState();
+      }
+    }
+
+    function showLoggedInState() {
+      document.getElementById('loginBtn').style.display = 'none';
+      document.getElementById('userProfile').style.display = 'flex';
+      document.getElementById('username').textContent = currentUser.name;
+      document.getElementById('writeSection').style.display = 'block';
+      document.getElementById('loginPrompt').style.display = 'none';
+    }
+
+    function showLoggedOutState() {
+      document.getElementById('loginBtn').style.display = 'block';
+      document.getElementById('userProfile').style.display = 'none';
+      document.getElementById('writeSection').style.display = 'none';
+      document.getElementById('loginPrompt').style.display = 'block';
+    }
+
+    function showLoginModal() {
+      const name = prompt(currentLang === 'ko' ? '닉네임을 입력하세요:' : 'Enter your nickname:');
+      if (name && name.trim()) {
+        currentUser = { name: name.trim(), id: Date.now() };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        showLoggedInState();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('currentUser');
+      currentUser = null;
+      showLoggedOutState();
+    }
 
     const dummyPosts = [
       {
@@ -880,70 +1041,6 @@
       }
     ];
 
-    let currentUser = null;
-    let posts = [];
-    let currentCategory = 'all';
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.getElementById('loader').classList.add('hidden');
-      }, 800);
-
-      checkLoginStatus();
-      loadPosts();
-
-      document.querySelectorAll('.filter-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          currentCategory = tab.dataset.category;
-          renderPosts();
-        });
-      });
-
-      initMobileMenu();
-    });
-
-    function checkLoginStatus() {
-      const savedUser = localStorage.getItem('currentUser');
-      if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        showLoggedInState();
-      } else {
-        showLoggedOutState();
-      }
-    }
-
-    function showLoggedInState() {
-      document.getElementById('loginBtn').style.display = 'none';
-      document.getElementById('userProfile').style.display = 'flex';
-      document.getElementById('username').textContent = currentUser.name;
-      document.getElementById('writeSection').style.display = 'block';
-      document.getElementById('loginPrompt').style.display = 'none';
-    }
-
-    function showLoggedOutState() {
-      document.getElementById('loginBtn').style.display = 'block';
-      document.getElementById('userProfile').style.display = 'none';
-      document.getElementById('writeSection').style.display = 'none';
-      document.getElementById('loginPrompt').style.display = 'block';
-    }
-
-    function showLoginModal() {
-      const name = prompt('닉네임을 입력하세요:');
-      if (name && name.trim()) {
-        currentUser = { name: name.trim(), id: Date.now() };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        showLoggedInState();
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem('currentUser');
-      currentUser = null;
-      showLoggedOutState();
-    }
-
     function loadPosts() {
       const savedPosts = localStorage.getItem('communityPosts');
       posts = savedPosts ? JSON.parse(savedPosts) : dummyPosts;
@@ -970,7 +1067,7 @@
         list.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">📝</div>
-            <p>아직 게시글이 없습니다. 첫 글을 작성해보세요!</p>
+            <p>${currentLang === 'ko' ? '아직 게시글이 없습니다. 첫 글을 작성해보세요!' : 'No posts yet. Be the first to write!'}</p>
           </div>
         `;
         return;
@@ -1006,8 +1103,11 @@
     }
 
     function getCategoryName(cat) {
-      const names = { soccer: '축구', baseball: '야구', basketball: '농구', free: '자유' };
-      return names[cat] || cat;
+      const names = {
+        ko: { soccer: '축구', baseball: '야구', basketball: '농구', free: '자유' },
+        en: { soccer: 'Soccer', baseball: 'Baseball', basketball: 'Basketball', free: 'Free' }
+      };
+      return names[currentLang][cat] || cat;
     }
 
     function submitPost() {
@@ -1016,14 +1116,14 @@
       const category = document.getElementById('postCategory').value;
 
       if (!title || !content) {
-        alert('제목과 내용을 모두 입력해주세요.');
+        alert(currentLang === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
         return;
       }
 
       const newPost = {
         id: Date.now(),
         title, content, author: currentUser.name, category,
-        date: new Date().toLocaleString('ko-KR'),
+        date: new Date().toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US'),
         likes: 0, comments: 0, views: 0, likedBy: []
       };
 
@@ -1032,7 +1132,7 @@
       updateStats();
       renderPosts();
       clearForm();
-      alert('글이 등록되었습니다!');
+      alert(currentLang === 'ko' ? '글이 등록되었습니다!' : 'Post submitted!');
     }
 
     function clearForm() {
@@ -1042,7 +1142,7 @@
 
     function likePost(postId) {
       if (!currentUser) {
-        alert('로그인이 필요합니다.');
+        alert(currentLang === 'ko' ? '로그인이 필요합니다.' : 'Please login.');
         return;
       }
 
@@ -1069,7 +1169,7 @@
         post.views++;
         savePosts();
         renderPosts();
-        alert(`[${post.title}]\n\n${post.content}\n\n작성자: ${post.author}\n조회수: ${post.views}`);
+        alert(`[${post.title}]\n\n${post.content}\n\n${currentLang === 'ko' ? '작성자' : 'Author'}: ${post.author}\n${currentLang === 'ko' ? '조회수' : 'Views'}: ${post.views}`);
       }
     }
 
