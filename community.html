@@ -15,7 +15,7 @@
       overflow: hidden;
       background: linear-gradient(135deg, #0a0e12 0%, #0f172a 50%, #1e293b 100%);
     }
-    
+  
     .community-hero::before {
       content: '';
       position: absolute;
@@ -28,19 +28,19 @@
         radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
       pointer-events: none;
     }
-    
+  
     .hero-grid {
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 60px;
       align-items: center;
     }
-    
+  
     .hero-content {
       position: relative;
       z-index: 1;
     }
-    
+  
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -56,7 +56,7 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-    
+  
     .hero-badge::before {
       content: '';
       width: 8px;
@@ -66,12 +66,11 @@
       box-shadow: 0 0 10px #0ea5e9;
       animation: pulse 2s infinite;
     }
-    
+  
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+      0%, 100% { opacity: 1; } 50% { opacity: 0.5; }
     }
-    
+  
     .community-hero h1 {
       font-size: 56px;
       font-weight: 900;
@@ -82,14 +81,14 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    
+  
     .community-hero p {
       color: #64748b;
       font-size: 18px;
       line-height: 1.6;
       max-width: 480px;
     }
-    
+  
     /* Stats Cards - Glassmorphism */
     .community-stats {
       display: flex;
@@ -98,7 +97,7 @@
       position: relative;
       z-index: 1;
     }
-    
+  
     .stat-card {
       background: rgba(30, 41, 59, 0.6);
       backdrop-filter: blur(20px);
@@ -110,13 +109,13 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
-    
+  
     .stat-card:hover {
       transform: translateY(-4px);
       border-color: rgba(14, 165, 233, 0.3);
       box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.2);
     }
-    
+  
     .stat-card::before {
       content: '';
       position: absolute;
@@ -128,15 +127,13 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-    
-    .stat-card:hover::before {
-      opacity: 1;
-    }
-    
+  
+    .stat-card:hover::before { opacity: 1; }
+  
     .stat-card.posts::before { background: linear-gradient(90deg, transparent, #0ea5e9, transparent); }
     .stat-card.comments::before { background: linear-gradient(90deg, transparent, #8b5cf6, transparent); }
     .stat-card.online::before { background: linear-gradient(90deg, transparent, #22c55e, transparent); }
-    
+  
     .stat-card .number {
       font-size: 36px;
       font-weight: 800;
@@ -144,18 +141,18 @@
       margin-bottom: 8px;
       font-family: 'Inter', sans-serif;
     }
-    
+  
     .stat-card.posts .number { color: #0ea5e9; text-shadow: 0 0 20px rgba(14, 165, 233, 0.3); }
     .stat-card.comments .number { color: #8b5cf6; text-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
     .stat-card.online .number { color: #22c55e; text-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
-    
+  
     .stat-card .label {
       font-size: 13px;
       color: #64748b;
       font-weight: 500;
       letter-spacing: 0.5px;
     }
-    
+  
     /* Filter Tabs - 일반 흐름으로 변경 */
     .filter-section {
       background: var(--bg-deep);
@@ -164,13 +161,13 @@
       position: relative;
       z-index: 10;
     }
-    
+  
     .filter-tabs {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
     }
-    
+  
     .filter-tab {
       padding: 10px 20px;
       background: transparent;
@@ -184,7 +181,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+  
     .filter-tab::before {
       content: '';
       position: absolute;
@@ -193,28 +190,23 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-    
+  
     .filter-tab:hover {
       border-color: rgba(14, 165, 233, 0.5);
       color: #94a3b8;
       transform: translateY(-2px);
     }
-    
+  
     .filter-tab.active {
       border-color: transparent;
       color: white;
       font-weight: 600;
     }
-    
-    .filter-tab.active::before {
-      opacity: 1;
-    }
-    
-    .filter-tab span {
-      position: relative;
-      z-index: 1;
-    }
-    
+  
+    .filter-tab.active::before { opacity: 1; }
+  
+    .filter-tab span { position: relative; z-index: 1; }
+  
     /* Write Section */
     .write-section {
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
@@ -225,7 +217,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+  
     .write-section::before {
       content: '';
       position: absolute;
@@ -235,14 +227,14 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
     }
-    
+  
     .write-header {
       display: flex;
       align-items: center;
       gap: 12px;
       margin-bottom: 24px;
     }
-    
+  
     .write-icon {
       width: 48px;
       height: 48px;
@@ -253,16 +245,11 @@
       justify-content: center;
       font-size: 24px;
     }
-    
-    .write-title {
-      font-size: 20px;
-      font-weight: 700;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
+  
+    .write-title { font-size: 20px; font-weight: 700; }
+  
+    .form-group { margin-bottom: 20px; }
+  
     .form-group select,
     .form-group input,
     .form-group textarea {
@@ -276,7 +263,7 @@
       font-family: inherit;
       transition: all 0.3s;
     }
-    
+  
     .form-group select:focus,
     .form-group input:focus,
     .form-group textarea:focus {
@@ -284,25 +271,21 @@
       border-color: #0ea5e9;
       box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
     }
-    
+  
     .form-group textarea {
       min-height: 140px;
       resize: vertical;
     }
-    
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-    }
-    
+  
+    .form-actions { display: flex; justify-content: flex-end; gap: 12px; }
+  
     /* Post Cards */
     .post-list {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-    
+  
     .post-card {
       background: rgba(30, 41, 59, 0.4);
       border-radius: 16px;
@@ -313,7 +296,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+  
     .post-card::before {
       content: '';
       position: absolute;
@@ -325,30 +308,28 @@
       opacity: 0;
       transition: opacity 0.3s;
     }
-    
+  
     .post-card:hover {
       background: rgba(30, 41, 59, 0.6);
       border-color: rgba(255, 255, 255, 0.1);
       transform: translateX(4px);
     }
-    
-    .post-card:hover::before {
-      opacity: 1;
-    }
-    
+  
+    .post-card:hover::before { opacity: 1; }
+  
     .post-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 16px;
     }
-    
+  
     .post-meta {
       display: flex;
       align-items: center;
       gap: 14px;
     }
-    
+  
     .author-avatar {
       width: 44px;
       height: 44px;
@@ -362,24 +343,24 @@
       color: white;
       box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
     }
-    
+  
     .author-info {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    
+  
     .author-name {
       font-weight: 600;
       font-size: 15px;
       color: #e2e8f0;
     }
-    
+  
     .post-time {
       font-size: 13px;
       color: #475569;
     }
-    
+  
     .post-category {
       padding: 6px 14px;
       background: rgba(14, 165, 233, 0.1);
@@ -391,7 +372,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    
+  
     .post-title {
       font-size: 20px;
       font-weight: 700;
@@ -399,7 +380,7 @@
       line-height: 1.4;
       color: #f1f5f9;
     }
-    
+  
     .post-content {
       color: #64748b;
       font-size: 15px;
@@ -410,14 +391,14 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    
+  
     .post-footer {
       display: flex;
       gap: 24px;
       padding-top: 20px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
-    
+  
     .post-action {
       display: flex;
       align-items: center;
@@ -430,17 +411,17 @@
       padding: 6px 12px;
       border-radius: 8px;
     }
-    
+  
     .post-action:hover {
       background: rgba(255, 255, 255, 0.05);
       color: #94a3b8;
     }
-    
+  
     .post-action.liked {
       color: #ec4899;
       background: rgba(236, 72, 153, 0.1);
     }
-    
+  
     /* Login Prompt */
     .login-prompt {
       text-align: center;
@@ -451,14 +432,14 @@
       position: relative;
       overflow: hidden;
     }
-    
+  
     .login-prompt::before {
       content: '';
       position: absolute;
       inset: 0;
       background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
     }
-    
+  
     .login-icon {
       width: 80px;
       height: 80px;
@@ -471,20 +452,20 @@
       margin: 0 auto 24px;
       box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.3);
     }
-    
+  
     .login-prompt h3 {
       font-size: 24px;
       margin-bottom: 12px;
       position: relative;
     }
-    
+  
     .login-prompt p {
       color: #64748b;
       margin-bottom: 28px;
       font-size: 16px;
       position: relative;
     }
-    
+  
     /* Pagination */
     .pagination {
       display: flex;
@@ -492,7 +473,7 @@
       gap: 8px;
       margin-top: 48px;
     }
-    
+  
     .page-btn {
       min-width: 44px;
       height: 44px;
@@ -507,26 +488,26 @@
       transition: all 0.3s;
       font-weight: 500;
     }
-    
+  
     .page-btn:hover {
       border-color: #0ea5e9;
       color: #0ea5e9;
     }
-    
+  
     .page-btn.active {
       background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
       border-color: transparent;
       color: white;
       box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
     }
-    
+  
     /* Empty State */
     .empty-state {
       text-align: center;
       padding: 100px 20px;
       color: #475569;
     }
-    
+  
     .empty-state-icon {
       width: 120px;
       height: 120px;
@@ -539,68 +520,55 @@
       margin: 0 auto 24px;
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
-    
+  
     /* Responsive */
     @media (max-width: 1024px) {
       .hero-grid {
         grid-template-columns: 1fr;
         gap: 40px;
       }
-      
+    
       .community-stats {
         flex-direction: row;
         justify-content: center;
       }
-      
+    
       .stat-card {
         min-width: 140px;
       }
     }
-    
+  
     @media (max-width: 768px) {
-      .community-hero h1 {
-        font-size: 36px;
-      }
-      
+      .community-hero h1 { font-size: 36px; }
+    
       .community-stats {
         flex-direction: column;
         width: 100%;
       }
-      
+    
       .stat-card {
         width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
-      
-      .stat-card .number {
-        font-size: 28px;
-      }
-      
+    
+      .stat-card .number { font-size: 28px; }
+    
       .filter-tabs {
         overflow-x: auto;
         flex-wrap: nowrap;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 8px;
       }
-      
-      .filter-tab {
-        white-space: nowrap;
-      }
-      
-      .post-header {
-        flex-direction: column;
-        gap: 12px;
-      }
-      
-      .form-actions {
-        flex-direction: column;
-      }
-      
-      .form-actions .btn {
-        width: 100%;
-      }
+    
+      .filter-tab { white-space: nowrap; }
+    
+      .post-header { flex-direction: column; gap: 12px; }
+    
+      .form-actions { flex-direction: column; }
+    
+      .form-actions .btn { width: 100%; }
     }
   </style>
 </head>
@@ -617,7 +585,7 @@
   <header id="header">
     <div class="container header-inner">
       <div class="logo" onclick="location.href='index.html'">TV<span>SPOTCAM</span></div>
-      
+    
       <nav class="nav-desktop">
         <a href="index.html" class="nav-link" data-lang-key="nav_home">홈</a>
         <a href="#" class="nav-link" data-lang-key="nav_live">라이브</a>
@@ -674,7 +642,7 @@
             <h1 data-lang-key="community_title">스포츠 팬들의<br>커뮤니티</h1>
             <p data-lang-key="community_desc">같은 팀을 응원하는 팬들과 함께 이야기 나눠보세요. 실시간 경기 토론부터 일상 이야기까지, 당신의 스포츠 라이프를 공유하세요.</p>
           </div>
-          
+        
           <div class="community-stats">
             <div class="stat-card posts">
               <div class="number" id="totalPosts">0</div>
@@ -714,7 +682,7 @@
             <div class="write-icon">✨</div>
             <h3 class="write-title" data-lang-key="write_title">새 글 작성</h3>
           </div>
-          
+        
           <div class="form-group">
             <select id="postCategory">
               <option value="soccer" data-lang-key="cat_soccer">축구 토론</option>
@@ -815,7 +783,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
   <script>
     // ======================
     // 커뮤니티 JavaScript + 언어 설정
@@ -890,12 +857,12 @@
       currentLang = lang;
       document.documentElement.lang = lang;
       localStorage.setItem('selectedLanguage', lang);
-      
+    
       // 모든 data-lang-key 요소 처리
       document.querySelectorAll('[data-lang-key]').forEach(el => {
         const key = el.getAttribute('data-lang-key');
         const translated = allTranslations[lang][key];
-        
+      
         if (translated) {
           if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
             el.placeholder = translated;
@@ -904,7 +871,7 @@
           }
         }
       });
-      
+    
       // select 박스 동기화
       const langSelect = document.getElementById('langSelect');
       if (langSelect) langSelect.value = lang;
@@ -1062,7 +1029,7 @@
     function renderPosts() {
       const list = document.getElementById('postList');
       const filtered = currentCategory === 'all' ? posts : posts.filter(p => p.category === currentCategory);
-      
+    
       if (filtered.length === 0) {
         list.innerHTML = `
           <div class="empty-state">
@@ -1149,7 +1116,7 @@
       const post = posts.find(p => p.id === postId);
       if (!post) return;
       if (!post.likedBy) post.likedBy = [];
-      
+    
       const userIndex = post.likedBy.indexOf(currentUser.id);
       if (userIndex > -1) {
         post.likedBy.splice(userIndex, 1);
@@ -1182,7 +1149,7 @@
     function initMobileMenu() {
       const toggle = document.getElementById('mobileMenuToggle');
       const nav = document.getElementById('navMobile');
-      
+    
       toggle.addEventListener('click', () => {
         toggle.classList.toggle('active');
         nav.classList.toggle('active');
