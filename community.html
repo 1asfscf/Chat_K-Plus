@@ -6,6 +6,11 @@
   <title>커뮤니티 - TV SpotCam</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    /* 헤더 높이 계산을 위한 CSS 변수 (기본값) */
+    :root {
+      --header-h: 80px;
+    }
+
     /* 커뮤니티 전용 스타일 - Neon Cyberpunk Theme */
     .community-hero {
       position: relative;
@@ -570,6 +575,12 @@
     
       .form-actions .btn { width: 100%; }
     }
+
+    /* 헤더 애니메이션을 위한 전환 효과 */
+    #header {
+      transition: transform 0.3s ease-in-out;
+      will-change: transform;
+    }
   </style>
 </head>
 <body>
@@ -783,12 +794,16 @@
     </div>
   </footer>
 
+  <!-- 원본 script.js 포함 (헤더 애니메이션 및 공통 기능용) -->
+  <script src="script.js"></script>
+
   <script>
     // ======================
-    // 커뮤니티 JavaScript + 언어 설정
+    // 커뮤니티 전용 JavaScript
     // ======================
 
-    const communityTranslations = {
+    // 번역 데이터를 window 객체에 노출 (script.js에서 접근 가능하도록)
+    window.communityTranslations = {
       ko: {
         community_badge: "Fan Community",
         community_title: "스포츠 팬들의<br>커뮤니티",
@@ -841,27 +856,24 @@
       }
     };
 
-    // 기존 translations와 병합
-    const allTranslations = {
-      ko: { ...communityTranslations.ko },
-      en: { ...communityTranslations.en }
+    // script.js와 호환되는 allTranslations 객체
+    window.allTranslations = {
+      ko: { ...window.communityTranslations.ko },
+      en: { ...window.communityTranslations.en }
     };
 
-    let currentUser = null;
+    // currentLang은 script.js에서 관리하므로 여기서 선언하지 않음
     let posts = [];
     let currentCategory = 'all';
-    let currentLang = 'ko';
 
-    // 언어 설정 함수
-    function setLanguage(lang) {
-      currentLang = lang;
+    // 언어 설정 함수 (script.js의 setLanguage와 호환)
+    function setCommunityLanguage(lang) {
       document.documentElement.lang = lang;
-      localStorage.setItem('selectedLanguage', lang);
     
       // 모든 data-lang-key 요소 처리
       document.querySelectorAll('[data-lang-key]').forEach(el => {
         const key = el.getAttribute('data-lang-key');
-        const translated = allTranslations[lang][key];
+        const translated = window.allTranslations[lang][key];
       
         if (translated) {
           if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
@@ -877,23 +889,61 @@
       if (langSelect) langSelect.value = lang;
     }
 
+    // 헤더 높이 계산 및 CSS 변수 설정 (인덱스와 동일한 애니메이션을 위해)
+    function updateHeaderHeight() {
+      const header = document.getElementById('header');
+      if (header) {
+        const headerHeight = header.offsetHeight;
+        document.documentElement.style.setProperty('--header-h', `${headerHeight}px`);
+      }
+    }
+
+    // 스크롤 시 헤더 인/아웃 애니메이션
+    let lastScrollY = window.scrollY;
+    function handleScroll() {
+      const header = document.getElementById('header');
+      const currentScrollY = window.scrollY;
+    
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // 스크롤 다운 시 헤더 숨김
+        header.style.transform = 'translateY(-100%)';
+      } else {
+        // 스크롤 업 시 헤더 표시
+        header.style.transform = 'translateY(0)';
+      }
+    
+      lastScrollY = currentScrollY;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       // 로더 제거
       setTimeout(() => {
         document.getElementById('loader').classList.add('hidden');
       }, 800);
 
-      // 저장된 언어 불러오기
-      const savedLang = localStorage.getItem('selectedLanguage') || 'ko';
-      setLanguage(savedLang);
+      // 헤더 높이 계산
+      updateHeaderHeight();
+      window.addEventListener('resize', updateHeaderHeight);
 
-      // 언어 선택기 이벤트
+      // 스크롤 애니메이션 이벤트
+      window.addEventListener('scroll', handleScroll);
+
+      // 언어 선택기 이벤트 (script.js의 전역 함수와 연동)
       const langSelect = document.getElementById('langSelect');
       if (langSelect) {
         langSelect.addEventListener('change', (e) => {
-          setLanguage(e.target.value);
+          // script.js의 setLanguage 함수가 있다면 호출, 없으면 커뮤니티 함수 호출
+          if (typeof setLanguage === 'function') {
+            setLanguage(e.target.value);
+          } else {
+            setCommunityLanguage(e.target.value);
+          }
         });
       }
+
+      // script.js에서 currentLang을 관리하므로 여기서는 초기 언어 설정만
+      const savedLang = localStorage.getItem('selectedLanguage') || 'ko';
+      setCommunityLanguage(savedLang);
 
       checkLoginStatus();
       loadPosts();
@@ -936,7 +986,7 @@
     }
 
     function showLoginModal() {
-      const name = prompt(currentLang === 'ko' ? '닉네임을 입력하세요:' : 'Enter your nickname:');
+      const name = prompt((typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Enter your nickname:' : '닉네임을 입력하세요:');
       if (name && name.trim()) {
         currentUser = { name: name.trim(), id: Date.now() };
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -1034,7 +1084,7 @@
         list.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">📝</div>
-            <p>${currentLang === 'ko' ? '아직 게시글이 없습니다. 첫 글을 작성해보세요!' : 'No posts yet. Be the first to write!'}</p>
+            <p>${(typeof currentLang !== 'undefined' && currentLang === 'en') ? 'No posts yet. Be the first to write!' : '아직 게시글이 없습니다. 첫 글을 작성해보세요!'}</p>
           </div>
         `;
         return;
@@ -1070,11 +1120,12 @@
     }
 
     function getCategoryName(cat) {
+      const lang = (typeof currentLang !== 'undefined') ? currentLang : 'ko';
       const names = {
         ko: { soccer: '축구', baseball: '야구', basketball: '농구', free: '자유' },
         en: { soccer: 'Soccer', baseball: 'Baseball', basketball: 'Basketball', free: 'Free' }
       };
-      return names[currentLang][cat] || cat;
+      return names[lang][cat] || cat;
     }
 
     function submitPost() {
@@ -1083,14 +1134,14 @@
       const category = document.getElementById('postCategory').value;
 
       if (!title || !content) {
-        alert(currentLang === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
+        alert((typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Please enter both title and content.' : '제목과 내용을 모두 입력해주세요.');
         return;
       }
 
       const newPost = {
         id: Date.now(),
         title, content, author: currentUser.name, category,
-        date: new Date().toLocaleString(currentLang === 'ko' ? 'ko-KR' : 'en-US'),
+        date: new Date().toLocaleString((typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en-US' : 'ko-KR'),
         likes: 0, comments: 0, views: 0, likedBy: []
       };
 
@@ -1099,7 +1150,7 @@
       updateStats();
       renderPosts();
       clearForm();
-      alert(currentLang === 'ko' ? '글이 등록되었습니다!' : 'Post submitted!');
+      alert((typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Post submitted!' : '글이 등록되었습니다!');
     }
 
     function clearForm() {
@@ -1109,7 +1160,7 @@
 
     function likePost(postId) {
       if (!currentUser) {
-        alert(currentLang === 'ko' ? '로그인이 필요합니다.' : 'Please login.');
+        alert((typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Please login.' : '로그인이 필요합니다.');
         return;
       }
 
@@ -1136,7 +1187,10 @@
         post.views++;
         savePosts();
         renderPosts();
-        alert(`[${post.title}]\n\n${post.content}\n\n${currentLang === 'ko' ? '작성자' : 'Author'}: ${post.author}\n${currentLang === 'ko' ? '조회수' : 'Views'}: ${post.views}`);
+        const lang = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'ko';
+        const authorLabel = lang === 'en' ? 'Author' : '작성자';
+        const viewsLabel = lang === 'en' ? 'Views' : '조회수';
+        alert(`[${post.title}]\n\n${post.content}\n\n${authorLabel}: ${post.author}\n${viewsLabel}: ${post.views}`);
       }
     }
 
