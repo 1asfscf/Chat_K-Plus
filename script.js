@@ -1,5 +1,5 @@
 // ======================
-// 티비 스포캠 JavaScript (원본 구조 유지)
+// 티비 스포캠 JavaScript (원본 구조 유지 + 커뮤니티 통합)
 // ======================
 
 const translations = {
@@ -40,7 +40,7 @@ const translations = {
     filter_soccer: "축구",
     filter_baseball: "야구",
     filter_basketball: "농구",
-    filter_free: "자유",  // ✅ 영어로 번역해도 "자유" 그대로 (사용자 요청)
+    filter_free: "자유",
     write_title: "새 글 작성",
     cat_soccer: "축구 토론",
     cat_baseball: "야구 토론",
@@ -62,13 +62,9 @@ const translations = {
     post_date: "날짜",
     post_category: "카테고리",
     post_empty: "아직 게시글이 없습니다. 첫 글을 작성해보세요!",
-    post_empty_en: "No posts yet. Be the first to write!",
     post_login_required: "로그인이 필요합니다.",
-    post_login_required_en: "Please login.",
     post_enter_title_content: "제목과 내용을 모두 입력해주세요.",
-    post_enter_title_content_en: "Please enter both title and content.",
-    post_submitted: "글이 등록되었습니다!",
-    post_submitted_en: "Post submitted!"
+    post_submitted: "글이 등록되었습니다!"
   },
   en: {
     // 기존 인덱스 페이지 번역
@@ -107,7 +103,7 @@ const translations = {
     filter_soccer: "Soccer",
     filter_baseball: "Baseball",
     filter_basketball: "Basketball",
-    filter_free: "General",  // ✅ "FREE" → "General"으로 변경
+    filter_free: "General",
     write_title: "Write Post",
     cat_soccer: "Soccer Talk",
     cat_baseball: "Baseball Talk",
@@ -129,13 +125,9 @@ const translations = {
     post_date: "Date",
     post_category: "Category",
     post_empty: "No posts yet. Be the first to write!",
-    post_empty_en: "No posts yet. Be the first to write!",
     post_login_required: "Please login.",
-    post_login_required_en: "Please login.",
     post_enter_title_content: "Please enter both title and content.",
-    post_enter_title_content_en: "Please enter both title and content.",
-    post_submitted: "Post submitted!",
-    post_submitted_en: "Post submitted!"
+    post_submitted: "Post submitted!"
   }
 };
 
@@ -378,62 +370,18 @@ function initHud() {
   initLogStream();
 }
 
-// 9. 전체 초기화 - 원본 유지
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('TV SpotCam initializing...');
-  
-  const savedLang = localStorage.getItem('selectedLanguage') || 'ko';
-  
-  const langSelect = document.getElementById('langSelect');
-  if (langSelect) {
-    langSelect.value = savedLang;
-    langSelect.addEventListener('change', (e) => {
-      setLanguage(e.target.value);
-      isLogsPaused = false;
-      if (document.getElementById('pauseLogs')) {
-        document.getElementById('pauseLogs').textContent = e.target.value === 'ko' ? '일시정지' : 'PAUSE';
-        document.getElementById('pauseLogs').style.background = 'rgba(255,255,255,0.1)';
-      }
-    });
-  }
-  
-  initMobileFeatures();
-  initServiceDepsTabs();
-  
-  const loader = document.getElementById('loader');
-  if (loader) {
-    setTimeout(() => {
-      loader.classList.add('hidden');
-      setLanguage(savedLang);
-      initScrollEffects();
-      updateClock();
-      setInterval(updateClock, 1000);
-      initHud();
-    }, 1200);
-  } else {
-    setLanguage(savedLang);
-    initScrollEffects();
-    updateClock();
-    setInterval(updateClock, 1000);
-    initHud();
-  }
-  
-  if ('performance' in window) {
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const perf = performance.getEntriesByType('navigation')[0];
-        if (perf?.loadEventEnd && perf?.navigationStart) {
-          console.log(`Page load time: ${Math.round(perf.loadEventEnd - perf.navigationStart)}ms`);
-        }
-      }, 0);
-    });
-  }
-});
+// ======================
+// ✅ 커뮤니티 기능 (원본에 없던 부분 - 올바른 위치에 배치)
+// ======================
 
-// ✅ 커뮤니티 페이지 전용 기능 (원본에 없던 부분)
 let currentUser = null;
 let posts = [];
 let currentCategory = 'all';
+
+// ✅ 커뮤니티 요소 존재 여부 확인 헬퍼 함수
+function getCommunityElement(id) {
+  return document.getElementById(id);
+}
 
 function checkLoginStatus() {
   const savedUser = localStorage.getItem('currentUser');
@@ -446,18 +394,29 @@ function checkLoginStatus() {
 }
 
 function showLoggedInState() {
-  document.getElementById('loginBtn').style.display = 'none';
-  document.getElementById('userProfile').style.display = 'flex';
-  document.getElementById('username').textContent = currentUser.name;
-  document.getElementById('writeSection').style.display = 'block';
-  document.getElementById('loginPrompt').style.display = 'none';
+  const loginBtn = getCommunityElement('loginBtn');
+  const userProfile = getCommunityElement('userProfile');
+  const username = getCommunityElement('username');
+  const writeSection = getCommunityElement('writeSection');
+  const loginPrompt = getCommunityElement('loginPrompt');
+
+  if (loginBtn) loginBtn.style.display = 'none';
+  if (userProfile) userProfile.style.display = 'flex';
+  if (username) username.textContent = currentUser.name;
+  if (writeSection) writeSection.style.display = 'block';
+  if (loginPrompt) loginPrompt.style.display = 'none';
 }
 
 function showLoggedOutState() {
-  document.getElementById('loginBtn').style.display = 'block';
-  document.getElementById('userProfile').style.display = 'none';
-  document.getElementById('writeSection').style.display = 'none';
-  document.getElementById('loginPrompt').style.display = 'block';
+  const loginBtn = getCommunityElement('loginBtn');
+  const userProfile = getCommunityElement('userProfile');
+  const writeSection = getCommunityElement('writeSection');
+  const loginPrompt = getCommunityElement('loginPrompt');
+
+  if (loginBtn) loginBtn.style.display = 'block';
+  if (userProfile) userProfile.style.display = 'none';
+  if (writeSection) writeSection.style.display = 'none';
+  if (loginPrompt) loginPrompt.style.display = 'block';
 }
 
 function showLoginModal() {
@@ -546,13 +505,18 @@ function savePosts() {
 }
 
 function updateStats() {
-  document.getElementById('totalPosts').textContent = posts.length.toLocaleString();
+  const totalPostsEl = getCommunityElement('totalPosts');
+  const totalCommentsEl = getCommunityElement('totalComments');
+  
+  if (totalPostsEl) totalPostsEl.textContent = posts.length.toLocaleString();
   const totalComments = posts.reduce((sum, p) => sum + p.comments, 0);
-  document.getElementById('totalComments').textContent = totalComments.toLocaleString();
+  if (totalCommentsEl) totalCommentsEl.textContent = totalComments.toLocaleString();
 }
 
 function renderPosts() {
-  const list = document.getElementById('postList');
+  const list = getCommunityElement('postList');
+  if (!list) return;
+  
   const filtered = currentCategory === 'all' ? posts : posts.filter(p => p.category === currentCategory);
   
   if (filtered.length === 0) {
@@ -597,7 +561,7 @@ function renderPosts() {
 function getCategoryName(cat) {
   const names = {
     ko: { soccer: '축구', baseball: '야구', basketball: '농구', free: '자유' },
-    en: { soccer: 'Soccer', baseball: 'Baseball', basketball: 'Basketball', free: 'General' }  // ✅ "Free" → "General"
+    en: { soccer: 'Soccer', baseball: 'Baseball', basketball: 'Basketball', free: 'General' }
   };
   return names[currentLang][cat] || cat;
 }
@@ -628,8 +592,10 @@ function submitPost() {
 }
 
 function clearForm() {
-  document.getElementById('postTitle').value = '';
-  document.getElementById('postContent').value = '';
+  const titleEl = document.getElementById('postTitle');
+  const contentEl = document.getElementById('postContent');
+  if (titleEl) titleEl.value = '';
+  if (contentEl) contentEl.value = '';
 }
 
 function likePost(postId) {
@@ -674,65 +640,69 @@ function escapeHtml(text) {
 }
 
 function initMobileMenu() {
-  const toggle = document.getElementById('mobileMenuToggle');
-  const nav = document.getElementById('navMobile');
+  const toggle = getCommunityElement('mobileMenuToggle');
+  const nav = getCommunityElement('navMobile');
   
-  toggle.addEventListener('click', () => {
-    toggle.classList.toggle('active');
-    nav.classList.toggle('active');
-  });
-}
-
-// ... 위의 translations 객체와 나머지 코드는 동일 ...
-
-// ✅ 커뮤니티 페이지 전용 기능 (원본에 없던 부분)
-let currentUser = null;
-let posts = [];
-let currentCategory = 'all';
-
-function checkLoginStatus() {
-  const savedUser = localStorage.getItem('currentUser');
-  if (savedUser) {
-    currentUser = JSON.parse(savedUser);
-    showLoggedInState();
-  } else {
-    showLoggedOutState();
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
   }
 }
 
-function showLoggedInState() {
-  // ✅ 요소가 존재하는지 확인 (null 체크)
-  const loginBtn = document.getElementById('loginBtn');
-  const userProfile = document.getElementById('userProfile');
-  const username = document.getElementById('username');
-  const writeSection = document.getElementById('writeSection');
-  const loginPrompt = document.getElementById('loginPrompt');
-
-  if (loginBtn) loginBtn.style.display = 'none';
-  if (userProfile) userProfile.style.display = 'flex';
-  if (username) username.textContent = currentUser.name;
-  if (writeSection) writeSection.style.display = 'block';
-  if (loginPrompt) loginPrompt.style.display = 'none';
-}
-
-function showLoggedOutState() {
-  // ✅ 요소가 존재하는지 확인 (null 체크)
-  const loginBtn = document.getElementById('loginBtn');
-  const userProfile = document.getElementById('userProfile');
-  const writeSection = document.getElementById('writeSection');
-  const loginPrompt = document.getElementById('loginPrompt');
-
-  if (loginBtn) loginBtn.style.display = 'block';
-  if (userProfile) userProfile.style.display = 'none';
-  if (writeSection) writeSection.style.display = 'none';
-  if (loginPrompt) loginPrompt.style.display = 'block';
-}
-
-// ... 나머지 코드는 동일 ...
-
-// ✅ DOMContentLoaded에 커뮤니티 기능 추가 (원본에 없던 부분)
+// ======================
+// ✅ 원본 DOMContentLoaded (수정됨)
+// ======================
 document.addEventListener('DOMContentLoaded', () => {
-  // ... (기존 script.js 기능은 이미 위에서 실행됨) ...
+  console.log('TV SpotCam initializing...');
+  
+  const savedLang = localStorage.getItem('selectedLanguage') || 'ko';
+  
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) {
+    langSelect.value = savedLang;
+    langSelect.addEventListener('change', (e) => {
+      setLanguage(e.target.value);
+      isLogsPaused = false;
+      if (document.getElementById('pauseLogs')) {
+        document.getElementById('pauseLogs').textContent = e.target.value === 'ko' ? '일시정지' : 'PAUSE';
+        document.getElementById('pauseLogs').style.background = 'rgba(255,255,255,0.1)';
+      }
+    });
+  }
+  
+  initMobileFeatures();
+  initServiceDepsTabs();
+  
+  const loader = document.getElementById('loader');
+  if (loader) {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      setLanguage(savedLang);
+      initScrollEffects();
+      updateClock();
+      setInterval(updateClock, 1000);
+      initHud();
+    }, 1200);
+  } else {
+    setLanguage(savedLang);
+    initScrollEffects();
+    updateClock();
+    setInterval(updateClock, 1000);
+    initHud();
+  }
+  
+  if ('performance' in window) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const perf = performance.getEntriesByType('navigation')[0];
+        if (perf?.loadEventEnd && perf?.navigationStart) {
+          console.log(`Page load time: ${Math.round(perf.loadEventEnd - perf.navigationStart)}ms`);
+        }
+      }, 0);
+    });
+  }
 
   // ✅ 커뮤니티 페이지에서만 실행되도록 조건 추가
   if (document.getElementById('postList')) {
@@ -749,37 +719,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     initMobileMenu();
-
-    // 헤더 높이 계산 (커뮤니티 페이지용)
-    updateHeaderHeight();
-    window.addEventListener('resize', updateHeaderHeight);
-
-    // 스크롤 애니메이션 (커뮤니티 페이지용)
-    window.addEventListener('scroll', handleScroll);
   }
 });
-
-// ✅ 헤더 높이 계산 (커뮤니티 페이지용)
-function updateHeaderHeight() {
-  const header = document.getElementById('header');
-  if (header) {
-    const headerHeight = header.offsetHeight;
-    document.documentElement.style.setProperty('--header-h', `${headerHeight}px`);
-  }
-}
-
-// ✅ 스크롤 시 헤더 인/아웃 애니메이션 (커뮤니티 페이지용)
-let lastScrollY = window.scrollY;
-function handleScroll() {
-  const header = document.getElementById('header');
-  if (!header) return; // ✅ header가 없으면 종료
-  const currentScrollY = window.scrollY;
-  
-  if (currentScrollY > lastScrollY && currentScrollY > 100) {
-    header.style.transform = 'translateY(-100%)';
-  } else {
-    header.style.transform = 'translateY(0)';
-  }
-  
-  lastScrollY = currentScrollY;
-}
