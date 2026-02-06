@@ -4,6 +4,7 @@
 
 const translations = {
   ko: {
+    // 기존 인덱스 페이지 번역
     nav_home: "홈", nav_live: "라이브", nav_vod: "VOD", nav_community: "커뮤니티", nav_event: "이벤트",
     search_placeholder: "검색어를 입력하세요...", login: "로그인",
     hero_title: "모든 경기를<br>완벽하게 담다", hero_desc: "티비 스포캠은 팬을 위해 탄생했습니다.",
@@ -26,9 +27,35 @@ const translations = {
     newsletter: "뉴스레터 구독", newsletter_desc: "최신 소식과 이벤트 정보를 가장 먼저 받아보세요.", email_placeholder: "이메일 주소 입력", subscribe_btn: "구독",
     copyright: "© 2023 TV SpotCam Inc. All Rights Reserved.", business_info: "사업자정보", partnership: "제휴문의", guide: "이용가이드",
     current_time: "현재 시간", uptime_value: "가동 시간",
-    live: "실시간", health: "상태", perf: "성능"
+    live: "실시간", health: "상태", perf: "성능",
+
+    // ✅ 커뮤니티 페이지 번역 추가
+    community_badge: "Fan Community",
+    community_title: "스포츠 팬들의<br>커뮤니티",
+    community_desc: "같은 팀을 응원하는 팬들과 함께 이야기 나눠보세요. 실시간 경기 토론부터 일상 이야기까지, 당신의 스포츠 라이프를 공유하세요.",
+    stat_posts: "전체 글",
+    stat_comments: "댓글",
+    stat_online: "온라인",
+    filter_all: "전체",
+    filter_soccer: "축구",
+    filter_baseball: "야구",
+    filter_basketball: "농구",
+    filter_free: "자유",
+    write_title: "새 글 작성",
+    cat_soccer: "축구 토론",
+    cat_baseball: "야구 토론",
+    cat_basketball: "농구 토론",
+    cat_free: "자유 주제",
+    placeholder_title: "제목을 입력하세요",
+    placeholder_content: "내용을 입력하세요. 스포츠 팬들과 나누고 싶은 이야기를 자유롭게 적어주세요.",
+    btn_cancel: "취소",
+    btn_submit: "등록하기",
+    login_title: "로그인이 필요합니다",
+    login_desc: "글을 작성하고 다른 팬들과 소통하려면 로그인해주세요",
+    btn_login: "로그인하기"
   },
   en: {
+    // 기존 인덱스 페이지 번역
     nav_home: "Home", nav_live: "Live", nav_vod: "VOD", nav_community: "Community", nav_event: "Events",
     search_placeholder: "Enter search term...", login: "Login",
     hero_title: "Capture Every Match<br>Perfectly", hero_desc: "Born for fans.",
@@ -51,7 +78,32 @@ const translations = {
     newsletter: "Newsletter Subscription", newsletter_desc: "Be the first to receive the latest news and event information.", email_placeholder: "Enter email address", subscribe_btn: "Subscribe",
     copyright: "© 2023 TV SpotCam Inc. All Rights Reserved.", business_info: "Business Info", partnership: "Partnership", guide: "Guide",
     current_time: "Current Time", uptime_value: "Uptime",
-    live: "LIVE", health: "HEALTH", perf: "PERF"
+    live: "LIVE", health: "HEALTH", perf: "PERF",
+
+    // ✅ 커뮤니티 페이지 번역 추가
+    community_badge: "Fan Community",
+    community_title: "Sports Fan<br>Community",
+    community_desc: "Share your thoughts with fans who support the same team. From live game discussions to daily stories, share your sports life.",
+    stat_posts: "Posts",
+    stat_comments: "Comments",
+    stat_online: "Online",
+    filter_all: "All",
+    filter_soccer: "Soccer",
+    filter_baseball: "Baseball",
+    filter_basketball: "Basketball",
+    filter_free: "Free",
+    write_title: "Write Post",
+    cat_soccer: "Soccer Talk",
+    cat_baseball: "Baseball Talk",
+    cat_basketball: "Basketball Talk",
+    cat_free: "Free Topic",
+    placeholder_title: "Enter title",
+    placeholder_content: "Enter content. Feel free to share your stories with sports fans.",
+    btn_cancel: "Cancel",
+    btn_submit: "Submit",
+    login_title: "Login Required",
+    login_desc: "Please login to write posts and communicate with other fans",
+    btn_login: "Login"
   }
 };
 
