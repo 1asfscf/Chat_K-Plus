@@ -683,22 +683,103 @@ function initMobileMenu() {
   });
 }
 
+// ... 위의 translations 객체와 나머지 코드는 동일 ...
+
+// ✅ 커뮤니티 페이지 전용 기능 (원본에 없던 부분)
+let currentUser = null;
+let posts = [];
+let currentCategory = 'all';
+
+function checkLoginStatus() {
+  const savedUser = localStorage.getItem('currentUser');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    showLoggedInState();
+  } else {
+    showLoggedOutState();
+  }
+}
+
+function showLoggedInState() {
+  // ✅ 요소가 존재하는지 확인 (null 체크)
+  const loginBtn = document.getElementById('loginBtn');
+  const userProfile = document.getElementById('userProfile');
+  const username = document.getElementById('username');
+  const writeSection = document.getElementById('writeSection');
+  const loginPrompt = document.getElementById('loginPrompt');
+
+  if (loginBtn) loginBtn.style.display = 'none';
+  if (userProfile) userProfile.style.display = 'flex';
+  if (username) username.textContent = currentUser.name;
+  if (writeSection) writeSection.style.display = 'block';
+  if (loginPrompt) loginPrompt.style.display = 'none';
+}
+
+function showLoggedOutState() {
+  // ✅ 요소가 존재하는지 확인 (null 체크)
+  const loginBtn = document.getElementById('loginBtn');
+  const userProfile = document.getElementById('userProfile');
+  const writeSection = document.getElementById('writeSection');
+  const loginPrompt = document.getElementById('loginPrompt');
+
+  if (loginBtn) loginBtn.style.display = 'block';
+  if (userProfile) userProfile.style.display = 'none';
+  if (writeSection) writeSection.style.display = 'none';
+  if (loginPrompt) loginPrompt.style.display = 'block';
+}
+
+// ... 나머지 코드는 동일 ...
+
 // ✅ DOMContentLoaded에 커뮤니티 기능 추가 (원본에 없던 부분)
 document.addEventListener('DOMContentLoaded', () => {
-  // 기존 script.js 기능은 이미 위에서 실행됨
-  
-  // 커뮤니티 전용 초기화
-  checkLoginStatus();
-  loadPosts();
+  // ... (기존 script.js 기능은 이미 위에서 실행됨) ...
 
-  document.querySelectorAll('.filter-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentCategory = tab.dataset.category;
-      renderPosts();
+  // ✅ 커뮤니티 페이지에서만 실행되도록 조건 추가
+  if (document.getElementById('postList')) {
+    checkLoginStatus();
+    loadPosts();
+
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentCategory = tab.dataset.category;
+        renderPosts();
+      });
     });
-  });
 
-  initMobileMenu();
+    initMobileMenu();
+
+    // 헤더 높이 계산 (커뮤니티 페이지용)
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+
+    // 스크롤 애니메이션 (커뮤니티 페이지용)
+    window.addEventListener('scroll', handleScroll);
+  }
 });
+
+// ✅ 헤더 높이 계산 (커뮤니티 페이지용)
+function updateHeaderHeight() {
+  const header = document.getElementById('header');
+  if (header) {
+    const headerHeight = header.offsetHeight;
+    document.documentElement.style.setProperty('--header-h', `${headerHeight}px`);
+  }
+}
+
+// ✅ 스크롤 시 헤더 인/아웃 애니메이션 (커뮤니티 페이지용)
+let lastScrollY = window.scrollY;
+function handleScroll() {
+  const header = document.getElementById('header');
+  if (!header) return; // ✅ header가 없으면 종료
+  const currentScrollY = window.scrollY;
+  
+  if (currentScrollY > lastScrollY && currentScrollY > 100) {
+    header.style.transform = 'translateY(-100%)';
+  } else {
+    header.style.transform = 'translateY(0)';
+  }
+  
+  lastScrollY = currentScrollY;
+}
