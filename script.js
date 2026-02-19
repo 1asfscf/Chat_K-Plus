@@ -166,46 +166,95 @@ function setLanguage(lang) {
   if (sel) sel.value = lang;
 }
 
-// 2. 모바일 헤더 및 메뉴 기능 - 원본 유지
+// 2. 모바일 헤더 및 메뉴 기능 - ✅ 수정된 부분
 function initMobileFeatures() {
   const header = document.getElementById('header');
   const mobileToggle = document.getElementById('mobileMenuToggle');
   const navMobile = document.getElementById('navMobile');
-  let lastScroll = 0;
+  
+  if (!header || !mobileToggle || !navMobile) return;
 
-  window.addEventListener('scroll', () => {
-    const current = window.pageYOffset;
+  let lastScroll = 0;
+  let isMenuOpen = false;
+  let scrollTimeout;
+  const headerHeight = header.offsetHeight;
+  const scrollThreshold = headerHeight * 0.5; // 헤더 높이의 50% 이상 스크롤 시
+
+  // 모바일 메뉴 토글 상태 감지
+  mobileToggle.addEventListener('click', () => {
+    isMenuOpen = !isMenuOpen;
+    mobileToggle.classList.toggle('active', isMenuOpen);
+    navMobile.classList.toggle('active', isMenuOpen);
     
-    if (current > 50) {
-      header.classList.add('scrolled');
-      if (current > 200 && current > lastScroll && navMobile && !navMobile.classList.contains('active')) {
-        header.classList.add('hidden');
-      } else {
-        header.classList.remove('hidden');
-      }
-    } else {
-      header.classList.remove('scrolled', 'hidden');
+    // 메뉴가 열리면 헤더를 항상 표시
+    if (isMenuOpen) {
+      header.classList.remove('hidden');
     }
-    lastScroll = current;
   });
 
-  if (mobileToggle && navMobile) {
-    mobileToggle.addEventListener('click', () => {
-      mobileToggle.classList.toggle('active');
-      navMobile.classList.toggle('active');
-      
-      if (navMobile.classList.contains('active')) {
+  // 스크롤 이벤트 처리
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    // 모바일 메뉴가 열려있으면 헤더 제어하지 않음
+    if (isMenuOpen) {
+      lastScroll = currentScroll;
+      return;
+    }
+
+    // 헤더 높이보다 적게 스크롤했을 때
+    if (currentScroll <= 0) {
+      header.classList.remove('hidden', 'scrolled');
+      lastScroll = currentScroll;
+      return;
+    }
+
+    // 스크롤 임계값 이상일 때 스타일 적용
+    if (Math.abs(currentScroll - lastScroll) > 10) {
+      if (currentScroll > lastScroll && currentScroll > scrollThreshold) {
+        // 아래로 스크롤 + 임계값 초과 → 헤더 숨김
+        header.classList.add('hidden');
+      } else if (currentScroll < lastScroll) {
+        // 위로 스크롤 → 헤더 표시
         header.classList.remove('hidden');
       }
-    });
+      
+      // 스크롤 여부에 따라 배경 스타일 적용
+      if (currentScroll > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    }
 
-    navMobile.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileToggle.classList.remove('active');
-        navMobile.classList.remove('active');
-      });
+    // 스크롤 정지 후 헤더 표시 (UX 개선)
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      if (!isMenuOpen && currentScroll > scrollThreshold) {
+        header.classList.remove('hidden');
+      }
+    }, 150);
+  }, { passive: true });
+
+  // 모바일 메뉴 항목 클릭 시 헤더 상태 리셋
+  navMobile.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      isMenuOpen = false;
+      mobileToggle.classList.remove('active');
+      navMobile.classList.remove('active');
+      lastScroll = window.pageYOffset; // 현재 스크롤 위치 저장
     });
-  }
+  });
+
+  // 리사이즈 시 헤더 높이 재계산
+  window.addEventListener('resize', () => {
+    const newHeaderHeight = header.offsetHeight;
+    if (newHeaderHeight !== headerHeight) {
+      location.reload(); // 간단한 처리: 높이 변경 시 페이지 리로드
+    }
+  });
 }
 
 // 3. 서비스 의존성 탭 기능 - 원본 유지
@@ -672,7 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  initMobileFeatures();
+  initMobileFeatures(); // ✅ 수정된 함수 호출
   initServiceDepsTabs();
   
   const loader = document.getElementById('loader');
