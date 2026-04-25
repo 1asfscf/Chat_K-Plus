@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Got – AI 비서</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- 오버레이 (모바일 전용) -->
+        <div class="overlay" id="overlay"></div>
 
+        <!-- 사이드바 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="logo">Chat Got</span>
+                <button class="icon-btn" id="closeSidebarBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <button class="new-chat-btn" id="newChatBtn"><i class="fa-solid fa-plus"></i> 새 대화</button>
+            <div class="chat-list-label">최근 대화</div>
+            <div class="chat-list" id="chatList"></div>
+            <div class="sidebar-footer">
+                <button id="clearBtn"><i class="fa-regular fa-trash-can"></i> 모두 지우기</button>
+                <button id="settingsSidebarBtn"><i class="fa-solid fa-gear"></i> 설정</button>
+            </div>
+        </aside>
+
+        <!-- 메인 -->
+        <main class="main">
+            <header class="header">
+                <button class="icon-btn mobile-only" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
+                <div class="header-title">Chat Got <span class="version">v2.1</span></div>
+                <button class="icon-btn" id="settingsBtn"><i class="fa-solid fa-gear"></i></button>
+            </header>
+
+            <div class="chat-area" id="chatArea">
+                <div class="welcome" id="welcomeSection">
+                    <h2>무엇을 도와드릴까요?</h2>
+                    <p>아래 주제를 선택하거나 자유롭게 질문해보세요</p>
+                    <div class="suggestions">
+                        <button class="suggestion" data-query="머신러닝이 뭔지 쉽게 설명해줘">🧠 머신러닝이 뭐야?</button>
+                        <button class="suggestion" data-query="파이썬으로 간단한 게임 만드는 법">💻 파이썬 게임 만들기</button>
+                        <button class="suggestion" data-query="생산성 높이는 습관 알려줘">⚡ 생산성 습관</button>
+                        <button class="suggestion" data-query="클린코드 작성법">✨ 클린코드 팁</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea id="userInput" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+                    <button id="sendBtn" disabled><i class="fa-solid fa-arrow-up"></i></button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 설정 모달 -->
+        <div class="settings-modal" id="settingsModal">
+            <div class="settings-header">
+                <h3>⚙️ 설정</h3>
+                <button class="icon-btn" id="closeSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="settings-body">
+                <div class="setting-row">
+                    <span>다크 모드</span>
+                    <label class="switch">
+                        <input type="checkbox" id="darkToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-row">
+                    <span>글자 크기</span>
+                    <div class="font-btns" id="fontBtns">
+                        <button class="font-btn" data-size="14">작게</button>
+                        <button class="font-btn active" data-size="16">보통</button>
+                        <button class="font-btn" data-size="18">크게</button>
+                    </div>
+                </div>
+                <button class="danger-btn" id="resetBtn">대화 초기화</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="knowledge.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
