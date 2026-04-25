@@ -15,7 +15,7 @@ class ChatGot {
         this.settingsBtn = document.getElementById('settingsBtn');
         this.settingsModal = document.getElementById('settingsModal');
         this.modalClose = document.getElementById('modalClose');
-        this.saveSettings = document.getElementById('saveSettings');
+        this.saveSettingsBtn = document.getElementById('saveSettings');
         this.themeToggle = document.getElementById('themeToggle');
         this.exportBtn = document.getElementById('exportBtn');
         this.attachBtn = document.getElementById('attachBtn');
@@ -30,7 +30,7 @@ class ChatGot {
         this.isFirstMessage = true;
         this.context = new ConversationContext();
         this.settings = this.loadSettings();
-        this.typingSpeed = 35; // ms per char
+        this.typingSpeed = 35;
         
         this.init();
     }
@@ -41,17 +41,25 @@ class ChatGot {
         this.updateCharCount();
         this.loadConversations();
         
-        // marked 설정
-        marked.setOptions({
-            breaks: true,
-            gfm: true,
-            headerIds: false
-        });
+        if (typeof marked !== 'undefined') {
+            marked.setOptions({
+                breaks: true,
+                gfm: true,
+                headerIds: false
+            });
+        }
     }
 
     loadSettings() {
         const saved = localStorage.getItem('chatgot_settings');
-        return saved ? JSON.parse(saved) : {
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.warn('설정 로드 실패:', e);
+            }
+        }
+        return {
             userName: '',
             theme: 'light',
             typingSpeed: 35
@@ -63,15 +71,12 @@ class ChatGot {
     }
 
     applySettings() {
-        // 사용자 이름
         if (this.settings.userName) {
             this.userName.textContent = this.settings.userName;
         }
         
-        // 테마
         this.applyTheme(this.settings.theme);
         
-        // 타이핑 속도
         this.typingSpeed = this.settings.typingSpeed || 35;
     }
 
@@ -86,12 +91,12 @@ class ChatGot {
         
         if (theme === 'dark') {
             body.setAttribute('data-theme', 'dark');
-            icon.className = 'fa-solid fa-sun';
-            this.hljsTheme.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+            if (icon) icon.className = 'fa-solid fa-sun';
+            if (this.hljsTheme) this.hljsTheme.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
         } else {
             body.removeAttribute('data-theme');
-            icon.className = 'fa-solid fa-moon';
-            this.hljsTheme.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+            if (icon) icon.className = 'fa-solid fa-moon';
+            if (this.hljsTheme) this.hljsTheme.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
         }
     }
 
@@ -114,28 +119,20 @@ class ChatGot {
         this.sidebarOverlay.addEventListener('click', () => this.closeSidebar());
         this.clearBtn.addEventListener('click', () => this.clearAllConversations());
 
-        // 설정 모달
         this.settingsBtn.addEventListener('click', () => this.openSettings());
         this.modalClose.addEventListener('click', () => this.closeSettings());
         this.settingsModal.addEventListener('click', (e) => {
             if (e.target === this.settingsModal) this.closeSettings();
         });
-        this.saveSettings.addEventListener('click', () => this.saveSettingsFromModal());
+        this.saveSettingsBtn.addEventListener('click', () => this.saveSettingsFromModal());
 
-        // 테마 토글
         this.themeToggle.addEventListener('click', () => this.toggleTheme());
-
-        // 내보내기
         this.exportBtn.addEventListener('click', () => this.exportConversation());
-
-        // 파일 첨부
         this.attachBtn.addEventListener('click', () => this.fileInput.click());
         this.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
 
-        // 추천 카드
         this.setupSuggestionCards();
 
-        // 단축키
         document.addEventListener('keydown', (e) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
                 e.preventDefault();
@@ -147,7 +144,6 @@ class ChatGot {
             }
         });
 
-        // 사용자 카드 클릭
         this.userCard.addEventListener('click', () => this.openSettings());
     }
 
@@ -167,16 +163,16 @@ class ChatGot {
         const speedInput = document.getElementById('typingSpeed');
         const speedValue = document.getElementById('speedValue');
         
-        nameInput.value = this.settings.userName || '';
-        speedInput.value = this.settings.typingSpeed || 35;
-        speedValue.textContent = this.getSpeedLabel(speedInput.value);
+        if (nameInput) nameInput.value = this.settings.userName || '';
+        if (speedInput) {
+            speedInput.value = this.settings.typingSpeed || 35;
+            if (speedValue) speedValue.textContent = this.getSpeedLabel(speedInput.value);
+        }
         
-        // 테마 버튼 상태
         document.querySelectorAll('.theme-option').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.theme === this.settings.theme);
         });
         
-        // 테마 버튼 클릭
         document.querySelectorAll('.theme-option').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
@@ -184,10 +180,11 @@ class ChatGot {
             };
         });
         
-        // 슬라이더
-        speedInput.oninput = () => {
-            speedValue.textContent = this.getSpeedLabel(speedInput.value);
-        };
+        if (speedInput) {
+            speedInput.oninput = () => {
+                if (speedValue) speedValue.textContent = this.getSpeedLabel(speedInput.value);
+            };
+        }
         
         this.settingsModal.classList.add('active');
     }
@@ -201,8 +198,8 @@ class ChatGot {
         const speedInput = document.getElementById('typingSpeed');
         const activeTheme = document.querySelector('.theme-option.active');
         
-        this.settings.userName = nameInput.value.trim();
-        this.settings.typingSpeed = parseInt(speedInput.value);
+        this.settings.userName = nameInput ? nameInput.value.trim() : '';
+        this.settings.typingSpeed = speedInput ? parseInt(speedInput.value) : 35;
         this.settings.theme = activeTheme ? activeTheme.dataset.theme : 'light';
         
         this.saveSettings();
@@ -243,7 +240,7 @@ class ChatGot {
 
     updateCharCount() {
         const len = this.userInput.value.length;
-        this.charCount.textContent = `${len}/10000`;
+        this.charCount.textContent = len + '/10000';
         this.charCount.classList.toggle('visible', len > 0);
         const hasText = len > 0;
         this.sendBtn.disabled = !hasText || this.isProcessing;
@@ -320,7 +317,7 @@ class ChatGot {
         const item = document.createElement('div');
         item.className = 'chat-item active';
         item.dataset.chatId = this.currentChatId;
-        item.innerHTML = `<i class="fa-solid fa-message"></i><span>${this.escapeHtml(title)}</span>`;
+        item.innerHTML = '<i class="fa-solid fa-message"></i><span>' + this.escapeHtml(title) + '</span>';
         document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
         this.chatList.insertBefore(item, this.chatList.firstChild);
         item.addEventListener('click', () => this.loadConversation(this.currentChatId));
@@ -361,21 +358,19 @@ class ChatGot {
             this.welcomeSection = document.getElementById('welcomeSection');
             this.isFirstMessage = !this.welcomeSection;
             
-            // 맥락 복원
             if (this.conversations[chatId].context) {
                 this.context.lastCategory = this.conversations[chatId].context.lastCategory;
                 this.context.messageCount = this.conversations[chatId].context.messageCount;
                 this.context.history = this.conversations[chatId].context.history || [];
             }
             
-            // 코드 하이라이트 재적용
             this.chatScroll.querySelectorAll('pre code').forEach(block => {
-                hljs.highlightElement(block);
+                if (typeof hljs !== 'undefined') hljs.highlightElement(block);
             });
         }
         
         document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
-        const activeItem = document.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+        const activeItem = document.querySelector('.chat-item[data-chat-id="' + chatId + '"]');
         if (activeItem) activeItem.classList.add('active');
         this.closeSidebar();
     }
@@ -412,7 +407,6 @@ class ChatGot {
         const loadingEl = this.addLoadingIndicator();
         this.scrollToBottom();
 
-        // 짧은 지연 (자연스러운 느낌)
         const delay = 300 + Math.random() * 400;
         await new Promise(resolve => setTimeout(resolve, delay));
 
@@ -430,21 +424,20 @@ class ChatGot {
         this.userInput.focus();
     }
 
-    addMessage(role, content, userName = 'U') {
+    addMessage(role, content, userName) {
         const wrapper = document.createElement('div');
         wrapper.className = 'message-wrapper';
         const msgDiv = document.createElement('div');
-        msgDiv.className = `message-row ${role}`;
+        msgDiv.className = 'message-row ' + role;
 
         const avatarIcon = role === 'user'
-            ? `<div class="message-avatar">${this.escapeHtml(userName.charAt(0).toUpperCase())}</div>`
+            ? '<div class="message-avatar">' + this.escapeHtml((userName || 'U').charAt(0).toUpperCase()) + '</div>'
             : '<div class="message-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>';
 
         const bubble = document.createElement('div');
         bubble.className = 'message-bubble';
         
-        if (role === 'bot') {
-            // 마크다운 파싱
+        if (role === 'bot' && typeof marked !== 'undefined') {
             bubble.innerHTML = this.renderMarkdown(content);
         } else {
             bubble.textContent = content;
@@ -453,28 +446,25 @@ class ChatGot {
         msgDiv.innerHTML = avatarIcon;
         msgDiv.appendChild(bubble);
         
-        // 액션 버튼 (봇 메시지에만)
         if (role === 'bot') {
             const actions = document.createElement('div');
             actions.className = 'message-actions';
-            actions.innerHTML = `
-                <button class="message-action-btn" onclick="this.closest('.message-row').querySelector('.message-bubble').classList.toggle('expanded')">
-                    <i class="fa-solid fa-copy"></i> 복사
-                </button>
-            `;
-            actions.querySelector('.message-action-btn').addEventListener('click', () => {
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'message-action-btn';
+            copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> 복사';
+            copyBtn.addEventListener('click', () => {
                 this.copyToClipboard(content);
             });
+            actions.appendChild(copyBtn);
             msgDiv.appendChild(actions);
         }
         
         wrapper.appendChild(msgDiv);
         this.chatScroll.appendChild(wrapper);
         
-        // 코드 하이라이트
         if (role === 'bot') {
             wrapper.querySelectorAll('pre code').forEach(block => {
-                hljs.highlightElement(block);
+                if (typeof hljs !== 'undefined') hljs.highlightElement(block);
             });
             this.wrapCodeBlocks(wrapper);
         }
@@ -486,7 +476,7 @@ class ChatGot {
         const wrapper = document.createElement('div');
         wrapper.className = 'message-wrapper';
         const msgDiv = document.createElement('div');
-        msgDiv.className = `message-row ${role}`;
+        msgDiv.className = 'message-row ' + role;
 
         const avatarIcon = '<div class="message-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>';
         msgDiv.innerHTML = avatarIcon;
@@ -495,20 +485,21 @@ class ChatGot {
         bubble.className = 'message-bubble';
         msgDiv.appendChild(bubble);
         
-        // 액션 버튼
         const actions = document.createElement('div');
         actions.className = 'message-actions';
-        actions.innerHTML = `<button class="message-action-btn"><i class="fa-solid fa-copy"></i> 복사</button>`;
-        actions.querySelector('.message-action-btn').addEventListener('click', () => {
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'message-action-btn';
+        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> 복사';
+        copyBtn.addEventListener('click', () => {
             this.copyToClipboard(content);
         });
+        actions.appendChild(copyBtn);
         msgDiv.appendChild(actions);
         
         wrapper.appendChild(msgDiv);
         this.chatScroll.appendChild(wrapper);
         this.scrollToBottom();
 
-        // 마크다운을 plain text로 변환 후 타이핑
         const plainText = content.replace(/[#*`_\[\]()|>-]/g, '');
         const chars = plainText.split('');
         
@@ -520,24 +511,24 @@ class ChatGot {
             await new Promise(r => setTimeout(r, this.typingSpeed));
         }
 
-        // 타이핑 완료 후 마크다운 렌더링
-        bubble.innerHTML = this.renderMarkdown(content);
+        if (typeof marked !== 'undefined') {
+            bubble.innerHTML = this.renderMarkdown(content);
+        }
         this.chatScroll.querySelectorAll('pre code').forEach(block => {
-            hljs.highlightElement(block);
+            if (typeof hljs !== 'undefined') hljs.highlightElement(block);
         });
         this.wrapCodeBlocks(wrapper);
         this.scrollToBottom();
     }
 
     renderMarkdown(text) {
-        // marked.js로 파싱
+        if (typeof marked === 'undefined') return this.escapeHtml(text);
+        
         let html = marked.parse(text);
         
-        // XSS 방지 기본 처리
         const div = document.createElement('div');
         div.innerHTML = html;
         
-        // 외부 링크는 새 탭으로
         div.querySelectorAll('a').forEach(a => {
             a.setAttribute('target', '_blank');
             a.setAttribute('rel', 'noopener noreferrer');
@@ -548,7 +539,7 @@ class ChatGot {
 
     wrapCodeBlocks(container) {
         container.querySelectorAll('pre').forEach(pre => {
-            if (pre.parentElement.classList.contains('code-block-wrapper')) return;
+            if (pre.parentElement && pre.parentElement.classList.contains('code-block-wrapper')) return;
             
             const wrapper = document.createElement('div');
             wrapper.className = 'code-block-wrapper';
@@ -594,7 +585,7 @@ class ChatGot {
     }
 
     updateChatTitle(message) {
-        const activeItem = document.querySelector(`.chat-item[data-chat-id="${this.currentChatId}"]`);
+        const activeItem = document.querySelector('.chat-item[data-chat-id="' + this.currentChatId + '"]');
         if (activeItem) {
             const title = message.length > 20 ? message.substring(0, 20) + '...' : message;
             activeItem.querySelector('span').textContent = title;
@@ -614,14 +605,24 @@ class ChatGot {
     }
 
     copyToClipboard(text) {
-        navigator.clipboard.writeText(text).catch(() => {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).catch(() => {
+                this.fallbackCopy(text);
+            });
+        } else {
+            this.fallbackCopy(text);
+        }
+    }
+
+    fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
     }
 
     exportConversation() {
@@ -642,13 +643,18 @@ class ChatGot {
             return;
         }
 
-        const text = messages.map(m => `${m.role === 'user' ? '사용자' : 'Chat Got'}: ${m.content}`).join('\n\n');
+        const text = messages.map(function(m) {
+            return (m.role === 'user' ? '사용자' : 'Chat Got') + ': ' + m.content;
+        }).join('\n\n');
+        
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `chatgot-conversation-${new Date().toISOString().slice(0,10)}.txt`;
+        a.download = 'chatgot-conversation-' + new Date().toISOString().slice(0,10) + '.txt';
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
 
@@ -659,7 +665,7 @@ class ChatGot {
         const reader = new FileReader();
         reader.onload = (event) => {
             const content = event.target.result;
-            this.userInput.value = `[파일: ${file.name}]\n${content.substring(0, 500)}${content.length > 500 ? '...' : ''}`;
+            this.userInput.value = '[파일: ' + file.name + ']\n' + content.substring(0, 500) + (content.length > 500 ? '...' : '');
             this.updateCharCount();
             this.autoResize();
         };
@@ -686,14 +692,14 @@ class ChatGot {
             const saved = localStorage.getItem('chatgot_conversations');
             if (saved) {
                 this.conversations = JSON.parse(saved);
-                Object.keys(this.conversations).forEach(chatId => {
+                for (const chatId in this.conversations) {
                     const item = document.createElement('div');
                     item.className = 'chat-item';
                     item.dataset.chatId = chatId;
-                    item.innerHTML = `<i class="fa-solid fa-message"></i><span>${this.escapeHtml(this.conversations[chatId].title)}</span>`;
+                    item.innerHTML = '<i class="fa-solid fa-message"></i><span>' + this.escapeHtml(this.conversations[chatId].title) + '</span>';
                     this.chatList.appendChild(item);
                     item.addEventListener('click', () => this.loadConversation(chatId));
-                });
+                }
             }
         } catch (e) {
             console.warn('localStorage 로드 실패:', e);
