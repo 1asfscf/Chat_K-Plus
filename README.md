@@ -2,4 +2,4 @@
 
 (NEW)/ 1.Chat K-Plus Basic 2.Chat K-Plus pro 3.Chat K-Plus Ultra
 
-다음으로 사이트 공개는 5월중으로 에정되어 있습니다.
+다음으로 사이트 공개 "곳 이곳에서"
