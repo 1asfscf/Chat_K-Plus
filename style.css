@@ -17,6 +17,7 @@
   --accent: #ff6b35;
   --spark-grad: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa500 100%);
   --code-bg: #1a1a2e;
+  --danger: #ff3b30;
 }
 
 body.light {
@@ -28,6 +29,7 @@ body.light {
   --text-muted: #9a9aae;
   --border: #e8e8f0;
   --code-bg: #f5f5f8;
+  --danger: #d70015;
 }
 
 html, body {
@@ -102,7 +104,7 @@ body {
   background: var(--bg-chat);
 }
 
-/* Header - 미니멀 */
+/* Header */
 .chat-header {
   height: 56px;
   display: flex;
@@ -251,7 +253,7 @@ body {
   color: var(--text-dim);
 }
 
-/* Chat List - 채팅방 형식 */
+/* Chat List */
 .chat-list {
   flex: 1;
   overflow-y: auto;
@@ -259,7 +261,7 @@ body {
   scroll-behavior: smooth;
 }
 
-/* 유저 메시지 - 오른쪽 말풍선 유지 */
+/* 유저 메시지 */
 .msg.user {
   display: flex;
   justify-content: flex-end;
@@ -284,30 +286,7 @@ body {
   display: none;
 }
 
-/* 차단 메시지 스타일 */
-.msg.ai.blocked.bubble {
-  background: rgba(255, 59, 48, 0.1);
-  border: 1.5px solid rgba(255, 59, 48, 0.3);
-  color: #ff3b30;
-}
-
-body.light.msg.ai.blocked.bubble {
-  background: rgba(255, 59, 48, 0.08);
-  border: 1.5px solid rgba(255, 59, 48, 0.4);
-}
-
-.msg.ai.blocked.bubble::before {
-  content: '⚠️ 차단됨';
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  color: #ff3b30;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* AI 메시지 - 본문형 채팅방 스타일 */
+/* AI 메시지 - 본문형 */
 .msg.ai {
   display: block;
   padding: 32px 0;
@@ -344,6 +323,48 @@ body.light.msg.ai.blocked.bubble {
   color: var(--text-dim);
   margin-bottom: 12px;
   letter-spacing: 0.3px;
+}
+
+/* 차단 메시지 스타일 - 올바른 셀렉터 */
+.msg.ai.blocked {
+  border-bottom: 1px solid rgba(255, 59, 48, 0.2);
+}
+
+.msg.ai.blocked .bubble {
+  background: rgba(255, 59, 48, 0.08);
+  border: 1.5px solid rgba(255, 59, 48, 0.4);
+  border-radius: 12px;
+  padding: 16px 16px 16px 44px;
+  color: var(--danger);
+  position: relative;
+}
+
+body.light .msg.ai.blocked .bubble {
+  background: rgba(255, 59, 48, 0.06);
+  border: 1.5px solid rgba(255, 59, 48, 0.5);
+  color: var(--danger);
+}
+
+/* 차단 헤더 덮어쓰기 */
+.msg.ai.blocked .bubble::before {
+  content: '⚠️ 정책 위반 감지';
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--danger);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  opacity: 0.9;
+}
+
+/* 차단 아이콘 */
+.msg.ai.blocked .bubble::after {
+  content: '🚫';
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  font-size: 20px;
 }
 
 /* 마크다운 스타일 */
@@ -390,7 +411,7 @@ body.light.msg.ai.blocked.bubble {
   margin: 6px 0;
 }
 
-/* 출처 블록 - 본문형 */
+/* 출처 블록 */
 .msg.ai .bubble .sources {
   margin-top: 24px;
   padding-top: 20px;
@@ -433,9 +454,7 @@ body.light.msg.ai.blocked.bubble {
   font-size: 16px;
 }
 
-/* 기존 .typing 관련 다 지우고 이걸로 교체 */
-
-/* AI 로딩바 - 채팅방 본문형 */
+/* 로딩바 - 타이핑 교체 */
 .typing.msg.ai {
   display: block;
   padding: 32px 0;
@@ -456,7 +475,6 @@ body.light.msg.ai.blocked.bubble {
   display: block;
 }
 
-/* 로딩 헤더 */
 .typing.msg.ai .bubble::before {
   content: 'Chat K Plus';
   display: block;
@@ -527,26 +545,7 @@ body.light.msg.ai.blocked.bubble {
   font-variant-numeric: tabular-nums;
 }
 
-/* 모바일 조정 */
-@media (max-width: 768px) {
-  .typing.msg.ai {
-    padding: 28px 0;
-  }
-  
-  .typing.msg.ai .bubble {
-    padding: 0 16px;
-  }
-  
-  .loading-text {
-    font-size: 13px;
-  }
-  
-  .loading-bar {
-    height: 2.5px;
-  }
-}
-
-/* Input Area - 동그란 미니멀 */
+/* Input Area */
 .input-area {
   padding: 16px 20px 20px;
   background: var(--bg-chat);
@@ -675,9 +674,28 @@ body.light.msg.ai.blocked.bubble {
     max-width: 85%;
   }
   
-  .msg.ai .bubble {
+  .msg.ai .bubble,
+  .typing.msg.ai .bubble {
     padding: 0 16px;
     font-size: 15px;
+  }
+  
+  .msg.ai.blocked .bubble {
+    padding-left: 40px;
+  }
+  
+  .msg.ai.blocked .bubble::after {
+    left: 14px;
+    top: 14px;
+    font-size: 18px;
+  }
+  
+  .loading-text {
+    font-size: 13px;
+  }
+  
+  .loading-bar {
+    height: 2.5px;
   }
   
   .welcome-title {
