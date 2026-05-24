@@ -5,6 +5,7 @@ const sendBtn = document.getElementById('sendBtn');
 const themeToggle = document.getElementById('themeToggle');
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.querySelector('.sidebar');
+const welcomeScreen = document.getElementById('welcomeScreen');
 
 // 자연스러운 더미 응답 3종
 const dummyReplies = [
@@ -17,6 +18,9 @@ const dummyReplies = [
 function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
+
+  // 첫 메시지 보내면 웰컴화면 숨김
+  if (welcomeScreen) welcomeScreen.classList.add('hidden');
 
   addMessage(text, 'user');
   userInput.value = '';
@@ -43,7 +47,7 @@ function addMessage(text, type) {
   scrollToBottom();
 }
 
-// 3. 타이핑 효과 - 랙 없애려고 5ms로 수정
+// 3. 타이핑 효과 - 5ms로 랙 제거
 function streamText(text, type) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
@@ -60,7 +64,7 @@ function streamText(text, type) {
     i++;
     scrollToBottom();
     if (i >= text.length) clearInterval(interval);
-  }, 5); // 25ms → 5ms로 랙 제거
+  }, 5);
 }
 
 // 4. 타이핑중 표시
@@ -69,7 +73,7 @@ function addTyping() {
   msg.className = 'msg ai typing';
   msg.innerHTML = `
     <div class="avatar">S</div>
-    <div class="bubble"><span></span><span></span></div>
+    <div class="bubble"><span></span><span></span><span></span></div>
   `;
   chatList.appendChild(msg);
   scrollToBottom();
@@ -99,30 +103,36 @@ function toggleSidebar() {
   sidebar.classList.toggle('open');
 }
 
-// 9. 초기화 - 저장된 테마 불러오기
+// 9. 예시 카드 클릭 이벤트
+function initExampleCards() {
+  document.querySelectorAll('.example-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const prompt = card.dataset.prompt;
+      userInput.value = prompt;
+      sendMessage();
+    });
+  });
+}
+
+// 10. 초기화 - 방법 2 핵심 로직
 function init() {
+  // 저장된 테마 불러오기
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light');
     themeToggle.textContent = '다크';
   }
+
+  // 첫 로딩시 채팅 없으면 웰컴화면 표시
+  if (chatList.children.length === 0 && welcomeScreen) {
+    welcomeScreen.classList.remove('hidden');
+  } else if (welcomeScreen) {
+    welcomeScreen.classList.add('hidden');
+  }
+
+  // 예시 카드 이벤트 등록
+  initExampleCards();
 }
 
-// 예시 카드 클릭 이벤트
-document.querySelectorAll('.example-card').forEach(card => {
-  card.addEventListener('click', () => {
-    const prompt = card.dataset.prompt;
-    userInput.value = prompt;
-    sendMessage();
-    document.getElementById('welcomeScreen').classList.add('hidden');
-  });
-});
-
-// 첫 메시지 보내면 웰컴화면 숨김
-const originalSend = sendMessage;
-sendMessage = function() {
-  document.getElementById('welcomeScreen')?.classList.add('hidden');
-  originalSend();
-}
 // 이벤트 리스너
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keydown', (e) => {
@@ -135,18 +145,8 @@ userInput.addEventListener('input', autoResize);
 themeToggle.addEventListener('click', toggleTheme);
 menuBtn.addEventListener('click', toggleSidebar);
 
-function init() {
-  if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light');
-    themeToggle.textContent = '다크';
-  }
-  
-  // 첫 로딩시 채팅 없으면 웰컴화면 표시
-  if (chatList.children.length === 0) {
-    document.getElementById('welcomeScreen').classList.remove('hidden');
-  }
-}
 // iOS 300ms 딜레이 제거
 document.addEventListener('touchstart', () => {}, { passive: true });
 
+// 실행
 init();
