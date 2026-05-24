@@ -284,6 +284,29 @@ body {
   display: none;
 }
 
+/* 차단 메시지 스타일 */
+.msg.ai.blocked.bubble {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1.5px solid rgba(255, 59, 48, 0.3);
+  color: #ff3b30;
+}
+
+body.light.msg.ai.blocked.bubble {
+  background: rgba(255, 59, 48, 0.08);
+  border: 1.5px solid rgba(255, 59, 48, 0.4);
+}
+
+.msg.ai.blocked.bubble::before {
+  content: '⚠️ 차단됨';
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ff3b30;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* AI 메시지 - 본문형 채팅방 스타일 */
 .msg.ai {
   display: block;
