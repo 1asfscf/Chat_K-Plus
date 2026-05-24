@@ -11,6 +11,7 @@ const newChatBtn = document.getElementById('newChatBtn');
 const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
+document.getElementById('welcomeTitle').textContent = `${userName}, 불꽃 켰다`;
 
 // 유저 이름 관리 - localStorage 저장
 let userName = localStorage.getItem('sparkUserName') || '이용자';
