@@ -6,6 +6,12 @@ const themeToggle = document.getElementById('themeToggle');
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.querySelector('.sidebar');
 const welcomeScreen = document.getElementById('welcomeScreen');
+const newChatBtn = document.getElementById('newChatBtn'); // 추가
+
+// 오버레이 요소 동적 생성
+const overlay = document.createElement('div');
+overlay.className = 'sidebar-overlay';
+document.body.appendChild(overlay);
 
 // 자연스러운 더미 응답 3종
 const dummyReplies = [
@@ -19,14 +25,13 @@ function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
 
-  // 첫 메시지 보내면 웰컴화면 숨김
   if (welcomeScreen) welcomeScreen.classList.add('hidden');
+  closeSidebar(); // 전송하면 사이드바 자동 닫기
 
   addMessage(text, 'user');
   userInput.value = '';
   autoResize();
 
-  // 더미 AI 응답
   const typingEl = addTyping();
   setTimeout(() => {
     typingEl.remove();
@@ -47,7 +52,7 @@ function addMessage(text, type) {
   scrollToBottom();
 }
 
-// 3. 타이핑 효과 - 5ms로 랙 제거
+// 3. 타이핑 효과
 function streamText(text, type) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
@@ -73,7 +78,7 @@ function addTyping() {
   msg.className = 'msg ai typing';
   msg.innerHTML = `
     <div class="avatar">S</div>
-    <div class="bubble"><span></span><span></span><span></span></div>
+    <div class="bubble"><span></span><span></span></div>
   `;
   chatList.appendChild(msg);
   scrollToBottom();
@@ -98,12 +103,28 @@ function toggleTheme() {
   localStorage.setItem('theme', document.body.classList.contains('light')? 'light' : 'dark');
 }
 
-// 8. 모바일 사이드바 토글
+// 8. 사이드바 토글
 function toggleSidebar() {
   sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
 }
 
-// 9. 예시 카드 클릭 이벤트
+// 9. 사이드바 닫기
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+}
+
+// 10. 새 채팅 시작 - 핵심 수정
+function startNewChat() {
+  chatList.innerHTML = ''; // 채팅 비우기
+  userInput.value = '';
+  autoResize();
+  if (welcomeScreen) welcomeScreen.classList.remove('hidden'); // 웰컴 다시 표시
+  closeSidebar();
+}
+
+// 11. 예시 카드 클릭 이벤트
 function initExampleCards() {
   document.querySelectorAll('.example-card').forEach(card => {
     card.addEventListener('click', () => {
@@ -114,22 +135,19 @@ function initExampleCards() {
   });
 }
 
-// 10. 초기화 - 방법 2 핵심 로직
+// 12. 초기화
 function init() {
-  // 저장된 테마 불러오기
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light');
     themeToggle.textContent = '다크';
   }
 
-  // 첫 로딩시 채팅 없으면 웰컴화면 표시
   if (chatList.children.length === 0 && welcomeScreen) {
     welcomeScreen.classList.remove('hidden');
   } else if (welcomeScreen) {
     welcomeScreen.classList.add('hidden');
   }
 
-  // 예시 카드 이벤트 등록
   initExampleCards();
 }
 
@@ -144,6 +162,8 @@ userInput.addEventListener('keydown', (e) => {
 userInput.addEventListener('input', autoResize);
 themeToggle.addEventListener('click', toggleTheme);
 menuBtn.addEventListener('click', toggleSidebar);
+newChatBtn.addEventListener('click', startNewChat); // 새 채팅 이벤트 추가
+overlay.addEventListener('click', closeSidebar); // 오버레이 클릭시 닫기
 
 // iOS 300ms 딜레이 제거
 document.addEventListener('touchstart', () => {}, { passive: true });
