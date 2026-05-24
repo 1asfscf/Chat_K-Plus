@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Spark Chat v4</title>
+  <title>Spark Chat v6</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,12 +23,38 @@
         <button class="theme-toggle" id="themeToggle">라이트</button>
       </header>
 
-      <div class="chat-list" id="chatList">
-        <div class="msg ai">
-          <div class="avatar">S</div>
-          <div class="bubble">성민아, 불꽃 켰다. 테스트해봐.</div>
+      <!-- V1 예시 화면 - 첫 진입시 노출 -->
+      <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-logo">🔥</div>
+        <h2 class="welcome-title">성민아, 불꽃 켰다</h2>
+        <p class="welcome-sub">Spark한테 뭐든지 물어봐</p>
+        
+        <div class="example-grid">
+          <div class="example-card" data-prompt="5.18 광주민주화운동 왜곡 사례 5가지 알려줘">
+            <div class="icon">📚</div>
+            <div class="title">역사 팩트체크</div>
+            <div class="desc">5.18 왜곡 패턴 분석해줘</div>
+          </div>
+          <div class="example-card" data-prompt="깃허브 페이지에서 CSS 깨지는 이유랑 해결법">
+            <div class="icon">💻</div>
+            <div class="title">개발 디버깅</div>
+            <div class="desc">CSS 정렬 버그 잡아줘</div>
+          </div>
+          <div class="example-card" data-prompt="아이폰 12 Pro에서 클릭 안 되는 이유">
+            <div class="icon">📱</div>
+            <div class="title">iOS 호환성</div>
+            <div class="desc">사파리 터치 버그 해결</div>
+          </div>
+          <div class="example-card" data-prompt="GPU 덜 먹는 글래스모피즘 CSS 코드 짜줘">
+            <div class="icon">⚡</div>
+            <div class="title">성능 최적화</div>
+            <div class="desc">60fps 나오는 UI 만들어줘</div>
+          </div>
         </div>
       </div>
+
+      <!-- 실제 채팅 리스트 - 비워둬야 웰컴화면 뜸 -->
+      <div class="chat-list" id="chatList"></div>
 
       <footer class="input-area">
         <textarea 
