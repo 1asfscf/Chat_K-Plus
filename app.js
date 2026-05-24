@@ -146,7 +146,7 @@ function getChartNotAvailableReply(u) { return { reply: `⚠️ "${u}" 주제 �
 function getReasoningAdviceReply() { return { reply: '💡 **추론 모드가 꺼져 있습니다**\n\n🧠 추론 버튼을 켜주세요!', table: null, chart: null, suggest: ['추론 모드 켜는 방법', '추론 모드로 뭐가 달라져?'] }; }
 function getTableFromChartReply(cd) { const t = chartDataToTable(cd); return { reply: `📋 표로 변환! ${cd.labels.length}개\n최대:${Math.max(...cd.values)} 최소:${Math.min(...cd.values)} 평균:${Math.round(cd.values.reduce((a,b)=>a+b,0)/cd.values.length)}`, table: t, chart: null, suggest: ['더 자세히', '그래프로', '다른 그래프'] }; }
 
-// ===== 추론 스트림 (한 줄 순차 변경) =====
+// ===== 추론 스트림 (타자 치는 효과 + 페이드 전환) =====
 function addReasoningStreamMessage(steps) {
     const ml = document.getElementById('messagesList');
     const id = 'rs-' + Date.now();
@@ -158,7 +158,8 @@ function addReasoningStreamMessage(steps) {
         <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
         <div class="message-body">
             <div class="reasoning-stream">
-                <div class="reasoning-stream-line" id="${id}-line">> 🧠 질문 분석 중...</div>
+                <span class="reasoning-stream-line" id="${id}-line">> 🧠 질문 분석 중...</span>
+                <span class="reasoning-cursor" id="${id}-cursor">|</span>
             </div>
             <p style="color:var(--text-tertiary);font-size:13px;">
                 <span class="reasoning-stream-spinner"></span> 심층 답변 생성 중...
@@ -169,17 +170,46 @@ function addReasoningStreamMessage(steps) {
     ml.appendChild(d);
     scrollToBottom();
 
-    // 0.5초 간격으로 텍스트만 변경
+    // 단계별로 페이드아웃 → 타이핑 전환
+    let currentTimeout = 800; // 첫 지연
+
     steps.forEach((step, i) => {
+        const newText = `> ${step.iconText} ${step.title}: ${step.desc}`;
+        
+        // 페이드 아웃 (이전 텍스트)
         setTimeout(() => {
             const line = document.getElementById(`${id}-line`);
+            const cursor = document.getElementById(`${id}-cursor`);
             if (line) {
-                line.textContent = `> ${step.iconText} ${step.title}: ${step.desc}`;
-                line.style.animation = 'none';
-                line.offsetHeight;
-                line.style.animation = 'typeIn 0.4s ease both';
+                line.style.opacity = '0';
+                line.style.transition = 'opacity 0.15s ease';
             }
-        }, 500 + i * 500);
+            if (cursor) cursor.style.opacity = '0';
+        }, currentTimeout);
+
+        // 타이핑 시작 (새 텍스트)
+        setTimeout(() => {
+            const line = document.getElementById(`${id}-line`);
+            const cursor = document.getElementById(`${id}-cursor`);
+            if (!line) return;
+
+            line.textContent = '';
+            line.style.opacity = '1';
+            if (cursor) cursor.style.opacity = '1';
+
+            // 한 글자씩 타이핑
+            let charIndex = 0;
+            const typeInterval = setInterval(() => {
+                if (charIndex < newText.length) {
+                    line.textContent += newText[charIndex];
+                    charIndex++;
+                } else {
+                    clearInterval(typeInterval);
+                }
+            }, 18); // 한 글자당 18ms (빠른 타이핑)
+        }, currentTimeout + 180);
+
+        currentTimeout += 1200; // 다음 단계까지 1.2초
     });
 
     return id;
