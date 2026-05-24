@@ -317,6 +317,19 @@ body {
 @keyframes startPulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
     50% { box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
+
+    .reasoning-cursor {
+    display: inline;
+    color: var(--reasoning-color);
+    font-weight: 300;
+    animation: cursorBlink 0.8s step-end infinite;
+    margin-left: 1px;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
 }
 
 /* ===== 반응형 ===== */
