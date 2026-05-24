@@ -21,18 +21,15 @@ const MODEL_IDENTITY = Object.freeze({
   base: 'Muse Spark',
   engine: 'KRL',
   cutoff: '2025-09-04',
-  desc: `나는 ${MODEL_NAME}야. 스튜디오 페라리에서 제작한 AI야. Meta의 Muse Spark를 기반으로 하되, KRL(Knowledge Reasoning Layer) 엔진으로 한국 언어/문화에 최적화됐어. 역사 팩트체크, 개발, 일상 대화를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
+  desc: `나는 ${MODEL_NAME}야. 스튜디오 페라리에서 제작한 AI야. Meta의 Muse Spark를 기반으로 하되, KRL(Knowledge Reasoning Layer) 엔진으로 한국 언어/문화에 최적화됐어. 역사 팩트체크, 개발, 건강 가이드, 일상 대화를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
 });
 
-// 유저 이름 관리
 let userName = localStorage.getItem('chatkUserName') || '성민';
 
-// 추론 시스템 설정
 const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
 const activeReasoning = new Map();
 
-// 성적 금지어 리스트
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성기', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '브라', '속옷', '알몸', '누드', 'nude',
@@ -51,13 +48,11 @@ function isInappropriateContent(text) {
   return SEXUAL_PATTERN.test(normalized);
 }
 
-// 패턴
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방가|안녕하세요)/i;
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
-// 지식베이스 + 출처
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -97,6 +92,7 @@ const knowledgeBase = {
 3. 15초 추론: 1차 실패시 자동 재탐색 3회
 4. 콘텐츠 필터: 부적절 표현 자동 차단
 5. KRL 최적화: 한국어 맥락 추론 강화
+6. 건강 가이드: 오줌/배뇨 관련 의학 정보 제공
 
 **한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
     sources: [],
@@ -122,34 +118,69 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     tags: ['기술', '모델', 'ai']
   },
   "오줌": {
-    text: `**오줌(소변)에 대한 의학 정보**
+    text: `**오줌(소변) 건강 가이드 - ${MODEL_NAME} 제공**
 
-**정의**: 신장에서 혈액을 걸러 만든 노폐물. 하루 1~2L 생성.
+**기본 정보**
+신장에서 혈액을 걸러 만든 노폐물. 하루 1~2L 생성. 95% 물 + 요소, 요산, 크레아티닌.
 
-**성분**: 95% 물 + 5% 요소, 요산, 크레아티닌, 무기염류. 정상 소변은 무균 상태.
+**정상 소변 기준**
+- **색**: 투명~연노랑. 진노랑은 탈수 신호
+- **횟수**: 하루 6~8회. 2시간마다 1회꼴
+- **양**: 1회 200~400ml
+- **냄새**: 약한 암모니아. 단내/과일향은 당뇨 의심
 
-**색깔**:
-- **투명/연노랑**: 수분 충분
-- **진노랑**: 수분 부족
-- **갈색/붉은색**: 혈뇨 의심. 즉시 병원
-- **탁함**: 요로감염 가능성
+**성별/연령별 특이사항**
 
-**냄새**: 암모니아 냄새. 단내 나면 당뇨 의심.
+**1. 성인 남성**
+- 전립선 비대: 50대 이상 잔뇨감, 야간뇨 증가. 비뇨기과 검진 필수
+- 요도 길이 20cm. 요로감염 드물지만 발생시 중증
+- 아침 첫 소변 거품 많으면 단백뇨 의심
 
-**주의**: 소변 참으면 방광염, 신우신염 위험. 하루 6~8회 배뇨가 정상.
+**2. 성인 여성**
+- 요도 길이 4cm. 세균 침입 쉬워 방광염 빈발
+- 배뇨 후 앞에서 뒤로 닦기. 생리 중 위생 관리
+- 임신시 빈뇨 정상. 단, 통증/혈뇨는 즉시 병원
 
-**민간요법 경고**: 오줌 치료법은 의학적 근거 없음. 질병 있으면 비뇨기과 방문.`,
+**3. 트랜스젠더**
+- **트랜스여성(HRT 중)**: 스피로놀락톤 복용시 이뇨 작용으로 빈뇨. 칼륨 수치 체크 필요
+- **트랜스남성(테스토스테론)**: 전립선 조직 없어도 요도 자극 가능. 수술 여부에 따라 배뇨 자세 다름
+- **공통**: 호르몬 치료 중 신장 기능 정기 검사 권장. 소변색 변화시 주치의 상담
+
+**4. 남아(사춘기 이전)**
+- 포경: 귀두염 방지 위해 청결 유지. 무리한 젖힘 금지
+- 야뇨증: 5세 이후 주 2회 이상이면 소아과 상담
+- 소변 줄기 가늘면 요도협착 의심
+
+**5. 여아(사춘기 이전)**
+- 외음부염: 비누 과다사용 금지. 면 속옷 착용
+- 방광염: 배뇨통, 잔뇨감시 즉시 소아과. 참으면 신우신염 위험
+- 변비 동반시 배뇨장애 유발
+
+**위험 신호 - 즉시 병원**
+- 혈뇨: 붉은색/콜라색
+- 통증: 배뇨시 따가움, 옆구리 통증
+- 발열 동반: 38도 이상 + 배뇨장애 = 신우신염
+- 소변 못 봄: 12시간 이상 무뇨는 응급
+
+**건강한 배뇨 습관**
+1. 참지 않기. 방광 팽창시 세균 증식
+2. 하루 물 1.5~2L. 카페인/알코올 줄이기
+3. 배뇨 후 손 씻기. 요로감염 예방
+4. 크랜베리 주스: 여성 방광염 예방 효과
+
+**주의**: 민간요법, 오줌 치료법은 의학적 근거 없음. 증상 있으면 비뇨기과/내과 방문.`,
     sources: [
       { title: "대한비뇨의학회 소변 건강 가이드", url: "https://www.urology.or.kr" },
-      { title: "서울아산병원 건강정보", url: "https://www.amc.seoul.kr" },
-      { title: "국가건강정보포털", url: "https://health.kdca.go.kr" }
+      { title: "서울아산병원 건강정보 - 배뇨장애", url: "https://www.amc.seoul.kr" },
+      { title: "국가건강정보포털 - 소변검사", url: "https://health.kdca.go.kr" },
+      { title: "대한소아비뇨의학회 소아 배뇨 가이드", url: "https://www.kspu.or.kr" },
+      { title: "트랜스젠더 건강관리 지침서 - 국립중앙의료원", url: "https://www.nmc.or.kr" }
     ],
-    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨'],
-    tags: ['의학', '건강', '생물']
+    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '남아', '여아', '트랜스젠더', '트젠', '전립선', '방광염', '요로감염', '가이드'],
+    tags: ['의학', '건강', '생물', '가이드']
   }
 };
 
-// 답변 톤
 const replies = {
   greeting: [
     `안녕 ${userName}. 뭐 도와줄까?`,
@@ -189,21 +220,24 @@ function updateWelcomeTitle() {
   }
 }
 
-// 1차 지식 검색 - 정확 매칭 강화
+// 1차 지식 검색 - 오줌/가이드 우선 처리
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
 
-  // 인사말 우선 처리
   if (greetingPatterns.test(lowerText)) {
     return { type: 'greeting' };
   }
 
-  // KRL 질문 우선 처리
   if (krlPattern.test(lowerText)) {
     return { data: knowledgeBase["KRL"], confidence: 1.0 };
   }
 
-  // 지식베이스 검색
+  // 오줌 관련 키워드 우선 매칭
+  const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨', '가이드', '남자', '여자', '트젠', '트랜스젠더'];
+  if (urineKeywords.some(k => lowerText.includes(k))) {
+    return { data: knowledgeBase["오줌"], confidence: 1.0 };
+  }
+
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (data.keywords.some(k => lowerText.includes(k))) {
       return { data, confidence: 1.0 };
@@ -212,7 +246,6 @@ function searchKnowledge(text) {
   return null;
 }
 
-// 2차 추론 검색 - 15초 동안 3회 재시도
 function deepReasoning(query, attempt) {
   const words = query
 .toLowerCase()
@@ -247,7 +280,6 @@ function deepReasoning(query, attempt) {
     return { data: bestMatch, confidence: bestScore / 10 };
   }
 
-  // 시도별 특수 연관 검색
   if (attempt >= 2) {
     if (words.some(w => ['광주', '5월', '전두환', '계엄', '오일팔'].includes(w))) {
       return { data: knowledgeBase["5.18"], confidence: 0.5 };
@@ -258,7 +290,7 @@ function deepReasoning(query, attempt) {
     if (words.some(w => ['krl', '케이알엘', '엔진', '추론'].includes(w))) {
       return { data: knowledgeBase["KRL"], confidence: 0.5 };
     }
-    if (words.some(w => ['오줌', '소변', '쉬', '화장실', '뇨'].includes(w))) {
+    if (words.some(w => ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨', '가이드'].includes(w))) {
       return { data: knowledgeBase["오줌"], confidence: 0.5 };
     }
   }
@@ -266,12 +298,10 @@ function deepReasoning(query, attempt) {
   return null;
 }
 
-// 전송 기능
 function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
 
-  // 입력 필터 - 1차 차단
   if (isInappropriateContent(text)) {
     if (welcomeScreen) welcomeScreen.classList.add('hidden');
     closeSidebar();
@@ -298,7 +328,6 @@ function sendMessage() {
   autoResize();
   sendBtn.classList.remove('has-text');
 
-  // 1순위: 이름 설정
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
@@ -316,7 +345,6 @@ function sendMessage() {
 
   const typingEl = addTyping(msgId, 0);
 
-  // 2순위: 자기소개 - 스튜디오 페라리 + KRL
   if (identityPatterns.test(text)) {
     setTimeout(() => {
       typingEl.remove();
@@ -325,11 +353,9 @@ function sendMessage() {
     return;
   }
 
-  // 3순위: 1차 지식 검색
   const kb1 = searchKnowledge(text);
 
   if (kb1) {
-    // 인사말 처리
     if (kb1.type === 'greeting') {
       setTimeout(() => {
         typingEl.remove();
@@ -339,7 +365,6 @@ function sendMessage() {
       return;
     }
 
-    // 출력 필터 - 2차 차단
     if (isInappropriateContent(kb1.data.text)) {
       setTimeout(() => {
         typingEl.remove();
@@ -356,11 +381,9 @@ function sendMessage() {
     return;
   }
 
-  // 4순위: 추론 시작
   startReasoning(text, msgId, typingEl);
 }
 
-// 추론 시스템 - 15초 풀가동
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0;
   let attempt = 1;
@@ -384,7 +407,6 @@ function startReasoning(query, msgId, typingEl) {
 
       const result = deepReasoning(query, attempt);
       if (result && result.confidence >= 0.3) {
-        // 출력 필터 - 3차 차단
         if (isInappropriateContent(result.data.text)) {
           clearInterval(timer);
           typingEl.remove();
