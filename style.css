@@ -376,6 +376,40 @@ body {
   color: var(--text-dim);
 }
 
+/* 말풍선 내부 출처 */
+.bubble.sources {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 13px;
+}
+
+body.light.bubble.sources {
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.sources-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.sources a {
+  display: block;
+  color: var(--accent);
+  text-decoration: none;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.sources a:hover {
+  text-decoration: underline;
+}
+
+.msg.user.sources {
+  display: none;
+}
 /* 전송 버튼 - 원형 미니멀 */
 #sendBtn {
   width: 40px;
