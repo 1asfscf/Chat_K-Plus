@@ -30,8 +30,16 @@ const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
 const activeReasoning = new Map();
 
+// 의학 용어 화이트리스트 - 이건 차단 안 함
+const MEDICAL_WHITELIST = [
+  '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
+  '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
+  '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
+];
+
+// 성적 금지어 리스트 - 의학 맥락 제외
 const SEXUAL_BLACKLIST = [
-  '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성기', '성관계', '성행위',
+  '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '브라', '속옷', '알몸', '누드', 'nude',
   '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크',
   '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
@@ -43,8 +51,16 @@ const SEXUAL_PATTERN = new RegExp(
   'i'
 );
 
+// 부적절 콘텐츠 감지 - 의학 화이트리스트 우선
 function isInappropriateContent(text) {
-  const normalized = text.toLowerCase().replace(/\s+/g, '');
+  const lowerText = text.toLowerCase();
+  const normalized = lowerText.replace(/\s+/g, '');
+
+  // 의학 용어 포함시 차단 해제
+  if (MEDICAL_WHITELIST.some(w => lowerText.includes(w))) {
+    return false;
+  }
+
   return SEXUAL_PATTERN.test(normalized);
 }
 
@@ -90,7 +106,7 @@ const knowledgeBase = {
 1. ${userName} 이름 기억: localStorage 저장
 2. 출처 인용: 검증 가능한 소스 첨부
 3. 15초 추론: 1차 실패시 자동 재탐색 3회
-4. 콘텐츠 필터: 부적절 표현 자동 차단
+4. 콘텐츠 필터: 부적절 표현 자동 차단 (의학 용어 제외)
 5. KRL 최적화: 한국어 맥락 추론 강화
 6. 건강 가이드: 오줌/배뇨 관련 의학 정보 제공
 
@@ -176,7 +192,7 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
       { title: "대한소아비뇨의학회 소아 배뇨 가이드", url: "https://www.kspu.or.kr" },
       { title: "트랜스젠더 건강관리 지침서 - 국립중앙의료원", url: "https://www.nmc.or.kr" }
     ],
-    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '남아', '여아', '트랜스젠더', '트젠', '전립선', '방광염', '요로감염', '가이드'],
+    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '남아', '여아', '트랜스젠더', '트젠', '전립선', '방광염', '요로감염', '가이드', '건강'],
     tags: ['의학', '건강', '생물', '가이드']
   }
 };
@@ -220,7 +236,6 @@ function updateWelcomeTitle() {
   }
 }
 
-// 1차 지식 검색 - 오줌/가이드 우선 처리
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
 
@@ -232,7 +247,6 @@ function searchKnowledge(text) {
     return { data: knowledgeBase["KRL"], confidence: 1.0 };
   }
 
-  // 오줌 관련 키워드 우선 매칭
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨', '가이드', '남자', '여자', '트젠', '트랜스젠더'];
   if (urineKeywords.some(k => lowerText.includes(k))) {
     return { data: knowledgeBase["오줌"], confidence: 1.0 };
