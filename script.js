@@ -15,6 +15,7 @@ document.body.appendChild(overlay);
 
 // 모델 정보 - KRL 기반 스튜디오 페라리
 const MODEL_NAME = 'Chat K Plus';
+const TEAM_EMAIL = 'studioferrari_kr@outlook.com';
 const MODEL_IDENTITY = Object.freeze({
   name: 'Chat K Plus',
   maker: '스튜디오 페라리',
@@ -25,7 +26,7 @@ const MODEL_IDENTITY = Object.freeze({
 });
 
 let userName = localStorage.getItem('chatkUserName') || '성민';
-let isAnswering = false; // 답변 중 플래그
+let isAnswering = false;
 
 const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
@@ -64,7 +65,16 @@ const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방�
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
-// 폭주 방지용 요약 지식베이스 - 전체 덤프 금지
+// 키워드 별칭 매핑
+const KEYWORD_ALIASES = {
+  '여야': '여아',
+  '남자': '남성',
+  '여자': '여성',
+  '트젠': '트랜스젠더',
+  '아이': '남아',
+  '어린이': '남아'
+};
+
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -120,7 +130,6 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     tags: ['기술'],
     needsReasoning: false
   },
-  // 오줌 - 폭주 방지: 추론 필수 + 카테고리별 분리
   "오줌": {
     summary: `**오줌(소변) 건강 정보**
 
@@ -163,9 +172,9 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
       { title: "서울아산병원 건강정보", url: "https://www.amc.seoul.kr" },
       { title: "국가건강정보포털", url: "https://health.kdca.go.kr" }
     ],
-    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '트젠', '트랜스젠더', '가이드', '건강'],
+    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '트젠', '트랜스젠더', '가이드', '건강', '남성', '여성', '남아', '여아'],
     tags: ['의학', '건강'],
-    needsReasoning: true // 이건 추론 필수
+    needsReasoning: true
   }
 };
 
@@ -191,9 +200,13 @@ const replies = {
     `좀 더 찾아볼게 ${userName}. 15초 안에 결론 낸다.`
   ],
   failed: [
-    `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어. 질문을 다르게 해볼래?`,
-    `미안 ${userName}. 이건 내 지식베이스에 없어. 더 구체적으로 물어봐주면 찾아볼게.`,
-    `${userName}, 관련 정보 못 찾았어. 구체적으로 물어봐.`
+    `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어.`,
+    `미안 ${userName}. 이건 내 지식베이스에 없어.`,
+    `${userName}, 관련 정보 못 찾았어.`
+  ],
+  feedback: [
+    `${userName}, 해당 정보가 없어. 더 정확한 정보가 필요하면 ${TEAM_EMAIL}로 피드백 보내줘. 스튜디오 페라리 팀이 검토할게.`,
+    `미안 ${userName}. 그 항목은 데이터에 없어. 개선 요청은 ${TEAM_EMAIL}로 보내주면 반영할게.`
   ],
   blocked: [
     `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
@@ -208,7 +221,6 @@ function updateWelcomeTitle() {
   }
 }
 
-// 버튼 상태 제어
 function setAnsweringState(state) {
   isAnswering = state;
   sendBtn.disabled = state;
@@ -224,9 +236,42 @@ function setAnsweringState(state) {
   }
 }
 
-// 1차 지식 검색 - 추론 필요 여부 판단
+// 키워드 정규화 - 별칭 처리
+function normalizeKeyword(text) {
+  let normalized = text.toLowerCase();
+  for (const [alias, target] of Object.entries(KEYWORD_ALIASES)) {
+    if (normalized.includes(alias)) {
+      normalized = normalized.replace(alias, target);
+    }
+  }
+  return normalized;
+}
+
+// 출력 스타일 결정 - 추론 과정 필수
+function determineOutputStyle(query, data) {
+  const lowerQuery = query.toLowerCase();
+
+  // 1. 단순 질문: "뭐야", "알려줘" → 요약
+  if (/뭐야|뭔데|알려줘|설명/.test(lowerQuery) &&!data.subKey) {
+    return 'summary';
+  }
+
+  // 2. 세부 항목: "남성", "여아" 등 → 상세
+  if (data.subKey) {
+    return 'detail';
+  }
+
+  // 3. 가이드 요청: "가이드", "방법" → 목록형
+  if (/가이드|방법|팁|주의/.test(lowerQuery)) {
+    return 'guide';
+  }
+
+  return 'summary'; // 기본값
+}
+
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
+  const normalizedText = normalizeKeyword(lowerText);
 
   if (greetingPatterns.test(lowerText)) {
     return { type: 'greeting' };
@@ -236,22 +281,20 @@ function searchKnowledge(text) {
     return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
   }
 
-  // 오줌 - 카테고리 세부 질문 감지
+  // 오줌 - 키워드 정규화 후 매칭
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
-  if (urineKeywords.some(k => lowerText.includes(k))) {
-    const detailKeys = ['남성', '남자', '여성', '여자', '트랜스젠더', '트젠', '남아', '여아'];
-    const foundKey = detailKeys.find(k => lowerText.includes(k));
+  if (urineKeywords.some(k => normalizedText.includes(k))) {
+    const detailKeys = ['남성', '여성', '트랜스젠더', '남아', '여아'];
+    const foundKey = detailKeys.find(k => normalizedText.includes(k));
 
     if (foundKey) {
-      // 세부 카테고리 질문이면 바로 답변
       return {
         data: knowledgeBase["오줌"],
         confidence: 1.0,
         direct: true,
-        subKey: foundKey.replace('남자', '남성').replace('여자', '여성').replace('트젠', '트랜스젠더')
+        subKey: foundKey
       };
     } else {
-      // 광범위 질문이면 요약만
       return {
         data: knowledgeBase["오줌"],
         confidence: 1.0,
@@ -262,7 +305,7 @@ function searchKnowledge(text) {
   }
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
-    if (data.keywords.some(k => lowerText.includes(k))) {
+    if (data.keywords.some(k => normalizedText.includes(k))) {
       return { data, confidence: 1.0, direct:!data.needsReasoning };
     }
   }
@@ -270,7 +313,7 @@ function searchKnowledge(text) {
 }
 
 function deepReasoning(query, attempt) {
-  const words = query
+  const words = normalizeKeyword(query)
 .toLowerCase()
 .replace(/[?!.]/g, ' ')
 .split(' ')
@@ -408,12 +451,23 @@ function sendMessage() {
     // 오줌 세부 카테고리
     if (kb1.subKey && kb1.data.details) {
       const detailText = kb1.data.details[kb1.subKey];
-      setTimeout(() => {
-        typingEl.remove();
-        streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false);
-        setAnsweringState(false);
-      }, 500);
-      return;
+      if (detailText) {
+        setTimeout(() => {
+          typingEl.remove();
+          streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false);
+          setAnsweringState(false);
+        }, 500);
+        return;
+      } else {
+        // 세부 항목 못 찾으면 피드백 안내
+        setTimeout(() => {
+          typingEl.remove();
+          const feedback = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
+          streamText(feedback.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
+          setAnsweringState(false);
+        }, 500);
+        return;
+      }
     }
 
     if (isInappropriateContent(kb1.data.text)) {
@@ -429,7 +483,15 @@ function sendMessage() {
     if (kb1.direct) {
       setTimeout(() => {
         typingEl.remove();
-        streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId, false);
+        // 추론 과정에서 출력 스타일 결정
+        const style = determineOutputStyle(text, kb1.data);
+        let outputText = kb1.data.text;
+
+        if (style === 'summary' && kb1.data.summary) {
+          outputText = kb1.data.summary;
+        }
+
+        streamTextWithSources(outputText, kb1.data.sources, 'ai', msgId, false);
         setAnsweringState(false);
       }, 500);
       return;
@@ -475,13 +537,15 @@ function startReasoning(query, msgId, typingEl) {
         clearInterval(timer);
         typingEl.remove();
 
-        // 오줌은 요약 모드 강제
-        if (result.useSummary) {
-          streamTextWithSources(result.data.summary, result.data.sources, 'ai', msgId, false);
-        } else {
-          streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId, false);
+        // 추론 과정에서 스타일 결정
+        const style = determineOutputStyle(query, result.data);
+        let outputText = result.data.text;
+
+        if ((style === 'summary' || result.useSummary) && result.data.summary) {
+          outputText = result.data.summary;
         }
 
+        streamTextWithSources(outputText, result.data.sources, 'ai', msgId, false);
         activeReasoning.delete(msgId);
         setAnsweringState(false);
         return;
@@ -491,8 +555,9 @@ function startReasoning(query, msgId, typingEl) {
     if (elapsed >= REASONING_TIMEOUT) {
       clearInterval(timer);
       typingEl.remove();
-      const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
-      streamText(failed.replaceAll('${userName}', userName), 'ai', msgId, false);
+      // 피드백 이메일 포함
+      const failed = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
+      streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
       activeReasoning.delete(msgId);
       setAnsweringState(false);
     }
