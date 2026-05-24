@@ -27,9 +27,30 @@ const MODEL_IDENTITY = Object.freeze({
 let userName = localStorage.getItem('chatkUserName') || '성민';
 
 // 추론 시스템 설정
-const REASONING_TIMEOUT = 15000; // 15초
-const RETRY_INTERVAL = 5000; // 5초마다 재시도
-const activeReasoning = new Map(); // msgId -> {timer, attempts, typingEl}
+const REASONING_TIMEOUT = 15000;
+const RETRY_INTERVAL = 5000;
+const activeReasoning = new Map();
+
+// 성적 금지어 리스트 - 확장 가능
+const SEXUAL_BLACKLIST = [
+  '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성기', '성관계', '성행위',
+  '유두', '가슴', '엉덩이', '팬티', '브라', '속옷', '알몸', '누드', 'nude',
+  '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크',
+  '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
+  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘'
+];
+
+// 변형 탐지용 정규식
+const SEXUAL_PATTERN = new RegExp(
+  SEXUAL_BLACKLIST.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
+  'i'
+);
+
+// 부적절 콘텐츠 감지
+function isInappropriateContent(text) {
+  const normalized = text.toLowerCase().replace(/\s+/g, '');
+  return SEXUAL_PATTERN.test(normalized);
+}
 
 // 패턴
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
@@ -73,7 +94,7 @@ const knowledgeBase = {
 1. ${userName} 이름 기억: localStorage 저장
 2. 출처 인용: 검증 가능한 소스 첨부
 3. 15초 추론: 1차 실패시 자동 재탐색 3회
-4. 데모 모드: 로컬 지식베이스 기반
+4. 콘텐츠 필터: 부적절 표현 자동 차단
 
 **한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
     sources: [],
@@ -108,6 +129,11 @@ const replies = {
     `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어. 질문을 다르게 해볼래?`,
     `미안 ${userName}. 이건 내 지식베이스에 없어. 더 구체적으로 물어봐주면 찾아볼게.`,
     `${userName}, 관련 정보 못 찾았어. 5.18이나 모델 사양 같은 건 바로 답 가능해.`
+  ],
+  blocked: [
+    `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
+    `부적절한 내용이야 ${userName}. 정책상 답변 불가해.`,
+    `미안 ${userName}. 그 주제는 지원하지 않아.`
   ]
 };
 
@@ -118,7 +144,7 @@ function updateWelcomeTitle() {
   }
 }
 
-// 1차 지식 검색 - 정확 매칭
+// 1차 지식 검색
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase();
   for (const [key, data] of Object.entries(knowledgeBase)) {
@@ -129,48 +155,41 @@ function searchKnowledge(text) {
   return null;
 }
 
-// 2차 추론 - 키워드 확장 + 연관 검색
+// 2차 추론 검색
 function deepReasoning(query, attempt) {
   const words = query
-   .toLowerCase()
-   .replace(/[?!.]/g, ' ')
-   .split(' ')
-   .filter(w => w.length > 1);
+ .toLowerCase()
+ .replace(/[?!.]/g, ' ')
+ .split(' ')
+ .filter(w => w.length > 1);
 
   let bestMatch = null;
   let bestScore = 0;
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
     let score = 0;
-
-    // 키워드 매칭
     data.keywords.forEach(k => {
       words.forEach(w => {
         if (k.includes(w) || w.includes(k)) score += 2;
         if (k === w) score += 3;
       });
     });
-
-    // 태그 매칭
     data.tags.forEach(t => {
       words.forEach(w => {
         if (t.includes(w) || w.includes(t)) score += 1;
       });
     });
-
     if (score > bestScore) {
       bestScore = score;
       bestMatch = data;
     }
   }
 
-  // 시도 횟수별 임계값 하향
   const threshold = 4 - attempt;
   if (bestScore >= threshold) {
     return { data: bestMatch, confidence: bestScore / 10 };
   }
 
-  // 특수 연관 검색
   if (attempt >= 2) {
     if (words.some(w => ['광주', '5월', '전두환', '계엄'].includes(w))) {
       return { data: knowledgeBase["5.18"], confidence: 0.5 };
@@ -187,6 +206,24 @@ function deepReasoning(query, attempt) {
 function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
+
+  // 입력 필터 - 1차 차단
+  if (isInappropriateContent(text)) {
+    if (welcomeScreen) welcomeScreen.classList.add('hidden');
+    closeSidebar();
+
+    const msgId = Date.now();
+    addMessage(text, 'user', msgId);
+    userInput.value = '';
+    autoResize();
+    sendBtn.classList.remove('has-text');
+
+    const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
+    setTimeout(() => {
+      streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId);
+    }, 300);
+    return;
+  }
 
   if (welcomeScreen) welcomeScreen.classList.add('hidden');
   closeSidebar();
@@ -227,6 +264,16 @@ function sendMessage() {
   // 3순위: 1차 지식 검색
   const kb1 = searchKnowledge(text);
   if (kb1) {
+    // 출력 필터 - 2차 차단
+    if (isInappropriateContent(kb1.data.text)) {
+      setTimeout(() => {
+        typingEl.remove();
+        const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
+        streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId);
+      }, 400);
+      return;
+    }
+
     setTimeout(() => {
       typingEl.remove();
       streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId);
@@ -234,15 +281,14 @@ function sendMessage() {
     return;
   }
 
-  // 4순위: 추론 시작 - 15초 풀가동
+  // 4순위: 추론 시작
   startReasoning(text, msgId, typingEl);
 }
 
-// 추론 시스템 - 15초 동안 계속 재시도
+// 추론 시스템
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0;
   let attempt = 1;
-  const maxAttempts = 3;
 
   const updateLoadingText = (attemptNum) => {
     const textEl = typingEl.querySelector('.loading-text');
@@ -257,13 +303,22 @@ function startReasoning(query, msgId, typingEl) {
   const timer = setInterval(() => {
     elapsed += 100;
 
-    // 5초, 10초마다 재시도
     if (elapsed % RETRY_INTERVAL === 0 && elapsed < REASONING_TIMEOUT) {
       attempt++;
       updateLoadingText(attempt);
 
       const result = deepReasoning(query, attempt);
       if (result && result.confidence >= 0.3) {
+        // 출력 필터 - 3차 차단
+        if (isInappropriateContent(result.data.text)) {
+          clearInterval(timer);
+          typingEl.remove();
+          const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
+          streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId);
+          activeReasoning.delete(msgId);
+          return;
+        }
+
         clearInterval(timer);
         typingEl.remove();
         streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId);
@@ -272,7 +327,6 @@ function startReasoning(query, msgId, typingEl) {
       }
     }
 
-    // 15초 타임아웃 - 진짜 실패
     if (elapsed >= REASONING_TIMEOUT) {
       clearInterval(timer);
       typingEl.remove();
@@ -350,7 +404,7 @@ function streamText(text, type, msgId) {
   }, 5);
 }
 
-// 타이핑중 표시 - 로딩바 + 단계별 텍스트
+// 타이핑중 표시 - 로딩바
 function addTyping(msgId, attempt) {
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
