@@ -206,10 +206,12 @@ function sendMessage(predefinedText) {
     if (!predefinedText) { input.value = ''; input.style.height = 'auto'; updateInputState(); }
     const q = text.toLowerCase();
 
-    // "다시 추론" 요청 감지 → 추론 모드 강제 ON + 재실행
+    // "다시 추론" 요청 감지 → 추론 ON + 마지막 질문 재실행
     if (text.includes('다시 추론') || text.includes('재추론') || text.includes('다시 생각')) {
         if (!reasoningMode) toggleReasoning();
-        setTimeout(() => { sendMessage(pendingKnowledgeInput || text.replace(/다시 추론|재추론|다시 생각/g, '').trim() || '이 질문에 대해 다시 추론해줘'); }, 300);
+        const lastUserMsg = conversationHistory.filter(m => m.type === 'user').pop();
+        const retryText = lastUserMsg ? lastUserMsg.content : text;
+        setTimeout(() => { sendMessage(retryText); }, 300);
         return;
     }
 
@@ -243,7 +245,17 @@ function sendMessage(predefinedText) {
         scrollToBottom(); return;
     }
     if (reasoningMode) { const sr = searchKnowledgeBase(text); const s = generateThinkingSteps(text, sr.found); const l = addReasoningStreamMessage(s); setTimeout(() => { removeLoadingMessage(l); let fr; if (sr.found) { fr = expandReasoningResponse(sr.response, text); if (sr.response.table) { lastTableData = sr.response.table; lastResponseType = 'table'; } if (sr.response.chart) { lastChartData = sr.response.chart.data; lastResponseType = 'chart'; } } else { fr = generateFallbackResponse(text); } addMessage('bot', fr.reply, fr.table || null, fr.chart || null, fr.suggest || [], s, sr.found); saveConversation(); updateInputState(); }, 3000); scrollToBottom(); return; }
-    setTimeout(() => { const sr = searchKnowledgeBase(text); const r = sr.response; if (r.table) { lastTableData = r.table; lastResponseType = 'table'; } if (r.chart) { lastChartData = r.chart.data; lastResponseType = 'chart'; } if (!sr.found) { r.suggest = ['🔄 다시 추론하기', ...(r.suggest || [])]; } addMessage('bot', r.reply, r.table || null, r.chart || null, r.suggest || []); saveConversation(); updateInputState(); }, 500);
+    
+    // 일반 모드
+    setTimeout(() => {
+        const sr = searchKnowledgeBase(text);
+        const r = sr.response;
+        if (r.table) { lastTableData = r.table; lastResponseType = 'table'; }
+        if (r.chart) { lastChartData = r.chart.data; lastResponseType = 'chart'; }
+        if (!sr.found) { r.suggest = ['🔄 다시 추론하기', '뭐 할 수 있어?', '과학이 뭐야?']; }
+        addMessage('bot', r.reply, r.table || null, r.chart || null, r.suggest || []);
+        saveConversation(); updateInputState();
+    }, 500);
     scrollToBottom();
 }
 
@@ -254,7 +266,7 @@ function generateChartDeepAnalysis(cd) { const { labels, values } = cd; const ma
 function generateThinkingSteps(u, kf) { return [{ icon: 'analyze', iconText: '🧠', title: '질문 분석', desc: `"${u}" 의도 파악` }, { icon: 'search', iconText: '🔍', title: '지식 검색', desc: kf ? '관련 지식 발견' : '⚠️ 정보 없음' }, { icon: 'analyze', iconText: '📋', title: '지식 검토', desc: kf ? '정확성 확인 중' : '대체 탐색' }, { icon: 'analyze', iconText: '🔗', title: '맥락 구성', desc: kf ? '최적 답변 구성' : '재분석' }, { icon: kf ? 'result' : 'warning-step', iconText: kf ? '✅' : '⚠️', title: kf ? '완료' : '대체', desc: kf ? '검증된 답변' : '최선의 답변' }]; }
 function expandReasoningResponse(br, u) { let e = br.reply; const d = generateDeepAnalysis(u, br.reply); if (d) e += '\n\n---\n## 🔬 심층 분석\n\n' + d + '\n\n> 💡 추론 모드 검토 완료'; return { reply: e, table: br.table, chart: br.chart, suggest: br.suggest }; }
 function generateDeepAnalysis(u, r) { const q = u.toLowerCase(); if (q.includes('개발자')||q.includes('누구')||q.includes('소개')) return '10대 개발자, JavaScript, 완전 무료.'; if (q.includes('과학')||q.includes('물리')||q.includes('화학')) return '관찰→가설→실험→분석→결론.'; if (q.includes('컴퓨터')||q.includes('코딩')) return '추상화, 알고리즘, Python 추천.'; if (q.includes('공부')||q.includes('학습')) return '망각 곡선, 복습, 수면이 핵심.'; if (q.includes('힘들')||q.includes('슬프')||q.includes('위로')) return '감정은 자연스러움, 수용이 중요.'; if (q.includes('운동')||q.includes('건강')) return '주 150분, 7-9시간 수면.'; if (q.includes('또봇')) return '2010년, X(차하나), Y(차두리), Z(권세모).'; if (q.includes('도라에몽')) return '1969년 후지코 F. 후지오.'; if (q.includes('극우')) return '기독교+반공 결합, 비판적 사고 필요.'; if (q.includes('ai')) return '특정 분야 능가, Chat K-Plus도 AI.'; return null; }
-function generateFallbackResponse(u) { return { reply: `"${u}"에 대해 아직 잘 몰라요. 😅\n\n조금 다른 방식으로 물어봐 주시거나, 추론 모드를 켜고 다시 시도해 보세요.`, table: null, chart: null, suggest: ['🔄 다시 추론하기', '뭐 할 수 있어?', '과학이 뭐야?'] }; }
+function generateFallbackResponse(u) { return { reply: `"${u}"에 대해 아직 잘 몰라요. 😅\n\n추론 모드를 켜고 다시 시도해 보시거나, 아래 버튼을 눌러 주세요.`, table: null, chart: null, suggest: ['🔄 다시 추론하기', '뭐 할 수 있어?', '과학이 뭐야?'] }; }
 
 // ===== 메시지 UI =====
 function addMessage(type, content, tableData, chartData, suggestions, thinkingSteps, knowledgeFound) {
