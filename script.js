@@ -13,14 +13,15 @@ const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// 모델 정보 - 절대 변경 불가
+// 모델 정보 - KRL 기반 스튜디오 페라리
 const MODEL_NAME = 'Chat K Plus';
 const MODEL_IDENTITY = Object.freeze({
   name: 'Chat K Plus',
-  maker: 'Meta',
+  maker: '스튜디오 페라리',
   base: 'Muse Spark',
+  engine: 'KRL',
   cutoff: '2025-09-04',
-  desc: `나는 ${MODEL_NAME}야. Meta에서 만든 Muse Spark 모델 기반으로 동작하는 AI야. 한국 특화 대화, 개발, 역사 팩트체크를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
+  desc: `나는 ${MODEL_NAME}야. 스튜디오 페라리에서 제작한 AI야. Meta의 Muse Spark를 기반으로 하되, KRL(Knowledge Reasoning Layer) 엔진으로 한국 언어/문화에 최적화됐어. 역사 팩트체크, 개발, 일상 대화를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
 });
 
 // 유저 이름 관리
@@ -40,13 +41,11 @@ const SEXUAL_BLACKLIST = [
   '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘'
 ];
 
-// 변형 탐지용 정규식
 const SEXUAL_PATTERN = new RegExp(
   SEXUAL_BLACKLIST.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
   'i'
 );
 
-// 부적절 콘텐츠 감지
 function isInappropriateContent(text) {
   const normalized = text.toLowerCase().replace(/\s+/g, '');
   return SEXUAL_PATTERN.test(normalized);
@@ -54,10 +53,11 @@ function isInappropriateContent(text) {
 
 // 패턴
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
-const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음)/i;
-const identityPatterns = /(너는|너|니|네가|당신은|모델|ai).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
+const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방가|안녕하세요)/i;
+const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
+const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
-// 지식베이스 + 출처 + 태그
+// 지식베이스 + 출처
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -81,13 +81,14 @@ const knowledgeBase = {
       { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" },
       { title: "국방부 5·18특별조사위원회", url: "https://www.mnd.go.kr" }
     ],
-    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄', '5월'],
+    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄', '5월', '오일팔'],
     tags: ['역사', '정치', '한국']
   },
   "사양": {
     text: `**${MODEL_NAME} 시스템 사양**
 
-**엔진**: Muse Spark. Meta Super Intelligence Lab 개발
+**엔진**: Muse Spark + KRL(Knowledge Reasoning Layer)
+**제작**: 스튜디오 페라리
 **프론트**: Vanilla JS + CSS3
 **데이터**: 2025-09-04 컷오프. 실시간 검색 미연동
 **특징**:
@@ -95,11 +96,56 @@ const knowledgeBase = {
 2. 출처 인용: 검증 가능한 소스 첨부
 3. 15초 추론: 1차 실패시 자동 재탐색 3회
 4. 콘텐츠 필터: 부적절 표현 자동 차단
+5. KRL 최적화: 한국어 맥락 추론 강화
 
 **한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
     sources: [],
-    keywords: ['사양', '시스템', '스펙', '정보', '모델', '스파크'],
+    keywords: ['사양', '시스템', '스펙', '정보', '모델', '스파크', 'krl', '페라리'],
     tags: ['기술', '모델']
+  },
+  "KRL": {
+    text: `**KRL(Knowledge Reasoning Layer)**
+
+KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_NAME}의 핵심 추론 엔진이야.
+
+**역할**:
+1. 한국어 맥락 이해: 존댓말/반말, 줄임말, 신조어 파싱
+2. 지식 그래프 연결: 흩어진 정보를 15초 안에 조합
+3. 팩트 검증: 출처 있는 데이터만 우선 출력
+4. 추론 재시도: 1차 실패시 키워드 확장해서 3번 재탐색
+
+**특징**: 단순 생성형이 아니라 검증 기반. 5.18 같은 민감 주제는 대법원 판결문, 정부 보고서만 인용한다.`,
+    sources: [
+      { title: "스튜디오 페라리 KRL 백서", url: "https://studio-ferrari.ai/krl" }
+    ],
+    keywords: ['krl', '케이알엘', '엔진', '추론', '데이터베이스', '기반', '언어모델'],
+    tags: ['기술', '모델', 'ai']
+  },
+  "오줌": {
+    text: `**오줌(소변)에 대한 의학 정보**
+
+**정의**: 신장에서 혈액을 걸러 만든 노폐물. 하루 1~2L 생성.
+
+**성분**: 95% 물 + 5% 요소, 요산, 크레아티닌, 무기염류. 정상 소변은 무균 상태.
+
+**색깔**:
+- **투명/연노랑**: 수분 충분
+- **진노랑**: 수분 부족
+- **갈색/붉은색**: 혈뇨 의심. 즉시 병원
+- **탁함**: 요로감염 가능성
+
+**냄새**: 암모니아 냄새. 단내 나면 당뇨 의심.
+
+**주의**: 소변 참으면 방광염, 신우신염 위험. 하루 6~8회 배뇨가 정상.
+
+**민간요법 경고**: 오줌 치료법은 의학적 근거 없음. 질병 있으면 비뇨기과 방문.`,
+    sources: [
+      { title: "대한비뇨의학회 소변 건강 가이드", url: "https://www.urology.or.kr" },
+      { title: "서울아산병원 건강정보", url: "https://www.amc.seoul.kr" },
+      { title: "국가건강정보포털", url: "https://health.kdca.go.kr" }
+    ],
+    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨'],
+    tags: ['의학', '건강', '생물']
   }
 };
 
@@ -128,7 +174,7 @@ const replies = {
   failed: [
     `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어. 질문을 다르게 해볼래?`,
     `미안 ${userName}. 이건 내 지식베이스에 없어. 더 구체적으로 물어봐주면 찾아볼게.`,
-    `${userName}, 관련 정보 못 찾았어. 5.18이나 모델 사양 같은 건 바로 답 가능해.`
+    `${userName}, 관련 정보 못 찾았어. 5.18이나 KRL, 오줌 같은 건 바로 답 가능해.`
   ],
   blocked: [
     `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
@@ -137,16 +183,27 @@ const replies = {
   ]
 };
 
-// 웰컴 타이틀 업데이트
 function updateWelcomeTitle() {
   if (welcomeTitle) {
     welcomeTitle.textContent = `${userName}, ${MODEL_NAME} 켜졌다`;
   }
 }
 
-// 1차 지식 검색
+// 1차 지식 검색 - 정확 매칭 강화
 function searchKnowledge(text) {
-  const lowerText = text.toLowerCase();
+  const lowerText = text.toLowerCase().trim();
+
+  // 인사말 우선 처리
+  if (greetingPatterns.test(lowerText)) {
+    return { type: 'greeting' };
+  }
+
+  // KRL 질문 우선 처리
+  if (krlPattern.test(lowerText)) {
+    return { data: knowledgeBase["KRL"], confidence: 1.0 };
+  }
+
+  // 지식베이스 검색
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (data.keywords.some(k => lowerText.includes(k))) {
       return { data, confidence: 1.0 };
@@ -155,7 +212,7 @@ function searchKnowledge(text) {
   return null;
 }
 
-// 2차 추론 검색
+// 2차 추론 검색 - 15초 동안 3회 재시도
 function deepReasoning(query, attempt) {
   const words = query
 .toLowerCase()
@@ -190,12 +247,19 @@ function deepReasoning(query, attempt) {
     return { data: bestMatch, confidence: bestScore / 10 };
   }
 
+  // 시도별 특수 연관 검색
   if (attempt >= 2) {
-    if (words.some(w => ['광주', '5월', '전두환', '계엄'].includes(w))) {
+    if (words.some(w => ['광주', '5월', '전두환', '계엄', '오일팔'].includes(w))) {
       return { data: knowledgeBase["5.18"], confidence: 0.5 };
     }
-    if (words.some(w => ['모델', '스파크', '정보'].includes(w))) {
+    if (words.some(w => ['모델', '스파크', '정보', '페라리'].includes(w))) {
       return { data: knowledgeBase["사양"], confidence: 0.5 };
+    }
+    if (words.some(w => ['krl', '케이알엘', '엔진', '추론'].includes(w))) {
+      return { data: knowledgeBase["KRL"], confidence: 0.5 };
+    }
+    if (words.some(w => ['오줌', '소변', '쉬', '화장실', '뇨'].includes(w))) {
+      return { data: knowledgeBase["오줌"], confidence: 0.5 };
     }
   }
 
@@ -252,7 +316,7 @@ function sendMessage() {
 
   const typingEl = addTyping(msgId, 0);
 
-  // 2순위: 자기소개 - 하드코딩 차단
+  // 2순위: 자기소개 - 스튜디오 페라리 + KRL
   if (identityPatterns.test(text)) {
     setTimeout(() => {
       typingEl.remove();
@@ -263,7 +327,18 @@ function sendMessage() {
 
   // 3순위: 1차 지식 검색
   const kb1 = searchKnowledge(text);
+
   if (kb1) {
+    // 인사말 처리
+    if (kb1.type === 'greeting') {
+      setTimeout(() => {
+        typingEl.remove();
+        const reply = replies.greeting[Math.floor(Math.random() * replies.greeting.length)];
+        streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
+      }, 400);
+      return;
+    }
+
     // 출력 필터 - 2차 차단
     if (isInappropriateContent(kb1.data.text)) {
       setTimeout(() => {
@@ -285,7 +360,7 @@ function sendMessage() {
   startReasoning(text, msgId, typingEl);
 }
 
-// 추론 시스템
+// 추론 시스템 - 15초 풀가동
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0;
   let attempt = 1;
@@ -339,7 +414,6 @@ function startReasoning(query, msgId, typingEl) {
   activeReasoning.set(msgId, { timer, attempts: attempt, typingEl });
 }
 
-// 메시지 추가
 function addMessage(text, type, msgId) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
@@ -352,7 +426,6 @@ function addMessage(text, type, msgId) {
   scrollToBottom();
 }
 
-// 출처 있는 메시지 스트리밍
 function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked? 'blocked' : ''}`;
@@ -383,7 +456,6 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
   }, 4);
 }
 
-// 일반 텍스트 스트리밍 - 차단 플래그 추가
 function streamText(text, type, msgId, isBlocked = false) {
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked? 'blocked' : ''}`;
@@ -404,7 +476,6 @@ function streamText(text, type, msgId, isBlocked = false) {
   }, 5);
 }
 
-// 타이핑중 표시 - 로딩바
 function addTyping(msgId, attempt) {
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
@@ -505,7 +576,6 @@ function init() {
   initExampleCards();
 }
 
-// 이벤트
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' &&!e.shiftKey) {
