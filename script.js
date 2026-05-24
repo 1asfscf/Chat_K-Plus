@@ -22,28 +22,39 @@ const MODEL_IDENTITY = Object.freeze({
   base: 'Muse Spark',
   engine: 'KRL',
   cutoff: '2025-09-04',
-  desc: `나는 ${MODEL_NAME}야. 스튜디오 페라리에서 제작한 AI야. Meta의 Muse Spark를 기반으로 하되, KRL(Knowledge Reasoning Layer) 엔진으로 한국 언어/문화에 최적화됐어. 역사 팩트체크, 개발, 건강 가이드, 일상 대화를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
+  desc: `나는 ${MODEL_NAME}야. 스튜디오 페라리에서 제작한 AI야. Meta의 Muse Spark를 기반으로 하되, KRL(Knowledge Reasoning Layer) 엔진으로 한국 언어/문화에 최적화됐어. 역사 팩트체크, 개발, 건강 가이드, 영화, 일상 대화를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
 });
 
 let userName = localStorage.getItem('chatkUserName') || '성민';
 let isAnswering = false;
+let currentStreamInterval = null; // 멈춤용
 
 const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
 const activeReasoning = new Map();
 
+// 의학 용어 화이트리스트
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
 ];
 
+// 성적 금지어 - 팬티 포함 모든 변형
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
-  '유두', '가슴', '엉덩이', '팬티', '브라', '속옷', '알몸', '누드', 'nude',
-  '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크',
+  '유두', '가슴', '엉덩이', '팬티', '팬티', 'panty', 'panties', '브라', '속옷',
+  '알몸', '누드', 'nude', '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크',
   '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
-  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘'
+  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘',
+  '팬티', '빤스', '속바지', '란제리'
+];
+
+// 모욕/혐오 이모티콘 차단
+const BANNED_EMOJIS = [
+  '🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿', // 중지
+  '👆🏻', '👆🏼', '👆🏽', '👆🏾', '👆🏿', // 검지 변형
+  '🖖', '🤬', '😡', '🤢', '🤮', '💩'
 ];
 
 const SEXUAL_PATTERN = new RegExp(
@@ -51,12 +62,21 @@ const SEXUAL_PATTERN = new RegExp(
   'i'
 );
 
+// 부적절 콘텐츠 감지 - 의학 화이트리스트 + 이모티콘
 function isInappropriateContent(text) {
   const lowerText = text.toLowerCase();
-  const normalized = lowerText.replace(/\s+/g, '');
+
+  // 이모티콘 차단
+  if (BANNED_EMOJIS.some(e => text.includes(e))) {
+    return true;
+  }
+
+  // 의학 용어 포함시 차단 해제
   if (MEDICAL_WHITELIST.some(w => lowerText.includes(w))) {
     return false;
   }
+
+  const normalized = lowerText.replace(/\s+/g, '');
   return SEXUAL_PATTERN.test(normalized);
 }
 
@@ -65,7 +85,6 @@ const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방�
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
-// 키워드 별칭 매핑
 const KEYWORD_ALIASES = {
   '여야': '여아',
   '남자': '남성',
@@ -107,7 +126,7 @@ const knowledgeBase = {
 **엔진**: Muse Spark + KRL(Knowledge Reasoning Layer)
 **제작**: 스튜디오 페라리
 **데이터**: 2025-09-04 컷오프
-**특징**: 이름 기억, 출처 인용, 15초 추론, 콘텐츠 필터, 건강 가이드
+**특징**: 이름 기억, 출처 인용, 15초 추론, 콘텐츠 필터, 건강 가이드, 영화 정보
 
 **한계**: 실시간 정보, 이미지 생성 미지원`,
     sources: [],
@@ -175,6 +194,34 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '트젠', '트랜스젠더', '가이드', '건강', '남성', '여성', '남아', '여아'],
     tags: ['의학', '건강'],
     needsReasoning: true
+  },
+  "영화": {
+    text: `**한국 영화 지식 - ${MODEL_NAME}**
+
+**대표작 예시**
+
+**1. 기생충 (2019)**
+봉준호 감독. 칸 영화제 황금종려상, 아카데미 작품상. 계급 갈등을 블랙코미디로 풀어냄.
+
+**2. 올드보이 (2003)**
+박찬욱 감독. 칸 심사위원대상. 복수 3부작. 15년 감금 미스터리.
+
+**3. 부산행 (2016)**
+연상호 감독. K-좀비 장르 세계화. 좀비 아포칼립스 + 부성애.
+
+**4. 헤어질 결심 (2022)**
+박찬욱 감독. 칸 감독상. 멜로 + 수사극. "사랑한다" 대사 없이 사랑 표현.
+
+**트렌드**: 넷플릭스 <오징어 게임> 이후 K-콘텐츠 글로벌 확장. OTT 제작비 상승으로 극장/OTT 동시개봉 증가.
+
+더 구체적인 감독, 배우, 장르 물어봐 ${userName}.`,
+    sources: [
+      { title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" },
+      { title: "영화진흥위원회 KOFIC", url: "https://www.kofic.or.kr" }
+    ],
+    keywords: ['영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱', '한국영화'],
+    tags: ['문화', '예술'],
+    needsReasoning: false
   }
 };
 
@@ -221,22 +268,55 @@ function updateWelcomeTitle() {
   }
 }
 
+// 답변 상태 + 멈춤 버튼 제어
 function setAnsweringState(state) {
   isAnswering = state;
   sendBtn.disabled = state;
   userInput.disabled = state;
+
   if (state) {
-    sendBtn.style.opacity = '0.4';
-    sendBtn.style.cursor = 'not-allowed';
-    userInput.placeholder = '답변 생성 중...';
-  } else {
+    sendBtn.innerHTML = `
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+        <rect x="6" y="4" width="4" height="16"></rect>
+        <rect x="14" y="4" width="4" height="16"></rect>
+      </svg>
+    `;
     sendBtn.style.opacity = '1';
     sendBtn.style.cursor = 'pointer';
+    sendBtn.style.background = 'var(--danger)';
+    userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
+  } else {
+    sendBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="19" x2="12" y2="5"></line>
+        <polyline points="5 12 12 5 19 12"></polyline>
+      </svg>
+    `;
+    sendBtn.style.opacity = '1';
+    sendBtn.style.cursor = 'pointer';
+    sendBtn.style.background = '';
     userInput.placeholder = '메시지 입력...';
   }
 }
 
-// 키워드 정규화 - 별칭 처리
+// 멈춤 기능
+function stopStreaming() {
+  if (currentStreamInterval) {
+    clearInterval(currentStreamInterval);
+    currentStreamInterval = null;
+  }
+
+  activeReasoning.forEach(({ timer }) => clearInterval(timer));
+  activeReasoning.clear();
+
+  // 마지막 타이핑 제거
+  const typingEl = chatList.querySelector('.msg.ai.typing');
+  if (typingEl) typingEl.remove();
+
+  setAnsweringState(false);
+  autoResize();
+}
+
 function normalizeKeyword(text) {
   let normalized = text.toLowerCase();
   for (const [alias, target] of Object.entries(KEYWORD_ALIASES)) {
@@ -247,26 +327,22 @@ function normalizeKeyword(text) {
   return normalized;
 }
 
-// 출력 스타일 결정 - 추론 과정 필수
 function determineOutputStyle(query, data) {
   const lowerQuery = query.toLowerCase();
 
-  // 1. 단순 질문: "뭐야", "알려줘" → 요약
   if (/뭐야|뭔데|알려줘|설명/.test(lowerQuery) &&!data.subKey) {
     return 'summary';
   }
 
-  // 2. 세부 항목: "남성", "여아" 등 → 상세
   if (data.subKey) {
     return 'detail';
   }
 
-  // 3. 가이드 요청: "가이드", "방법" → 목록형
   if (/가이드|방법|팁|주의/.test(lowerQuery)) {
     return 'guide';
   }
 
-  return 'summary'; // 기본값
+  return 'summary';
 }
 
 function searchKnowledge(text) {
@@ -281,7 +357,6 @@ function searchKnowledge(text) {
     return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
   }
 
-  // 오줌 - 키워드 정규화 후 매칭
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
   if (urineKeywords.some(k => normalizedText.includes(k))) {
     const detailKeys = ['남성', '여성', '트랜스젠더', '남아', '여아'];
@@ -359,13 +434,19 @@ function deepReasoning(query, attempt) {
     if (words.some(w => ['오줌', '소변', '쉬', '화장실', '뇨'].includes(w))) {
       return { data: knowledgeBase["오줌"], confidence: 0.5, useSummary: true };
     }
+    if (words.some(w => ['영화', '시네마', '무비'].includes(w))) {
+      return { data: knowledgeBase["영화"], confidence: 0.5 };
+    }
   }
 
   return null;
 }
 
 function sendMessage() {
-  if (isAnswering) return;
+  if (isAnswering) {
+    stopStreaming();
+    return;
+  }
 
   const text = userInput.value.trim();
   if (!text) return;
@@ -438,7 +519,6 @@ function sendMessage() {
       return;
     }
 
-    // 오줌 요약 모드
     if (kb1.useSummary) {
       setTimeout(() => {
         typingEl.remove();
@@ -448,7 +528,6 @@ function sendMessage() {
       return;
     }
 
-    // 오줌 세부 카테고리
     if (kb1.subKey && kb1.data.details) {
       const detailText = kb1.data.details[kb1.subKey];
       if (detailText) {
@@ -459,7 +538,6 @@ function sendMessage() {
         }, 500);
         return;
       } else {
-        // 세부 항목 못 찾으면 피드백 안내
         setTimeout(() => {
           typingEl.remove();
           const feedback = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
@@ -483,7 +561,6 @@ function sendMessage() {
     if (kb1.direct) {
       setTimeout(() => {
         typingEl.remove();
-        // 추론 과정에서 출력 스타일 결정
         const style = determineOutputStyle(text, kb1.data);
         let outputText = kb1.data.text;
 
@@ -537,7 +614,6 @@ function startReasoning(query, msgId, typingEl) {
         clearInterval(timer);
         typingEl.remove();
 
-        // 추론 과정에서 스타일 결정
         const style = determineOutputStyle(query, result.data);
         let outputText = result.data.text;
 
@@ -555,7 +631,6 @@ function startReasoning(query, msgId, typingEl) {
     if (elapsed >= REASONING_TIMEOUT) {
       clearInterval(timer);
       typingEl.remove();
-      // 피드백 이메일 포함
       const failed = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
       streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
       activeReasoning.delete(msgId);
@@ -594,16 +669,23 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
   const sourcesEl = msg.querySelector('.sources');
 
   let i = 0;
-  const interval = setInterval(() => {
+  currentStreamInterval = setInterval(() => {
+    if (!isAnswering) {
+      clearInterval(currentStreamInterval);
+      currentStreamInterval = null;
+      return;
+    }
     bubble.textContent += text[i];
     i++;
     scrollToBottom();
     if (i >= text.length) {
-      clearInterval(interval);
+      clearInterval(currentStreamInterval);
+      currentStreamInterval = null;
       if (sources.length && sourcesEl) {
         sourcesEl.innerHTML = '<div class="sources-title">출처</div>' +
           sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
       }
+      setAnsweringState(false);
     }
   }, 4);
 }
@@ -620,11 +702,20 @@ function streamText(text, type, msgId, isBlocked = false) {
   const bubble = msg.querySelector('.bubble');
 
   let i = 0;
-  const interval = setInterval(() => {
+  currentStreamInterval = setInterval(() => {
+    if (!isAnswering) {
+      clearInterval(currentStreamInterval);
+      currentStreamInterval = null;
+      return;
+    }
     bubble.textContent += text[i];
     i++;
     scrollToBottom();
-    if (i >= text.length) clearInterval(interval);
+    if (i >= text.length) {
+      clearInterval(currentStreamInterval);
+      currentStreamInterval = null;
+      setAnsweringState(false);
+    }
   }, 5);
 }
 
@@ -688,6 +779,7 @@ function closeSidebar() {
 function startNewChat() {
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
+  stopStreaming();
   setAnsweringState(false);
 
   chatList.innerHTML = '';
