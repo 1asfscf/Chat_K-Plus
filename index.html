@@ -3,32 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Spark Chat v6</title>
+  <title>Chat K Plus v9</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
-    <!-- PC 사이드바 -->
     <aside class="sidebar">
-      <div class="logo">🔥 Spark</div>
+      <div class="logo">🔥 Chat K Plus</div>
       <button class="new-chat" id="newChatBtn">+ 새 채팅</button>
       <div class="history" id="history"></div>
     </aside>
 
-    <!-- 메인 채팅 영역 -->
     <main class="chat-wrap">
       <header class="chat-header">
         <button class="menu-btn" id="menuBtn">☰</button>
-        <h1>Spark</h1>
+        <h1>Chat K Plus</h1>
         <button class="theme-toggle" id="themeToggle">라이트</button>
       </header>
 
-      <!-- V1 예시 화면 - 첫 진입시 노출 -->
       <div class="welcome-screen" id="welcomeScreen">
         <div class="welcome-logo">🔥</div>
-        <div class="logo">🔥 Chat K Plus</div>
-        <h1>Chat K Plus</h1>
-<h2 class="welcome-title" id="welcomeTitle">이용자, Chat K Plus 켜졌다</h2>
+        <h2 class="welcome-title" id="welcomeTitle">이용자, Chat K Plus 켜졌다</h2>
+        <p class="welcome-sub">Chat K Plus한테 뭐든지 물어봐</p>
         
         <div class="example-grid">
           <div class="example-card" data-prompt="5.18 광주민주화운동 왜곡 사례 5가지 알려줘">
@@ -54,13 +50,12 @@
         </div>
       </div>
 
-      <!-- 실제 채팅 리스트 - 비워둬야 웰컴화면 뜸 -->
       <div class="chat-list" id="chatList"></div>
 
       <footer class="input-area">
         <textarea 
           id="userInput" 
-          placeholder="Spark에게 물어보세요..." 
+          placeholder="Chat K Plus에게 물어보세요..." 
           rows="1"></textarea>
         <button id="sendBtn">전송</button>
       </footer>
