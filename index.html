@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Spark Chat v4</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- PC 사이드바 -->
+    <aside class="sidebar">
+      <div class="logo">🔥 Spark</div>
+      <button class="new-chat" id="newChatBtn">+ 새 채팅</button>
+      <div class="history" id="history"></div>
+    </aside>
 
+    <!-- 메인 채팅 영역 -->
+    <main class="chat-wrap">
+      <header class="chat-header">
+        <button class="menu-btn" id="menuBtn">☰</button>
+        <h1>Spark</h1>
+        <button class="theme-toggle" id="themeToggle">라이트</button>
+      </header>
+
+      <div class="chat-list" id="chatList">
+        <div class="msg ai">
+          <div class="avatar">S</div>
+          <div class="bubble">성민아, 불꽃 켰다. 테스트해봐.</div>
+        </div>
+      </div>
+
+      <footer class="input-area">
+        <textarea 
+          id="userInput" 
+          placeholder="Spark에게 물어보세요..." 
+          rows="1"></textarea>
+        <button id="sendBtn">전송</button>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
