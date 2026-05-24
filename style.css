@@ -12,10 +12,11 @@
   --bg-chat: #12121f;
   --text: #e8e8f0;
   --text-dim: #8a8a9e;
+  --text-muted: #5a5a6e;
   --border: #2a2a3e;
   --accent: #ff6b35;
   --spark-grad: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa500 100%);
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --code-bg: #1a1a2e;
 }
 
 body.light {
@@ -24,8 +25,9 @@ body.light {
   --bg-chat: #ffffff;
   --text: #1a1a2e;
   --text-dim: #6a6a7e;
+  --text-muted: #9a9aae;
   --border: #e8e8f0;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  --code-bg: #f5f5f8;
 }
 
 html, body {
@@ -102,12 +104,13 @@ body {
 
 /* Header - 미니멀 */
 .chat-header {
-  height: 60px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
   background: transparent;
+  border-bottom: 1px solid var(--border);
 }
 
 .header-left {
@@ -116,9 +119,9 @@ body {
 }
 
 .header-center h1 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  opacity: 0.7;
+  opacity: 0.6;
   letter-spacing: -0.2px;
 }
 
@@ -128,11 +131,11 @@ body {
 }
 
 .menu-btn {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   background: transparent;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   color: var(--text-dim);
   font-size: 18px;
   cursor: pointer;
@@ -148,11 +151,11 @@ body {
 }
 
 .theme-toggle {
-  height: 34px;
-  padding: 0 14px;
+  height: 32px;
+  padding: 0 12px;
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 17px;
+  border-radius: 16px;
   color: var(--text-dim);
   font-size: 12px;
   font-weight: 500;
@@ -160,7 +163,7 @@ body {
   transition: all 0.25s;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .theme-toggle:hover {
@@ -169,7 +172,7 @@ body {
 }
 
 .theme-toggle .icon {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 /* Welcome Screen */
@@ -188,15 +191,15 @@ body {
 }
 
 .welcome-logo {
-  font-size: 64px;
-  margin-bottom: 20px;
+  font-size: 60px;
+  margin-bottom: 16px;
   opacity: 0.9;
 }
 
 .welcome-title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   background: var(--spark-grad);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -206,22 +209,22 @@ body {
 .welcome-sub {
   font-size: 14px;
   color: var(--text-dim);
-  margin-bottom: 48px;
+  margin-bottom: 40px;
 }
 
 .example-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-  max-width: 640px;
+  max-width: 600px;
   width: 100%;
 }
 
 .example-card {
   background: transparent;
   border: 1.5px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 14px;
+  padding: 14px;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s;
@@ -233,135 +236,193 @@ body {
 }
 
 .example-card .icon {
-  font-size: 24px;
-  margin-bottom: 8px;
+  font-size: 22px;
+  margin-bottom: 6px;
 }
 
 .example-card .title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .example-card .desc {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-dim);
 }
 
-/* Chat List */
+/* Chat List - 채팅방 형식 */
 .chat-list {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 16px;
+  padding: 0;
+  scroll-behavior: smooth;
 }
 
-.msg {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  animation: msgIn 0.3s ease;
-}
-
-@keyframes msgIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* 유저 메시지 - 오른쪽 말풍선 유지 */
 .msg.user {
-  flex-direction: row-reverse;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
+  justify-content: flex-end;
+  padding: 24px 20px 0;
+  gap: 0;
 }
 
-.msg.ai .avatar {
+.msg.user .bubble {
+  max-width: 70%;
+  padding: 12px 16px;
   background: var(--spark-grad);
   color: #fff;
-}
-
-.msg.user .avatar {
-  background: var(--border);
-}
-
-.bubble {
-  max-width: 72%;
-  padding: 13px 17px;
   border-radius: 18px;
-  line-height: 1.6;
+  border-bottom-right-radius: 4px;
   font-size: 15px;
+  line-height: 1.6;
   word-wrap: break-word;
   white-space: pre-wrap;
 }
 
-.msg.ai .bubble {
-  background: var(--border);
-  border-bottom-left-radius: 6px;
+.msg.user .avatar {
+  display: none;
 }
 
-.msg.user .bubble {
-  background: var(--spark-grad);
-  color: #fff;
-  border-bottom-right-radius: 6px;
-}
-
-/* 출처 블록 - 추가된 부분 */
-.msg.ai .bubble .msg-text {
+/* AI 메시지 - 본문형 채팅방 스타일 */
+.msg.ai {
   display: block;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn 0.3s ease;
 }
 
-.msg.ai .bubble .sources {
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.msg.ai .avatar {
+  display: none;
+}
+
+.msg.ai .bubble {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+  background: transparent;
+  border-radius: 0;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+/* AI 답변 헤더 */
+.msg.ai .bubble::before {
+  content: 'Chat K Plus';
+  display: block;
   font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
 }
 
-body.light .msg.ai .bubble .sources {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+/* 마크다운 스타일 */
+.msg.ai .bubble h1,
+.msg.ai .bubble h2,
+.msg.ai .bubble h3 {
+  margin: 24px 0 12px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.msg.ai .bubble h1 { font-size: 24px; }
+.msg.ai .bubble h2 { font-size: 20px; }
+.msg.ai .bubble h3 { font-size: 18px; }
+
+.msg.ai .bubble strong {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.msg.ai .bubble code {
+  background: var(--code-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 14px;
+}
+
+.msg.ai .bubble pre {
+  background: var(--code-bg);
+  padding: 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.msg.ai .bubble ul,
+.msg.ai .bubble ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.msg.ai .bubble li {
+  margin: 6px 0;
+}
+
+/* 출처 블록 - 본문형 */
+.msg.ai .bubble .sources {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
 }
 
 .sources-title {
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--text-dim);
   font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
 }
 
 .sources a {
-  display: block;
-  color: var(--accent);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text);
   text-decoration: none;
-  margin-bottom: 6px;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  background: var(--border);
+  border-radius: 8px;
   transition: all 0.2s;
-  padding: 4px 0;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .sources a:hover {
-  text-decoration: underline;
+  background: var(--accent);
+  color: #fff;
   transform: translateX(2px);
 }
 
 .sources a::before {
-  content: '→ ';
-  opacity: 0.6;
+  content: '🔗';
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+/* 타이핑 표시 - 본문형 */
+.typing.msg.ai {
+  border-bottom: none;
+}
+
+.typing.msg.ai .bubble::before {
+  content: 'Chat K Plus';
 }
 
 .typing .bubble {
   display: flex;
-  gap: 5px;
-  padding: 16px 18px;
+  gap: 6px;
+  padding-top: 12px;
 }
 
 .typing .bubble span {
@@ -382,8 +443,9 @@ body.light .msg.ai .bubble .sources {
 
 /* Input Area - 동그란 미니멀 */
 .input-area {
-  padding: 16px 16px 20px;
-  background: transparent;
+  padding: 16px 20px 20px;
+  background: var(--bg-chat);
+  border-top: 1px solid var(--border);
   padding-bottom: calc(20px + env(safe-area-inset-bottom));
 }
 
@@ -421,10 +483,9 @@ body.light .msg.ai .bubble .sources {
   color: var(--text-dim);
 }
 
-/* 전송 버튼 - 원형 미니멀 */
 #sendBtn {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   background: transparent;
   border: none;
   border-radius: 50%;
@@ -438,8 +499,8 @@ body.light .msg.ai .bubble .sources {
 }
 
 #sendBtn svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   transition: all 0.25s;
 }
 
@@ -498,19 +559,28 @@ body.light .msg.ai .bubble .sources {
   }
   
   .header-center h1 {
-    font-size: 15px;
+    font-size: 14px;
   }
   
   .example-grid {
     grid-template-columns: 1fr;
   }
   
-  .bubble {
+  .msg.user .bubble {
     max-width: 85%;
   }
   
+  .msg.ai .bubble {
+    padding: 0 16px;
+    font-size: 15px;
+  }
+  
   .welcome-title {
-    font-size: 24px;
+    font-size: 22px;
+  }
+  
+  .input-area {
+    padding: 12px 16px 16px;
   }
 }
 
@@ -522,10 +592,18 @@ body.light .msg.ai .bubble .sources {
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 3px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
 }
