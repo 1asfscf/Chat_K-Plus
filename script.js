@@ -25,19 +25,18 @@ const MODEL_IDENTITY = Object.freeze({
 });
 
 let userName = localStorage.getItem('chatkUserName') || '성민';
+let isAnswering = false; // 답변 중 플래그
 
 const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
 const activeReasoning = new Map();
 
-// 의학 용어 화이트리스트 - 이건 차단 안 함
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
 ];
 
-// 성적 금지어 리스트 - 의학 맥락 제외
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '브라', '속옷', '알몸', '누드', 'nude',
@@ -51,16 +50,12 @@ const SEXUAL_PATTERN = new RegExp(
   'i'
 );
 
-// 부적절 콘텐츠 감지 - 의학 화이트리스트 우선
 function isInappropriateContent(text) {
   const lowerText = text.toLowerCase();
   const normalized = lowerText.replace(/\s+/g, '');
-
-  // 의학 용어 포함시 차단 해제
   if (MEDICAL_WHITELIST.some(w => lowerText.includes(w))) {
     return false;
   }
-
   return SEXUAL_PATTERN.test(normalized);
 }
 
@@ -69,6 +64,7 @@ const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방�
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
+// 폭주 방지용 요약 지식베이스 - 전체 덤프 금지
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -80,120 +76,96 @@ const knowledgeBase = {
 시민들의 민주화 요구를 무장폭동으로 규정. 계엄군이 먼저 발포했고, 시민군은 최후 방어수단으로 무장한 것이다. 1997년 대법원에서 정당한 항쟁으로 인정.
 
 **3. 희생자 수 축소**
-사망자 170여명이라는 주장은 공식 통계와 다르다. 정부 공식 집계는 사망 166명, 행방불명 54명, 부상 3,139명이다. 암매장 등 미확인 희생자 포함하면 더 많다.
+사망자 170여명이라는 주장은 공식 통계와 다르다. 정부 공식 집계는 사망 166명, 행방불명 54명, 부상 3,139명이다.
 
 **4. 유공자 가짜설**
-5.18 유공자 대부분이 가짜라는 주장. 국가보훈부가 심사하고 법원 판결로 확정된 유공자다. 허위 유공자는 형사처벌 대상이다.
+5.18 유공자 대부분이 가짜라는 주장. 국가보훈부가 심사하고 법원 판결로 확정된 유공자다.
 
 **5. 전두환 미화**
-전두환 신군부가 질서 유지를 위해 불가피했다는 논리. 1996년 전두환, 노태우는 내란죄, 반란죄로 유죄 판결 받았다.`,
+전두환 신군부가 질서 유지를 위해 불가피했다는 논리. 1996년 내란죄, 반란죄로 유죄 판결.`,
     sources: [
-      { title: "5·18민주화운동진상규명조사위원회 보고서", url: "https://www.518commission.go.kr" },
-      { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" },
-      { title: "국방부 5·18특별조사위원회", url: "https://www.mnd.go.kr" }
+      { title: "5·18민주화운동진상규명조사위원회", url: "https://www.518commission.go.kr" },
+      { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" }
     ],
-    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄', '5월', '오일팔'],
-    tags: ['역사', '정치', '한국']
+    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄'],
+    tags: ['역사', '정치'],
+    needsReasoning: false
   },
   "사양": {
     text: `**${MODEL_NAME} 시스템 사양**
 
 **엔진**: Muse Spark + KRL(Knowledge Reasoning Layer)
 **제작**: 스튜디오 페라리
-**프론트**: Vanilla JS + CSS3
-**데이터**: 2025-09-04 컷오프. 실시간 검색 미연동
-**특징**:
-1. ${userName} 이름 기억: localStorage 저장
-2. 출처 인용: 검증 가능한 소스 첨부
-3. 15초 추론: 1차 실패시 자동 재탐색 3회
-4. 콘텐츠 필터: 부적절 표현 자동 차단 (의학 용어 제외)
-5. KRL 최적화: 한국어 맥락 추론 강화
-6. 건강 가이드: 오줌/배뇨 관련 의학 정보 제공
+**데이터**: 2025-09-04 컷오프
+**특징**: 이름 기억, 출처 인용, 15초 추론, 콘텐츠 필터, 건강 가이드
 
-**한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
+**한계**: 실시간 정보, 이미지 생성 미지원`,
     sources: [],
     keywords: ['사양', '시스템', '스펙', '정보', '모델', '스파크', 'krl', '페라리'],
-    tags: ['기술', '모델']
+    tags: ['기술'],
+    needsReasoning: false
   },
   "KRL": {
     text: `**KRL(Knowledge Reasoning Layer)**
 
 KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_NAME}의 핵심 추론 엔진이야.
 
-**역할**:
-1. 한국어 맥락 이해: 존댓말/반말, 줄임말, 신조어 파싱
-2. 지식 그래프 연결: 흩어진 정보를 15초 안에 조합
-3. 팩트 검증: 출처 있는 데이터만 우선 출력
-4. 추론 재시도: 1차 실패시 키워드 확장해서 3번 재탐색
+**역할**: 한국어 맥락 이해, 지식 그래프 연결, 팩트 검증, 추론 재시도 3회
 
-**특징**: 단순 생성형이 아니라 검증 기반. 5.18 같은 민감 주제는 대법원 판결문, 정부 보고서만 인용한다.`,
+**특징**: 단순 생성형이 아니라 검증 기반. 출처 있는 데이터만 우선 출력한다.`,
     sources: [
       { title: "스튜디오 페라리 KRL 백서", url: "https://studio-ferrari.ai/krl" }
     ],
-    keywords: ['krl', '케이알엘', '엔진', '추론', '데이터베이스', '기반', '언어모델'],
-    tags: ['기술', '모델', 'ai']
+    keywords: ['krl', '케이알엘', '엔진', '추론', '데이터베이스'],
+    tags: ['기술'],
+    needsReasoning: false
   },
+  // 오줌 - 폭주 방지: 추론 필수 + 카테고리별 분리
   "오줌": {
-    text: `**오줌(소변) 건강 가이드 - ${MODEL_NAME} 제공**
+    summary: `**오줌(소변) 건강 정보**
 
-**기본 정보**
-신장에서 혈액을 걸러 만든 노폐물. 하루 1~2L 생성. 95% 물 + 요소, 요산, 크레아티닌.
+신장에서 만든 노폐물. 하루 1~2L. 95% 물.
 
-**정상 소변 기준**
-- **색**: 투명~연노랑. 진노랑은 탈수 신호
-- **횟수**: 하루 6~8회. 2시간마다 1회꼴
-- **양**: 1회 200~400ml
-- **냄새**: 약한 암모니아. 단내/과일향은 당뇨 의심
+**기본 체크**: 색(연노랑 정상), 횟수(하루 6~8회), 냄새(약한 암모니아)
 
-**성별/연령별 특이사항**
+**위험 신호**: 혈뇨, 배뇨통, 발열 동반시 즉시 병원.
 
-**1. 성인 남성**
-- 전립선 비대: 50대 이상 잔뇨감, 야간뇨 증가. 비뇨기과 검진 필수
-- 요도 길이 20cm. 요로감염 드물지만 발생시 중증
-- 아침 첫 소변 거품 많으면 단백뇨 의심
+더 자세한 정보는 '남성', '여성', '트랜스젠더', '남아', '여아' 중 선택해서 물어봐 ${userName}.`,
+    details: {
+      남성: `**성인 남성 배뇨 가이드**
 
-**2. 성인 여성**
-- 요도 길이 4cm. 세균 침입 쉬워 방광염 빈발
-- 배뇨 후 앞에서 뒤로 닦기. 생리 중 위생 관리
-- 임신시 빈뇨 정상. 단, 통증/혈뇨는 즉시 병원
+- 전립선 비대: 50대 이상 잔뇨감, 야간뇨 증가시 비뇨기과
+- 요도 20cm. 요로감염 드물지만 중증
+- 아침 첫 소변 거품은 단백뇨 의심`,
+      여성: `**성인 여성 배뇨 가이드**
 
-**3. 트랜스젠더**
-- **트랜스여성(HRT 중)**: 스피로놀락톤 복용시 이뇨 작용으로 빈뇨. 칼륨 수치 체크 필요
-- **트랜스남성(테스토스테론)**: 전립선 조직 없어도 요도 자극 가능. 수술 여부에 따라 배뇨 자세 다름
-- **공통**: 호르몬 치료 중 신장 기능 정기 검사 권장. 소변색 변화시 주치의 상담
+- 요도 4cm. 방광염 빈발
+- 배뇨 후 앞에서 뒤로 닦기
+- 임신시 빈뇨 정상. 통증/혈뇨는 병원`,
+      트랜스젠더: `**트랜스젠더 배뇨 가이드**
 
-**4. 남아(사춘기 이전)**
-- 포경: 귀두염 방지 위해 청결 유지. 무리한 젖힘 금지
-- 야뇨증: 5세 이후 주 2회 이상이면 소아과 상담
-- 소변 줄기 가늘면 요도협착 의심
+- 트랜스여성(HRT): 스피로놀락톤 이뇨작용. 칼륨 체크
+- 트랜스남성(T): 요도 자극 가능. 수술별 배뇨 자세 다름
+- 공통: 호르몬 치료중 신장 정기검사`,
+      남아: `**남아 배뇨 가이드**
 
-**5. 여아(사춘기 이전)**
-- 외음부염: 비누 과다사용 금지. 면 속옷 착용
-- 방광염: 배뇨통, 잔뇨감시 즉시 소아과. 참으면 신우신염 위험
-- 변비 동반시 배뇨장애 유발
+- 포경: 청결 유지. 무리한 젖힘 금지
+- 야뇨증: 5세 이후 주2회 이상 소아과
+- 소변줄기 가늘면 요도협착 의심`,
+      여아: `**여아 배뇨 가이드**
 
-**위험 신호 - 즉시 병원**
-- 혈뇨: 붉은색/콜라색
-- 통증: 배뇨시 따가움, 옆구리 통증
-- 발열 동반: 38도 이상 + 배뇨장애 = 신우신염
-- 소변 못 봄: 12시간 이상 무뇨는 응급
-
-**건강한 배뇨 습관**
-1. 참지 않기. 방광 팽창시 세균 증식
-2. 하루 물 1.5~2L. 카페인/알코올 줄이기
-3. 배뇨 후 손 씻기. 요로감염 예방
-4. 크랜베리 주스: 여성 방광염 예방 효과
-
-**주의**: 민간요법, 오줌 치료법은 의학적 근거 없음. 증상 있으면 비뇨기과/내과 방문.`,
+- 외음부염: 비누 과다금지. 면 속옷
+- 방광염: 배뇨통시 즉시 소아과
+- 변비시 배뇨장애 유발`
+    },
     sources: [
       { title: "대한비뇨의학회 소변 건강 가이드", url: "https://www.urology.or.kr" },
-      { title: "서울아산병원 건강정보 - 배뇨장애", url: "https://www.amc.seoul.kr" },
-      { title: "국가건강정보포털 - 소변검사", url: "https://health.kdca.go.kr" },
-      { title: "대한소아비뇨의학회 소아 배뇨 가이드", url: "https://www.kspu.or.kr" },
-      { title: "트랜스젠더 건강관리 지침서 - 국립중앙의료원", url: "https://www.nmc.or.kr" }
+      { title: "서울아산병원 건강정보", url: "https://www.amc.seoul.kr" },
+      { title: "국가건강정보포털", url: "https://health.kdca.go.kr" }
     ],
-    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '남아', '여아', '트랜스젠더', '트젠', '전립선', '방광염', '요로감염', '가이드', '건강'],
-    tags: ['의학', '건강', '생물', '가이드']
+    keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '트젠', '트랜스젠더', '가이드', '건강'],
+    tags: ['의학', '건강'],
+    needsReasoning: true // 이건 추론 필수
   }
 };
 
@@ -221,7 +193,7 @@ const replies = {
   failed: [
     `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어. 질문을 다르게 해볼래?`,
     `미안 ${userName}. 이건 내 지식베이스에 없어. 더 구체적으로 물어봐주면 찾아볼게.`,
-    `${userName}, 관련 정보 못 찾았어. 5.18이나 KRL, 오줌 같은 건 바로 답 가능해.`
+    `${userName}, 관련 정보 못 찾았어. 구체적으로 물어봐.`
   ],
   blocked: [
     `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
@@ -236,6 +208,23 @@ function updateWelcomeTitle() {
   }
 }
 
+// 버튼 상태 제어
+function setAnsweringState(state) {
+  isAnswering = state;
+  sendBtn.disabled = state;
+  userInput.disabled = state;
+  if (state) {
+    sendBtn.style.opacity = '0.4';
+    sendBtn.style.cursor = 'not-allowed';
+    userInput.placeholder = '답변 생성 중...';
+  } else {
+    sendBtn.style.opacity = '1';
+    sendBtn.style.cursor = 'pointer';
+    userInput.placeholder = '메시지 입력...';
+  }
+}
+
+// 1차 지식 검색 - 추론 필요 여부 판단
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
 
@@ -244,17 +233,37 @@ function searchKnowledge(text) {
   }
 
   if (krlPattern.test(lowerText)) {
-    return { data: knowledgeBase["KRL"], confidence: 1.0 };
+    return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
   }
 
-  const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨', '가이드', '남자', '여자', '트젠', '트랜스젠더'];
+  // 오줌 - 카테고리 세부 질문 감지
+  const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
   if (urineKeywords.some(k => lowerText.includes(k))) {
-    return { data: knowledgeBase["오줌"], confidence: 1.0 };
+    const detailKeys = ['남성', '남자', '여성', '여자', '트랜스젠더', '트젠', '남아', '여아'];
+    const foundKey = detailKeys.find(k => lowerText.includes(k));
+
+    if (foundKey) {
+      // 세부 카테고리 질문이면 바로 답변
+      return {
+        data: knowledgeBase["오줌"],
+        confidence: 1.0,
+        direct: true,
+        subKey: foundKey.replace('남자', '남성').replace('여자', '여성').replace('트젠', '트랜스젠더')
+      };
+    } else {
+      // 광범위 질문이면 요약만
+      return {
+        data: knowledgeBase["오줌"],
+        confidence: 1.0,
+        direct: false,
+        useSummary: true
+      };
+    }
   }
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (data.keywords.some(k => lowerText.includes(k))) {
-      return { data, confidence: 1.0 };
+      return { data, confidence: 1.0, direct:!data.needsReasoning };
     }
   }
   return null;
@@ -295,7 +304,7 @@ function deepReasoning(query, attempt) {
   }
 
   if (attempt >= 2) {
-    if (words.some(w => ['광주', '5월', '전두환', '계엄', '오일팔'].includes(w))) {
+    if (words.some(w => ['광주', '5월', '전두환', '계엄'].includes(w))) {
       return { data: knowledgeBase["5.18"], confidence: 0.5 };
     }
     if (words.some(w => ['모델', '스파크', '정보', '페라리'].includes(w))) {
@@ -304,8 +313,8 @@ function deepReasoning(query, attempt) {
     if (words.some(w => ['krl', '케이알엘', '엔진', '추론'].includes(w))) {
       return { data: knowledgeBase["KRL"], confidence: 0.5 };
     }
-    if (words.some(w => ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨', '가이드'].includes(w))) {
-      return { data: knowledgeBase["오줌"], confidence: 0.5 };
+    if (words.some(w => ['오줌', '소변', '쉬', '화장실', '뇨'].includes(w))) {
+      return { data: knowledgeBase["오줌"], confidence: 0.5, useSummary: true };
     }
   }
 
@@ -313,6 +322,8 @@ function deepReasoning(query, attempt) {
 }
 
 function sendMessage() {
+  if (isAnswering) return;
+
   const text = userInput.value.trim();
   if (!text) return;
 
@@ -342,6 +353,8 @@ function sendMessage() {
   autoResize();
   sendBtn.classList.remove('has-text');
 
+  setAnsweringState(true);
+
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
@@ -353,6 +366,7 @@ function sendMessage() {
       typingEl.remove();
       const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
       streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
+      setAnsweringState(false);
     }, 400);
     return;
   }
@@ -363,6 +377,7 @@ function sendMessage() {
     setTimeout(() => {
       typingEl.remove();
       streamText(MODEL_IDENTITY.desc, 'ai', msgId, false);
+      setAnsweringState(false);
     }, 400);
     return;
   }
@@ -375,7 +390,29 @@ function sendMessage() {
         typingEl.remove();
         const reply = replies.greeting[Math.floor(Math.random() * replies.greeting.length)];
         streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
+        setAnsweringState(false);
       }, 400);
+      return;
+    }
+
+    // 오줌 요약 모드
+    if (kb1.useSummary) {
+      setTimeout(() => {
+        typingEl.remove();
+        streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false);
+        setAnsweringState(false);
+      }, 500);
+      return;
+    }
+
+    // 오줌 세부 카테고리
+    if (kb1.subKey && kb1.data.details) {
+      const detailText = kb1.data.details[kb1.subKey];
+      setTimeout(() => {
+        typingEl.remove();
+        streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false);
+        setAnsweringState(false);
+      }, 500);
       return;
     }
 
@@ -384,15 +421,19 @@ function sendMessage() {
         typingEl.remove();
         const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
         streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
+        setAnsweringState(false);
       }, 400);
       return;
     }
 
-    setTimeout(() => {
-      typingEl.remove();
-      streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId, false);
-    }, 500);
-    return;
+    if (kb1.direct) {
+      setTimeout(() => {
+        typingEl.remove();
+        streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId, false);
+        setAnsweringState(false);
+      }, 500);
+      return;
+    }
   }
 
   startReasoning(text, msgId, typingEl);
@@ -427,13 +468,22 @@ function startReasoning(query, msgId, typingEl) {
           const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
           streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
           activeReasoning.delete(msgId);
+          setAnsweringState(false);
           return;
         }
 
         clearInterval(timer);
         typingEl.remove();
-        streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId, false);
+
+        // 오줌은 요약 모드 강제
+        if (result.useSummary) {
+          streamTextWithSources(result.data.summary, result.data.sources, 'ai', msgId, false);
+        } else {
+          streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId, false);
+        }
+
         activeReasoning.delete(msgId);
+        setAnsweringState(false);
         return;
       }
     }
@@ -444,6 +494,7 @@ function startReasoning(query, msgId, typingEl) {
       const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
       streamText(failed.replaceAll('${userName}', userName), 'ai', msgId, false);
       activeReasoning.delete(msgId);
+      setAnsweringState(false);
     }
   }, 100);
 
@@ -534,7 +585,7 @@ function addTyping(msgId, attempt) {
 function autoResize() {
   userInput.style.height = 'auto';
   userInput.style.height = userInput.scrollHeight + 'px';
-  if (userInput.value.trim()) {
+  if (userInput.value.trim() &&!isAnswering) {
     sendBtn.classList.add('has-text');
   } else {
     sendBtn.classList.remove('has-text');
@@ -572,6 +623,7 @@ function closeSidebar() {
 function startNewChat() {
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
+  setAnsweringState(false);
 
   chatList.innerHTML = '';
   userInput.value = '';
@@ -584,6 +636,7 @@ function startNewChat() {
 function initExampleCards() {
   document.querySelectorAll('.example-card').forEach(card => {
     card.addEventListener('click', () => {
+      if (isAnswering) return;
       const prompt = card.dataset.prompt;
       userInput.value = prompt;
       autoResize();
