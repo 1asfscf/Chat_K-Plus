@@ -79,7 +79,7 @@ const knowledgeBase = {
   }
 };
 
-// 답변 톤 - 자기소개 절대 안 들어감
+// 답변 톤
 const replies = {
   greeting: [
     `안녕 ${userName}. 뭐 도와줄까?`,
@@ -123,13 +123,12 @@ function searchKnowledge(text) {
 
 // 2차 추론 검색 - 15초 재시도
 function deepReasoning(query, msgId, attempt = 1) {
-  if (attempt > 3) return null; // 최대 3번
+  if (attempt > 3) return null;
 
-  // 키워드 확장해서 다시 검색
   const expandedKeywords = query
-   .replace(/[?!.]/g, ' ')
-   .split(' ')
-   .filter(w => w.length > 1);
+  .replace(/[?!.]/g, ' ')
+  .split(' ')
+  .filter(w => w.length > 1);
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
     const matchCount = data.keywords.filter(k =>
@@ -141,7 +140,6 @@ function deepReasoning(query, msgId, attempt = 1) {
     }
   }
 
-  // 연관 검색
   if (query.includes('광주') || query.includes('5월')) {
     return knowledgeBase["5.18"];
   }
@@ -207,12 +205,11 @@ function sendMessage() {
 // 추론 시스템
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0;
-  const interval = 100; // 0.1초마다 체크
+  const interval = 100;
 
   const timer = setInterval(() => {
     elapsed += interval;
 
-    // 5초, 10초마다 재시도
     if (elapsed === 5000 || elapsed === 10000) {
       const kb2 = deepReasoning(query, msgId, elapsed / 5000);
       if (kb2) {
@@ -224,7 +221,6 @@ function startReasoning(query, msgId, typingEl) {
       }
     }
 
-    // 15초 타임아웃
     if (elapsed >= REASONING_TIMEOUT) {
       clearInterval(timer);
       typingEl.remove();
@@ -302,14 +298,20 @@ function streamText(text, type, msgId) {
   }, 5);
 }
 
-// 타이핑중 표시
+// 타이핑중 표시 - 로딩바로 교체
 function addTyping(msgId) {
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
   msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">C</div>
-    <div class="bubble"><span></span><span></span></div>
+    <div class="bubble">
+      <div class="loading-wrap">
+        <div class="loading-text">데이터 파고드는 중...</div>
+        <div class="loading-bar"></div>
+        <div class="loading-time">최대 15초 소요</div>
+      </div>
+    </div>
   `;
   chatList.appendChild(msg);
   scrollToBottom();
@@ -355,7 +357,6 @@ function closeSidebar() {
 }
 
 function startNewChat() {
-  // 추론 중인 거 다 취소
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
 
