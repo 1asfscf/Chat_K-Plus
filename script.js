@@ -13,7 +13,7 @@ const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// 모델 정보 - KRL 기반 스튜디오 페라리
+// 모델 정보
 const MODEL_NAME = 'Chat K Plus';
 const TEAM_EMAIL = 'studioferrari_kr@outlook.com';
 const MODEL_IDENTITY = Object.freeze({
@@ -27,33 +27,33 @@ const MODEL_IDENTITY = Object.freeze({
 
 let userName = localStorage.getItem('chatkUserName') || '성민';
 let isAnswering = false;
-let currentStreamInterval = null; // 멈춤용
+let currentStreamInterval = null;
+let currentMsgElement = null;
 
 const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
 const activeReasoning = new Map();
 
-// 의학 용어 화이트리스트
+// 의학 화이트리스트
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
 ];
 
-// 성적 금지어 - 팬티 포함 모든 변형
+// 성적 금지어 - 팬티 포함 강화
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
-  '유두', '가슴', '엉덩이', '팬티', '팬티', 'panty', 'panties', '브라', '속옷',
-  '알몸', '누드', 'nude', '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크',
-  '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
-  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘',
-  '팬티', '빤스', '속바지', '란제리'
+  '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '브라', '속옷',
+  '란제리', '속바지', '알몸', '누드', 'nude', '강간', '성폭행', '성추행', '성희롱',
+  '몰카', '딥페이크', '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
+  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘'
 ];
 
-// 모욕/혐오 이모티콘 차단
+// 모욕 이모티콘
 const BANNED_EMOJIS = [
-  '🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿', // 중지
-  '👆🏻', '👆🏼', '👆🏽', '👆🏾', '👆🏿', // 검지 변형
+  '🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿',
+  '👆🏻', '👆🏼', '👆🏽', '👆🏾', '👆🏿',
   '🖖', '🤬', '😡', '🤢', '🤮', '💩'
 ];
 
@@ -62,16 +62,13 @@ const SEXUAL_PATTERN = new RegExp(
   'i'
 );
 
-// 부적절 콘텐츠 감지 - 의학 화이트리스트 + 이모티콘
 function isInappropriateContent(text) {
   const lowerText = text.toLowerCase();
 
-  // 이모티콘 차단
   if (BANNED_EMOJIS.some(e => text.includes(e))) {
     return true;
   }
 
-  // 의학 용어 포함시 차단 해제
   if (MEDICAL_WHITELIST.some(w => lowerText.includes(w))) {
     return false;
   }
@@ -271,7 +268,7 @@ function updateWelcomeTitle() {
 // 답변 상태 + 멈춤 버튼 제어
 function setAnsweringState(state) {
   isAnswering = state;
-  sendBtn.disabled = state;
+  sendBtn.disabled = false; // 멈춤 버튼용으로 항상 활성화
   userInput.disabled = state;
 
   if (state) {
@@ -281,9 +278,9 @@ function setAnsweringState(state) {
         <rect x="14" y="4" width="4" height="16"></rect>
       </svg>
     `;
+    sendBtn.style.background = 'var(--danger)';
     sendBtn.style.opacity = '1';
     sendBtn.style.cursor = 'pointer';
-    sendBtn.style.background = 'var(--danger)';
     userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
   } else {
     sendBtn.innerHTML = `
@@ -292,14 +289,14 @@ function setAnsweringState(state) {
         <polyline points="5 12 12 5 19 12"></polyline>
       </svg>
     `;
+    sendBtn.style.background = '';
     sendBtn.style.opacity = '1';
     sendBtn.style.cursor = 'pointer';
-    sendBtn.style.background = '';
     userInput.placeholder = '메시지 입력...';
   }
 }
 
-// 멈춤 기능
+// 스트리밍 완전 중단
 function stopStreaming() {
   if (currentStreamInterval) {
     clearInterval(currentStreamInterval);
@@ -309,10 +306,18 @@ function stopStreaming() {
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
 
-  // 마지막 타이핑 제거
   const typingEl = chatList.querySelector('.msg.ai.typing');
   if (typingEl) typingEl.remove();
 
+  // 마지막 메시지에 중단 표시
+  if (currentMsgElement) {
+    const bubble = currentMsgElement.querySelector('.bubble,.msg-text');
+    if (bubble &&!bubble.textContent.includes('[중단됨]')) {
+      bubble.textContent += '\n\n[중단됨]';
+    }
+  }
+
+  currentMsgElement = null;
   setAnsweringState(false);
   autoResize();
 }
@@ -321,7 +326,7 @@ function normalizeKeyword(text) {
   let normalized = text.toLowerCase();
   for (const [alias, target] of Object.entries(KEYWORD_ALIASES)) {
     if (normalized.includes(alias)) {
-      normalized = normalized.replace(alias, target);
+      normalized = normalized.replace(new RegExp(alias, 'g'), target);
     }
   }
   return normalized;
@@ -490,7 +495,6 @@ function sendMessage() {
       typingEl.remove();
       const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
       streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
-      setAnsweringState(false);
     }, 400);
     return;
   }
@@ -501,7 +505,6 @@ function sendMessage() {
     setTimeout(() => {
       typingEl.remove();
       streamText(MODEL_IDENTITY.desc, 'ai', msgId, false);
-      setAnsweringState(false);
     }, 400);
     return;
   }
@@ -514,7 +517,6 @@ function sendMessage() {
         typingEl.remove();
         const reply = replies.greeting[Math.floor(Math.random() * replies.greeting.length)];
         streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
-        setAnsweringState(false);
       }, 400);
       return;
     }
@@ -523,7 +525,6 @@ function sendMessage() {
       setTimeout(() => {
         typingEl.remove();
         streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false);
-        setAnsweringState(false);
       }, 500);
       return;
     }
@@ -534,7 +535,6 @@ function sendMessage() {
         setTimeout(() => {
           typingEl.remove();
           streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false);
-          setAnsweringState(false);
         }, 500);
         return;
       } else {
@@ -542,7 +542,6 @@ function sendMessage() {
           typingEl.remove();
           const feedback = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
           streamText(feedback.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-          setAnsweringState(false);
         }, 500);
         return;
       }
@@ -553,7 +552,6 @@ function sendMessage() {
         typingEl.remove();
         const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
         streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
-        setAnsweringState(false);
       }, 400);
       return;
     }
@@ -569,7 +567,6 @@ function sendMessage() {
         }
 
         streamTextWithSources(outputText, kb1.data.sources, 'ai', msgId, false);
-        setAnsweringState(false);
       }, 500);
       return;
     }
@@ -607,7 +604,6 @@ function startReasoning(query, msgId, typingEl) {
           const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
           streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
           activeReasoning.delete(msgId);
-          setAnsweringState(false);
           return;
         }
 
@@ -623,7 +619,6 @@ function startReasoning(query, msgId, typingEl) {
 
         streamTextWithSources(outputText, result.data.sources, 'ai', msgId, false);
         activeReasoning.delete(msgId);
-        setAnsweringState(false);
         return;
       }
     }
@@ -634,7 +629,6 @@ function startReasoning(query, msgId, typingEl) {
       const failed = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
       streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
       activeReasoning.delete(msgId);
-      setAnsweringState(false);
     }
   }, 100);
 
@@ -654,6 +648,11 @@ function addMessage(text, type, msgId) {
 }
 
 function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
+  if (currentStreamInterval) {
+    clearInterval(currentStreamInterval);
+    currentStreamInterval = null;
+  }
+
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked? 'blocked' : ''}`;
   msg.dataset.msgId = msgId;
@@ -665,6 +664,8 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
     </div>
   `;
   chatList.appendChild(msg);
+  currentMsgElement = msg;
+
   const bubble = msg.querySelector('.msg-text');
   const sourcesEl = msg.querySelector('.sources');
 
@@ -673,6 +674,7 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
     if (!isAnswering) {
       clearInterval(currentStreamInterval);
       currentStreamInterval = null;
+      currentMsgElement = null;
       return;
     }
     bubble.textContent += text[i];
@@ -681,6 +683,7 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
     if (i >= text.length) {
       clearInterval(currentStreamInterval);
       currentStreamInterval = null;
+      currentMsgElement = null;
       if (sources.length && sourcesEl) {
         sourcesEl.innerHTML = '<div class="sources-title">출처</div>' +
           sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
@@ -691,6 +694,11 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
 }
 
 function streamText(text, type, msgId, isBlocked = false) {
+  if (currentStreamInterval) {
+    clearInterval(currentStreamInterval);
+    currentStreamInterval = null;
+  }
+
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked? 'blocked' : ''}`;
   msg.dataset.msgId = msgId;
@@ -699,6 +707,8 @@ function streamText(text, type, msgId, isBlocked = false) {
     <div class="bubble"></div>
   `;
   chatList.appendChild(msg);
+  currentMsgElement = msg;
+
   const bubble = msg.querySelector('.bubble');
 
   let i = 0;
@@ -706,6 +716,7 @@ function streamText(text, type, msgId, isBlocked = false) {
     if (!isAnswering) {
       clearInterval(currentStreamInterval);
       currentStreamInterval = null;
+      currentMsgElement = null;
       return;
     }
     bubble.textContent += text[i];
@@ -714,6 +725,7 @@ function streamText(text, type, msgId, isBlocked = false) {
     if (i >= text.length) {
       clearInterval(currentStreamInterval);
       currentStreamInterval = null;
+      currentMsgElement = null;
       setAnsweringState(false);
     }
   }, 5);
