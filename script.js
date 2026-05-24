@@ -31,7 +31,7 @@ const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
 const activeReasoning = new Map();
 
-// 성적 금지어 리스트 - 확장 가능
+// 성적 금지어 리스트
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성기', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '브라', '속옷', '알몸', '누드', 'nude',
@@ -158,10 +158,10 @@ function searchKnowledge(text) {
 // 2차 추론 검색
 function deepReasoning(query, attempt) {
   const words = query
- .toLowerCase()
- .replace(/[?!.]/g, ' ')
- .split(' ')
- .filter(w => w.length > 1);
+.toLowerCase()
+.replace(/[?!.]/g, ' ')
+.split(' ')
+.filter(w => w.length > 1);
 
   let bestMatch = null;
   let bestScore = 0;
@@ -220,7 +220,7 @@ function sendMessage() {
 
     const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
     setTimeout(() => {
-      streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId);
+      streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
     }, 300);
     return;
   }
@@ -245,7 +245,7 @@ function sendMessage() {
     setTimeout(() => {
       typingEl.remove();
       const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
-      streamText(reply.replaceAll('${userName}', userName), 'ai', msgId);
+      streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
     }, 400);
     return;
   }
@@ -256,7 +256,7 @@ function sendMessage() {
   if (identityPatterns.test(text)) {
     setTimeout(() => {
       typingEl.remove();
-      streamText(MODEL_IDENTITY.desc, 'ai', msgId);
+      streamText(MODEL_IDENTITY.desc, 'ai', msgId, false);
     }, 400);
     return;
   }
@@ -269,14 +269,14 @@ function sendMessage() {
       setTimeout(() => {
         typingEl.remove();
         const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
-        streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId);
+        streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
       }, 400);
       return;
     }
 
     setTimeout(() => {
       typingEl.remove();
-      streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId);
+      streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId, false);
     }, 500);
     return;
   }
@@ -314,14 +314,14 @@ function startReasoning(query, msgId, typingEl) {
           clearInterval(timer);
           typingEl.remove();
           const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
-          streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId);
+          streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
           activeReasoning.delete(msgId);
           return;
         }
 
         clearInterval(timer);
         typingEl.remove();
-        streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId);
+        streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId, false);
         activeReasoning.delete(msgId);
         return;
       }
@@ -331,7 +331,7 @@ function startReasoning(query, msgId, typingEl) {
       clearInterval(timer);
       typingEl.remove();
       const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
-      streamText(failed.replaceAll('${userName}', userName), 'ai', msgId);
+      streamText(failed.replaceAll('${userName}', userName), 'ai', msgId, false);
       activeReasoning.delete(msgId);
     }
   }, 100);
@@ -353,9 +353,9 @@ function addMessage(text, type, msgId) {
 }
 
 // 출처 있는 메시지 스트리밍
-function streamTextWithSources(text, sources, type, msgId) {
+function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
   const msg = document.createElement('div');
-  msg.className = `msg ${type}`;
+  msg.className = `msg ${type} ${isBlocked? 'blocked' : ''}`;
   msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">C</div>
@@ -383,10 +383,10 @@ function streamTextWithSources(text, sources, type, msgId) {
   }, 4);
 }
 
-// 일반 텍스트 스트리밍
-function streamText(text, type, msgId) {
+// 일반 텍스트 스트리밍 - 차단 플래그 추가
+function streamText(text, type, msgId, isBlocked = false) {
   const msg = document.createElement('div');
-  msg.className = `msg ${type}`;
+  msg.className = `msg ${type} ${isBlocked? 'blocked' : ''}`;
   msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">C</div>
