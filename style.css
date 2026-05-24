@@ -36,7 +36,6 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Inter', sans-serif;
   height: 100vh;
   overflow: hidden;
-  /* 그라디언트 메시 - GPU 안 먹고 CSS만으로 */
   background-image: 
     radial-gradient(at 20% 30%, rgba(255, 90, 0, 0.15) 0px, transparent 50%),
     radial-gradient(at 80% 70%, rgba(255, 90, 0, 0.1) 0px, transparent 50%);
@@ -58,7 +57,6 @@ body {
   gap: 12px;
 }
 
-/* 글래스 느낌 - backdrop-filter 없이 border + rgba로 속임 */
 @supports not (backdrop-filter: blur(1px)) {
   .sidebar, .chat-header, .input-area {
     background: var(--card-solid);
@@ -85,7 +83,6 @@ body {
   cursor: pointer;
   touch-action: manipulation;
   transition: transform 0.1s ease;
-  /* 그림자 1겹만 - GPU 부담 최소 */
   box-shadow: 0 2px 8px var(--accent-glow);
 }
 
@@ -143,6 +140,90 @@ body {
   background: var(--ai-bubble);
 }
 
+/* ===== V1 예시 화면 - 웰컴 카드 ===== */
+.welcome-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.welcome-screen.hidden {
+  display: none;
+}
+
+.welcome-logo {
+  font-size: 48px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff7a33 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.welcome-sub {
+  font-size: 15px;
+  color: var(--text-sub);
+  margin-bottom: 32px;
+}
+
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 680px;
+  width: 100%;
+}
+
+.example-card {
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.example-card:hover {
+  border-color: var(--accent);
+  background: var(--ai-bubble);
+  transform: translateY(-2px);
+}
+
+.example-card:active {
+  transform: scale(0.98);
+}
+
+.example-card .icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.example-card .title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.example-card .desc {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.4;
+}
+
 /* ===== 채팅 리스트 ===== */
 .chat-list {
   flex: 1;
@@ -152,6 +233,10 @@ body {
   flex-direction: column;
   gap: 20px;
   -webkit-overflow-scrolling: touch;
+}
+
+.chat-list:empty + .welcome-screen {
+  display: flex;
 }
 
 .msg {
@@ -178,7 +263,6 @@ body {
   font-size: 13px;
   font-weight: 800;
   flex-shrink: 0;
-  /* 그림자 대신 border로 입체감 */
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -202,7 +286,7 @@ body {
   border-color: rgba(255, 90, 0, 0.15);
 }
 
-/* 타이핑 애니메이션 - 점 3개만 */
+/* 타이핑 애니메이션 */
 .typing .bubble {
   padding: 14px 16px;
 }
@@ -308,14 +392,17 @@ textarea:focus {
   .input-area {
     padding: 12px 16px;
   }
+  
+  .example-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .welcome-title {
+    font-size: 24px;
+  }
 }
 
 /* ===== GPU 최적화 규칙 ===== */
-/* 1. backdrop-filter 전면 제거 - border + rgba로 대체 */
-/* 2. box-shadow 1겹만, blur 8px 이하 */
-/* 3. 그라디언트는 텍스트, 버튼에만 사용 */
-/* 4. transition 0.15s 이하, transform scale만 */
-
 @media (prefers-reduced-motion: reduce) {
     * {
     animation-duration: 0.01ms !important;
