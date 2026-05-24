@@ -135,6 +135,17 @@ userInput.addEventListener('input', autoResize);
 themeToggle.addEventListener('click', toggleTheme);
 menuBtn.addEventListener('click', toggleSidebar);
 
+function init() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    themeToggle.textContent = '다크';
+  }
+  
+  // 첫 로딩시 채팅 없으면 웰컴화면 표시
+  if (chatList.children.length === 0) {
+    document.getElementById('welcomeScreen').classList.remove('hidden');
+  }
+}
 // iOS 300ms 딜레이 제거
 document.addEventListener('touchstart', () => {}, { passive: true });
 
