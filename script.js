@@ -13,8 +13,9 @@ const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// 모델 이름
+// 모델 정보 - 고정값
 const MODEL_NAME = 'Chat K Plus';
+const MODEL_IDENTITY = `나는 ${MODEL_NAME}야. Meta에서 만든 Muse Spark 모델 기반으로 동작하는 AI야. 한국 특화 대화, 개발, 역사 팩트체크 같은 걸 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`;
 
 // 유저 이름 관리
 let userName = localStorage.getItem('chatkUserName') || '성민';
@@ -23,7 +24,10 @@ let userName = localStorage.getItem('chatkUserName') || '성민';
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
 
 // 인사 패턴
-const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|뭐해|야|반가워|처음)/i;
+const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음)/i;
+
+// 자기소개 질문 패턴 - 이게 핵심
+const identityPatterns = /(너는|너|니|네가|당신은|모델|ai).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 
 // 5.18 지식베이스 + 출처
 const knowledgeBase = {
@@ -46,48 +50,48 @@ const knowledgeBase = {
 전두환 신군부가 질서 유지를 위해 불가피했다는 논리. 1996년 전두환, 노태우는 내란죄, 반란죄로 유죄 판결 받았다.`,
     sources: [
       { title: "5·18민주화운동진상규명조사위원회 보고서", url: "https://www.518commission.go.kr" },
-      { title: "대법원 1997도1140 판결", url: "https://casenote.kr" },
+      { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" },
       { title: "국방부 5·18특별조사위원회", url: "https://www.mnd.go.kr" }
     ]
   },
   "사양": {
     text: `**${MODEL_NAME} 시스템 사양**
 
-**엔진**: GPT-4o 기반 경량화 데모
-**프론트**: Vanilla JS + CSS3. 프레임워크 없이 60fps 최적화
-**데이터**: 2024년 4월 학습 기준. 실시간 검색 미연동
+**엔진**: Muse Spark. Meta Super Intelligence Lab 개발
+**프론트**: Vanilla JS + CSS3. 프레임워크 없이 동작
+**데이터**: 2025-09-04 컷오프. 실시간 검색 미연동
 **특징**:
 1. ${userName} 이름 기억: localStorage 저장
-2. 출처 인용: 주요 팩트에 검증 가능한 소스 첨부
-3. 모바일 최적화: iOS 사파리 터치 대응, GPU 절약
-4. 데모 모드: 실제 API 없이 로컬 지식베이스 동작
+2. 출처 인용: 검증 가능한 소스 첨부
+3. 모바일 최적화: iOS 사파리 대응
+4. 데모 모드: 로컬 지식베이스 기반
 
 **한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
     sources: []
   }
 };
 
-// 답변 스타일 정리
+// 답변 톤 정리 - normal에서 애매한 거 제거
 const replies = {
   greeting: [
-    `${userName} 왔어? ${MODEL_NAME}이야. 뭐 물어볼래?`,
-    `ㅎㅇ ${userName}. ${MODEL_NAME} 켜졌다. 질문해봐.`,
-    `반갑다 ${userName}. 오늘은 뭘로 도와줄까?`
+    `안녕 ${userName}. ${MODEL_NAME}이야. 뭐 도와줄까?`,
+    `ㅎㅇ ${userName}. 질문 있어?`,
+    `반가워 ${userName}. 뭘 알아보고 싶어?`
   ],
   thanks: [
-    `ㅇㅋ ${userName}. 더 필요하면 말해.`,
-    `별거 아니야 ${userName}. 이게 내 일이지.`,
-    `ㄱㅅ ${userName}. 다른 거 없어?`
+    `ㅇㅋ ${userName}. 더 물어볼 거 있어?`,
+    `별거 아냐 ${userName}.`,
+    `ㄱㅅ ${userName}. 또 필요하면 불러.`
   ],
   nameSet: [
     `알았어 ${userName}. 이제 그렇게 부를게.`,
-    `ㅇㅋ ${userName}로 저장했다. 뭐부터 할까?`,
-    `좋아 ${userName}. 편하게 질문해.`
+    `ㅇㅋ ${userName}로 기억했다. 뭐부터 할까?`,
+    `좋아 ${userName}. 편하게 말해.`
   ],
   normal: [
-    `${userName}, 그건 이렇게 접근하면 돼. 핵심만 말하면 ${MODEL_NAME}는 구조화해서 답한다.`,
-    `질문 좋다 ${userName}. 내가 아는 선에서 정리해줄게.`,
-    `${userName}, 그 부분은 팩트체크가 중요해. 출처 확인하고 말해줄게.`
+    `${userName}, 그 질문은 이렇게 정리할 수 있어. 핵심만 말하면 된다.`,
+    `그거 물어봤구나 ${userName}. 내가 아는 범위에서 답해줄게.`,
+    `${userName}, 그 부분은 팩트체크가 필요해. 확인하고 말해줄게.`
   ]
 };
 
@@ -123,7 +127,7 @@ function sendMessage() {
   autoResize();
   sendBtn.classList.remove('has-text');
 
-  // 이름 설정 감지
+  // 1순위: 이름 설정 감지
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
@@ -143,14 +147,20 @@ function sendMessage() {
   setTimeout(() => {
     typingEl.remove();
 
-    // 지식베이스 우선
+    // 2순위: 자기소개 질문 - 고정 응답
+    if (identityPatterns.test(text)) {
+      streamText(MODEL_IDENTITY, 'ai');
+      return;
+    }
+
+    // 3순위: 지식베이스
     const kb = getKnowledgeAnswer(text);
     if (kb) {
       streamTextWithSources(kb.text, kb.sources, 'ai');
       return;
     }
 
-    // 일반 응답
+    // 4순위: 일반 응답
     let replyArray = replies.normal;
     if (greetingPatterns.test(text)) {
       replyArray = replies.greeting;
@@ -197,7 +207,6 @@ function streamTextWithSources(text, sources, type) {
     scrollToBottom();
     if (i >= text.length) {
       clearInterval(interval);
-      // 출처 렌더링
       if (sources.length && sourcesEl) {
         sourcesEl.innerHTML = '<div class="sources-title">출처</div>' +
           sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
