@@ -7,13 +7,13 @@ const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.querySelector('.sidebar');
 const welcomeScreen = document.getElementById('welcomeScreen');
 const newChatBtn = document.getElementById('newChatBtn');
+const welcomeTitle = document.getElementById('welcomeTitle');
 
 const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
-document.getElementById('welcomeTitle').textContent = `${userName}, 불꽃 켰다`;
 
-// 유저 이름 관리 - localStorage 저장
+// 유저 이름 관리
 let userName = localStorage.getItem('sparkUserName') || '이용자';
 
 // 이름 설정 패턴: 나는 철수야, 저는 민수야, 내 이름은 영희야
@@ -52,7 +52,14 @@ function formatReply(text) {
   return text.replace(/{USER}/g, userName);
 }
 
-// 1. 전송 기능 - 이름 설정 로직 추가
+// 웰컴 타이틀 업데이트
+function updateWelcomeTitle() {
+  if (welcomeTitle) {
+    welcomeTitle.textContent = `${userName}, 불꽃 켰다`;
+  }
+}
+
+// 1. 전송 기능
 function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
@@ -64,11 +71,12 @@ function sendMessage() {
   userInput.value = '';
   autoResize();
 
-  // 이름 설정 감지: "나는 철수야"
+  // 이름 설정 감지
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
     localStorage.setItem('sparkUserName', userName);
+    updateWelcomeTitle();
 
     const typingEl = addTyping();
     setTimeout(() => {
@@ -91,7 +99,7 @@ function sendMessage() {
     }
 
     const rawReply = replyArray[Math.floor(Math.random() * replyArray.length)];
-    const reply = formatReply(rawReply); // {USER} 치환
+    const reply = formatReply(rawReply);
     streamText(reply, 'ai');
   }, 400);
 }
@@ -101,7 +109,7 @@ function addMessage(text, type) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
   msg.innerHTML = `
-    <div class="avatar">${type === 'user'? userName[0] : 'S'}</div>
+    <div class="avatar">${type === 'user'? userName[0].toUpperCase() : 'S'}</div>
     <div class="bubble">${text}</div>
   `;
   chatList.appendChild(msg);
@@ -171,12 +179,13 @@ function closeSidebar() {
   overlay.classList.remove('active');
 }
 
-// 10. 새 채팅 시작 - 이름은 유지
+// 10. 새 채팅 시작
 function startNewChat() {
   chatList.innerHTML = '';
   userInput.value = '';
   autoResize();
   if (welcomeScreen) welcomeScreen.classList.remove('hidden');
+  updateWelcomeTitle();
   closeSidebar();
 }
 
@@ -197,6 +206,8 @@ function init() {
     document.body.classList.add('light');
     themeToggle.textContent = '다크';
   }
+
+  updateWelcomeTitle();
 
   if (chatList.children.length === 0 && welcomeScreen) {
     welcomeScreen.classList.remove('hidden');
