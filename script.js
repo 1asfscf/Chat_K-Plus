@@ -28,14 +28,15 @@ let userName = localStorage.getItem('chatkUserName') || '성민';
 
 // 추론 시스템 설정
 const REASONING_TIMEOUT = 15000; // 15초
-const activeReasoning = new Map(); // msgId -> {timer, attempts}
+const RETRY_INTERVAL = 5000; // 5초마다 재시도
+const activeReasoning = new Map(); // msgId -> {timer, attempts, typingEl}
 
 // 패턴
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음)/i;
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 
-// 지식베이스 + 출처
+// 지식베이스 + 출처 + 태그
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -59,7 +60,8 @@ const knowledgeBase = {
       { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" },
       { title: "국방부 5·18특별조사위원회", url: "https://www.mnd.go.kr" }
     ],
-    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동']
+    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄', '5월'],
+    tags: ['역사', '정치', '한국']
   },
   "사양": {
     text: `**${MODEL_NAME} 시스템 사양**
@@ -70,12 +72,13 @@ const knowledgeBase = {
 **특징**:
 1. ${userName} 이름 기억: localStorage 저장
 2. 출처 인용: 검증 가능한 소스 첨부
-3. 15초 추론: 1차 실패시 자동 재탐색
+3. 15초 추론: 1차 실패시 자동 재탐색 3회
 4. 데모 모드: 로컬 지식베이스 기반
 
 **한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
     sources: [],
-    keywords: ['사양', '시스템', '스펙', '정보']
+    keywords: ['사양', '시스템', '스펙', '정보', '모델', '스파크'],
+    tags: ['기술', '모델']
   }
 };
 
@@ -96,10 +99,15 @@ const replies = {
     `ㅇㅋ ${userName}로 기억했다. 뭐부터 할까?`,
     `좋아 ${userName}. 편하게 말해.`
   ],
-  fallback: [
-    `${userName}, 그 질문은 데이터에서 못 찾았어. 다시 파고들어볼게.`,
-    `1차 검색 실패 ${userName}. 15초 안에 다시 찾아볼게.`,
-    `지금은 정확한 답이 없어 ${userName}. 추론 시스템 돌리는 중이야.`
+  reasoning: [
+    `${userName}, 데이터 깊게 파는 중이야. 잠깐만.`,
+    `1차 탐색 실패 ${userName}. 2차 추론 들어간다.`,
+    `좀 더 찾아볼게 ${userName}. 15초 안에 결론 낸다.`
+  ],
+  failed: [
+    `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어. 질문을 다르게 해볼래?`,
+    `미안 ${userName}. 이건 내 지식베이스에 없어. 더 구체적으로 물어봐주면 찾아볼게.`,
+    `${userName}, 관련 정보 못 찾았어. 5.18이나 모델 사양 같은 건 바로 답 가능해.`
   ]
 };
 
@@ -110,38 +118,66 @@ function updateWelcomeTitle() {
   }
 }
 
-// 1차 지식 검색
+// 1차 지식 검색 - 정확 매칭
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase();
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (data.keywords.some(k => lowerText.includes(k))) {
-      return data;
+      return { data, confidence: 1.0 };
     }
   }
   return null;
 }
 
-// 2차 추론 검색 - 15초 재시도
-function deepReasoning(query, msgId, attempt = 1) {
-  if (attempt > 3) return null;
+// 2차 추론 - 키워드 확장 + 연관 검색
+function deepReasoning(query, attempt) {
+  const words = query
+   .toLowerCase()
+   .replace(/[?!.]/g, ' ')
+   .split(' ')
+   .filter(w => w.length > 1);
 
-  const expandedKeywords = query
-  .replace(/[?!.]/g, ' ')
-  .split(' ')
-  .filter(w => w.length > 1);
+  let bestMatch = null;
+  let bestScore = 0;
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
-    const matchCount = data.keywords.filter(k =>
-      expandedKeywords.some(ek => k.includes(ek) || ek.includes(k))
-    ).length;
+    let score = 0;
 
-    if (matchCount >= 1) {
-      return data;
+    // 키워드 매칭
+    data.keywords.forEach(k => {
+      words.forEach(w => {
+        if (k.includes(w) || w.includes(k)) score += 2;
+        if (k === w) score += 3;
+      });
+    });
+
+    // 태그 매칭
+    data.tags.forEach(t => {
+      words.forEach(w => {
+        if (t.includes(w) || w.includes(t)) score += 1;
+      });
+    });
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = data;
     }
   }
 
-  if (query.includes('광주') || query.includes('5월')) {
-    return knowledgeBase["5.18"];
+  // 시도 횟수별 임계값 하향
+  const threshold = 4 - attempt;
+  if (bestScore >= threshold) {
+    return { data: bestMatch, confidence: bestScore / 10 };
+  }
+
+  // 특수 연관 검색
+  if (attempt >= 2) {
+    if (words.some(w => ['광주', '5월', '전두환', '계엄'].includes(w))) {
+      return { data: knowledgeBase["5.18"], confidence: 0.5 };
+    }
+    if (words.some(w => ['모델', '스파크', '정보'].includes(w))) {
+      return { data: knowledgeBase["사양"], confidence: 0.5 };
+    }
   }
 
   return null;
@@ -168,7 +204,7 @@ function sendMessage() {
     localStorage.setItem('chatkUserName', userName);
     updateWelcomeTitle();
 
-    const typingEl = addTyping(msgId);
+    const typingEl = addTyping(msgId, 0);
     setTimeout(() => {
       typingEl.remove();
       const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
@@ -177,7 +213,7 @@ function sendMessage() {
     return;
   }
 
-  const typingEl = addTyping(msgId);
+  const typingEl = addTyping(msgId, 0);
 
   // 2순위: 자기소개 - 하드코딩 차단
   if (identityPatterns.test(text)) {
@@ -193,44 +229,60 @@ function sendMessage() {
   if (kb1) {
     setTimeout(() => {
       typingEl.remove();
-      streamTextWithSources(kb1.text, kb1.sources, 'ai', msgId);
+      streamTextWithSources(kb1.data.text, kb1.data.sources, 'ai', msgId);
     }, 500);
     return;
   }
 
-  // 4순위: 추론 시작
+  // 4순위: 추론 시작 - 15초 풀가동
   startReasoning(text, msgId, typingEl);
 }
 
-// 추론 시스템
+// 추론 시스템 - 15초 동안 계속 재시도
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0;
-  const interval = 100;
+  let attempt = 1;
+  const maxAttempts = 3;
+
+  const updateLoadingText = (attemptNum) => {
+    const textEl = typingEl.querySelector('.loading-text');
+    if (textEl) {
+      const msg = replies.reasoning[attemptNum - 1] || replies.reasoning[0];
+      textEl.textContent = msg.replaceAll('${userName}', userName);
+    }
+  };
+
+  updateLoadingText(1);
 
   const timer = setInterval(() => {
-    elapsed += interval;
+    elapsed += 100;
 
-    if (elapsed === 5000 || elapsed === 10000) {
-      const kb2 = deepReasoning(query, msgId, elapsed / 5000);
-      if (kb2) {
+    // 5초, 10초마다 재시도
+    if (elapsed % RETRY_INTERVAL === 0 && elapsed < REASONING_TIMEOUT) {
+      attempt++;
+      updateLoadingText(attempt);
+
+      const result = deepReasoning(query, attempt);
+      if (result && result.confidence >= 0.3) {
         clearInterval(timer);
         typingEl.remove();
-        streamTextWithSources(kb2.text, kb2.sources, 'ai', msgId);
+        streamTextWithSources(result.data.text, result.data.sources, 'ai', msgId);
         activeReasoning.delete(msgId);
         return;
       }
     }
 
+    // 15초 타임아웃 - 진짜 실패
     if (elapsed >= REASONING_TIMEOUT) {
       clearInterval(timer);
       typingEl.remove();
-      const fallback = replies.fallback[Math.floor(Math.random() * replies.fallback.length)];
-      streamText(fallback.replaceAll('${userName}', userName), 'ai', msgId);
+      const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
+      streamText(failed.replaceAll('${userName}', userName), 'ai', msgId);
       activeReasoning.delete(msgId);
     }
-  }, interval);
+  }, 100);
 
-  activeReasoning.set(msgId, { timer });
+  activeReasoning.set(msgId, { timer, attempts: attempt, typingEl });
 }
 
 // 메시지 추가
@@ -298,8 +350,8 @@ function streamText(text, type, msgId) {
   }, 5);
 }
 
-// 타이핑중 표시 - 로딩바로 교체
-function addTyping(msgId) {
+// 타이핑중 표시 - 로딩바 + 단계별 텍스트
+function addTyping(msgId, attempt) {
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
   msg.dataset.msgId = msgId;
