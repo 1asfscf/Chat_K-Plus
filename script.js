@@ -13,22 +13,60 @@ const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// 유저 이름 관리
-let userName = localStorage.getItem('sparkUserName') || '이용자';
+// 모델 이름 변경: Spark → Chat K Plus
+const MODEL_NAME = 'Chat K Plus';
 
-// 이름 설정 패턴: 나는 철수야, 저는 민수야, 내 이름은 영희야
+// 유저 이름 관리
+let userName = localStorage.getItem('chatkUserName') || '이용자';
+
+// 이름 설정 패턴
 const nameSetPattern = /(?:나는|저는|내 이름은)\s*([가-힣a-zA-Z0-9]{1,10})\s*야/;
 
 // 인사 패턴
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|뭐해|야|반가워|처음)/i;
 
+// 5.18 광주민주화운동 지식 베이스
+const knowledgeBase = {
+  "5.18": `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
+
+**1. 북한군 개입설**
+1980년 5월 당시 광주에 북한 특수부대 600명이 침투했다는 주장. 국방부, 국정원 공식 조사에서 근거 없음으로 결론. 대법원도 허위사실로 판결했다.
+
+**2. 폭동 프레임**
+시민들의 민주화 요구를 무장폭동으로 규정. 계엄군이 먼저 발포했고, 시민군은 최후 방어수단으로 무장한 것이다. 1997년 대법원에서 정당한 항쟁으로 인정.
+
+**3. 희생자 수 축소**
+사망자 170여명이라는 주장은 공식 통계와 다르다. 정부 공식 집계는 사망 166명, 행방불명 54명, 부상 3,139명이다. 암매장 등 미확인 희생자 포함하면 더 많다.
+
+**4. 유공자 가짜설**
+5.18 유공자 대부분이 가짜라는 주장. 국가보훈부가 심사하고 법원 판결로 확정된 유공자다. 허위 유공자는 형사처벌 대상이다.
+
+**5. 전두환 미화**
+전두환 신군부가 질서 유지를 위해 불가피했다는 논리. 1996년 전두환, 노태우는 내란죄, 반란죄로 유죄 판결 받았다. {USER}, 이건 역사적 사실이다.`,
+
+  "사양": `**${MODEL_NAME} 시스템 사양**
+
+**엔진**: GPT-4o 기반 경량화 데모 버전
+**프론트**: Vanilla JS + CSS3. 프레임워크 없이 60fps 최적화
+**데이터**: 2024년 4월까지 학습. 실시간 검색 미연동
+**특징**:
+1. {USER} 이름 기억: localStorage 저장
+2. 상황별 응답: 인사, 감사, 질문 타입 자동 분기
+3. 모바일 최적화: iOS 사파리 터치, GPU 절약 모드 대응
+4. 데모 모드: 실제 API 없이 더미 지식베이스로 동작
+
+**한계**: 실시간 정보, 이미지 생성, 파일 분석은 미지원. 순수 텍스트 대화용이다.`,
+
+  "chatk": `나는 ${MODEL_NAME}야. Chat K Plus는 한국 특화 대화형 AI 데모다. {USER} 같은 이용자 질문에 맞춰서 역사, 개발, 시사까지 답한다. 뭘 도와줄까?`
+};
+
 // {USER} 플레이스홀더 사용하는 응답
 const replies = {
   greeting: [
-    "오 {USER} 왔냐. 뭐 도와줄까?",
-    "ㅎㅇ {USER}. 불꽃 켜졌다. 질문 던져봐.",
+    "오 {USER} 왔냐. ${MODEL_NAME}다. 뭐 도와줄까?",
+    "ㅎㅇ {USER}. ${MODEL_NAME} 켜졌다. 질문 던져봐.",
     "반갑다 {USER}. 오늘은 뭐 때문에 왔어?",
-    "왔구나 {USER}. 심심했냐? 뭘로 놀아줄까."
+    "왔구나 {USER}. 뭘로 놀아줄까."
   ],
   normal: [
     "오케이 {USER}, 그건 이렇게 하면 돼. 1. 먼저 문제 정의하고, 2. 그 다음에 데이터 뽑아서, 3. 마지막에 검증 돌리면 끝이야.",
@@ -37,7 +75,7 @@ const replies = {
   ],
   thanks: [
     "ㅇㅋ {USER}. 또 필요하면 불러.",
-    "별말을 {USER}. 이게 Spark 일이다.",
+    "별말을 {USER}. 이게 ${MODEL_NAME} 일이다.",
     "ㄱㅅ {USER}. 다른 건 없냐?"
   ],
   nameSet: [
@@ -47,16 +85,32 @@ const replies = {
   ]
 };
 
-// {USER} 치환 함수
+// {USER}, ${MODEL_NAME} 치환 함수
 function formatReply(text) {
-  return text.replace(/{USER}/g, userName);
+  return text.replace(/{USER}/g, userName).replace(/\${MODEL_NAME}/g, MODEL_NAME);
 }
 
 // 웰컴 타이틀 업데이트
 function updateWelcomeTitle() {
   if (welcomeTitle) {
-    welcomeTitle.textContent = `${userName}, 불꽃 켰다`;
+    welcomeTitle.textContent = `${userName}, ${MODEL_NAME} 켜졌다`;
   }
+}
+
+// 지식베이스 검색
+function getKnowledgeAnswer(text) {
+  const lowerText = text.toLowerCase();
+
+  if (lowerText.includes('5.18') || lowerText.includes('광주') || lowerText.includes('왜곡')) {
+    return knowledgeBase["5.18"];
+  }
+  if (lowerText.includes('사양') || lowerText.includes('시스템') || lowerText.includes('스펙')) {
+    return knowledgeBase["사양"];
+  }
+  if (lowerText.includes('너는 누구') || lowerText.includes('chat k') || lowerText.includes('스파크')) {
+    return knowledgeBase["chatk"];
+  }
+  return null;
 }
 
 // 1. 전송 기능
@@ -75,7 +129,7 @@ function sendMessage() {
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
-    localStorage.setItem('sparkUserName', userName);
+    localStorage.setItem('chatkUserName', userName);
     updateWelcomeTitle();
 
     const typingEl = addTyping();
@@ -91,6 +145,14 @@ function sendMessage() {
   setTimeout(() => {
     typingEl.remove();
 
+    // 지식베이스 우선 체크
+    const kbAnswer = getKnowledgeAnswer(text);
+    if (kbAnswer) {
+      streamText(formatReply(kbAnswer), 'ai');
+      return;
+    }
+
+    // 일반 응답 분기
     let replyArray = replies.normal;
     if (greetingPatterns.test(text)) {
       replyArray = replies.greeting;
@@ -109,7 +171,7 @@ function addMessage(text, type) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
   msg.innerHTML = `
-    <div class="avatar">${type === 'user'? userName[0].toUpperCase() : 'S'}</div>
+    <div class="avatar">${type === 'user'? userName[0].toUpperCase() : 'C'}</div>
     <div class="bubble">${text}</div>
   `;
   chatList.appendChild(msg);
@@ -121,7 +183,7 @@ function streamText(text, type) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
   msg.innerHTML = `
-    <div class="avatar">S</div>
+    <div class="avatar">C</div>
     <div class="bubble"></div>
   `;
   chatList.appendChild(msg);
@@ -141,7 +203,7 @@ function addTyping() {
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
   msg.innerHTML = `
-    <div class="avatar">S</div>
+    <div class="avatar">C</div>
     <div class="bubble"><span></span><span></span></div>
   `;
   chatList.appendChild(msg);
