@@ -6,27 +6,42 @@ const themeToggle = document.getElementById('themeToggle');
 const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.querySelector('.sidebar');
 const welcomeScreen = document.getElementById('welcomeScreen');
-const newChatBtn = document.getElementById('newChatBtn'); // 추가
+const newChatBtn = document.getElementById('newChatBtn');
 
-// 오버레이 요소 동적 생성
 const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// 자연스러운 더미 응답 3종
-const dummyReplies = [
-  "오케이 성민아, 그건 이렇게 하면 돼. 1. 먼저 문제 정의하고, 2. 그 다음에 데이터 뽑아서, 3. 마지막에 검증 돌리면 끝이야.",
-  "그거 질문 좋은데. 내가 아는 선에서 말하면, 깃허브 페이지에서는 인라인 스크립트보다 외부 js가 캐시 때문에 더 안정적이야.",
-  "방금 검색해본 건 아니고, 내 기억으로는 iOS 사파리는 backdrop-filter 쓰면 클릭 이벤트 씹는 버그가 17.4까지 있었어."
-];
+// 인사 패턴 감지용 정규식
+const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|뭐해|야|성민|스파크|반가워|처음)/i;
 
-// 1. 전송 기능
+// 상황에 맞는 더미 응답
+const replies = {
+  greeting: [
+    "오 성민아 왔냐. 뭐 도와줄까?",
+    "ㅎㅇ 성민아. 불꽃 켜졌다. 질문 던져봐.",
+    "반갑다 성민아. 오늘은 뭐 때문에 왔어?",
+    "왔구나. 심심했냐? 뭘로 놀아줄까."
+  ],
+  normal: [
+    "오케이 성민아, 그건 이렇게 하면 돼. 1. 먼저 문제 정의하고, 2. 그 다음에 데이터 뽑아서, 3. 마지막에 검증 돌리면 끝이야.",
+    "그거 질문 좋은데. 내가 아는 선에서 말하면, 깃허브 페이지에서는 인라인 스크립트보다 외부 js가 캐시 때문에 더 안정적이야.",
+    "방금 검색해본 건 아니고, 내 기억으로는 iOS 사파리는 backdrop-filter 쓰면 클릭 이벤트 씹는 버그가 17.4까지 있었어."
+  ],
+  thanks: [
+    "ㅇㅋ 성민아. 또 필요하면 불러.",
+    "별말을. 이게 Spark 일이다.",
+    "ㄱㅅ. 다른 건 없냐?"
+  ]
+};
+
+// 1. 전송 기능 - 인사 감지 로직 추가
 function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
 
   if (welcomeScreen) welcomeScreen.classList.add('hidden');
-  closeSidebar(); // 전송하면 사이드바 자동 닫기
+  closeSidebar();
 
   addMessage(text, 'user');
   userInput.value = '';
@@ -35,7 +50,16 @@ function sendMessage() {
   const typingEl = addTyping();
   setTimeout(() => {
     typingEl.remove();
-    const reply = dummyReplies[Math.floor(Math.random() * dummyReplies.length)];
+
+    // 핵심: 메시지 타입 판별
+    let replyArray = replies.normal;
+    if (greetingPatterns.test(text)) {
+      replyArray = replies.greeting;
+    } else if (/고마워|ㄱㅅ|땡큐|thx/i.test(text)) {
+      replyArray = replies.thanks;
+    }
+
+    const reply = replyArray[Math.floor(Math.random() * replyArray.length)];
     streamText(reply, 'ai');
   }, 400);
 }
@@ -115,12 +139,12 @@ function closeSidebar() {
   overlay.classList.remove('active');
 }
 
-// 10. 새 채팅 시작 - 핵심 수정
+// 10. 새 채팅 시작
 function startNewChat() {
-  chatList.innerHTML = ''; // 채팅 비우기
+  chatList.innerHTML = '';
   userInput.value = '';
   autoResize();
-  if (welcomeScreen) welcomeScreen.classList.remove('hidden'); // 웰컴 다시 표시
+  if (welcomeScreen) welcomeScreen.classList.remove('hidden');
   closeSidebar();
 }
 
@@ -162,11 +186,8 @@ userInput.addEventListener('keydown', (e) => {
 userInput.addEventListener('input', autoResize);
 themeToggle.addEventListener('click', toggleTheme);
 menuBtn.addEventListener('click', toggleSidebar);
-newChatBtn.addEventListener('click', startNewChat); // 새 채팅 이벤트 추가
-overlay.addEventListener('click', closeSidebar); // 오버레이 클릭시 닫기
-
-// iOS 300ms 딜레이 제거
+newChatBtn.addEventListener('click', startNewChat);
+overlay.addEventListener('click', closeSidebar);
 document.addEventListener('touchstart', () => {}, { passive: true });
 
-// 실행
 init();
