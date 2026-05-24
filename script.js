@@ -107,6 +107,22 @@ function init() {
   }
 }
 
+// 예시 카드 클릭 이벤트
+document.querySelectorAll('.example-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const prompt = card.dataset.prompt;
+    userInput.value = prompt;
+    sendMessage();
+    document.getElementById('welcomeScreen').classList.add('hidden');
+  });
+});
+
+// 첫 메시지 보내면 웰컴화면 숨김
+const originalSend = sendMessage;
+sendMessage = function() {
+  document.getElementById('welcomeScreen')?.classList.add('hidden');
+  originalSend();
+}
 // 이벤트 리스너
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keydown', (e) => {
