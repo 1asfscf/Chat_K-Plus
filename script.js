@@ -13,23 +13,29 @@ const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// 모델 정보 - 고정값
+// 모델 정보 - 절대 변경 불가
 const MODEL_NAME = 'Chat K Plus';
-const MODEL_IDENTITY = `나는 ${MODEL_NAME}야. Meta에서 만든 Muse Spark 모델 기반으로 동작하는 AI야. 한국 특화 대화, 개발, 역사 팩트체크 같은 걸 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`;
+const MODEL_IDENTITY = Object.freeze({
+  name: 'Chat K Plus',
+  maker: 'Meta',
+  base: 'Muse Spark',
+  cutoff: '2025-09-04',
+  desc: `나는 ${MODEL_NAME}야. Meta에서 만든 Muse Spark 모델 기반으로 동작하는 AI야. 한국 특화 대화, 개발, 역사 팩트체크를 도와준다. 실시간 검색은 안 되고 2025-09-04까지 데이터로 학습했어.`
+});
 
 // 유저 이름 관리
 let userName = localStorage.getItem('chatkUserName') || '성민';
 
-// 이름 설정 패턴
+// 추론 시스템 설정
+const REASONING_TIMEOUT = 15000; // 15초
+const activeReasoning = new Map(); // msgId -> {timer, attempts}
+
+// 패턴
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
-
-// 인사 패턴
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음)/i;
-
-// 자기소개 질문 패턴 - 이게 핵심
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는)/i;
 
-// 5.18 지식베이스 + 출처
+// 지식베이스 + 출처
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -52,29 +58,31 @@ const knowledgeBase = {
       { title: "5·18민주화운동진상규명조사위원회 보고서", url: "https://www.518commission.go.kr" },
       { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" },
       { title: "국방부 5·18특별조사위원회", url: "https://www.mnd.go.kr" }
-    ]
+    ],
+    keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동']
   },
   "사양": {
     text: `**${MODEL_NAME} 시스템 사양**
 
 **엔진**: Muse Spark. Meta Super Intelligence Lab 개발
-**프론트**: Vanilla JS + CSS3. 프레임워크 없이 동작
+**프론트**: Vanilla JS + CSS3
 **데이터**: 2025-09-04 컷오프. 실시간 검색 미연동
 **특징**:
 1. ${userName} 이름 기억: localStorage 저장
 2. 출처 인용: 검증 가능한 소스 첨부
-3. 모바일 최적화: iOS 사파리 대응
+3. 15초 추론: 1차 실패시 자동 재탐색
 4. 데모 모드: 로컬 지식베이스 기반
 
 **한계**: 실시간 정보, 이미지 생성, 파일 분석 미지원`,
-    sources: []
+    sources: [],
+    keywords: ['사양', '시스템', '스펙', '정보']
   }
 };
 
-// 답변 톤 정리 - normal에서 애매한 거 제거
+// 답변 톤 - 자기소개 절대 안 들어감
 const replies = {
   greeting: [
-    `안녕 ${userName}. ${MODEL_NAME}이야. 뭐 도와줄까?`,
+    `안녕 ${userName}. 뭐 도와줄까?`,
     `ㅎㅇ ${userName}. 질문 있어?`,
     `반가워 ${userName}. 뭘 알아보고 싶어?`
   ],
@@ -88,10 +96,10 @@ const replies = {
     `ㅇㅋ ${userName}로 기억했다. 뭐부터 할까?`,
     `좋아 ${userName}. 편하게 말해.`
   ],
-  normal: [
-    `${userName}, 그 질문은 이렇게 정리할 수 있어. 핵심만 말하면 된다.`,
-    `그거 물어봤구나 ${userName}. 내가 아는 범위에서 답해줄게.`,
-    `${userName}, 그 부분은 팩트체크가 필요해. 확인하고 말해줄게.`
+  fallback: [
+    `${userName}, 그 질문은 데이터에서 못 찾았어. 다시 파고들어볼게.`,
+    `1차 검색 실패 ${userName}. 15초 안에 다시 찾아볼게.`,
+    `지금은 정확한 답이 없어 ${userName}. 추론 시스템 돌리는 중이야.`
   ]
 };
 
@@ -102,15 +110,42 @@ function updateWelcomeTitle() {
   }
 }
 
-// 지식베이스 검색
-function getKnowledgeAnswer(text) {
+// 1차 지식 검색
+function searchKnowledge(text) {
   const lowerText = text.toLowerCase();
-  if (lowerText.includes('5.18') || lowerText.includes('광주') || lowerText.includes('왜곡')) {
+  for (const [key, data] of Object.entries(knowledgeBase)) {
+    if (data.keywords.some(k => lowerText.includes(k))) {
+      return data;
+    }
+  }
+  return null;
+}
+
+// 2차 추론 검색 - 15초 재시도
+function deepReasoning(query, msgId, attempt = 1) {
+  if (attempt > 3) return null; // 최대 3번
+
+  // 키워드 확장해서 다시 검색
+  const expandedKeywords = query
+   .replace(/[?!.]/g, ' ')
+   .split(' ')
+   .filter(w => w.length > 1);
+
+  for (const [key, data] of Object.entries(knowledgeBase)) {
+    const matchCount = data.keywords.filter(k =>
+      expandedKeywords.some(ek => k.includes(ek) || ek.includes(k))
+    ).length;
+
+    if (matchCount >= 1) {
+      return data;
+    }
+  }
+
+  // 연관 검색
+  if (query.includes('광주') || query.includes('5월')) {
     return knowledgeBase["5.18"];
   }
-  if (lowerText.includes('사양') || lowerText.includes('시스템') || lowerText.includes('스펙')) {
-    return knowledgeBase["사양"];
-  }
+
   return null;
 }
 
@@ -122,61 +157,91 @@ function sendMessage() {
   if (welcomeScreen) welcomeScreen.classList.add('hidden');
   closeSidebar();
 
-  addMessage(text, 'user');
+  const msgId = Date.now();
+  addMessage(text, 'user', msgId);
   userInput.value = '';
   autoResize();
   sendBtn.classList.remove('has-text');
 
-  // 1순위: 이름 설정 감지
+  // 1순위: 이름 설정
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
     localStorage.setItem('chatkUserName', userName);
     updateWelcomeTitle();
 
-    const typingEl = addTyping();
+    const typingEl = addTyping(msgId);
     setTimeout(() => {
       typingEl.remove();
       const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
-      streamText(reply.replaceAll('${userName}', userName), 'ai');
+      streamText(reply.replaceAll('${userName}', userName), 'ai', msgId);
     }, 400);
     return;
   }
 
-  const typingEl = addTyping();
-  setTimeout(() => {
-    typingEl.remove();
+  const typingEl = addTyping(msgId);
 
-    // 2순위: 자기소개 질문 - 고정 응답
-    if (identityPatterns.test(text)) {
-      streamText(MODEL_IDENTITY, 'ai');
-      return;
+  // 2순위: 자기소개 - 하드코딩 차단
+  if (identityPatterns.test(text)) {
+    setTimeout(() => {
+      typingEl.remove();
+      streamText(MODEL_IDENTITY.desc, 'ai', msgId);
+    }, 400);
+    return;
+  }
+
+  // 3순위: 1차 지식 검색
+  const kb1 = searchKnowledge(text);
+  if (kb1) {
+    setTimeout(() => {
+      typingEl.remove();
+      streamTextWithSources(kb1.text, kb1.sources, 'ai', msgId);
+    }, 500);
+    return;
+  }
+
+  // 4순위: 추론 시작
+  startReasoning(text, msgId, typingEl);
+}
+
+// 추론 시스템
+function startReasoning(query, msgId, typingEl) {
+  let elapsed = 0;
+  const interval = 100; // 0.1초마다 체크
+
+  const timer = setInterval(() => {
+    elapsed += interval;
+
+    // 5초, 10초마다 재시도
+    if (elapsed === 5000 || elapsed === 10000) {
+      const kb2 = deepReasoning(query, msgId, elapsed / 5000);
+      if (kb2) {
+        clearInterval(timer);
+        typingEl.remove();
+        streamTextWithSources(kb2.text, kb2.sources, 'ai', msgId);
+        activeReasoning.delete(msgId);
+        return;
+      }
     }
 
-    // 3순위: 지식베이스
-    const kb = getKnowledgeAnswer(text);
-    if (kb) {
-      streamTextWithSources(kb.text, kb.sources, 'ai');
-      return;
+    // 15초 타임아웃
+    if (elapsed >= REASONING_TIMEOUT) {
+      clearInterval(timer);
+      typingEl.remove();
+      const fallback = replies.fallback[Math.floor(Math.random() * replies.fallback.length)];
+      streamText(fallback.replaceAll('${userName}', userName), 'ai', msgId);
+      activeReasoning.delete(msgId);
     }
+  }, interval);
 
-    // 4순위: 일반 응답
-    let replyArray = replies.normal;
-    if (greetingPatterns.test(text)) {
-      replyArray = replies.greeting;
-    } else if (/고마워|ㄱㅅ|땡큐|thx/i.test(text)) {
-      replyArray = replies.thanks;
-    }
-
-    const rawReply = replyArray[Math.floor(Math.random() * replyArray.length)];
-    streamText(rawReply.replaceAll('${userName}', userName), 'ai');
-  }, 500);
+  activeReasoning.set(msgId, { timer });
 }
 
 // 메시지 추가
-function addMessage(text, type) {
+function addMessage(text, type, msgId) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
+  msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">${type === 'user'? userName[0].toUpperCase() : 'C'}</div>
     <div class="bubble">${text}</div>
@@ -186,9 +251,10 @@ function addMessage(text, type) {
 }
 
 // 출처 있는 메시지 스트리밍
-function streamTextWithSources(text, sources, type) {
+function streamTextWithSources(text, sources, type, msgId) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
+  msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">C</div>
     <div class="bubble">
@@ -216,9 +282,10 @@ function streamTextWithSources(text, sources, type) {
 }
 
 // 일반 텍스트 스트리밍
-function streamText(text, type) {
+function streamText(text, type, msgId) {
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
+  msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">C</div>
     <div class="bubble"></div>
@@ -236,9 +303,10 @@ function streamText(text, type) {
 }
 
 // 타이핑중 표시
-function addTyping() {
+function addTyping(msgId) {
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
+  msg.dataset.msgId = msgId;
   msg.innerHTML = `
     <div class="avatar">C</div>
     <div class="bubble"><span></span><span></span></div>
@@ -248,7 +316,6 @@ function addTyping() {
   return msg;
 }
 
-// textarea 자동 높이 + 버튼 활성화
 function autoResize() {
   userInput.style.height = 'auto';
   userInput.style.height = userInput.scrollHeight + 'px';
@@ -263,7 +330,6 @@ function scrollToBottom() {
   chatList.scrollTop = chatList.scrollHeight;
 }
 
-// 테마 토글
 function toggleTheme() {
   document.body.classList.toggle('light');
   const icon = themeToggle.querySelector('.icon');
@@ -289,6 +355,10 @@ function closeSidebar() {
 }
 
 function startNewChat() {
+  // 추론 중인 거 다 취소
+  activeReasoning.forEach(({ timer }) => clearInterval(timer));
+  activeReasoning.clear();
+
   chatList.innerHTML = '';
   userInput.value = '';
   autoResize();
