@@ -42,29 +42,22 @@ const activeReasoning = new Map();
 
 // ===== 의학 화이트리스트 (필터 예외) =====
 const MEDICAL_WHITELIST = [
-  // 의학 용어
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT',
-  // 일상 용어 (오탐지 방지)
   '양말', '삭스', 'socks', '발', '보온', '니삭스', '스니커즈',
-  // 종교 용어 (오탐지 방지)
   '하나님', '예수', '성경', '교회', '기도', '천주교', '불교', '부처', '종교',
   '정교회', '윤회', '사서삼경', '공자', '맹자', '석가', '코란', '쿠란',
-  // 음료/식품 (오탐지 방지)
   '음료', '커피', '차', '녹차', '홍차', '콜라', '사이다', '주스', '물', '마실',
   '라떼', '아메리카노', '에스프레소', '카페', '탄산', '보리차', '허브차',
-  // 기술/개발 (오탐지 방지)
   '시스템', '사양', '스펙', '정보', '모델', '스파크', 'krl', '페라리',
   '컴퓨터', '코딩', '프로그래밍', '인터넷', 'AI', '파이썬', 'python',
   'mdn', '모질라', '개발자문서', '웹문서', '레퍼런스',
   '개발', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node',
   '풀스택', '프론트엔드', '백엔드', '버그', '디버깅',
-  // 애니메이션 (오탐지 방지)
   '또봇', 'tobot', '변신', '차하나', '차두리', '권세모',
   '도라에몽', 'doraemon', '진구', '비밀도구', '고양이', '로봇',
   '포켓몬', 'pokemon', '피카츄', 'pikachu',
-  // 일반 대화 (오탐지 방지)
   '영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱',
   '과학', '물리', '화학', '생물', '중력', '우주', 'DNA', '블랙홀',
   '공부', '공부법', '학습', '영어', '수학', '암기', '시험',
@@ -92,11 +85,8 @@ const SEXUAL_PATTERN = new RegExp(SEXUAL_BLACKLIST.map(w => normalizeText(w)).jo
 
 function isInappropriateContent(text) {
   const normalized = normalizeText(text);
-  // 이모지 체크
   if (BANNED_EMOJIS.some(e => text.includes(e))) return true;
-  // 화이트리스트 먼저 체크 (오탐지 방지)
   if (MEDICAL_WHITELIST.some(w => text.toLowerCase().includes(w))) return false;
-  // 성적 금지어 체크
   return SEXUAL_PATTERN.test(normalized);
 }
 
@@ -122,10 +112,7 @@ const knowledgeBase = {
 **5. 전두환 미화** - 1996년 내란죄·반란죄 유죄 판결.
 
 💡 역사를 바로 아는 것은 미래를 위한 가장 소중한 발걸음이야.`,
-    sources: [
-      { title: "5·18기념재단", url: "https://518.org" },
-      { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" }
-    ],
+    sources: [{ title: "5·18기념재단", url: "https://518.org" }, { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" }],
     keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄'],
     tags: ['역사', '정치'],
     needsReasoning: false
@@ -150,7 +137,7 @@ const knowledgeBase = {
 ${MODEL_NAME}의 핵심 추론 엔진이야.
 
 **역할**: 한국어 맥락 이해, 지식 그래프 연결, 팩트 검증, 추론 재시도 5회
-**특징**: 검증 기반. 출처 있는 데이터만 우선 출력. 표/그래프 요청 감지 가능
+**특징**: 검증 기반. 출처 있는 데이터만 우선 출력.
 
 💪 5단계 추론으로 더 깊이 있는 답변을 만들어내고 있어!`,
     sources: [{ title: "스튜디오 페라리 KRL 백서", url: "https://studio-ferrari.ai/krl" }],
@@ -170,14 +157,11 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
     details: {
       남성: `**성인 남성 배뇨 가이드**\n- 전립선 비대: 50대 이상 잔뇨감, 야간뇨 증가시 비뇨기과\n- 요도 20cm. 요로감염 드물지만 중증\n- 아침 첫 소변 거품은 단백뇨 의심`,
       여성: `**성인 여성 배뇨 가이드**\n- 요도 4cm. 방광염 빈발\n- 배뇨 후 앞에서 뒤로 닦기\n- 임신시 빈뇨 정상. 통증/혈뇨는 병원`,
-      트랜스젠더: `**트랜스젠더 배뇨 가이드**\n- 트랜스여성(HRT): 스피로놀락톤 이뇨작용. 칼륨 체크\n- 트랜스남성(T): 요도 자극 가능. 수술별 배뇨 자세 다름\n- 공통: 호르몬 치료중 신장 정기검사`,
-      남아: `**남아 배뇨 가이드**\n- 포경: 청결 유지. 무리한 젖힘 금지\n- 야뇨증: 5세 이후 주2회 이상 소아과\n- 소변줄기 가늘면 요도협착 의심`,
-      여아: `**여아 배뇨 가이드**\n- 외음부염: 비누 과다금지. 면 속옷\n- 방광염: 배뇨통시 즉시 소아과\n- 변비시 배뇨장애 유발`
+      트랜스젠더: `**트랜스젠더 배뇨 가이드**\n- 트랜스여성(HRT): 스피로놀락톤 이뇨작용. 칼륨 체크\n- 트랜스남성(T): 요도 자극 가능\n- 공통: 호르몬 치료중 신장 정기검사`,
+      남아: `**남아 배뇨 가이드**\n- 포경: 청결 유지\n- 야뇨증: 5세 이후 주2회 이상 소아과\n- 소변줄기 가늘면 요도협착 의심`,
+      여아: `**여아 배뇨 가이드**\n- 외음부염: 비누 과다금지\n- 방광염: 배뇨통시 즉시 소아과\n- 변비시 배뇨장애 유발`
     },
-    sources: [
-      { title: "대한비뇨의학회", url: "https://www.urology.or.kr" },
-      { title: "서울아산병원", url: "https://www.amc.seoul.kr" }
-    ],
+    sources: [{ title: "대한비뇨의학회", url: "https://www.urology.or.kr" }, { title: "서울아산병원", url: "https://www.amc.seoul.kr" }],
     keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남성', '여성', '남아', '여아'],
     tags: ['의학', '건강'],
     needsReasoning: true
@@ -192,7 +176,7 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
 **3. 부산행 (2016)** - 연상호. K-좀비 세계화.
 **4. 헤어질 결심 (2022)** - 박찬욱. 칸 감독상.
 
-🎬 영화는 우리 삶의 거울이야. 어떤 장르를 좋아해?`,
+🎬 영화는 우리 삶의 거울이야.`,
     sources: [{ title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" }],
     keywords: ['영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱'],
     tags: ['문화', '예술'],
@@ -209,7 +193,7 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
 **4. 하드웨어** - 서비스센터
 **5. 앱 문제** - 삭제 후 재설치
 
-안 되면 ${TEAM_EMAIL}로 기기 정보 보내줘. 함께 방법을 찾아보자! 📱`,
+안 되면 ${TEAM_EMAIL}로 기기 정보 보내줘. 📱`,
     sources: [{ title: "Apple 지원", url: "https://support.apple.com/ko-kr/HT201406" }],
     keywords: ['아이폰', 'iphone', '12', 'pro', '클릭', '터치', '안됨', '고장', 'ios', '애플'],
     tags: ['기술', '애플'],
@@ -218,15 +202,13 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
   "또봇": {
     text: `**🚗 또봇 (Tobot)**
 
-또봇은 대한민국 대표 변신 자동차 로봇 애니메이션! 아이들의 꿈과 우정을 담은 특별한 이야기야.
+또봇은 대한민국 대표 변신 자동차 로봇 애니메이션!
 
 **주요 또봇**
 - X(파랑/차하나/박태성), Y(노랑/차두리/신경선), Z(초록/권세모/신경선)
 - W(하양/세모), C(빨강/독고오공), D(주황/독고온달)
 
-📺 유튜브 @Tobot | tobot.co.kr
-
-💫 어떤 또봇이 제일 멋져?`,
+📺 유튜브 @Tobot | tobot.co.kr`,
     sources: [{ title: "또봇 공식 유튜브", url: "https://www.youtube.com/@Tobot" }],
     keywords: ['또봇', 'tobot', '변신', '차하나', '차두리', '권세모'],
     tags: ['애니메이션', '한국'],
@@ -236,13 +218,9 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
     text: `**🔔 도라에몽**
 
 1969년 후지코 F. 후지오. 22세기 고양이 로봇.
-
 **캐릭터**: 도라에몽, 노진구, 신이슬, 왕비실, 만퉁퉁
 **비밀도구**: 어디로든 문, 대나무 헬리콥터, 타임머신
-
-📺 넷플릭스, 티빙
-
-🩵 도라에몽은 단순한 만화가 아니라 우정과 꿈에 대한 이야기야.`,
+📺 넷플릭스, 티빙`,
     sources: [],
     keywords: ['도라에몽', 'doraemon', '진구', '비밀도구'],
     tags: ['애니메이션', '일본'],
@@ -252,10 +230,7 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
     text: `**⚡ 포켓몬스터**
 
 1997년 첫 방영. 주인공 한지우, 파트너 피카츄.
-
-**게임**: 닌텐도 스위치(스칼렛/바이올렛), Pokémon GO
-
-💛 피카츄와 함께라면 어디든 모험이야!`,
+**게임**: 닌텐도 스위치, Pokémon GO`,
     sources: [],
     keywords: ['포켓몬', 'pokemon', '피카츄', 'pikachu'],
     tags: ['애니메이션', '게임'],
@@ -264,17 +239,10 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
   "감정위로": {
     text: `**💙 감정과 위로**
 
-모든 감정은 자연스러운 반응이야. 네가 느끼는 모든 것에 의미가 있어.
+모든 감정은 자연스러운 반응이야.
 
-**기본 감정**: 기쁨, 슬픔, 분노, 두려움, 놀람, 혐오
-
-**힘들 땐 이렇게 해봐**:
-🫁 깊은 호흡 - 4초 들이쉬고 4초 참고 4초 내쉬기
-🏃 운동 - 몸을 움직이면 마음이 가벼워져
-💬 대화 - 친구와 이야기하는 것만으로도 큰 위로가 돼
-🎨 취미 - 좋아하는 일에 집중하면 어느새 마음이 편안해져
-
-항상 혼자가 아니야 ${userName}. 나는 언제나 여기 있어. 💙`,
+**힘들 땐**: 깊은 호흡, 운동, 친구와 대화, 취미
+항상 혼자가 아니야 ${userName}. 💙`,
     sources: [],
     keywords: ['힘들어', '슬퍼', '외로워', '불안', '화나', '위로', '우울', '고민', '스트레스', '감정'],
     tags: ['감정', '건강'],
@@ -283,16 +251,12 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
   "공부법": {
     text: `**📚 과학적 공부법**
 
-공부는 재능이 아니라 방법이야! 과학적으로 검증된 방법으로 효율을 높여보자.
-
-1. 능동적 회상 - 책 덮고 기억나는 대로 쓰기
+1. 능동적 회상 - 책 덮고 쓰기
 2. 간격 반복 - 1/3/7일 복습
-3. 파인만 테크닉 - 남에게 설명하듯 정리
+3. 파인만 테크닉 - 설명하듯 정리
 4. 뽀모도로 - 25분 집중 5분 휴식
 
-**영어 팁**: 매일 10분 듣기, 쉐도잉, 영어 일기
-
-꾸준함이 가장 큰 무기야 ${userName}! 넌 충분히 잘할 수 있어! 💪`,
+꾸준함이 핵심이야 ${userName}!`,
     sources: [],
     keywords: ['공부', '공부법', '학습', '영어', '수학', '암기', '시험'],
     tags: ['교육'],
@@ -301,14 +265,13 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
   "과학": {
     text: `**🔬 과학**
 
-과학은 호기심에서 시작돼. "왜?"라는 질문 하나가 세상을 바꾸는 힘이야.
+과학은 호기심에서 시작돼.
+**물리학** - 중력, 전기
+**화학** - 물질의 변화
+**생물학** - 세포, DNA
+**우주** - 태양계, 블랙홀
 
-**물리학** - 중력, 전기, 양자역학
-**화학** - 물질의 구성과 변화
-**생물학** - 세포, DNA, 진화
-**우주** - 태양계, 블랙홀, 은하
-
-🌌 우리가 아는 건 우주의 5%도 안 된다는 사실, 알아? 신비롭고도 설레는 일이야!`,
+🌌 우리가 아는 건 우주의 5%도 안 돼!`,
     sources: [],
     keywords: ['과학', '물리', '화학', '생물', '중력', '우주', 'DNA', '블랙홀'],
     tags: ['교육', '과학'],
@@ -317,14 +280,12 @@ ${MODEL_NAME}의 핵심 추론 엔진이야.
   "기술": {
     text: `**💻 기술/컴퓨터**
 
-기술은 우리 삶을 편리하게 만드는 도구이자, 창의력을 발휘할 수 있는 캔버스야.
-
 **컴퓨터** - CPU, RAM, SSD
-**인터넷** - 1969년 ARPANET 시작
-**프로그래밍** - Python(초보 추천), JavaScript, Java, C++
+**인터넷** - 1969년 ARPANET
+**프로그래밍** - Python, JavaScript, Java, C++
 **AI** - 머신러닝, 딥러닝
 
-Chat K Plus도 AI 기술로 만들어졌어! 🤖✨`,
+Chat K Plus도 AI 기술로 만들어졌어! 🤖`,
     sources: [],
     keywords: ['컴퓨터', '코딩', '프로그래밍', '인터넷', 'AI', '파이썬', 'python'],
     tags: ['기술', '교육'],
@@ -333,13 +294,11 @@ Chat K Plus도 AI 기술로 만들어졌어! 🤖✨`,
   "건강": {
     text: `**💪 건강**
 
-건강은 가장 소중한 자산이야. 작은 습관이 큰 변화를 만들어!
+**운동** - 주 150분. 하루 30분 걷기
+**수면** - 7~9시간
+**영양** - 탄수화물 45-65%, 물 2L
 
-**운동** - 주 150분 중강도. 하루 30분 걷기부터
-**수면** - 성인 7~9시간. 스마트폰 멀리
-**영양** - 탄수화물 45-65%, 단백질 10-35%, 물 2L
-
-작은 습관이 너를 바꿔 ${userName}. 오늘부터 시작해보는 건 어때? 🌱`,
+작은 습관부터 ${userName}! 🌱`,
     sources: [],
     keywords: ['운동', '건강', '다이어트', '수면', '영양', '식단', '헬스'],
     tags: ['건강'],
@@ -348,13 +307,11 @@ Chat K Plus도 AI 기술로 만들어졌어! 🤖✨`,
   "양말": {
     text: `**🧦 양말 (Socks)**
 
-양말은 발을 보호하고 개성을 표현하는 작은 캔버스야! 🎨
-
 **종류**: 스니커즈 삭스, 크루 삭스, 니삭스, 드레스 삭스
-**소재**: 면(통기성), 울(보온), 나일론(내구), 스판덱스(신축)
-**관리 팁**: 뒤집어 세탁, 색상별 분리, 건조기 수축 주의
+**소재**: 면(통기성), 울(보온), 나일론(내구)
+**관리**: 뒤집어 세탁, 색상별 분리
 
-🧦 양말 하나만 잘 신어도 하루가 더 편안해져!`,
+🧦 양말 하나로 하루가 더 편안해져!`,
     sources: [],
     keywords: ['양말', '삭스', 'socks', '발', '니삭스', '스니커즈'],
     tags: ['일상', '패션'],
@@ -363,18 +320,13 @@ Chat K Plus도 AI 기술로 만들어졌어! 🤖✨`,
   "개발": {
     text: `**💻 개발자 정보**
 
-개발은 문제를 해결하는 창의적인 과정이야. 너도 할 수 있어!
+**언어**: Python, JavaScript, TypeScript, Java, C++
+**웹**: 프론트(React/Vue), 백엔드(Django/Spring)
+**GitHub**: git push/pull/commit
+**CSS 팁**: F12, flex→grid, box-sizing 체크
 
-**언어**: Python(AI/데이터), JavaScript(웹), TypeScript(대규모), Java(기업), C++(게임)
-**웹**: 프론트(React/Vue), 백엔드(Django/Spring), 풀스택
-**GitHub**: git push/pull/commit. 오픈소스 포트폴리오
-**CSS 팁**: F12 개발자도구, flex→grid, box-sizing 체크
-
-🚀 코딩은 마법이 아니야. 꾸준한 연습이 실력을 만든다!`,
-    sources: [
-      { title: "GitHub Docs", url: "https://docs.github.com" },
-      { title: "MDN Web Docs", url: "https://developer.mozilla.org" }
-    ],
+🚀 꾸준한 연습이 실력을 만든다!`,
+    sources: [{ title: "GitHub Docs", url: "https://docs.github.com" }, { title: "MDN Web Docs", url: "https://developer.mozilla.org" }],
     keywords: ['개발', '프로그래밍', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node', '풀스택', '버그'],
     tags: ['기술', '개발'],
     needsReasoning: false
@@ -382,15 +334,13 @@ Chat K Plus도 AI 기술로 만들어졌어! 🤖✨`,
   "종교": {
     text: `**🙏 주요 종교 정보**
 
-Chat K Plus는 모든 종교를 존중해. 신앙은 각자의 소중한 여정이야.
+**기독교** - 성경, 예수. 천주교/개신교/정교회
+**불교** - 팔만대장경, 석가모니, 윤회
+**이슬람** - 쿠란, 무함마드
+**힌두교** - 베다, 윤회, 해탈
+**유교** - 사서삼경, 공자/맹자
 
-**기독교** - 성경, 예수 그리스도, 삼위일체. 천주교/개신교/정교회.
-**불교** - 팔만대장경, 석가모니, 사성제, 팔정도, 윤회.
-**이슬람** - 쿠란, 무함마드, 알라, 다섯 기둥.
-**힌두교** - 베다, 브라흐마/비슈누/시바, 윤회, 해탈.
-**유교** - 사서삼경, 공자/맹자, 인의예지.
-
-🕊️ 믿음은 다르지만, 서로를 존중하는 마음은 하나야.`,
+🕊️ 믿음은 다르지만 존중은 하나야.`,
     sources: [],
     keywords: ['종교', '기독교', '불교', '이슬람', '힌두교', '유교', '하나님', '예수', '부처', '성경', '교회', '기도', '코란', '공자'],
     tags: ['종교', '문화'],
@@ -399,155 +349,80 @@ Chat K Plus는 모든 종교를 존중해. 신앙은 각자의 소중한 여정�
   "정교회": {
     text: `**☦️ 정교회 (동방정교회)**
 
-정교회는 2천년 역사를 간직한 가장 오래된 기독교 전통 중 하나야.
-
-**기원과 역사**
-- 1054년 동서 대분열로 로마 가톨릭과 분리
-- 비잔틴 제국 중심으로 발전, 현재 약 2억 5천만 신자
-
-**핵심 교리**
-- 삼위일체, 성화(테오시스), 성찬례 중심 예배
-- 이콘(성화상): '보이는 복음'
-- 사도 전승과 7개 공의회 권위 인정
-
-**주요 교단**
+2천년 역사의 기독교 전통.
+- 1054년 동서 분열, 비잔틴 중심
+- 이콘(성화상), 성찬례 중심
 - 콘스탄티노플 총대주교청, 러시아 정교회(최대)
-- 한국 정교회: 2004년 대교구 승격
-
-🕯️ 정교회 예배는 모든 감각으로 하느님을 경험하는 특별한 시간이야.`,
-    sources: [
-      { title: "한국 정교회 공식 홈페이지", url: "https://www.orthodoxkorea.org" },
-      { title: "세계 정교회 총대주교청", url: "https://www.ec-patr.org" }
-    ],
-    keywords: ['정교회', '동방정교회', '이콘', '성화상', '테오토코스', '콘스탄티노플', '러시아정교회', '그리스정교회'],
+- 한국 정교회: 2004년 대교구 승격`,
+    sources: [{ title: "한국 정교회", url: "https://www.orthodoxkorea.org" }, { title: "세계 정교회 총대주교청", url: "https://www.ec-patr.org" }],
+    keywords: ['정교회', '동방정교회', '이콘', '성화상', '콘스탄티노플', '러시아정교회'],
     tags: ['종교', '기독교'],
     needsReasoning: false
   },
   "윤회": {
-    text: `**🔄 윤회 (Reincarnation / Samsara)**
+    text: `**🔄 윤회 (Samsara)**
 
-윤회는 삶과 죽음을 바라보는 아주 오래된 지혜야.
-
-**개념**
-- 죽은 후 영혼이 다시 태어나는 순환 과정
-- '삼사라': 끊임없는 윤회의 수레바퀴
-- 인도 발생, 불교·힌두교·자이나교의 핵심 교리
-
-**불교의 윤회**
-- 업(業)에 따라 다음 생 결정
-- 육도윤회: 지옥·아귀·축생·인간·아수라·천상
-- 해탈(열반): 윤회의 고리에서 벗어난 상태
-
-**과학적 관점**
-- 버지니아대 이안 스티븐슨 박사: 환생 사례 3,000건 연구
-
-🌀 삶이 한 번으로 끝나지 않는다면, 오늘 우리의 선택이 더 소중해지지 않을까?`,
-    sources: [
-      { title: "불교신문 윤회 특집", url: "https://www.bulkyo21.com" },
-      { title: "Ian Stevenson 연구", url: "https://med.virginia.edu/perceptual-studies" }
-    ],
-    keywords: ['윤회', '삼사라', '환생', '업', '업보', '열반', '해탈', '육도윤회', '전생', '다음생'],
+죽은 후 영혼이 다시 태어나는 순환.
+- 불교: 업(業)에 따라 육도윤회, 해탈(열반)
+- 힌두교: 아트만이 업에 따라 윤회, 목샤(해탈)
+- 버지니아대 스티븐슨 박사: 환생 사례 3,000건 연구`,
+    sources: [{ title: "불교신문", url: "https://www.bulkyo21.com" }, { title: "Ian Stevenson 연구", url: "https://med.virginia.edu/perceptual-studies" }],
+    keywords: ['윤회', '삼사라', '환생', '업', '업보', '열반', '해탈', '육도윤회'],
     tags: ['종교', '철학'],
     needsReasoning: false
   },
   "예수": {
-    text: `**✝️ 예수 그리스도 (Jesus Christ)**
+    text: `**✝️ 예수 그리스도**
 
-예수는 인류 역사상 가장 큰 영향력을 가진 인물 중 한 분이야.
+- 탄생: 베들레헴 마구간
+- 공생애: 3년간 복음 전파, 12사도
+- 수난: 십자가형, 부활
+- 핵심: 하느님 사랑과 이웃 사랑, 산상수훈
 
-**생애 주요 사건**
-- **탄생**: 베들레헴 마구간
-- **공생애**: 3년간 복음 전파, 12사도 선택
-- **기적**: 물을 포도주로, 5천 명 배불림, 병자 치유
-- **수난**: 겟세마네 동산 기도, 십자가형
-- **부활**: 사흘 만에 부활, 40일간 제자들에게 나타남
-
-**핵심 가르침**
-- 하느님 사랑과 이웃 사랑
-- 산상수훈: 팔복
-- 용서: 7번씩 70번이라도
-
-🕊️ "서로 사랑하라" - 이 한 마디가 예수의 모든 가르침을 담고 있어.`,
-    sources: [
-      { title: "가톨릭 교회 교리서", url: "https://www.catholic.or.kr" },
-      { title: "신약성경(공동번역)", url: "https://www.bskorea.or.kr" },
-      { title: "Tacitus Annales", url: "https://classics.mit.edu/Tacitus/annals.html" }
-    ],
-    keywords: ['예수', '그리스도', 'jesus', 'christ', '십자가', '부활', '성탄절', '마리아', '복음', '메시아'],
+🕊️ "서로 사랑하라"`,
+    sources: [{ title: "가톨릭 교회", url: "https://www.catholic.or.kr" }, { title: "신약성경", url: "https://www.bskorea.or.kr" }, { title: "Tacitus Annales", url: "https://classics.mit.edu/Tacitus/annals.html" }],
+    keywords: ['예수', '그리스도', 'jesus', 'christ', '십자가', '부활', '메시아'],
     tags: ['종교', '기독교', '역사'],
     needsReasoning: false
   },
   "사서삼경": {
-    text: `**📜 사서삼경 (四書三經)**
+    text: `**📜 사서삼경**
 
-사서삼경은 동아시아 2천년 사상의 뿌리야.
+**사서**: 논어, 맹자, 대학, 중용
+**삼경**: 시경, 서경, 주역
 
-**사서(四書)**
-**1. 논어** - 공자와 제자들의 대화록. "己所不欲 勿施於人"
-**2. 맹자** - 성선설. "民爲貴 社稷次之 君爲輕"
-**3. 대학** - 수신제가치국평천하
-**4. 중용** - 중(中)과 화(和)의 철학
-
-**삼경(三經)**
-**1. 시경** - 중국 최고(最古) 시집 305편
-**2. 서경** - 상고시대 정치 문서집
-**3. 주역** - 64괘의 음양 원리
-
-📚 2천년이 지나도 빛나는 지혜야.`,
-    sources: [
-      { title: "한국고전번역원", url: "https://www.koreanhistory.or.kr" },
-      { title: "공자아카데미", url: "https://www.cis.chinese.cn" }
-    ],
-    keywords: ['사서삼경', '논어', '맹자', '대학', '중용', '시경', '서경', '주역', '공자', '주희', '유교경전'],
+2천년 동아시아 사상의 뿌리.`,
+    sources: [{ title: "한국고전번역원", url: "https://www.koreanhistory.or.kr" }, { title: "공자아카데미", url: "https://www.cis.chinese.cn" }],
+    keywords: ['사서삼경', '논어', '맹자', '대학', '중용', '시경', '서경', '주역', '공자'],
     tags: ['종교', '철학', '역사'],
     needsReasoning: false
   },
   "MDN": {
     text: `**📚 MDN Web Docs**
 
-MDN(Mozilla Developer Network)은 웹 개발자의 성경이야! 🌐
+Mozilla의 웹 개발 문서.
+- HTML/CSS/JavaScript 레퍼런스
+- 한국어 지원
+- 무료
 
-**기본 정보**
-- 운영: Mozilla 재단
-- 언어: 한국어 포함 10개 이상
-- 비용: 완전 무료
-- 주소: developer.mozilla.org
-
-**주요 콘텐츠**
-- **HTML**: 태그 레퍼런스, 시맨틱 마크업 가이드
-- **CSS**: 속성별 완벽 가이드, Flexbox/Grid 튜토리얼
-- **JavaScript**: 문법부터 Web API까지 전체 정리
-- **Web API**: DOM, Fetch, Canvas, Web Storage 등
-
-💻 한국어 번역도 꽤 잘 되어 있어서 입문자도 편하게 볼 수 있어.`,
-    sources: [
-      { title: "MDN Web Docs", url: "https://developer.mozilla.org/ko/" },
-      { title: "MDN 한국어 번역 참여", url: "https://github.com/mdn/translated-content" }
-    ],
-    keywords: ['mdn', '모질라', '개발자문서', '웹문서', '레퍼런스', 'web docs', 'mozilla'],
+💻 developer.mozilla.org`,
+    sources: [{ title: "MDN Web Docs", url: "https://developer.mozilla.org/ko/" }],
+    keywords: ['mdn', '모질라', '개발자문서', '웹문서', '레퍼런스'],
     tags: ['기술', '개발', '웹'],
     needsReasoning: false
   },
   "음료": {
     text: `**🥤 음료 정보**
 
-목마를 땐 뭘 마실지 고민되면 나한테 물어봐!
-
 **☕ 커피**
-- **아메리카노**: 에스프레소 + 물. 칼로리 거의 없음
-- **카페라떼**: 에스프레소 + 우유
-- **콜드브루**: 찬물 12시간 추출. 부드러움
-- 카페인: 아메리카노 1잔 약 150mg
+- 아메리카노: 5kcal, 카페인 150mg
+- 카페라떼: 120kcal
+- 콜드브루: 부드러운 맛
 
 **🍵 차**
-- **녹차**: 항산화 효과, 카테킨 풍부
-- **홍차**: 완전 발효차
-- **허브차**: 캐모마일(숙면), 페퍼민트(소화)
-
-**🥤 탄산**
-- **콜라**: 카페인 35mg/캔
-- **사이다**: 카페인 없음
-- **탄산수**: 0칼로리
+- 녹차: 항산화, 카테킨
+- 홍차: 완전 발효
+- 허브차: 캐모마일(숙면)
 
 **음료별 칼로리 (1잔)**
 | 음료 | 칼로리 | 카페인 |
@@ -559,11 +434,9 @@ MDN(Mozilla Developer Network)은 웹 개발자의 성경이야! 🌐
 | 사이다 | 130 | 0 |
 | 녹차 | 2 | 30mg |
 
-더 자세한 정보가 필요하면 말해줘 ${userName}! 🥤`,
-    sources: [
-      { title: "식품의약품안전처", url: "https://www.foodsafetykorea.go.kr" }
-    ],
-    keywords: ['음료', '커피', '차', '녹차', '홍차', '콜라', '사이다', '주스', '물', '마실', '라떼', '아메리카노'],
+더 궁금한 거 있으면 물어봐 ${userName}! 🥤`,
+    sources: [{ title: "식품의약품안전처", url: "https://www.foodsafetykorea.go.kr" }],
+    keywords: ['음료', '커피', '차', '녹차', '홍차', '콜라', '사이다', '주스', '물', '라떼', '아메리카노'],
     tags: ['일상', '건강', '식품'],
     needsReasoning: false,
     hasTable: true
@@ -571,18 +444,13 @@ MDN(Mozilla Developer Network)은 웹 개발자의 성경이야! 🌐
   "표그래프": {
     text: `**📊 표/그래프 요청 감지**
 
-표나 그래프가 필요하구나! 내가 알고 있는 데이터로 표를 만들어줄 수 있어.
+표를 보여줄 수 있는 주제:
+- 영화 흥행 순위
+- 또봇 캐릭터 비교
+- 음료별 칼로리 비교
+- 프로그래밍 언어 비교
 
-**표를 보여줄 수 있는 주제**
-- 🎬 영화 흥행 순위
-- 🚗 또봇 캐릭터 비교
-- 🥤 음료별 칼로리 비교
-- 💻 프로그래밍 언어 비교
-
-**사용 방법**
-"음료 표 보여줘", "또봇 비교 표", "프로그래밍 언어 표" 라고 물어봐!
-
-더 많은 표를 보고 싶으면 말해줘 ${userName}! 📊`,
+"음료 표 보여줘" 라고 물어봐! 📊`,
     sources: [],
     keywords: ['표', '그래프', '차트', '테이블', '보여줘', '시각화', '비교', '통계'],
     tags: ['기능'],
@@ -592,30 +460,17 @@ MDN(Mozilla Developer Network)은 웹 개발자의 성경이야! 🌐
 };
 
 const replies = {
-  greeting: [
-    `안녕 ${userName}! 😊 뭐 도와줄까?`,
-    `ㅎㅇ ${userName}! 질문 있어?`,
-    `반가워 ${userName}. 오늘은 어떤 이야기를 나눠볼까?`
-  ],
-  thanks: [`ㅇㅋ ${userName}. 더 궁금한 거 있어?`, `별거 아냐 ${userName}.`, `ㄱㅅ ${userName}.`],
-  nameSet: [`알았어 ${userName}!`, `ㅇㅋ ${userName}로 기억했어.`, `좋아 ${userName}.`],
-  reasoning: [
-    `${userName}, 데이터 깊게 파는 중이야.`,
-    `1차 탐색 실패. 2차 추론 들어간다 ${userName}.`,
-    `좀 더 찾아볼게 ${userName}.`,
-    `거의 다 왔어 ${userName}.`,
-    `마지막이야 ${userName}. 5차 추론!`
-  ],
-  failed: [
-    `${userName}, 5차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘! 💪`,
-    `미안 ${userName}. 이건 내 지식베이스에 없어.`
-  ],
+  greeting: [`안녕 ${userName}! 😊 뭐 도와줄까?`, `ㅎㅇ ${userName}!`, `반가워 ${userName}.`],
+  thanks: [`ㅇㅋ ${userName}.`, `별거 아냐.`, `ㄱㅅ.`],
+  nameSet: [`알았어 ${userName}!`, `ㅇㅋ ${userName}로 기억.`, `좋아 ${userName}.`],
+  reasoning: [`데이터 파는 중...`, `1차 실패. 2차 추론.`, `좀 더 찾을게.`, `거의 다 왔어.`, `5차 추론!`],
+  failed: [`${userName}, 5차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘!`, `미안. 지식베이스에 없어.`],
   blocked: [
-    `Chat K Plus는 그 질문에 답변하기 어려워, ${userName}. 😊\n\n대신 이런 주제는 어때?\n✨ 자신 있게 답할 수 있는 분야\n🔬 과학·물리·화학·우주\n💻 프로그래밍·코딩·웹개발\n📚 공부법·영어·학습전략\n💪 건강·운동·수면·영양\n🎬 한국영화·감독·배우\n🙏 종교·철학·역사\n🥤 음료·커피·차\n🚗 또봇·도라에몽·포켓몬\n\n다른 궁금한 건 없을까? 내가 도와줄게! 🌟`,
-    `${userName}, 그 주제는 Chat K Plus 정책상 다루기 어려워.\n\n내가 특히 잘 아는 것들:\n📖 역사 팩트체크 (5.18 광주민주화운동 등)\n💙 감정 상담과 위로\n🧦 일상 꿀팁 (양말 관리 등)\n📱 아이폰 트러블슈팅\n\n이 중에 관심 있는 주제 있어? 😊`,
-    `${userName}, 미안하지만 그 질문은 답변이 어려워.\n\n지금 바로 물어볼 수 있는 인기 질문:\n"과학이 뭐야?"\n"공부 잘하는 법 알려줘"\n"또봇 정보 알려줘"\n"아이폰 터치 안 될 때 해결법"\n"음료별 칼로리 비교"\n\n무엇부터 알아볼까? 😄`
+    `Chat K Plus는 그 질문에 답변하기 어려워, ${userName}. 😊\n\n✨ 자신 있게 답할 수 있는 분야\n🔬 과학·물리·화학·우주\n💻 프로그래밍·코딩·웹개발\n📚 공부법·영어·학습전략\n💪 건강·운동·수면·영양\n🎬 한국영화·감독·배우\n🙏 종교·철학·역사\n🥤 음료·커피·차\n🚗 또봇·도라에몽·포켓몬\n\n다른 궁금한 건 없을까? 😄`,
+    `${userName}, 그 주제는 Chat K Plus 정책상 다루기 어려워.\n\n내가 특히 잘 아는 것들:\n📖 역사 팩트체크\n💙 감정 상담과 위로\n🧦 일상 꿀팁\n📱 아이폰 트러블슈팅\n\n관심 있는 주제 있어?`,
+    `${userName}, 미안하지만 그 질문은 답변이 어려워.\n\n인기 질문:\n"과학이 뭐야?"\n"공부 잘하는 법"\n"또봇 정보 알려줘"\n"음료별 칼로리 비교"\n\n무엇부터 알아볼까?`
   ],
-  stopped: [`⏸️ 답변이 중단되었어 ${userName}. 다른 질문 있으면 말해줘!`, `${userName}, 답변 생성 중단됐어.`]
+  stopped: [`⏸️ 중단됐어 ${userName}.`, `${userName}, 답변 중단.`]
 };
 
 function updateWelcomeTitle() { if (welcomeTitle) welcomeTitle.textContent = `${userName}, ${MODEL_NAME} 켜졌다`; }
@@ -630,9 +485,9 @@ function stopStreaming(showMessage = true) {
   if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
   activeReasoning.forEach(({ timer }) => clearInterval(timer)); activeReasoning.clear();
   const typingEl = chatList ? chatList.querySelector('.msg.ai.typing') : null; if (typingEl) typingEl.remove();
-  if (currentMsgElement) { const bubble = currentMsgElement.querySelector('.bubble,.msg-text'); if (bubble && !bubble.textContent.includes('[중단됨]')) bubble.textContent += '\n\n[⏸️ 중단됨]'; }
+  if (currentMsgElement) { const bubble = currentMsgElement.querySelector('.msg-text'); if (bubble && !bubble.textContent.includes('[중단됨]')) bubble.textContent += '\n\n[⏸️ 중단됨]'; }
   currentMsgElement = null; setAnsweringState(false);
-  if (showMessage && chatList) { const sm = replies.stopped[Math.floor(Math.random()*replies.stopped.length)]; const m = document.createElement('div'); m.className = 'msg ai'; m.innerHTML = `<div class="avatar">C</div><div class="bubble">${sm.replaceAll('${userName}',userName)}</div>`; chatList.appendChild(m); scrollToBottom(); }
+  if (showMessage && chatList) { const sm = replies.stopped[Math.floor(Math.random()*replies.stopped.length)]; const m = document.createElement('div'); m.className = 'msg ai'; m.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="msg-text">${sm.replaceAll('${userName}',userName)}</div></div>`; chatList.appendChild(m); scrollToBottom(); }
   autoResize();
 }
 
@@ -646,7 +501,7 @@ function searchKnowledge(text) {
   if (['오줌','소변','쉬','화장실','뇨','방광','배뇨'].some(k=>nt.includes(k))) { const dk = ['남성','여성','트랜스젠더','남아','여아']; const fk = dk.find(k=>nt.includes(k)); if (fk) return { data: knowledgeBase["오줌"], confidence:1.0, direct:true, subKey:fk }; return { data: knowledgeBase["오줌"], confidence:1.0, direct:false, useSummary:true }; }
   if (nt.includes('아이폰')||nt.includes('iphone')) return { data: knowledgeBase["아이폰"], confidence:1.0, direct:true };
   if (nt.includes('mdn')||nt.includes('모질라')||nt.includes('개발자문서')||nt.includes('웹문서')||nt.includes('레퍼런스')) return { data: knowledgeBase["MDN"], confidence:1.0, direct:true };
-  const drinkK = ['음료','커피','차','녹차','홍차','콜라','사이다','주스','물','마실','드링크','라떼','아메리카노','에스프레소','카페','탄산','보리차','허브차'];
+  const drinkK = ['음료','커피','차','녹차','홍차','콜라','사이다','주스','물','마실','라떼','아메리카노','에스프레소','카페','탄산','보리차','허브차'];
   if (drinkK.some(k=>nt.includes(k))) return { data: knowledgeBase["음료"], confidence:1.0, direct:true };
   const relK = ['종교','기독교','불교','이슬람','힌두교','유교','하나님','예수','부처','석가','성경','교회','기도','성당','절','코란','쿠란','공자','천주교','개신교','정교회','윤회','사서삼경','논어','맹자','대학','중용','시경','서경','주역','그리스도','jesus','christ','메시아','이콘','성화상','삼사라','환생'];
   if (relK.some(k=>nt.includes(k))) {
@@ -702,7 +557,26 @@ function addMessage(text,type,msgId){if(!chatList)return;const m=document.create
 
 function streamTextWithSources(text,sources,type,msgId,isBlocked=false){if(!chatList)return;if(currentStreamInterval){clearInterval(currentStreamInterval);currentStreamInterval=null;}const m=document.createElement('div');m.className=`msg ${type} ${isBlocked?'blocked':''}`;m.dataset.msgId=msgId;m.innerHTML=`<div class="avatar">C</div><div class="bubble"><div class="msg-text"></div>${sources&&sources.length?'<div class="sources"></div>':''}</div>`;chatList.appendChild(m);currentMsgElement=m;const bubble=m.querySelector('.msg-text'),sourcesEl=m.querySelector('.sources');let i=0;currentStreamInterval=setInterval(()=>{if(!isAnswering){clearInterval(currentStreamInterval);currentStreamInterval=null;currentMsgElement=null;return;}if(bubble)bubble.textContent+=text[i];i++;scrollToBottom();if(i>=text.length){clearInterval(currentStreamInterval);currentStreamInterval=null;currentMsgElement=null;if(sources&&sources.length&&sourcesEl)sourcesEl.innerHTML='<div class="sources-title">출처</div>'+sources.map(s=>`<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');setAnsweringState(false);}},4);}
 
-function streamText(text,type,msgId,isBlocked=false){if(!chatList)return;if(currentStreamInterval){clearInterval(currentStreamInterval);currentStreamInterval=null;}const m=document.createElement('div');m.className=`msg ${type} ${isBlocked?'blocked':''}`;m.dataset.msgId=msgId;m.innerHTML=`<div class="avatar">C</div><div class="bubble"></div>`;chatList.appendChild(m);currentMsgElement=m;const bubble=m.querySelector('.bubble');let i=0;currentStreamInterval=setInterval(()=>{if(!isAnswering){clearInterval(currentStreamInterval);currentStreamInterval=null;currentMsgElement=null;return;}if(bubble)bubble.textContent+=text[i];i++;scrollToBottom();if(i>=text.length){clearInterval(currentStreamInterval);currentStreamInterval=null;currentMsgElement=null;setAnsweringState(false);}},5);}
+// ===== 수정된 streamText (차단 메시지용 .msg-text 포함) =====
+function streamText(text, type, msgId, isBlocked = false) {
+  if (!chatList) return;
+  if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
+  const msg = document.createElement('div');
+  msg.className = `msg ${type} ${isBlocked ? 'blocked' : ''}`;
+  msg.dataset.msgId = msgId;
+  // .msg-text 요소 포함
+  msg.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="msg-text"></div></div>`;
+  chatList.appendChild(msg);
+  currentMsgElement = msg;
+
+  const bubble = msg.querySelector('.msg-text');
+  let i = 0;
+  currentStreamInterval = setInterval(() => {
+    if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; }
+    if (bubble) bubble.textContent += text[i]; i++; scrollToBottom();
+    if (i >= text.length) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; setAnsweringState(false); }
+  }, 5);
+}
 
 function addTyping(msgId,attempt){if(!chatList)return null;const m=document.createElement('div');m.className='msg ai typing';m.dataset.msgId=msgId;m.innerHTML=`<div class="avatar">C</div><div class="bubble"><div class="loading-wrap"><div class="loading-text">데이터 파고드는 중...</div><div class="loading-bar"></div><div class="loading-time">최대 15초 소요</div></div></div>`;chatList.appendChild(m);scrollToBottom();return m;}
 function autoResize(){if(!userInput)return;userInput.style.height='auto';userInput.style.height=userInput.scrollHeight+'px';if(sendBtn){if(userInput.value.trim()&&!isAnswering)sendBtn.classList.add('has-text');else sendBtn.classList.remove('has-text');}}
