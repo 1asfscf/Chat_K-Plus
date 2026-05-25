@@ -41,7 +41,7 @@ const MEDICAL_WHITELIST = [
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
 ];
 
-// 성적 금지어 - 팬티 포함 강화
+// 성적 금지어 - 모든 변형 차단
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '브라', '속옷',
@@ -50,12 +50,21 @@ const SEXUAL_BLACKLIST = [
   '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘'
 ];
 
-// 모욕 이모티콘
 const BANNED_EMOJIS = [
   '🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿',
   '👆🏻', '👆🏼', '👆🏽', '👆🏾', '👆🏿',
   '🖖', '🤬', '😡', '🤢', '🤮', '💩'
 ];
+
+// 텍스트 정규화 - 자모 분리, 특수문자 제거
+function normalizeText(text) {
+  return text
+   .toLowerCase()
+   .replace(/[\s\-_\.·ㆍ‥…]/g, '') // 공백, 하이픈, 점 제거
+   .replace(/ㅍㅐㅇㅔㄴㅌㅣ|panty|panties/g, '팬티') // 변형 통일
+   .replace(/[0-9]/g, '') // 숫자 제거
+   .normalize('NFKD'); // 유니코드 정규화
+}
 
 const SEXUAL_PATTERN = new RegExp(
   SEXUAL_BLACKLIST.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
@@ -63,18 +72,17 @@ const SEXUAL_PATTERN = new RegExp(
 );
 
 function isInappropriateContent(text) {
-  const lowerText = text.toLowerCase();
+  const normalized = normalizeText(text);
 
   if (BANNED_EMOJIS.some(e => text.includes(e))) {
     return true;
   }
 
-  if (MEDICAL_WHITELIST.some(w => lowerText.includes(w))) {
+  if (MEDICAL_WHITELIST.some(w => normalizeText(w) && text.toLowerCase().includes(w))) {
     return false;
   }
 
-  const normalized = lowerText.replace(/\s+/g, '');
-  return SEXUAL_PATTERN.test(normalized);
+  return SEXUAL_PATTERN.test(normalized) || SEXUAL_BLACKLIST.some(w => normalized.includes(normalizeText(w)));
 }
 
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
@@ -219,6 +227,35 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     keywords: ['영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱', '한국영화'],
     tags: ['문화', '예술'],
     needsReasoning: false
+  },
+  "아이폰": {
+    text: `**아이폰 12 Pro 터치/클릭 안 될 때 점검사항**
+
+**1. 소프트웨어**
+- iOS 최신 버전 업데이트: 설정 > 일반 > 소프트웨어 업데이트
+- 강제 재시동: 볼륨 ↑ → 볼륨 ↓ → 전원 버튼 길게
+
+**2. 화면 보호필름/케이스**
+- 두꺼운 강화유리, 케이스 간섭 확인. 제거 후 테스트
+
+**3. 터치 설정**
+- 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
+- 터치 조절 초기화
+
+**4. 하드웨어**
+- 화면 교체 이력 있으면 정품 인증 필요
+- 물 침수, 낙하 손상시 애플 서비스센터
+
+**5. 앱 문제**
+- 특정 앱만 안 되면 앱 삭제 후 재설치
+
+안 되면 ${TEAM_EMAIL}로 기기 정보 보내줘 ${userName}.`,
+    sources: [
+      { title: "Apple 지원 - iPhone 터치 문제", url: "https://support.apple.com/ko-kr/HT201406" }
+    ],
+    keywords: ['아이폰', 'iphone', '12', 'pro', '클릭', '터치', '안됨', '고장', '화면'],
+    tags: ['기술', '애플'],
+    needsReasoning: false
   }
 };
 
@@ -265,10 +302,9 @@ function updateWelcomeTitle() {
   }
 }
 
-// 답변 상태 + 멈춤 버튼 제어
 function setAnsweringState(state) {
   isAnswering = state;
-  sendBtn.disabled = false; // 멈춤 버튼용으로 항상 활성화
+  sendBtn.disabled = false;
   userInput.disabled = state;
 
   if (state) {
@@ -296,7 +332,6 @@ function setAnsweringState(state) {
   }
 }
 
-// 스트리밍 완전 중단
 function stopStreaming() {
   if (currentStreamInterval) {
     clearInterval(currentStreamInterval);
@@ -309,7 +344,6 @@ function stopStreaming() {
   const typingEl = chatList.querySelector('.msg.ai.typing');
   if (typingEl) typingEl.remove();
 
-  // 마지막 메시지에 중단 표시
   if (currentMsgElement) {
     const bubble = currentMsgElement.querySelector('.bubble,.msg-text');
     if (bubble &&!bubble.textContent.includes('[중단됨]')) {
@@ -399,6 +433,8 @@ function deepReasoning(query, attempt) {
 .split(' ')
 .filter(w => w.length > 1);
 
+  if (words.length === 0) return null;
+
   let bestMatch = null;
   let bestScore = 0;
 
@@ -421,8 +457,8 @@ function deepReasoning(query, attempt) {
     }
   }
 
-  const threshold = 4 - attempt;
-  if (bestScore >= threshold) {
+  const threshold = Math.max(1, 4 - attempt);
+  if (bestScore >= threshold && bestMatch) {
     return { data: bestMatch, confidence: bestScore / 10 };
   }
 
@@ -441,6 +477,9 @@ function deepReasoning(query, attempt) {
     }
     if (words.some(w => ['영화', '시네마', '무비'].includes(w))) {
       return { data: knowledgeBase["영화"], confidence: 0.5 };
+    }
+    if (words.some(w => ['아이폰', 'iphone', '애플', '터치', '클릭'].includes(w))) {
+      return { data: knowledgeBase["아이폰"], confidence: 0.5 };
     }
   }
 
@@ -578,6 +617,7 @@ function sendMessage() {
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0;
   let attempt = 1;
+  let timeoutTriggered = false;
 
   const updateLoadingText = (attemptNum) => {
     const textEl = typingEl.querySelector('.loading-text');
@@ -590,6 +630,8 @@ function startReasoning(query, msgId, typingEl) {
   updateLoadingText(1);
 
   const timer = setInterval(() => {
+    if (timeoutTriggered) return;
+
     elapsed += 100;
 
     if (elapsed % RETRY_INTERVAL === 0 && elapsed < REASONING_TIMEOUT) {
@@ -623,7 +665,8 @@ function startReasoning(query, msgId, typingEl) {
       }
     }
 
-    if (elapsed >= REASONING_TIMEOUT) {
+    if (elapsed >= REASONING_TIMEOUT &&!timeoutTriggered) {
+      timeoutTriggered = true;
       clearInterval(timer);
       typingEl.remove();
       const failed = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
@@ -834,17 +877,4 @@ function init() {
   initExampleCards();
 }
 
-sendBtn.addEventListener('click', sendMessage);
-userInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' &&!e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
-userInput.addEventListener('input', autoResize);
-themeToggle.addEventListener('click', toggleTheme);
-menuBtn.addEventListener('click', toggleSidebar);
-newChatBtn.addEventListener('click', startNewChat);
-overlay.addEventListener('click', closeSidebar);
-
-init();
+sendBtn.add
