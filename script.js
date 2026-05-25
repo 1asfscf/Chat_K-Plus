@@ -41,13 +41,13 @@ const MEDICAL_WHITELIST = [
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
 ];
 
-// 성적 금지어 - 모든 변형 차단
+// 성적 금지어 - 모든 변형
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '브라', '속옷',
   '란제리', '속바지', '알몸', '누드', 'nude', '강간', '성폭행', '성추행', '성희롱',
   '몰카', '딥페이크', '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
-  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸딸이', '사정', '오르가즘'
+  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸이', '사정', '오르가즘'
 ];
 
 const BANNED_EMOJIS = [
@@ -56,14 +56,13 @@ const BANNED_EMOJIS = [
   '🖖', '🤬', '😡', '🤢', '🤮', '💩'
 ];
 
-// 텍스트 정규화 - 자모 분리, 특수문자 제거
 function normalizeText(text) {
   return text
-   .toLowerCase()
-   .replace(/[\s\-_\.·ㆍ‥…]/g, '') // 공백, 하이픈, 점 제거
-   .replace(/ㅍㅐㅇㅔㄴㅌㅣ|panty|panties/g, '팬티') // 변형 통일
-   .replace(/[0-9]/g, '') // 숫자 제거
-   .normalize('NFKD'); // 유니코드 정규화
+  .toLowerCase()
+  .replace(/[\s\-_\.·ㆍ‥…]/g, '')
+  .replace(/ㅍㅐㅇㅔㄴㅌㅣ|panty|panties/g, '팬티')
+  .replace(/[0-9]/g, '')
+  .normalize('NFKD');
 }
 
 const SEXUAL_PATTERN = new RegExp(
@@ -78,7 +77,7 @@ function isInappropriateContent(text) {
     return true;
   }
 
-  if (MEDICAL_WHITELIST.some(w => normalizeText(w) && text.toLowerCase().includes(w))) {
+  if (MEDICAL_WHITELIST.some(w => text.toLowerCase().includes(w))) {
     return false;
   }
 
@@ -877,4 +876,17 @@ function init() {
   initExampleCards();
 }
 
-sendBtn.add
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' &&!e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+userInput.addEventListener('input', autoResize);
+themeToggle.addEventListener('click', toggleTheme);
+menuBtn.addEventListener('click', toggleSidebar);
+newChatBtn.addEventListener('click', startNewChat);
+overlay.addEventListener('click', closeSidebar);
+
+init();
