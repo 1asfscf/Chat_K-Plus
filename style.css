@@ -730,3 +730,30 @@ body.light .msg.ai.blocked .bubble {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-dim);
 }
+/* ===== 채팅 영역 레이아웃 수정 ===== */
+.chat-wrap {
+  position: relative;
+}
+
+.welcome-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.welcome-screen.hidden {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+.chat-list {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+.chat-list.has-messages {
+  display: block;
+}
