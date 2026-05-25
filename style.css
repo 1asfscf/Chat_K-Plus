@@ -208,7 +208,7 @@ body {
   color: var(--text); font-size: 16px; line-height: 1.75;
 }
 
-/* ===== 차단 메시지 ===== */
+/* 차단 메시지 */
 .msg.ai.blocked {
   border-bottom: 1px solid rgba(255, 59, 48, 0.15);
   padding: 24px 0;
@@ -229,7 +229,6 @@ body.light .msg.ai.blocked .bubble {
   border-color: rgba(215, 0, 21, 0.2);
 }
 
-/* 차단 헤더 */
 .msg.ai.blocked .bubble::before {
   content: '🚫 Chat K Plus 안내';
   display: block;
@@ -240,13 +239,11 @@ body.light .msg.ai.blocked .bubble {
   letter-spacing: 0; text-transform: none; opacity: 1;
 }
 
-/* 차단 아이콘 */
 .msg.ai.blocked .bubble::after {
   content: '💬'; position: absolute;
   left: 18px; top: 20px; font-size: 22px;
 }
 
-/* 차단 내용 텍스트 */
 .msg.ai.blocked .msg-text {
   white-space: pre-wrap !important;
   word-wrap: break-word !important;
@@ -254,7 +251,7 @@ body.light .msg.ai.blocked .bubble {
   font-size: 15px; line-height: 1.8;
 }
 
-/* ===== 마크다운 ===== */
+/* 마크다운 */
 .msg.ai .bubble h1, .msg.ai .bubble h2, .msg.ai .bubble h3 {
   margin: 24px 0 12px; font-weight: 700; line-height: 1.3;
 }
@@ -311,7 +308,7 @@ body.light .msg.ai.blocked .bubble {
 }
 .loading-time { font-size: 12px; color: var(--text-muted); }
 
-/* Input Area */
+/* Input Area - 데스크톱 */
 .input-area {
   padding: 12px 20px 16px; background: transparent;
   border-top: none; padding-bottom: calc(16px + env(safe-area-inset-bottom)); flex-shrink: 0;
@@ -353,43 +350,134 @@ body.light .msg.ai.blocked .bubble {
 }
 .sidebar-overlay.active { display: block; opacity: 1; pointer-events: auto; }
 
-/* ===== Mobile ===== */
+/* ==============================================
+   MOBILE - 대대적인 손질 (헤더/입력창 확대)
+   ============================================== */
 @media (max-width: 768px) {
-  .sidebar { position: fixed; left: 0; top: 0; height: 100%; transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .menu-btn { display: flex; }
-  .header-center h1 { font-size: 14px; }
-  .example-grid { grid-template-columns: 1fr; }
-  
-  .msg.user .bubble { max-width: 85%; font-size: 14px; padding: 10px 14px; }
-  .msg.ai .bubble, .typing.msg.ai .bubble { padding: 0 16px; font-size: 15px; }
-  .msg.ai .msg-text { font-size: 15px; }
-  
-  /* 차단 메시지 모바일 */
-  .msg.ai.blocked .bubble {
-    padding: 16px 14px 16px 44px; margin: 0 8px;
-    font-size: 14px; max-width: calc(100% - 16px);
+  .sidebar {
+    position: fixed; left: 0; top: 0; height: 100%;
+    transform: translateX(-100%);
   }
-  .msg.ai.blocked .bubble::before { font-size: 13px; }
-  .msg.ai.blocked .bubble::after { left: 14px; top: 16px; font-size: 20px; }
-  .msg.ai.blocked .msg-text { font-size: 13px; line-height: 1.6; }
+  .sidebar.open { transform: translateX(0); }
+
+  /* 헤더 키우기 */
+  .chat-header {
+    height: 64px;
+    padding: 0 16px;
+  }
+  .header-center h1 {
+    font-size: 17px;
+  }
+  .menu-btn {
+    display: flex;
+    width: 40px; height: 40px;
+    font-size: 20px;
+  }
+  .theme-toggle {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  /* 웰컴 스크린 조정 */
+  .welcome-screen {
+    inset: 64px 0 0 0;
+    padding: 24px 16px;
+  }
+  .welcome-logo {
+    font-size: 52px;
+  }
+  .welcome-title {
+    font-size: 24px;
+  }
+  .welcome-sub {
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+  .example-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .example-card {
+    padding: 16px;
+  }
+  .example-card .icon {
+    font-size: 24px;
+  }
+  .example-card .title {
+    font-size: 14px;
+  }
+  .example-card .desc {
+    font-size: 12px;
+  }
+
+  /* 메시지 영역 */
+  .msg.user .bubble {
+    max-width: 85%;
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+  .msg.ai .bubble,
+  .typing.msg.ai .bubble {
+    padding: 0 16px;
+    font-size: 16px;
+  }
+  .msg.ai .msg-text {
+    font-size: 16px;
+  }
+
+  /* 차단 메시지 */
+  .msg.ai.blocked .bubble {
+    padding: 18px 14px 18px 48px;
+    margin: 0 8px;
+    font-size: 15px;
+    max-width: calc(100% - 16px);
+  }
+  .msg.ai.blocked .bubble::before { font-size: 14px; }
+  .msg.ai.blocked .bubble::after {
+    left: 16px; top: 18px;
+    font-size: 22px;
+  }
+  .msg.ai.blocked .msg-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* 로딩 */
+  .loading-text { font-size: 14px; }
+  .loading-bar { height: 3px; }
+
+  /* ===== 입력창 대폭 확대 ===== */
+  .input-area {
+    padding: 10px 16px 14px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+  .input-wrapper {
+    border-radius: 28px;
+    padding: 4px 4px 4px 18px;
+  }
+  #userInput {
+    font-size: 16px;        /* iOS에서 16px 미만이면 확대되므로 16px로 고정 */
+    padding: 10px 0;
+    max-height: 150px;
+  }
+  #userInput::placeholder {
+    font-size: 16px;
+  }
+  #sendBtn {
+    width: 40px; height: 40px;
+  }
+  #sendBtn svg {
+    width: 20px; height: 20px;
+  }
   
-  .loading-text { font-size: 13px; }
-  .loading-bar { height: 2.5px; }
-  .welcome-title { font-size: 22px; }
-  
-  .input-area { padding: 8px 12px 12px; }
-  .input-wrapper { border-radius: 20px; padding: 2px 3px 2px 14px; }
-  #userInput { font-size: 14px; padding: 6px 0; }
-  #sendBtn { width: 32px; height: 32px; }
-  #sendBtn svg { width: 16px; height: 16px; }
-  
-  .welcome-screen { inset: 56px 0 0 0; padding: 20px 16px; }
-  .welcome-logo { font-size: 48px; }
-  .msg.ai { padding: 20px 0; }
+  .msg.ai {
+    padding: 24px 0;
+  }
 }
 
-@media (min-width: 769px) { .menu-btn { display: none; } }
+@media (min-width: 769px) {
+  .menu-btn { display: none; }
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
