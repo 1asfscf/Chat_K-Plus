@@ -35,14 +35,12 @@ const RETRY_INTERVAL = 5000;
 const MAX_RETRY_ATTEMPTS = 3;
 const activeReasoning = new Map();
 
-// 의학 화이트리스트
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
   '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
 ];
 
-// 성적 금지어
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '브라', '속옷',
@@ -73,9 +71,8 @@ const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
 const KEYWORD_ALIASES = { '여야': '여아', '남자': '남성', '여자': '여성', '트젠': '트랜스젠더', '아이': '남아', '어린이': '남아' };
 
-// ===== 확장된 지식베이스 =====
+// ===== 지식베이스 =====
 const knowledgeBase = {
-  // 기존 지식
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
 
@@ -147,28 +144,22 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     },
     sources: [
       { title: "대한비뇨의학회 소변 건강 가이드", url: "https://www.urology.or.kr" },
-      { title: "서울아산병원 건강정보", url: "https://www.amc.seoul.kr" },
-      { title: "국가건강정보포털", url: "https://health.kdca.go.kr" }
+      { title: "서울아산병원 건강정보", url: "https://www.amc.seoul.kr" }
     ],
     keywords: ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '신장', '혈뇨', '배뇨', '남자', '여자', '트젠', '트랜스젠더', '가이드', '건강', '남성', '여성', '남아', '여아'],
     tags: ['의학', '건강'],
     needsReasoning: true
   },
   "영화": {
-    text: `**한국 영화 지식 - ${MODEL_NAME}**
+    text: `**한국 영화 지식**
 
-**대표작 예시**
-**1. 기생충 (2019)** - 봉준호 감독. 칸 황금종려상, 아카데미 작품상. 계급 갈등 블랙코미디.
-**2. 올드보이 (2003)** - 박찬욱 감독. 칸 심사위원대상. 복수 3부작.
-**3. 부산행 (2016)** - 연상호 감독. K-좀비 세계화. 좀비 아포칼립스 + 부성애.
-**4. 헤어질 결심 (2022)** - 박찬욱 감독. 칸 감독상. 멜로 + 수사극.
-
-**트렌드**: 넷플릭스 <오징어 게임> 이후 K-콘텐츠 글로벌 확장. OTT 제작비 상승으로 극장/OTT 동시개봉 증가.
-
-더 구체적인 감독, 배우, 장르 물어봐 ${userName}.`,
+**대표작**
+**1. 기생충 (2019)** - 봉준호 감독. 칸 황금종려상, 아카데미 작품상.
+**2. 올드보이 (2003)** - 박찬욱 감독. 칸 심사위원대상.
+**3. 부산행 (2016)** - 연상호 감독. K-좀비 세계화.
+**4. 헤어질 결심 (2022)** - 박찬욱 감독. 칸 감독상.`,
     sources: [
-      { title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" },
-      { title: "영화진흥위원회 KOFIC", url: "https://www.kofic.or.kr" }
+      { title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" }
     ],
     keywords: ['영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱', '한국영화'],
     tags: ['문화', '예술'],
@@ -177,153 +168,131 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
   "아이폰": {
     text: `**아이폰 12 Pro 터치/클릭 안 될 때 점검사항**
 
-**1. 소프트웨어** - iOS 최신 업데이트, 강제 재시동 (볼륨↑ → 볼륨↓ → 전원 길게)
-**2. 화면 보호필름/케이스** - 두꺼운 강화유리, 케이스 간섭 확인 후 제거 테스트
-**3. 터치 설정** - 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
-**4. 하드웨어** - 화면 교체 이력 있으면 정품 인증 필요. 물 침수, 낙하 손상시 서비스센터
-**5. 앱 문제** - 특정 앱만 안 되면 앱 삭제 후 재설치
+**1. 소프트웨어**
+- iOS 최신 버전 업데이트: 설정 > 일반 > 소프트웨어 업데이트
+- 강제 재시동: 볼륨 ↑ → 볼륨 ↓ → 전원 버튼 길게
+
+**2. 화면 보호필름/케이스**
+- 두꺼운 강화유리, 케이스 간섭 확인. 제거 후 테스트
+
+**3. 터치 설정**
+- 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
+- 터치 조절 초기화
+
+**4. 하드웨어**
+- 화면 교체 이력 있으면 정품 인증 필요
+- 물 침수, 낙하 손상시 애플 서비스센터
+
+**5. 앱 문제**
+- 특정 앱만 안 되면 앱 삭제 후 재설치
 
 안 되면 ${TEAM_EMAIL}로 기기 정보 보내줘 ${userName}.`,
     sources: [{ title: "Apple 지원 - iPhone 터치 문제", url: "https://support.apple.com/ko-kr/HT201406" }],
-    keywords: ['아이폰', 'iphone', '12', 'pro', '클릭', '터치', '안됨', '고장', '화면'],
+    keywords: ['아이폰', 'iphone', '12', 'pro', '클릭', '터치', '안됨', '고장', '화면', 'ios', '애플'],
     tags: ['기술', '애플'],
     needsReasoning: false
   },
-
-  // ===== 추가된 지식 =====
   "또봇": {
-    text: `**🚗 또봇 (Tobot) 완벽 정보**
+    text: `**🚗 또봇 (Tobot) 정보**
 
-또봇은 대한민국의 대표적인 변신 자동차 로봇 애니메이션이야! 2010년 첫 방영 이후 지금까지 사랑받는 스테디셀러 콘텐츠야.
+또봇은 대한민국 대표 변신 자동차 로봇 애니메이션이야!
 
 **주요 또봇**
-**또봇 X (파랑)** - 파일럿: 차하나 (첫째). 리더, 검술 특화. 성우: 박태성. 첫 등장: 시즌 1
-**또봇 Y (노랑)** - 파일럿: 차두리 (둘째). 스피드 특화, 귀여움. 성우: 신경선. 첫 등장: 시즌 1
-**또봇 Z (초록)** - 파일럿: 권세모 (막내/디룩). 힘 특화, 에이스. 성우: 신경선. 첫 등장: 시즌 2
-**또봇 W (하양)** - 파일럿: 세모. 비행 능력 보유. 첫 등장: 시즌 3
-**또봇 C (빨강)** - 파일럿: 독고오공. 소방차 변신. 첫 등장: 시즌 4
-**또봇 D (주황)** - 파일럿: 독고온달. 불도저 변신. 첫 등장: 시즌 4
+- **또봇 X (파랑)** - 파일럿: 차하나. 리더, 검술 특화. 성우: 박태성
+- **또봇 Y (노랑)** - 파일럿: 차두리. 스피드 특화. 성우: 신경선
+- **또봇 Z (초록)** - 파일럿: 권세모(디룩). 힘 특화. 성우: 신경선
+- **또봇 W (하양)** - 파일럿: 세모. 비행 능력
+- **또봇 C (빨강)** - 파일럿: 독고오공. 소방차
+- **또봇 D (주황)** - 파일럿: 독고온달. 불도저
 
-📺 **공식 채널**: 유튜브 @Tobot, tobot.co.kr
-📱 **OTT**: 티빙, 웨이브, 넷플릭스 일부 시즌`,
+📺 공식 유튜브 @Tobot | tobot.co.kr`,
     sources: [
-      { title: "또봇 공식 유튜브", url: "https://www.youtube.com/@Tobot" },
-      { title: "또봇 공식 홈페이지", url: "https://tobot.co.kr" }
+      { title: "또봇 공식 유튜브", url: "https://www.youtube.com/@Tobot" }
     ],
-    keywords: ['또봇', 'tobot', '변신', '자동차', '로봇', '차하나', '차두리', '권세모', 'X', 'Y', 'Z', '파랑', '노랑', '초록'],
+    keywords: ['또봇', 'tobot', '변신', '자동차', '로봇', '차하나', '차두리', '권세모'],
     tags: ['애니메이션', '한국'],
     needsReasoning: false
   },
   "도라에몽": {
-    text: `**🔔 도라에몽 (ドラえもん)**
+    text: `**🔔 도라에몽**
 
-1969년 후지코 F. 후지오가 만든 일본 국민 만화/애니메이션이야.
+1969년 후지코 F. 후지오 작품. 22세기 고양이 로봇.
 
-**기본 정보**
-- 장르: SF, 코미디, 어드벤처
-- 첫 연재: 1969년
-- 애니메이션: 1973년 첫 방영
+**캐릭터**: 도라에몽, 노진구, 신이슬, 왕비실, 만퉁퉁
+**비밀도구**: 어디로든 문, 대나무 헬리콥터, 타임머신, 4차원 주머니
 
-**주요 캐릭터**
-- 도라에몽: 22세기에서 온 고양이형 로봇
-- 노진구 (노비타): 운동도 공부도 못하지만 착한 마음
-- 신이슬 (시즈카): 똑똑하고 상냥한 여자친구
-- 왕비실 (스네오): 부잣집 아들
-- 만퉁퉁 (자이언): 힘세고 노래 못 부르는 골목대장
-
-**인기 비밀도구**: 어디로든 문, 대나무 헬리콥터, 타임머신, 4차원 주머니
-
-📺 **시청**: 넷플릭스, 티빙, 대원방송`,
-    sources: [{ title: "도라에몽 공식 - TV 아사히", url: "https://www.tv-asahi.co.jp/doraemon/" }],
-    keywords: ['도라에몽', 'doraemon', '진구', '노비타', '이슬이', '퉁퉁이', '비실이', '고양이', '로봇', '비밀도구'],
+📺 넷플릭스, 티빙에서 시청 가능`,
+    sources: [],
+    keywords: ['도라에몽', 'doraemon', '진구', '비밀도구', '고양이', '로봇'],
     tags: ['애니메이션', '일본'],
     needsReasoning: false
   },
   "포켓몬": {
-    text: `**⚡ 포켓몬스터 (Pokémon)**
+    text: `**⚡ 포켓몬스터**
 
-전 세계에서 가장 인기 있는 애니메이션 중 하나야!
+1997년 첫 방영. 전 세계 인기 애니메이션.
+주인공: 한지우, 파트너: 피카츄
 
-**기본 정보**
-- 첫 방영: 1997년 (일본)
-- 주인공: 한지우 (사토시)
-- 파트너: 피카츄
-
-**시리즈 구성**: 무인편(1997) → AG → DP → BW → XY → SM → W(여행) → 현재(2023)
-
-**게임**: 닌텐도 스위치 (소드/실드, 스칼렛/바이올렛), 모바일 (Pokémon GO, Pokémon UNITE)`,
-    sources: [{ title: "포켓몬 공식 사이트", url: "https://www.pokemon.co.jp" }],
-    keywords: ['포켓몬', 'pokemon', '피카츄', 'pikachu', '포켓몬스터', '한지우'],
+**게임**: 닌텐도 스위치 (스칼렛/바이올렛), 모바일 (Pokémon GO)`,
+    sources: [],
+    keywords: ['포켓몬', 'pokemon', '피카츄', 'pikachu'],
     tags: ['애니메이션', '게임'],
     needsReasoning: false
   },
   "감정위로": {
     text: `**💙 감정과 위로**
 
-모든 감정은 자연스러운 반응이야. 억누르기보다 이해하는 게 중요해.
+모든 감정은 자연스러운 반응이야.
 
-**기본 감정 6가지**
-- 😊 기쁨 - 좋은 일이 생겼을 때
-- 😢 슬픔 - 무언가를 잃었을 때
-- 😤 분노 - 부당함을 느낄 때
-- 😰 두려움 - 위험을 감지했을 때
-- 😲 놀람 - 예상치 못한 일에
-- 🤢 혐오 - 싫은 것을 마주했을 때
+**기본 감정**: 기쁨, 슬픔, 분노, 두려움, 놀람, 혐오
 
-**힘들 땐 이렇게 해봐**
-1. 깊은 호흡 (4초 들이마시고, 4초 참고, 4초 내쉬기)
-2. 운동하기 (엔도르핀 분비로 기분 개선)
-3. 친구와 대화하기
-4. 취미 활동 즐기기
+**힘들 땐**: 깊은 호흡, 운동하기, 친구와 대화, 취미 활동
 
 항상 혼자가 아니야 ${userName}. 필요하면 언제든 말해줘. 💙`,
     sources: [],
-    keywords: ['힘들어', '슬퍼', '외로워', '불안', '화나', '위로', '우울', '고민', '스트레스', '감정', '짜증', '눈물'],
+    keywords: ['힘들어', '슬퍼', '외로워', '불안', '화나', '위로', '우울', '고민', '스트레스', '감정', '짜증'],
     tags: ['감정', '건강'],
     needsReasoning: false
   },
   "공부법": {
-    text: `**📚 과학적으로 검증된 공부법**
+    text: `**📚 과학적 공부법**
 
-**1. 능동적 회상** - 책 덮고 기억나는 대로 써보기
-**2. 간격 반복** - 1일, 3일, 7일 후 복습
-**3. 파인만 테크닉** - 남에게 설명하듯 정리
-**4. 뽀모도로** - 25분 집중, 5분 휴식
+1. 능동적 회상 - 책 덮고 기억나는 대로 쓰기
+2. 간격 반복 - 1일, 3일, 7일 후 복습
+3. 파인만 테크닉 - 남에게 설명하듯 정리
+4. 뽀모도로 - 25분 집중, 5분 휴식
 
-**영어 공부법**
-- 매일 10분 영어 듣기 (유튜브, 팟캐스트)
-- 쉐도잉: 원어민 발음 따라하기
-- 영어 일기 쓰기
+**영어**: 매일 10분 듣기, 쉐도잉, 영어 일기
 
 꾸준함이 가장 중요해 ${userName}!`,
     sources: [],
     keywords: ['공부', '공부법', '학습', '영어', '수학', '암기', '시험', '집중'],
-    tags: ['교육', '건강'],
+    tags: ['교육'],
     needsReasoning: false
   },
   "과학": {
-    text: `**🔬 과학 정보**
+    text: `**🔬 과학**
 
-과학은 실험과 관찰을 통해 세상의 원리를 알아내는 활동이야.
+과학은 실험과 관찰로 세상의 원리를 알아내는 활동이야.
 
-**물리학** - 우주의 기본 원리 연구. 중력, 전기, 양자역학
-**화학** - 물질의 구성과 변화 연구. 물이 얼음 되는 것, 음식이 익는 것 모두 화학 반응
-**생물학** - 살아있는 모든 것 연구. 세포, DNA, 진화
+**물리학** - 중력, 전기, 양자역학
+**화학** - 물질의 구성과 변화
+**생물학** - 세포, DNA, 진화
 **우주** - 태양계, 블랙홀, 은하
 
 호기심에서 시작하는 모든 질문이 과학의 시작이야 ${userName}!`,
     sources: [],
-    keywords: ['과학', '물리', '화학', '생물', '중력', '우주', 'DNA', '블랙홀', '원자'],
+    keywords: ['과학', '물리', '화학', '생물', '중력', '우주', 'DNA', '블랙홀'],
     tags: ['교육', '과학'],
     needsReasoning: false
   },
   "기술": {
-    text: `**💻 기술/컴퓨터 정보**
+    text: `**💻 기술/컴퓨터**
 
-**컴퓨터 기초** - CPU(두뇌), RAM(작업공간), SSD(저장공간)
-**인터넷** - 1969년 ARPANET으로 시작. WiFi는 무선 연결 기술
-**프로그래밍** - Python(초보자 추천), JavaScript(웹), Java(기업용), C++(게임)
-**AI** - 인공지능. 머신러닝, 딥러닝. ChatGPT, 자율주행, 의료 진단에 활용
+**컴퓨터** - CPU(두뇌), RAM(작업공간), SSD(저장공간)
+**인터넷** - 1969년 ARPANET 시작
+**프로그래밍** - Python(초보 추천), JavaScript, Java, C++
+**AI** - 인공지능, 머신러닝, 딥러닝
 
 Chat K Plus도 AI 기술로 만들어졌어!`,
     sources: [],
@@ -332,13 +301,13 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
     needsReasoning: false
   },
   "건강": {
-    text: `**💪 건강 정보**
+    text: `**💪 건강**
 
-**운동** - WHO 권장: 주 150분 중강도 운동. 하루 30분 걷기부터 시작
-**수면** - 성인 7~9시간 권장. 자기 전 스마트폰 멀리하기. 카페인 오후 2시 이후 금지
-**영양** - 탄수화물 45-65%, 단백질 10-35%, 지방 20-35%. 하루 물 2L 이상
+**운동** - 주 150분 중강도 운동. 하루 30분 걷기부터
+**수면** - 성인 7~9시간. 자기 전 스마트폰 멀리
+**영양** - 탄수화물 45-65%, 단백질 10-35%, 하루 물 2L
 
-작은 습관부터 꾸준히 실천하는 게 중요해 ${userName}!`,
+작은 습관부터 시작해 ${userName}!`,
     sources: [],
     keywords: ['운동', '건강', '다이어트', '수면', '영양', '식단', '헬스'],
     tags: ['건강'],
@@ -359,34 +328,27 @@ const replies = {
   ],
   nameSet: [
     `알았어 ${userName}. 이제 그렇게 부를게.`,
-    `ㅇㅋ ${userName}로 기억했다. 뭐부터 할까?`,
+    `ㅇㅋ ${userName}로 기억했다.`,
     `좋아 ${userName}. 편하게 말해.`
   ],
   reasoning: [
-    `${userName}, 데이터 깊게 파는 중이야. 잠깐만.`,
+    `${userName}, 데이터 깊게 파는 중이야.`,
     `1차 탐색 실패 ${userName}. 2차 추론 들어간다.`,
-    `좀 더 찾아볼게 ${userName}. 15초 안에 결론 낸다.`
+    `좀 더 찾아볼게 ${userName}.`
   ],
   failed: [
-    `${userName}, 15초 동안 다 뒤져봤는데 데이터 없어.`,
-    `미안 ${userName}. 이건 내 지식베이스에 없어.`,
-    `${userName}, 관련 정보 못 찾았어.`
-  ],
-  feedback: [
-    `${userName}, 해당 정보가 없어. 더 정확한 정보가 필요하면 ${TEAM_EMAIL}로 피드백 보내줘. 스튜디오 페라리 팀이 검토할게.`,
-    `미안 ${userName}. 그 항목은 데이터에 없어. 개선 요청은 ${TEAM_EMAIL}로 보내주면 반영할게.`
+    `${userName}, 데이터가 없어. 더 정확한 정보가 필요하면 ${TEAM_EMAIL}로 피드백 보내줘.`,
+    `미안 ${userName}. 이건 내 지식베이스에 없어.`
   ],
   blocked: [
     `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
-    `부적절한 내용이야 ${userName}. 정책상 답변 불가해.`,
+    `부적절한 내용이야 ${userName}.`,
     `미안 ${userName}. 그 주제는 지원하지 않아.`
   ]
 };
 
 function updateWelcomeTitle() {
-  if (welcomeTitle) {
-    welcomeTitle.textContent = `${userName}, ${MODEL_NAME} 켜졌다`;
-  }
+  if (welcomeTitle) welcomeTitle.textContent = `${userName}, ${MODEL_NAME} 켜졌다`;
 }
 
 function setAnsweringState(state) {
@@ -397,14 +359,10 @@ function setAnsweringState(state) {
   if (state) {
     sendBtn.innerHTML = `<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
     sendBtn.style.background = 'var(--danger)';
-    sendBtn.style.opacity = '1';
-    sendBtn.style.cursor = 'pointer';
-    userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
+    userInput.placeholder = '답변 생성 중...';
   } else {
     sendBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
     sendBtn.style.background = '';
-    sendBtn.style.opacity = '1';
-    sendBtn.style.cursor = 'pointer';
     userInput.placeholder = '메시지 입력...';
   }
 }
@@ -432,31 +390,33 @@ function normalizeKeyword(text) {
   return normalized;
 }
 
-function determineOutputStyle(query, data) {
-  const lowerQuery = query.toLowerCase();
-  if (/뭐야|뭔데|알려줘|설명/.test(lowerQuery) && !data.subKey) return 'summary';
-  if (data.subKey) return 'detail';
-  if (/가이드|방법|팁|주의/.test(lowerQuery)) return 'guide';
-  return 'summary';
-}
-
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
   const normalizedText = normalizeKeyword(lowerText);
 
+  // 인사 패턴
   if (greetingPatterns.test(lowerText)) return { type: 'greeting' };
+  
+  // KRL 질문
   if (krlPattern.test(lowerText)) return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
 
+  // 오줌 키워드 특별 처리
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
   if (urineKeywords.some(k => normalizedText.includes(k))) {
     const detailKeys = ['남성', '여성', '트랜스젠더', '남아', '여아'];
     const foundKey = detailKeys.find(k => normalizedText.includes(k));
     if (foundKey) return { data: knowledgeBase["오줌"], confidence: 1.0, direct: true, subKey: foundKey };
-    else return { data: knowledgeBase["오줌"], confidence: 1.0, direct: false, useSummary: true };
+    return { data: knowledgeBase["오줌"], confidence: 1.0, direct: false, useSummary: true };
   }
 
+  // 아이폰 키워드 특별 처리 (Pro, 12 등 포함)
+  if (normalizedText.includes('아이폰') || normalizedText.includes('iphone')) {
+    return { data: knowledgeBase["아이폰"], confidence: 1.0, direct: true };
+  }
+
+  // 일반 키워드 매칭
   for (const [key, data] of Object.entries(knowledgeBase)) {
-    if (data.keywords.some(k => normalizedText.includes(k))) {
+    if (data.keywords && data.keywords.some(k => normalizedText.includes(k))) {
       return { data, confidence: 1.0, direct: !data.needsReasoning };
     }
   }
@@ -471,6 +431,7 @@ function deepReasoning(query, attempt) {
   let bestScore = 0;
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
+    if (!data.keywords) continue;
     let score = 0;
     data.keywords.forEach(k => {
       words.forEach(w => {
@@ -478,48 +439,28 @@ function deepReasoning(query, attempt) {
         if (k === w) score += 3;
       });
     });
-    data.tags.forEach(t => {
-      words.forEach(w => { if (t.includes(w) || w.includes(t)) score += 1; });
-    });
+    if (data.tags) {
+      data.tags.forEach(t => {
+        words.forEach(w => { if (t.includes(w) || w.includes(t)) score += 1; });
+      });
+    }
     if (score > bestScore) { bestScore = score; bestMatch = data; }
   }
 
   const threshold = Math.max(1, 4 - attempt);
   if (bestScore >= threshold && bestMatch) return { data: bestMatch, confidence: bestScore / 10 };
 
-  // 광범위 키워드 매칭
-  if (attempt >= 2) {
-    const broadMatches = [
-      { words: ['광주', '5월', '전두환', '계엄'], data: knowledgeBase["5.18"] },
-      { words: ['모델', '스파크', '정보', '페라리', '사양', '스펙'], data: knowledgeBase["사양"] },
-      { words: ['krl', '케이알엘', '엔진', '추론'], data: knowledgeBase["KRL"] },
-      { words: ['오줌', '소변', '쉬', '화장실', '뇨'], data: knowledgeBase["오줌"] },
-      { words: ['영화', '시네마', '무비', '감독', '배우'], data: knowledgeBase["영화"] },
-      { words: ['아이폰', 'iphone', '애플', '터치', '클릭'], data: knowledgeBase["아이폰"] },
-      { words: ['또봇', 'tobot', '변신', '자동차', '로봇'], data: knowledgeBase["또봇"] },
-      { words: ['도라에몽', 'doraemon', '진구', '비밀도구', '고양이'], data: knowledgeBase["도라에몽"] },
-      { words: ['포켓몬', 'pokemon', '피카츄'], data: knowledgeBase["포켓몬"] },
-      { words: ['힘들어', '슬퍼', '외로워', '불안', '위로', '우울', '고민', '스트레스', '감정', '짜증'], data: knowledgeBase["감정위로"] },
-      { words: ['공부', '공부법', '학습', '영어', '수학', '암기', '시험'], data: knowledgeBase["공부법"] },
-      { words: ['과학', '물리', '화학', '생물', '중력', '우주', 'DNA', '블랙홀'], data: knowledgeBase["과학"] },
-      { words: ['컴퓨터', '코딩', '프로그래밍', '인터넷', 'AI', '파이썬', 'python'], data: knowledgeBase["기술"] },
-      { words: ['운동', '건강', '다이어트', '수면', '영양', '식단'], data: knowledgeBase["건강"] }
-    ];
-    for (const bm of broadMatches) {
-      if (words.some(w => bm.words.includes(w))) return { data: bm.data, confidence: 0.5 };
-    }
-  }
-
   return null;
 }
 
-// ===== 클릭 이벤트 수정 =====
+// ===== 메시지 전송 (수정: 무조건 응답 보장) =====
 function sendMessage() {
   if (isAnswering) { stopStreaming(); return; }
 
   const text = userInput.value.trim();
   if (!text) return;
 
+  // 부적절 콘텐츠 체크
   if (isInappropriateContent(text)) {
     if (welcomeScreen) welcomeScreen.classList.add('hidden');
     closeSidebar();
@@ -543,6 +484,7 @@ function sendMessage() {
   sendBtn.classList.remove('has-text');
   setAnsweringState(true);
 
+  // 이름 설정 패턴
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
@@ -559,14 +501,17 @@ function sendMessage() {
 
   const typingEl = addTyping(msgId, 0);
 
+  // 정체성 질문
   if (identityPatterns.test(text)) {
     setTimeout(() => { typingEl.remove(); streamText(MODEL_IDENTITY.desc, 'ai', msgId, false); }, 400);
     return;
   }
 
+  // 지식 검색
   const kb1 = searchKnowledge(text);
 
   if (kb1) {
+    // 인사
     if (kb1.type === 'greeting') {
       setTimeout(() => {
         typingEl.remove();
@@ -576,47 +521,32 @@ function sendMessage() {
       return;
     }
 
+    // 요약 사용
     if (kb1.useSummary) {
       setTimeout(() => { typingEl.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false); }, 500);
       return;
     }
 
+    // 세부 키
     if (kb1.subKey && kb1.data.details) {
       const detailText = kb1.data.details[kb1.subKey];
       if (detailText) {
         setTimeout(() => { typingEl.remove(); streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false); }, 500);
         return;
-      } else {
-        setTimeout(() => {
-          typingEl.remove();
-          const feedback = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
-          streamText(feedback.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-        }, 500);
-        return;
       }
     }
 
-    if (isInappropriateContent(kb1.data.text)) {
+    // 직접 응답
+    if (kb1.direct && kb1.data.text) {
       setTimeout(() => {
         typingEl.remove();
-        const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
-        streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
-      }, 400);
-      return;
-    }
-
-    if (kb1.direct) {
-      setTimeout(() => {
-        typingEl.remove();
-        const style = determineOutputStyle(text, kb1.data);
-        let outputText = kb1.data.text;
-        if (style === 'summary' && kb1.data.summary) outputText = kb1.data.summary;
-        streamTextWithSources(outputText, kb1.data.sources, 'ai', msgId, false);
+        streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false);
       }, 500);
       return;
     }
   }
 
+  // 추론 시작 (찾은 게 없을 때만)
   startReasoning(text, msgId, typingEl);
 }
 
@@ -642,7 +572,7 @@ function startReasoning(query, msgId, typingEl) {
         timeoutTriggered = true;
         clearInterval(timer);
         typingEl.remove();
-        const failed = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
+        const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
         streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
         activeReasoning.delete(msgId);
         return;
@@ -651,18 +581,8 @@ function startReasoning(query, msgId, typingEl) {
       updateLoadingText(attempt);
       const result = deepReasoning(query, attempt);
       if (result && result.confidence >= 0.3) {
-        if (isInappropriateContent(result.data.text)) {
-          clearInterval(timer); typingEl.remove();
-          const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
-          streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true);
-          activeReasoning.delete(msgId);
-          return;
-        }
         clearInterval(timer); typingEl.remove();
-        const style = determineOutputStyle(query, result.data);
-        let outputText = result.data.text;
-        if ((style === 'summary' || result.useSummary) && result.data.summary) outputText = result.data.summary;
-        streamTextWithSources(outputText, result.data.sources, 'ai', msgId, false);
+        streamTextWithSources(result.data.text, result.data.sources || [], 'ai', msgId, false);
         activeReasoning.delete(msgId);
         return;
       }
@@ -672,7 +592,7 @@ function startReasoning(query, msgId, typingEl) {
       timeoutTriggered = true;
       clearInterval(timer);
       typingEl.remove();
-      const failed = replies.feedback[Math.floor(Math.random() * replies.feedback.length)];
+      const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
       streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
       activeReasoning.delete(msgId);
     }
@@ -695,7 +615,7 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked ? 'blocked' : ''}`;
   msg.dataset.msgId = msgId;
-  msg.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="msg-text"></div>${sources.length ? '<div class="sources"></div>' : ''}</div>`;
+  msg.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="msg-text"></div>${sources && sources.length ? '<div class="sources"></div>' : ''}</div>`;
   chatList.appendChild(msg);
   currentMsgElement = msg;
 
@@ -708,7 +628,7 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
     bubble.textContent += text[i]; i++; scrollToBottom();
     if (i >= text.length) {
       clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null;
-      if (sources.length && sourcesEl) {
+      if (sources && sources.length && sourcesEl) {
         sourcesEl.innerHTML = '<div class="sources-title">출처</div>' + sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
       }
       setAnsweringState(false);
@@ -778,72 +698,51 @@ function startNewChat() {
   closeSidebar();
 }
 
-// ===== 이벤트 리스너 (클릭 문제 해결) =====
+// ===== 초기화 =====
 function init() {
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light');
     themeToggle.querySelector('.icon').textContent = '☀️';
     themeToggle.querySelector('.text').textContent = '라이트';
   }
-
   updateWelcomeTitle();
+  if (chatList.children.length === 0 && welcomeScreen) welcomeScreen.classList.remove('hidden');
 
-  if (chatList.children.length === 0 && welcomeScreen) {
-    welcomeScreen.classList.remove('hidden');
-  }
+  // 전송 버튼
+  sendBtn.addEventListener('click', (e) => { e.preventDefault(); sendMessage(); });
 
-  // 전송 버튼 클릭
-  sendBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    sendMessage();
-  });
-
-  // 엔터키 전송
+  // 엔터키
   userInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
 
   // 입력 감지
   userInput.addEventListener('input', autoResize);
 
-  // 테마 토글
+  // 테마
   themeToggle.addEventListener('click', toggleTheme);
 
-  // 메뉴 버튼
+  // 메뉴
   menuBtn.addEventListener('click', toggleSidebar);
 
   // 새 채팅
   if (newChatBtn) newChatBtn.addEventListener('click', startNewChat);
 
-  // 오버레이 클릭
+  // 오버레이
   overlay.addEventListener('click', closeSidebar);
-
-  // 중단 버튼 (답변 생성 중 클릭)
-  sendBtn.addEventListener('click', (e) => {
-    if (isAnswering) {
-      e.preventDefault();
-      stopStreaming();
-    }
-  });
 }
 
-// 예시 카드 클릭
 function initExampleCards() {
   document.querySelectorAll('.example-card').forEach(card => {
     card.addEventListener('click', () => {
       if (isAnswering) return;
-      const prompt = card.dataset.prompt;
-      userInput.value = prompt;
+      userInput.value = card.dataset.prompt;
       autoResize();
       sendMessage();
     });
   });
 }
 
-// ===== 실행 =====
 document.addEventListener('DOMContentLoaded', () => {
   init();
   initExampleCards();
