@@ -31,21 +31,22 @@ let currentStreamInterval = null;
 let currentMsgElement = null;
 
 const REASONING_TIMEOUT = 15000;
-const RETRY_INTERVAL = 5000;
-const MAX_RETRY_ATTEMPTS = 3;
+const RETRY_INTERVAL = 4000;
+const MAX_RETRY_ATTEMPTS = 4;
 const activeReasoning = new Map();
 
 // 의학 화이트리스트
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
-  '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT', '양말', '삭스', 'socks', '발'
+  '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT', '양말', '삭스', 'socks', '발',
+  '하나님', '예수', '성경', '교회', '기도', '천주교', '불교', '부처', '종교'
 ];
 
-// 성적 금지어 - 모든 변형 강화
+// 성적 금지어
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
-  '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '팬티', '팬티',
+  '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties',
   '페앤티', '페엔티', '패ㄴ티', '팬ㅌㅣ', 'p4nty', 'p@nty', 'pantie', 'pant y',
   '브라', '속옷', '란제리', '속바지', '알몸', '누드', 'nude', '강간', '성폭행',
   '성추행', '성희롱', '몰카', '딥페이크', '페티시', 'sm', 'bdsm', '야한', '에로',
@@ -112,7 +113,7 @@ const knowledgeBase = {
 **엔진**: Muse Spark + KRL(Knowledge Reasoning Layer)
 **제작**: 스튜디오 페라리
 **데이터**: 2025-09-04 컷오프
-**특징**: 이름 기억, 출처 인용, 15초 추론, 콘텐츠 필터, 건강 가이드, 영화 정보, 애니메이션/게임 정보
+**특징**: 이름 기억, 출처 인용, 15초 추론, 콘텐츠 필터, 건강 가이드, 영화 정보, 애니메이션/게임 정보, 개발 지식, 종교 정보
 
 **한계**: 실시간 정보, 이미지 생성 미지원`,
     sources: [],
@@ -125,7 +126,7 @@ const knowledgeBase = {
 
 KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_NAME}의 핵심 추론 엔진이야.
 
-**역할**: 한국어 맥락 이해, 지식 그래프 연결, 팩트 검증, 추론 재시도 3회
+**역할**: 한국어 맥락 이해, 지식 그래프 연결, 팩트 검증, 추론 재시도 4회
 
 **특징**: 단순 생성형이 아니라 검증 기반. 출처 있는 데이터만 우선 출력한다.`,
     sources: [{ title: "스튜디오 페라리 KRL 백서", url: "https://studio-ferrari.ai/krl" }],
@@ -174,22 +175,11 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
   "아이폰": {
     text: `**아이폰 12 Pro 터치/클릭 안 될 때 점검사항**
 
-**1. 소프트웨어**
-- iOS 최신 버전 업데이트: 설정 > 일반 > 소프트웨어 업데이트
-- 강제 재시동: 볼륨 ↑ → 볼륨 ↓ → 전원 버튼 길게
-
-**2. 화면 보호필름/케이스**
-- 두꺼운 강화유리, 케이스 간섭 확인. 제거 후 테스트
-
-**3. 터치 설정**
-- 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
-
-**4. 하드웨어**
-- 화면 교체 이력 있으면 정품 인증 필요
-- 물 침수, 낙하 손상시 애플 서비스센터
-
-**5. 앱 문제**
-- 특정 앱만 안 되면 앱 삭제 후 재설치
+**1. 소프트웨어** - iOS 최신 업데이트, 강제 재시동 (볼륨↑ → 볼륨↓ → 전원 길게)
+**2. 화면 보호필름/케이스** - 두꺼운 강화유리, 케이스 간섭 확인 후 제거 테스트
+**3. 터치 설정** - 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
+**4. 하드웨어** - 화면 교체 이력 있으면 정품 인증 필요
+**5. 앱 문제** - 특정 앱만 안 되면 앱 삭제 후 재설치
 
 안 되면 ${TEAM_EMAIL}로 기기 정보 보내줘 ${userName}.`,
     sources: [{ title: "Apple 지원 - iPhone 터치 문제", url: "https://support.apple.com/ko-kr/HT201406" }],
@@ -203,14 +193,14 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
 또봇은 대한민국 대표 변신 자동차 로봇 애니메이션이야!
 
 **주요 또봇**
-- **또봇 X (파랑)** - 파일럿: 차하나. 리더, 검술 특화. 성우: 박태성
-- **또봇 Y (노랑)** - 파일럿: 차두리. 스피드 특화. 성우: 신경선
-- **또봇 Z (초록)** - 파일럿: 권세모(디룩). 힘 특화. 성우: 신경선
-- **또봇 W (하양)** - 파일럿: 세모. 비행 능력
+- **또봇 X (파랑)** - 파일럿: 차하나. 리더. 성우: 박태성
+- **또봇 Y (노랑)** - 파일럿: 차두리. 스피드. 성우: 신경선
+- **또봇 Z (초록)** - 파일럿: 권세모. 힘. 성우: 신경선
+- **또봇 W (하양)** - 파일럿: 세모. 비행
 - **또봇 C (빨강)** - 파일럿: 독고오공. 소방차
 - **또봇 D (주황)** - 파일럿: 독고온달. 불도저
 
-📺 공식 유튜브 @Tobot | tobot.co.kr`,
+📺 유튜브 @Tobot | tobot.co.kr`,
     sources: [{ title: "또봇 공식 유튜브", url: "https://www.youtube.com/@Tobot" }],
     keywords: ['또봇', 'tobot', '변신', '자동차', '로봇', '차하나', '차두리', '권세모'],
     tags: ['애니메이션', '한국'],
@@ -220,11 +210,9 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     text: `**🔔 도라에몽**
 
 1969년 후지코 F. 후지오 작품. 22세기 고양이 로봇.
-
 **캐릭터**: 도라에몽, 노진구, 신이슬, 왕비실, 만퉁퉁
 **비밀도구**: 어디로든 문, 대나무 헬리콥터, 타임머신, 4차원 주머니
-
-📺 넷플릭스, 티빙에서 시청 가능`,
+📺 넷플릭스, 티빙 시청 가능`,
     sources: [],
     keywords: ['도라에몽', 'doraemon', '진구', '비밀도구', '고양이', '로봇'],
     tags: ['애니메이션', '일본'],
@@ -235,8 +223,7 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
 
 1997년 첫 방영. 전 세계 인기 애니메이션.
 주인공: 한지우, 파트너: 피카츄
-
-**게임**: 닌텐도 스위치 (스칼렛/바이올렛), 모바일 (Pokémon GO)`,
+**게임**: 닌텐도 스위치 (스칼렛/바이올렛), 모바일 Pokémon GO`,
     sources: [],
     keywords: ['포켓몬', 'pokemon', '피카츄', 'pikachu'],
     tags: ['애니메이션', '게임'],
@@ -246,9 +233,7 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     text: `**💙 감정과 위로**
 
 모든 감정은 자연스러운 반응이야.
-
 **기본 감정**: 기쁨, 슬픔, 분노, 두려움, 놀람, 혐오
-
 **힘들 땐**: 깊은 호흡, 운동하기, 친구와 대화, 취미 활동
 
 항상 혼자가 아니야 ${userName}. 필요하면 언제든 말해줘. 💙`,
@@ -266,7 +251,6 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
 4. 뽀모도로 - 25분 집중, 5분 휴식
 
 **영어**: 매일 10분 듣기, 쉐도잉, 영어 일기
-
 꾸준함이 가장 중요해 ${userName}!`,
     sources: [],
     keywords: ['공부', '공부법', '학습', '영어', '수학', '암기', '시험', '집중'],
@@ -277,7 +261,6 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
     text: `**🔬 과학**
 
 과학은 실험과 관찰로 세상의 원리를 알아내는 활동이야.
-
 **물리학** - 중력, 전기, 양자역학
 **화학** - 물질의 구성과 변화
 **생물학** - 세포, DNA, 진화
@@ -322,15 +305,15 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
 양말은 발을 보호하고 보온하는 필수 의류야.
 
 **종류**
-- **스니커즈 삭스**: 발목까지 오는 짧은 양말. 운동화에 착용
-- **크루 삭스**: 종아리 중간까지 오는 양말. 캐주얼에 적합
-- **니삭스**: 무릎 아래까지 오는 긴 양말. 겨울철 보온용
+- **스니커즈 삭스**: 발목까지 오는 짧은 양말
+- **크루 삭스**: 종아리 중간까지
+- **니삭스**: 무릎 아래까지. 겨울철 보온용
 - **드레스 삭스**: 정장용 얇은 양말
 
 **소재별 특징**
-- **면**: 통기성 좋고 일상용으로 적합
+- **면**: 통기성 좋고 일상용
 - **울**: 보온성 우수. 겨울용
-- **나일론/폴리에스터**: 내구성 좋고 빨리 마름
+- **나일론/폴리에스터**: 내구성 좋음
 - **스판덱스 혼방**: 신축성 좋음
 
 **관리 팁**
@@ -342,6 +325,80 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
     sources: [],
     keywords: ['양말', '삭스', 'socks', '발', '보온', '니삭스', '스니커즈'],
     tags: ['일상', '패션'],
+    needsReasoning: false
+  },
+  "개발": {
+    text: `**💻 개발자 정보**
+
+**프로그래밍 언어**
+- **Python**: 데이터 분석, AI, 웹 개발. 초보자에게 가장 추천
+- **JavaScript**: 웹 프론트엔드/백엔드(Node.js). 가장 널리 쓰임
+- **TypeScript**: JavaScript + 타입 안정성. 대규모 프로젝트에 적합
+- **Java**: 기업용 백엔드, 안드로이드 개발
+- **C++**: 게임 엔진, 시스템 프로그래밍, 고성능 필요할 때
+
+**웹 개발**
+- **프론트엔드**: HTML, CSS, JavaScript + React/Vue/Svelte
+- **백엔드**: Node.js, Python(Django/Flask), Java(Spring)
+- **풀스택**: 프론트 + 백엔드 모두 다루는 개발자
+
+**깃허브(GitHub)**
+- 코드 저장 및 버전 관리 플랫폼
+- `git push`, `git pull`, `git commit` 기본 명령어
+- 오픈소스 기여로 포트폴리오 구축 가능
+
+**CSS 깨짐 해결 팁**
+- 브라우저 개발자 도구(F12)로 스타일 확인
+- `display: flex` 대신 `grid` 시도
+- `box-sizing: border-box` 적용 여부 체크
+- 미디어 쿼리 충돌 확인
+
+더 궁금한 언어나 기술 있으면 물어봐 ${userName}.`,
+    sources: [
+      { title: "GitHub 공식 문서", url: "https://docs.github.com" },
+      { title: "MDN Web Docs", url: "https://developer.mozilla.org" }
+    ],
+    keywords: ['개발', '프로그래밍', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node', '타입스크립트', '풀스택', '프론트엔드', '백엔드', '버그', '디버깅'],
+    tags: ['기술', '개발'],
+    needsReasoning: false
+  },
+  "종교": {
+    text: `**🙏 주요 종교 정보**
+
+Chat K Plus는 모든 종교를 존중해. 특정 종교를 강요하지 않고 객관적 정보만 제공할게.
+
+**기독교**
+- **핵심 경전**: 성경 (구약 + 신약)
+- **주요 인물**: 예수 그리스도, 사도 바울, 마리아
+- **핵심 교리**: 삼위일체(성부, 성자, 성령), 부활, 구원
+- **주요 기념일**: 부활절, 성탄절(크리스마스)
+- **교파**: 천주교(가톨릭), 개신교(장로교, 감리교, 침례교 등), 정교회
+
+**불교**
+- **핵심 경전**: 팔만대장경, 법화경, 반야심경
+- **주요 인물**: 석가모니(고타마 싯다르타), 달라이 라마, 원효대사
+- **핵심 교리**: 사성제, 팔정도, 업과 윤회, 해탈과 열반
+- **주요 기념일**: 부처님 오신 날, 열반절
+
+**이슬람교**
+- **핵심 경전**: 쿠란(Quran)
+- **주요 인물**: 무함마드(마호메트)
+- **핵심 교리**: 알라(유일신), 다섯 기둥(신앙고백, 기도, 단식, 희사, 순례)
+
+**힌두교**
+- **핵심 경전**: 베다, 우파니샤드
+- **주요 신**: 브라흐마, 비슈누, 시바
+- **핵심 교리**: 법(다르마), 업, 윤회, 해탈(목샤)
+
+**유교**
+- **핵심 경전**: 사서삼경(논어, 맹자, 대학, 중용, 시경, 서경, 주역)
+- **주요 인물**: 공자, 맹자
+- **핵심 교리**: 인(仁), 의(義), 예(禮), 충(忠), 효(孝)
+
+질문이 있으면 편하게 물어봐 ${userName}.`,
+    sources: [],
+    keywords: ['종교', '기독교', '불교', '이슬람', '힌두교', '유교', '하나님', '예수', '부처', '석가', '성경', '교회', '기도', '성당', '절', '코란', '쿠란', '공자', '천주교', '개신교'],
+    tags: ['종교', '문화'],
     needsReasoning: false
   }
 };
@@ -365,16 +422,17 @@ const replies = {
   reasoning: [
     `${userName}, 데이터 깊게 파는 중이야.`,
     `1차 탐색 실패 ${userName}. 2차 추론 들어간다.`,
-    `좀 더 찾아볼게 ${userName}.`
+    `좀 더 찾아볼게 ${userName}.`,
+    `3차 추론 중 ${userName}. 거의 다 왔어.`
   ],
   failed: [
     `${userName}, 데이터가 없어. 더 정확한 정보가 필요하면 ${TEAM_EMAIL}로 피드백 보내줘.`,
     `미안 ${userName}. 이건 내 지식베이스에 없어.`
   ],
   blocked: [
-    `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
-    `부적절한 내용이야 ${userName}.`,
-    `미안 ${userName}. 그 주제는 지원하지 않아.`
+    `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐. 정책 위반 내용이 감지됐고, Chat K Plus는 모든 사용자에게 안전한 경험을 제공하려고 노력하고 있어. 부적절한 내용 대신 궁금한 지식이나 정보를 물어봐 주면 최선을 다해 답변할게.`,
+    `부적절한 내용이 감지됐어 ${userName}. Chat K Plus는 건전한 대화를 지향해. 다른 주제로 대화를 이어가자. 과학, 기술, 건강, 역사 등 다양한 분야의 질문은 언제든 환영이야.`,
+    `미안 ${userName}. Chat K Plus 정책상 그 주제는 지원하지 않아. 대신 다른 궁금한 점이 있다면 기꺼이 도와줄게.`
   ],
   stopped: [
     `⏸️ 답변이 중단되었어 ${userName}. 다른 질문이 있으면 말해줘.`,
@@ -405,20 +463,14 @@ function stopStreaming(showMessage = true) {
   if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
-
   const typingEl = chatList.querySelector('.msg.ai.typing');
   if (typingEl) typingEl.remove();
-
   if (currentMsgElement) {
     const bubble = currentMsgElement.querySelector('.bubble,.msg-text');
-    if (bubble && !bubble.textContent.includes('[중단됨]')) {
-      bubble.textContent += '\n\n[⏸️ 중단됨]';
-    }
+    if (bubble && !bubble.textContent.includes('[중단됨]')) bubble.textContent += '\n\n[⏸️ 중단됨]';
   }
-
   currentMsgElement = null;
   setAnsweringState(false);
-
   if (showMessage) {
     const stoppedMsg = replies.stopped[Math.floor(Math.random() * replies.stopped.length)];
     const msg = document.createElement('div');
@@ -427,7 +479,6 @@ function stopStreaming(showMessage = true) {
     chatList.appendChild(msg);
     scrollToBottom();
   }
-
   autoResize();
 }
 
@@ -456,6 +507,18 @@ function searchKnowledge(text) {
 
   if (normalizedText.includes('아이폰') || normalizedText.includes('iphone')) {
     return { data: knowledgeBase["아이폰"], confidence: 1.0, direct: true };
+  }
+
+  // 종교 키워드 특별 처리
+  const religionKeywords = ['종교', '기독교', '불교', '이슬람', '힌두교', '유교', '하나님', '예수', '부처', '석가', '성경', '교회', '기도', '성당', '절', '코란', '쿠란', '공자', '천주교', '개신교'];
+  if (religionKeywords.some(k => normalizedText.includes(k))) {
+    return { data: knowledgeBase["종교"], confidence: 1.0, direct: true };
+  }
+
+  // 개발 키워드 특별 처리
+  const devKeywords = ['개발', '프로그래밍', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node', '타입스크립트', '풀스택', '프론트엔드', '백엔드', '버그', '디버깅', '코딩'];
+  if (devKeywords.some(k => normalizedText.includes(k))) {
+    return { data: knowledgeBase["개발"], confidence: 1.0, direct: true };
   }
 
   for (const [key, data] of Object.entries(knowledgeBase)) {
@@ -490,7 +553,7 @@ function deepReasoning(query, attempt) {
     if (score > bestScore) { bestScore = score; bestMatch = data; }
   }
 
-  const threshold = Math.max(1, 4 - attempt);
+  const threshold = Math.max(1, 5 - attempt);
   if (bestScore >= threshold && bestMatch) return { data: bestMatch, confidence: bestScore / 10 };
 
   return null;
@@ -610,7 +673,7 @@ function startReasoning(query, msgId, typingEl) {
 
       updateLoadingText(attempt);
       const result = deepReasoning(query, attempt);
-      if (result && result.confidence >= 0.3) {
+      if (result && result.confidence >= 0.25) {
         clearInterval(timer); typingEl.remove();
         streamTextWithSources(result.data.text, result.data.sources || [], 'ai', msgId, false);
         activeReasoning.delete(msgId);
