@@ -326,6 +326,8 @@ body {
   font-size: 16px;
   line-height: 1.75;
   color: var(--text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .msg.ai .bubble::before {
@@ -338,7 +340,7 @@ body {
   letter-spacing: 0.3px;
 }
 
-/* 차단 메시지 - 완전 재디자인 */
+/* 차단 메시지 */
 .msg.ai.blocked {
   border-bottom: 1px solid rgba(255, 59, 48, 0.15);
   padding: 24px 0;
@@ -352,6 +354,8 @@ body {
   color: var(--text);
   position: relative;
   max-width: 700px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 body.light .msg.ai.blocked .bubble {
@@ -359,7 +363,6 @@ body.light .msg.ai.blocked .bubble {
   border: 1px solid rgba(215, 0, 21, 0.2);
 }
 
-/* 차단 헤더 */
 .msg.ai.blocked .bubble::before {
   content: '🚫 Chat K Plus 안내';
   display: block;
@@ -372,13 +375,21 @@ body.light .msg.ai.blocked .bubble {
   opacity: 1;
 }
 
-/* 차단 아이콘 */
 .msg.ai.blocked .bubble::after {
   content: '💬';
   position: absolute;
   left: 18px;
   top: 20px;
   font-size: 22px;
+}
+
+/* 차단 메시지 텍스트 */
+.msg.ai.blocked .msg-text {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
 }
 
 /* 마크다운 */
@@ -548,7 +559,7 @@ body.light .msg.ai.blocked .bubble {
   font-variant-numeric: tabular-nums;
 }
 
-/* Input Area - 모던 리디자인 */
+/* Input Area */
 .input-area {
   padding: 12px 20px 16px;
   background: transparent;
@@ -680,6 +691,7 @@ body.light .msg.ai.blocked .bubble {
   .msg.user .bubble {
     max-width: 85%;
     font-size: 14px;
+    padding: 10px 14px;
   }
   
   .msg.ai .bubble,
@@ -688,11 +700,11 @@ body.light .msg.ai.blocked .bubble {
     font-size: 15px;
   }
   
-  /* 차단 메시지 모바일 */
   .msg.ai.blocked .bubble {
     padding: 16px 14px 16px 44px;
     margin: 0 8px;
     font-size: 14px;
+    max-width: calc(100% - 16px);
   }
   
   .msg.ai.blocked .bubble::before {
@@ -703,6 +715,10 @@ body.light .msg.ai.blocked .bubble {
     left: 14px;
     top: 16px;
     font-size: 20px;
+  }
+  
+  .msg.ai.blocked .msg-text {
+    font-size: 13px;
   }
   
   .loading-text {
@@ -717,7 +733,6 @@ body.light .msg.ai.blocked .bubble {
     font-size: 22px;
   }
   
-  /* 입력창 모바일 */
   .input-area {
     padding: 8px 12px 12px;
   }
@@ -749,6 +764,10 @@ body.light .msg.ai.blocked .bubble {
   
   .welcome-logo {
     font-size: 48px;
+  }
+  
+  .msg.ai {
+    padding: 20px 0;
   }
 }
 
