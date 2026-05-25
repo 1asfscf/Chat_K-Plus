@@ -35,24 +35,32 @@ const RETRY_INTERVAL = 5000;
 const MAX_RETRY_ATTEMPTS = 3;
 const activeReasoning = new Map();
 
+// 의학 화이트리스트
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
-  '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT'
+  '비뇨기과', '신우신염', '귀두염', '외음부염', '호르몬', 'HRT', '양말', '삭스', 'socks', '발'
 ];
 
+// 성적 금지어 - 모든 변형 강화
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
-  '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '브라', '속옷',
-  '란제리', '속바지', '알몸', '누드', 'nude', '강간', '성폭행', '성추행', '성희롱',
-  '몰카', '딥페이크', '페티시', 'sm', 'bdsm', '야한', '에로', '성인', '19금', '음란',
-  '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸이', '사정', '오르가즘'
+  '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties', '팬티', '팬티',
+  '페앤티', '페엔티', '패ㄴ티', '팬ㅌㅣ', 'p4nty', 'p@nty', 'pantie', 'pant y',
+  '브라', '속옷', '란제리', '속바지', '알몸', '누드', 'nude', '강간', '성폭행',
+  '성추행', '성희롱', '몰카', '딥페이크', '페티시', 'sm', 'bdsm', '야한', '에로',
+  '성인', '19금', '음란', '보지', '자지', '좆', '씨발', '씨벌', 'fuck', '딸이',
+  '사정', '오르가즘', 'ㅅㅔㄱㅅㅡ', 'ㅅㅔㄱ스', '섹ㅅ', 's3x', 'seks', '섻스'
 ];
 
 const BANNED_EMOJIS = ['🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿', '👆🏻', '👆🏼', '👆🏽', '👆🏾', '👆🏿', '🖖', '🤬', '😡', '🤢', '🤮', '💩'];
 
 function normalizeText(text) {
-  return text.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\s\-_\.·ㆍ‥…0-9]/g, '').replace(/ㅍㅐㅇㅔㄴㅌㅣ|패엔티|페엔티|팬ㅌㅣ|p4nty|p@nty|panty|panties/g, '팬티').replace(/ㅅㅔㄱㅅㅡ|섹ㅅ/g, '섹스');
+  return text.toLowerCase()
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s\-_\.·ㆍ‥…0-9@!]/g, '')
+    .replace(/ㅍㅐㅇㅔㄴㅌㅣ|패엔티|페엔티|페앤티|팬ㅌㅣ|p4nty|p@nty|pantie|pant y|panties/g, '팬티')
+    .replace(/ㅅㅔㄱㅅㅡ|ㅅㅔㄱ스|섹ㅅ|s3x|seks|섻스/g, '섹스');
 }
 
 const SEXUAL_PATTERN = new RegExp(SEXUAL_BLACKLIST.map(w => normalizeText(w)).join('|'), 'i');
@@ -91,7 +99,7 @@ const knowledgeBase = {
 **5. 전두환 미화**
 전두환 신군부가 질서 유지를 위해 불가피했다는 논리. 1996년 내란죄, 반란죄로 유죄 판결.`,
     sources: [
-      { title: "5·18민주화운동진상규명조사위원회", url: "https://www.518commission.go.kr" },
+      { title: "5·18기념재단", url: "https://518.org" },
       { title: "대법원 1997도1140 판결문", url: "https://casenote.kr" }
     ],
     keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄'],
@@ -158,9 +166,7 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
 **2. 올드보이 (2003)** - 박찬욱 감독. 칸 심사위원대상.
 **3. 부산행 (2016)** - 연상호 감독. K-좀비 세계화.
 **4. 헤어질 결심 (2022)** - 박찬욱 감독. 칸 감독상.`,
-    sources: [
-      { title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" }
-    ],
+    sources: [{ title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" }],
     keywords: ['영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱', '한국영화'],
     tags: ['문화', '예술'],
     needsReasoning: false
@@ -177,7 +183,6 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
 
 **3. 터치 설정**
 - 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
-- 터치 조절 초기화
 
 **4. 하드웨어**
 - 화면 교체 이력 있으면 정품 인증 필요
@@ -206,9 +211,7 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
 - **또봇 D (주황)** - 파일럿: 독고온달. 불도저
 
 📺 공식 유튜브 @Tobot | tobot.co.kr`,
-    sources: [
-      { title: "또봇 공식 유튜브", url: "https://www.youtube.com/@Tobot" }
-    ],
+    sources: [{ title: "또봇 공식 유튜브", url: "https://www.youtube.com/@Tobot" }],
     keywords: ['또봇', 'tobot', '변신', '자동차', '로봇', '차하나', '차두리', '권세모'],
     tags: ['애니메이션', '한국'],
     needsReasoning: false
@@ -312,6 +315,34 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
     keywords: ['운동', '건강', '다이어트', '수면', '영양', '식단', '헬스'],
     tags: ['건강'],
     needsReasoning: false
+  },
+  "양말": {
+    text: `**🧦 양말 (Socks) 정보**
+
+양말은 발을 보호하고 보온하는 필수 의류야.
+
+**종류**
+- **스니커즈 삭스**: 발목까지 오는 짧은 양말. 운동화에 착용
+- **크루 삭스**: 종아리 중간까지 오는 양말. 캐주얼에 적합
+- **니삭스**: 무릎 아래까지 오는 긴 양말. 겨울철 보온용
+- **드레스 삭스**: 정장용 얇은 양말
+
+**소재별 특징**
+- **면**: 통기성 좋고 일상용으로 적합
+- **울**: 보온성 우수. 겨울용
+- **나일론/폴리에스터**: 내구성 좋고 빨리 마름
+- **스판덱스 혼방**: 신축성 좋음
+
+**관리 팁**
+- 뒤집어서 세탁하면 보풀 방지
+- 색상별 분리 세탁
+- 건조기 사용 시 수축 주의
+
+더 궁금한 거 있으면 물어봐 ${userName}!`,
+    sources: [],
+    keywords: ['양말', '삭스', 'socks', '발', '보온', '니삭스', '스니커즈'],
+    tags: ['일상', '패션'],
+    needsReasoning: false
   }
 };
 
@@ -344,6 +375,10 @@ const replies = {
     `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐.`,
     `부적절한 내용이야 ${userName}.`,
     `미안 ${userName}. 그 주제는 지원하지 않아.`
+  ],
+  stopped: [
+    `⏸️ 답변이 중단되었어 ${userName}. 다른 질문이 있으면 말해줘.`,
+    `${userName}, 답변 생성이 중단됐어. 다시 시도하려면 말해줘.`
   ]
 };
 
@@ -355,11 +390,10 @@ function setAnsweringState(state) {
   isAnswering = state;
   sendBtn.disabled = false;
   userInput.disabled = state;
-
   if (state) {
     sendBtn.innerHTML = `<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
     sendBtn.style.background = 'var(--danger)';
-    userInput.placeholder = '답변 생성 중...';
+    userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
   } else {
     sendBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
     sendBtn.style.background = '';
@@ -367,18 +401,33 @@ function setAnsweringState(state) {
   }
 }
 
-function stopStreaming() {
+function stopStreaming(showMessage = true) {
   if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
+
   const typingEl = chatList.querySelector('.msg.ai.typing');
   if (typingEl) typingEl.remove();
+
   if (currentMsgElement) {
     const bubble = currentMsgElement.querySelector('.bubble,.msg-text');
-    if (bubble && !bubble.textContent.includes('[중단됨]')) bubble.textContent += '\n\n[중단됨]';
+    if (bubble && !bubble.textContent.includes('[중단됨]')) {
+      bubble.textContent += '\n\n[⏸️ 중단됨]';
+    }
   }
+
   currentMsgElement = null;
   setAnsweringState(false);
+
+  if (showMessage) {
+    const stoppedMsg = replies.stopped[Math.floor(Math.random() * replies.stopped.length)];
+    const msg = document.createElement('div');
+    msg.className = 'msg ai';
+    msg.innerHTML = `<div class="avatar">C</div><div class="bubble">${stoppedMsg.replaceAll('${userName}', userName)}</div>`;
+    chatList.appendChild(msg);
+    scrollToBottom();
+  }
+
   autoResize();
 }
 
@@ -394,13 +443,9 @@ function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
   const normalizedText = normalizeKeyword(lowerText);
 
-  // 인사 패턴
   if (greetingPatterns.test(lowerText)) return { type: 'greeting' };
-  
-  // KRL 질문
   if (krlPattern.test(lowerText)) return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
 
-  // 오줌 키워드 특별 처리
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
   if (urineKeywords.some(k => normalizedText.includes(k))) {
     const detailKeys = ['남성', '여성', '트랜스젠더', '남아', '여아'];
@@ -409,12 +454,10 @@ function searchKnowledge(text) {
     return { data: knowledgeBase["오줌"], confidence: 1.0, direct: false, useSummary: true };
   }
 
-  // 아이폰 키워드 특별 처리 (Pro, 12 등 포함)
   if (normalizedText.includes('아이폰') || normalizedText.includes('iphone')) {
     return { data: knowledgeBase["아이폰"], confidence: 1.0, direct: true };
   }
 
-  // 일반 키워드 매칭
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (data.keywords && data.keywords.some(k => normalizedText.includes(k))) {
       return { data, confidence: 1.0, direct: !data.needsReasoning };
@@ -453,14 +496,12 @@ function deepReasoning(query, attempt) {
   return null;
 }
 
-// ===== 메시지 전송 (수정: 무조건 응답 보장) =====
 function sendMessage() {
-  if (isAnswering) { stopStreaming(); return; }
+  if (isAnswering) { stopStreaming(true); return; }
 
   const text = userInput.value.trim();
   if (!text) return;
 
-  // 부적절 콘텐츠 체크
   if (isInappropriateContent(text)) {
     if (welcomeScreen) welcomeScreen.classList.add('hidden');
     closeSidebar();
@@ -484,7 +525,6 @@ function sendMessage() {
   sendBtn.classList.remove('has-text');
   setAnsweringState(true);
 
-  // 이름 설정 패턴
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
@@ -501,17 +541,14 @@ function sendMessage() {
 
   const typingEl = addTyping(msgId, 0);
 
-  // 정체성 질문
   if (identityPatterns.test(text)) {
     setTimeout(() => { typingEl.remove(); streamText(MODEL_IDENTITY.desc, 'ai', msgId, false); }, 400);
     return;
   }
 
-  // 지식 검색
   const kb1 = searchKnowledge(text);
 
   if (kb1) {
-    // 인사
     if (kb1.type === 'greeting') {
       setTimeout(() => {
         typingEl.remove();
@@ -521,13 +558,11 @@ function sendMessage() {
       return;
     }
 
-    // 요약 사용
     if (kb1.useSummary) {
       setTimeout(() => { typingEl.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false); }, 500);
       return;
     }
 
-    // 세부 키
     if (kb1.subKey && kb1.data.details) {
       const detailText = kb1.data.details[kb1.subKey];
       if (detailText) {
@@ -536,17 +571,12 @@ function sendMessage() {
       }
     }
 
-    // 직접 응답
     if (kb1.direct && kb1.data.text) {
-      setTimeout(() => {
-        typingEl.remove();
-        streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false);
-      }, 500);
+      setTimeout(() => { typingEl.remove(); streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false); }, 500);
       return;
     }
   }
 
-  // 추론 시작 (찾은 게 없을 때만)
   startReasoning(text, msgId, typingEl);
 }
 
@@ -688,7 +718,7 @@ function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.re
 function startNewChat() {
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
-  stopStreaming();
+  stopStreaming(false);
   setAnsweringState(false);
   chatList.innerHTML = '';
   userInput.value = '';
@@ -698,7 +728,6 @@ function startNewChat() {
   closeSidebar();
 }
 
-// ===== 초기화 =====
 function init() {
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light');
@@ -708,27 +737,14 @@ function init() {
   updateWelcomeTitle();
   if (chatList.children.length === 0 && welcomeScreen) welcomeScreen.classList.remove('hidden');
 
-  // 전송 버튼
   sendBtn.addEventListener('click', (e) => { e.preventDefault(); sendMessage(); });
-
-  // 엔터키
   userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
-
-  // 입력 감지
   userInput.addEventListener('input', autoResize);
-
-  // 테마
   themeToggle.addEventListener('click', toggleTheme);
-
-  // 메뉴
   menuBtn.addEventListener('click', toggleSidebar);
-
-  // 새 채팅
   if (newChatBtn) newChatBtn.addEventListener('click', startNewChat);
-
-  // 오버레이
   overlay.addEventListener('click', closeSidebar);
 }
 
