@@ -564,9 +564,21 @@ function sendMessage() {
   const text = userInput ? userInput.value.trim() : '';
   if (!text) return;
 
+  // welcomeScreen 완전히 숨기기
+  if (welcomeScreen) {
+    welcomeScreen.classList.add('hidden');
+    welcomeScreen.style.display = 'none';
+  }
+  
+  // chatList 보이게
+  if (chatList) {
+    chatList.classList.add('has-messages');
+    chatList.style.display = 'block';
+  }
+  
+  closeSidebar();
+
   if (isInappropriateContent(text)) {
-    if (welcomeScreen) welcomeScreen.classList.add('hidden');
-    closeSidebar();
     const msgId = Date.now();
     addMessage(text, 'user', msgId);
     if (userInput) { userInput.value = ''; autoResize(); }
@@ -575,9 +587,6 @@ function sendMessage() {
     setTimeout(() => { streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true); }, 300);
     return;
   }
-
-  if (welcomeScreen) welcomeScreen.classList.add('hidden');
-  closeSidebar();
 
   const msgId = Date.now();
   addMessage(text, 'user', msgId);
@@ -789,9 +798,16 @@ function startNewChat() {
   activeReasoning.clear();
   stopStreaming(false);
   setAnsweringState(false);
-  if (chatList) chatList.innerHTML = '';
+  if (chatList) {
+    chatList.innerHTML = '';
+    chatList.classList.remove('has-messages');
+    chatList.style.display = '';
+  }
   if (userInput) { userInput.value = ''; autoResize(); }
-  if (welcomeScreen) welcomeScreen.classList.remove('hidden');
+  if (welcomeScreen) {
+    welcomeScreen.classList.remove('hidden');
+    welcomeScreen.style.display = 'flex';
+  }
   updateWelcomeTitle();
   closeSidebar();
 }
@@ -807,7 +823,10 @@ function init() {
     }
   }
   updateWelcomeTitle();
-  if (chatList && chatList.children.length === 0 && welcomeScreen) welcomeScreen.classList.remove('hidden');
+  if (chatList && chatList.children.length === 0 && welcomeScreen) {
+    welcomeScreen.classList.remove('hidden');
+    welcomeScreen.style.display = 'flex';
+  }
 
   if (sendBtn) {
     sendBtn.addEventListener('click', (e) => { e.preventDefault(); sendMessage(); });
