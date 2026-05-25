@@ -1,13 +1,20 @@
-// DOM 요소
-const chatList = document.getElementById('chatList');
-const userInput = document.getElementById('userInput');
-const sendBtn = document.getElementById('sendBtn');
-const themeToggle = document.getElementById('themeToggle');
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.querySelector('.sidebar');
-const welcomeScreen = document.getElementById('welcomeScreen');
-const newChatBtn = document.getElementById('newChatBtn');
-const welcomeTitle = document.getElementById('welcomeTitle');
+// ===== DOM 요소 (지연 로딩 대비) =====
+let chatList, userInput, sendBtn, themeToggle, menuBtn, sidebar, welcomeScreen, newChatBtn, welcomeTitle;
+
+function getElements() {
+  chatList = document.getElementById('chatList');
+  userInput = document.getElementById('userInput');
+  sendBtn = document.getElementById('sendBtn');
+  themeToggle = document.getElementById('themeToggle');
+  menuBtn = document.getElementById('menuBtn');
+  sidebar = document.querySelector('.sidebar');
+  welcomeScreen = document.getElementById('welcomeScreen');
+  newChatBtn = document.getElementById('newChatBtn');
+  welcomeTitle = document.getElementById('welcomeTitle');
+}
+
+// 즉시 한 번 가져오기
+getElements();
 
 const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
@@ -35,7 +42,6 @@ const RETRY_INTERVAL = 4000;
 const MAX_RETRY_ATTEMPTS = 4;
 const activeReasoning = new Map();
 
-// 의학 화이트리스트
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
   '방광염', '요로감염', '혈뇨', '단백뇨', '야뇨', '빈뇨', '잔뇨',
@@ -43,7 +49,6 @@ const MEDICAL_WHITELIST = [
   '하나님', '예수', '성경', '교회', '기도', '천주교', '불교', '부처', '종교'
 ];
 
-// 성적 금지어
 const SEXUAL_BLACKLIST = [
   '섹스', '섹', 'sex', '야동', '포르노', 'porn', '자위', '성관계', '성행위',
   '유두', '가슴', '엉덩이', '팬티', '빤스', 'panty', 'panties',
@@ -80,7 +85,6 @@ const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 
 const KEYWORD_ALIASES = { '여야': '여아', '남자': '남성', '여자': '여성', '트젠': '트랜스젠더', '아이': '남아', '어린이': '남아' };
 
-// ===== 지식베이스 =====
 const knowledgeBase = {
   "5.18": {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**
@@ -110,7 +114,7 @@ const knowledgeBase = {
   "사양": {
     text: `**${MODEL_NAME} 시스템 사양**
 
-**엔진**: Muse Spark + KRL(Knowledge Reasoning Layer)
+**엔진**: Muse Spark + KRL
 **제작**: 스튜디오 페라리
 **데이터**: 2025-09-04 컷오프
 **특징**: 이름 기억, 출처 인용, 15초 추론, 콘텐츠 필터, 건강 가이드, 영화 정보, 애니메이션/게임 정보, 개발 지식, 종교 정보
@@ -175,14 +179,14 @@ KRL은 기본 데이터베이스 기반 언어 모델을 상징한다. ${MODEL_N
   "아이폰": {
     text: `**아이폰 12 Pro 터치/클릭 안 될 때 점검사항**
 
-**1. 소프트웨어** - iOS 최신 업데이트, 강제 재시동 (볼륨↑ → 볼륨↓ → 전원 길게)
-**2. 화면 보호필름/케이스** - 두꺼운 강화유리, 케이스 간섭 확인 후 제거 테스트
-**3. 터치 설정** - 설정 > 손쉬운 사용 > 터치 > 3D Touch/Haptic Touch 끄기
-**4. 하드웨어** - 화면 교체 이력 있으면 정품 인증 필요
-**5. 앱 문제** - 특정 앱만 안 되면 앱 삭제 후 재설치
+**1. 소프트웨어** - iOS 최신 업데이트, 강제 재시동
+**2. 화면 보호필름/케이스** - 제거 후 테스트
+**3. 터치 설정** - 설정 > 손쉬운 사용 > 터치 > 3D Touch 끄기
+**4. 하드웨어** - 정품 인증 필요, 서비스센터
+**5. 앱 문제** - 앱 삭제 후 재설치
 
 안 되면 ${TEAM_EMAIL}로 기기 정보 보내줘 ${userName}.`,
-    sources: [{ title: "Apple 지원 - iPhone 터치 문제", url: "https://support.apple.com/ko-kr/HT201406" }],
+    sources: [{ title: "Apple 지원", url: "https://support.apple.com/ko-kr/HT201406" }],
     keywords: ['아이폰', 'iphone', '12', 'pro', '클릭', '터치', '안됨', '고장', '화면', 'ios', '애플'],
     tags: ['기술', '애플'],
     needsReasoning: false
@@ -304,22 +308,9 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
 
 양말은 발을 보호하고 보온하는 필수 의류야.
 
-**종류**
-- **스니커즈 삭스**: 발목까지 오는 짧은 양말
-- **크루 삭스**: 종아리 중간까지
-- **니삭스**: 무릎 아래까지. 겨울철 보온용
-- **드레스 삭스**: 정장용 얇은 양말
-
-**소재별 특징**
-- **면**: 통기성 좋고 일상용
-- **울**: 보온성 우수. 겨울용
-- **나일론/폴리에스터**: 내구성 좋음
-- **스판덱스 혼방**: 신축성 좋음
-
-**관리 팁**
-- 뒤집어서 세탁하면 보풀 방지
-- 색상별 분리 세탁
-- 건조기 사용 시 수축 주의
+**종류** - 스니커즈 삭스, 크루 삭스, 니삭스, 드레스 삭스
+**소재별 특징** - 면(통기성), 울(보온성), 나일론(내구성), 스판덱스(신축성)
+**관리 팁** - 뒤집어서 세탁, 색상별 분리, 건조기 수축 주의
 
 더 궁금한 거 있으면 물어봐 ${userName}!`,
     sources: [],
@@ -331,27 +322,15 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
     text: `**💻 개발자 정보**
 
 **프로그래밍 언어**
-- **Python**: 데이터 분석, AI, 웹 개발. 초보자에게 가장 추천
-- **JavaScript**: 웹 프론트엔드/백엔드(Node.js). 가장 널리 쓰임
-- **TypeScript**: JavaScript + 타입 안정성. 대규모 프로젝트에 적합
-- **Java**: 기업용 백엔드, 안드로이드 개발
-- **C++**: 게임 엔진, 시스템 프로그래밍, 고성능 필요할 때
+- **Python**: 데이터 분석, AI, 웹 개발. 초보 추천
+- **JavaScript**: 웹 프론트/백엔드(Node.js)
+- **TypeScript**: JS + 타입 안정성
+- **Java**: 기업용 백엔드, 안드로이드
+- **C++**: 게임 엔진, 시스템 프로그래밍
 
-**웹 개발**
-- **프론트엔드**: HTML, CSS, JavaScript + React/Vue/Svelte
-- **백엔드**: Node.js, Python(Django/Flask), Java(Spring)
-- **풀스택**: 프론트 + 백엔드 모두 다루는 개발자
-
-**깃허브(GitHub)**
-- 코드 저장 및 버전 관리 플랫폼
-- `git push`, `git pull`, `git commit` 기본 명령어
-- 오픈소스 기여로 포트폴리오 구축 가능
-
-**CSS 깨짐 해결 팁**
-- 브라우저 개발자 도구(F12)로 스타일 확인
-- `display: flex` 대신 `grid` 시도
-- `box-sizing: border-box` 적용 여부 체크
-- 미디어 쿼리 충돌 확인
+**웹 개발** - 프론트엔드(React/Vue/Svelte), 백엔드(Django/Spring), 풀스택
+**깃허브(GitHub)** - 코드 저장/버전 관리. 오픈소스 포트폴리오
+**CSS 깨짐 해결** - F12 개발자 도구, flex 대신 grid, box-sizing 체크
 
 더 궁금한 언어나 기술 있으면 물어봐 ${userName}.`,
     sources: [
@@ -365,35 +344,13 @@ Chat K Plus도 AI 기술로 만들어졌어!`,
   "종교": {
     text: `**🙏 주요 종교 정보**
 
-Chat K Plus는 모든 종교를 존중해. 특정 종교를 강요하지 않고 객관적 정보만 제공할게.
+Chat K Plus는 모든 종교를 존중해.
 
-**기독교**
-- **핵심 경전**: 성경 (구약 + 신약)
-- **주요 인물**: 예수 그리스도, 사도 바울, 마리아
-- **핵심 교리**: 삼위일체(성부, 성자, 성령), 부활, 구원
-- **주요 기념일**: 부활절, 성탄절(크리스마스)
-- **교파**: 천주교(가톨릭), 개신교(장로교, 감리교, 침례교 등), 정교회
-
-**불교**
-- **핵심 경전**: 팔만대장경, 법화경, 반야심경
-- **주요 인물**: 석가모니(고타마 싯다르타), 달라이 라마, 원효대사
-- **핵심 교리**: 사성제, 팔정도, 업과 윤회, 해탈과 열반
-- **주요 기념일**: 부처님 오신 날, 열반절
-
-**이슬람교**
-- **핵심 경전**: 쿠란(Quran)
-- **주요 인물**: 무함마드(마호메트)
-- **핵심 교리**: 알라(유일신), 다섯 기둥(신앙고백, 기도, 단식, 희사, 순례)
-
-**힌두교**
-- **핵심 경전**: 베다, 우파니샤드
-- **주요 신**: 브라흐마, 비슈누, 시바
-- **핵심 교리**: 법(다르마), 업, 윤회, 해탈(목샤)
-
-**유교**
-- **핵심 경전**: 사서삼경(논어, 맹자, 대학, 중용, 시경, 서경, 주역)
-- **주요 인물**: 공자, 맹자
-- **핵심 교리**: 인(仁), 의(義), 예(禮), 충(忠), 효(孝)
+**기독교** - 성경, 예수 그리스도, 삼위일체, 부활, 구원. 천주교/개신교/정교회
+**불교** - 팔만대장경, 석가모니, 사성제, 팔정도, 업과 윤회
+**이슬람교** - 쿠란, 무함마드, 알라(유일신), 다섯 기둥
+**힌두교** - 베다, 브라흐마/비슈누/시바, 법(다르마), 윤회
+**유교** - 사서삼경, 공자/맹자, 인의예지
 
 질문이 있으면 편하게 물어봐 ${userName}.`,
     sources: [],
@@ -404,40 +361,17 @@ Chat K Plus는 모든 종교를 존중해. 특정 종교를 강요하지 않고 
 };
 
 const replies = {
-  greeting: [
-    `안녕 ${userName}. 뭐 도와줄까?`,
-    `ㅎㅇ ${userName}. 질문 있어?`,
-    `반가워 ${userName}. 뭘 알아보고 싶어?`
-  ],
-  thanks: [
-    `ㅇㅋ ${userName}. 더 물어볼 거 있어?`,
-    `별거 아냐 ${userName}.`,
-    `ㄱㅅ ${userName}. 또 필요하면 불러.`
-  ],
-  nameSet: [
-    `알았어 ${userName}. 이제 그렇게 부를게.`,
-    `ㅇㅋ ${userName}로 기억했다.`,
-    `좋아 ${userName}. 편하게 말해.`
-  ],
-  reasoning: [
-    `${userName}, 데이터 깊게 파는 중이야.`,
-    `1차 탐색 실패 ${userName}. 2차 추론 들어간다.`,
-    `좀 더 찾아볼게 ${userName}.`,
-    `3차 추론 중 ${userName}. 거의 다 왔어.`
-  ],
-  failed: [
-    `${userName}, 데이터가 없어. 더 정확한 정보가 필요하면 ${TEAM_EMAIL}로 피드백 보내줘.`,
-    `미안 ${userName}. 이건 내 지식베이스에 없어.`
-  ],
+  greeting: [`안녕 ${userName}. 뭐 도와줄까?`, `ㅎㅇ ${userName}. 질문 있어?`, `반가워 ${userName}.`],
+  thanks: [`ㅇㅋ ${userName}.`, `별거 아냐 ${userName}.`, `ㄱㅅ ${userName}.`],
+  nameSet: [`알았어 ${userName}.`, `ㅇㅋ ${userName}로 기억했다.`, `좋아 ${userName}.`],
+  reasoning: [`${userName}, 데이터 파는 중.`, `1차 실패 ${userName}. 2차 추론.`, `좀 더 찾아볼게 ${userName}.`, `3차 추론 중 ${userName}.`],
+  failed: [`${userName}, 데이터 없어. ${TEAM_EMAIL}로 피드백 보내줘.`, `미안 ${userName}. 지식베이스에 없어.`],
   blocked: [
-    `${userName}, 그 질문은 답변할 수 없어. 다른 걸 물어봐. 정책 위반 내용이 감지됐고, Chat K Plus는 모든 사용자에게 안전한 경험을 제공하려고 노력하고 있어. 부적절한 내용 대신 궁금한 지식이나 정보를 물어봐 주면 최선을 다해 답변할게.`,
-    `부적절한 내용이 감지됐어 ${userName}. Chat K Plus는 건전한 대화를 지향해. 다른 주제로 대화를 이어가자. 과학, 기술, 건강, 역사 등 다양한 분야의 질문은 언제든 환영이야.`,
-    `미안 ${userName}. Chat K Plus 정책상 그 주제는 지원하지 않아. 대신 다른 궁금한 점이 있다면 기꺼이 도와줄게.`
+    `${userName}, 그 질문은 답변할 수 없어. Chat K Plus는 안전한 경험을 제공하려고 해. 다른 궁금한 지식이나 정보를 물어봐 주면 최선을 다해 답변할게.`,
+    `부적절한 내용이 감지됐어 ${userName}. 다른 주제로 대화를 이어가자. 과학, 기술, 건강, 역사 등 환영이야.`,
+    `미안 ${userName}. Chat K Plus 정책상 지원하지 않아. 다른 궁금한 점이 있다면 기꺼이 도와줄게.`
   ],
-  stopped: [
-    `⏸️ 답변이 중단되었어 ${userName}. 다른 질문이 있으면 말해줘.`,
-    `${userName}, 답변 생성이 중단됐어. 다시 시도하려면 말해줘.`
-  ]
+  stopped: [`⏸️ 답변이 중단되었어 ${userName}. 다른 질문 있으면 말해줘.`, `${userName}, 답변 생성 중단됐어.`]
 };
 
 function updateWelcomeTitle() {
@@ -454,7 +388,7 @@ function setAnsweringState(state) {
     sendBtn.style.background = 'var(--danger)';
     if (userInput) userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
   } else {
-    sendBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
+    sendBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
     sendBtn.style.background = '';
     if (userInput) userInput.placeholder = '메시지 입력...';
   }
@@ -494,10 +428,8 @@ function normalizeKeyword(text) {
 function searchKnowledge(text) {
   const lowerText = text.toLowerCase().trim();
   const normalizedText = normalizeKeyword(lowerText);
-
   if (greetingPatterns.test(lowerText)) return { type: 'greeting' };
   if (krlPattern.test(lowerText)) return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
-
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
   if (urineKeywords.some(k => normalizedText.includes(k))) {
     const detailKeys = ['남성', '여성', '트랜스젠더', '남아', '여아'];
@@ -505,25 +437,13 @@ function searchKnowledge(text) {
     if (foundKey) return { data: knowledgeBase["오줌"], confidence: 1.0, direct: true, subKey: foundKey };
     return { data: knowledgeBase["오줌"], confidence: 1.0, direct: false, useSummary: true };
   }
-
-  if (normalizedText.includes('아이폰') || normalizedText.includes('iphone')) {
-    return { data: knowledgeBase["아이폰"], confidence: 1.0, direct: true };
-  }
-
+  if (normalizedText.includes('아이폰') || normalizedText.includes('iphone')) return { data: knowledgeBase["아이폰"], confidence: 1.0, direct: true };
   const religionKeywords = ['종교', '기독교', '불교', '이슬람', '힌두교', '유교', '하나님', '예수', '부처', '석가', '성경', '교회', '기도', '성당', '절', '코란', '쿠란', '공자', '천주교', '개신교'];
-  if (religionKeywords.some(k => normalizedText.includes(k))) {
-    return { data: knowledgeBase["종교"], confidence: 1.0, direct: true };
-  }
-
+  if (religionKeywords.some(k => normalizedText.includes(k))) return { data: knowledgeBase["종교"], confidence: 1.0, direct: true };
   const devKeywords = ['개발', '프로그래밍', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node', '타입스크립트', '풀스택', '프론트엔드', '백엔드', '버그', '디버깅', '코딩'];
-  if (devKeywords.some(k => normalizedText.includes(k))) {
-    return { data: knowledgeBase["개발"], confidence: 1.0, direct: true };
-  }
-
+  if (devKeywords.some(k => normalizedText.includes(k))) return { data: knowledgeBase["개발"], confidence: 1.0, direct: true };
   for (const [key, data] of Object.entries(knowledgeBase)) {
-    if (data.keywords && data.keywords.some(k => normalizedText.includes(k))) {
-      return { data, confidence: 1.0, direct: !data.needsReasoning };
-    }
+    if (data.keywords && data.keywords.some(k => normalizedText.includes(k))) return { data, confidence: 1.0, direct: !data.needsReasoning };
   }
   return null;
 }
@@ -531,359 +451,145 @@ function searchKnowledge(text) {
 function deepReasoning(query, attempt) {
   const words = normalizeKeyword(query).toLowerCase().replace(/[?!.]/g, ' ').split(' ').filter(w => w.length > 1);
   if (words.length === 0) return null;
-
-  let bestMatch = null;
-  let bestScore = 0;
-
+  let bestMatch = null, bestScore = 0;
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (!data.keywords) continue;
     let score = 0;
-    data.keywords.forEach(k => {
-      words.forEach(w => {
-        if (k.includes(w) || w.includes(k)) score += 2;
-        if (k === w) score += 3;
-      });
-    });
-    if (data.tags) {
-      data.tags.forEach(t => {
-        words.forEach(w => { if (t.includes(w) || w.includes(t)) score += 1; });
-      });
-    }
+    data.keywords.forEach(k => { words.forEach(w => { if (k.includes(w) || w.includes(k)) score += 2; if (k === w) score += 3; }); });
+    if (data.tags) data.tags.forEach(t => { words.forEach(w => { if (t.includes(w) || w.includes(t)) score += 1; }); });
     if (score > bestScore) { bestScore = score; bestMatch = data; }
   }
-
   const threshold = Math.max(1, 5 - attempt);
   if (bestScore >= threshold && bestMatch) return { data: bestMatch, confidence: bestScore / 10 };
-
   return null;
 }
 
+// ===== 핵심: sendMessage (전역 노출) =====
 function sendMessage() {
   if (isAnswering) { stopStreaming(true); return; }
-
+  getElements();
   const text = userInput ? userInput.value.trim() : '';
   if (!text) return;
-
-  // welcomeScreen 완전히 숨기기
-  if (welcomeScreen) {
-    welcomeScreen.classList.add('hidden');
-    welcomeScreen.style.display = 'none';
-  }
-  
-  // chatList 보이게
-  if (chatList) {
-    chatList.classList.add('has-messages');
-    chatList.style.display = 'block';
-  }
-  
+  if (welcomeScreen) { welcomeScreen.classList.add('hidden'); welcomeScreen.style.display = 'none'; }
+  if (chatList) { chatList.classList.add('has-messages'); chatList.style.display = 'block'; }
   closeSidebar();
-
   if (isInappropriateContent(text)) {
-    const msgId = Date.now();
-    addMessage(text, 'user', msgId);
+    const msgId = Date.now(); addMessage(text, 'user', msgId);
     if (userInput) { userInput.value = ''; autoResize(); }
     if (sendBtn) sendBtn.classList.remove('has-text');
     const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
     setTimeout(() => { streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true); }, 300);
     return;
   }
-
-  const msgId = Date.now();
-  addMessage(text, 'user', msgId);
+  const msgId = Date.now(); addMessage(text, 'user', msgId);
   if (userInput) { userInput.value = ''; autoResize(); }
   if (sendBtn) sendBtn.classList.remove('has-text');
   setAnsweringState(true);
-
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
-    userName = nameMatch[1];
-    localStorage.setItem('chatkUserName', userName);
-    updateWelcomeTitle();
+    userName = nameMatch[1]; localStorage.setItem('chatkUserName', userName); updateWelcomeTitle();
     const typingEl = addTyping(msgId, 0);
-    setTimeout(() => {
-      if (typingEl) typingEl.remove();
-      const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
-      streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
-    }, 400);
+    setTimeout(() => { if (typingEl) typingEl.remove(); const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)]; streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false); }, 400);
     return;
   }
-
   const typingEl = addTyping(msgId, 0);
-
-  if (identityPatterns.test(text)) {
-    setTimeout(() => { if (typingEl) typingEl.remove(); streamText(MODEL_IDENTITY.desc, 'ai', msgId, false); }, 400);
-    return;
-  }
-
+  if (identityPatterns.test(text)) { setTimeout(() => { if (typingEl) typingEl.remove(); streamText(MODEL_IDENTITY.desc, 'ai', msgId, false); }, 400); return; }
   const kb1 = searchKnowledge(text);
-
   if (kb1) {
-    if (kb1.type === 'greeting') {
-      setTimeout(() => {
-        if (typingEl) typingEl.remove();
-        const reply = replies.greeting[Math.floor(Math.random() * replies.greeting.length)];
-        streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
-      }, 400);
-      return;
-    }
-
-    if (kb1.useSummary) {
-      setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false); }, 500);
-      return;
-    }
-
-    if (kb1.subKey && kb1.data.details) {
-      const detailText = kb1.data.details[kb1.subKey];
-      if (detailText) {
-        setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false); }, 500);
-        return;
-      }
-    }
-
-    if (kb1.direct && kb1.data.text) {
-      setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false); }, 500);
-      return;
-    }
+    if (kb1.type === 'greeting') { setTimeout(() => { if (typingEl) typingEl.remove(); const reply = replies.greeting[Math.floor(Math.random() * replies.greeting.length)]; streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false); }, 400); return; }
+    if (kb1.useSummary) { setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false); }, 500); return; }
+    if (kb1.subKey && kb1.data.details) { const detailText = kb1.data.details[kb1.subKey]; if (detailText) { setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false); }, 500); return; } }
+    if (kb1.direct && kb1.data.text) { setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false); }, 500); return; }
   }
-
   startReasoning(text, msgId, typingEl);
 }
 
 function startReasoning(query, msgId, typingEl) {
-  let elapsed = 0;
-  let attempt = 1;
-  let timeoutTriggered = false;
-
-  const updateLoadingText = (attemptNum) => {
-    if (!typingEl) return;
-    const textEl = typingEl.querySelector('.loading-text');
-    if (textEl) textEl.textContent = (replies.reasoning[attemptNum - 1] || replies.reasoning[0]).replaceAll('${userName}', userName);
-  };
-
+  let elapsed = 0, attempt = 1, timeoutTriggered = false;
+  const updateLoadingText = (a) => { if (!typingEl) return; const t = typingEl.querySelector('.loading-text'); if (t) t.textContent = (replies.reasoning[a-1]||replies.reasoning[0]).replaceAll('${userName}', userName); };
   updateLoadingText(1);
-
   const timer = setInterval(() => {
     if (timeoutTriggered) return;
     elapsed += 100;
-
     if (elapsed % RETRY_INTERVAL === 0 && elapsed < REASONING_TIMEOUT) {
       attempt++;
-      if (attempt > MAX_RETRY_ATTEMPTS) {
-        timeoutTriggered = true;
-        clearInterval(timer);
-        if (typingEl) typingEl.remove();
-        const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
-        streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-        activeReasoning.delete(msgId);
-        return;
-      }
-
+      if (attempt > MAX_RETRY_ATTEMPTS) { timeoutTriggered = true; clearInterval(timer); if (typingEl) typingEl.remove(); const f = replies.failed[Math.floor(Math.random()*replies.failed.length)]; streamText(f.replaceAll('${userName}',userName).replaceAll('${TEAM_EMAIL}',TEAM_EMAIL),'ai',msgId,false); activeReasoning.delete(msgId); return; }
       updateLoadingText(attempt);
       const result = deepReasoning(query, attempt);
-      if (result && result.confidence >= 0.25) {
-        clearInterval(timer); if (typingEl) typingEl.remove();
-        streamTextWithSources(result.data.text, result.data.sources || [], 'ai', msgId, false);
-        activeReasoning.delete(msgId);
-        return;
-      }
+      if (result && result.confidence >= 0.25) { clearInterval(timer); if (typingEl) typingEl.remove(); streamTextWithSources(result.data.text, result.data.sources||[], 'ai', msgId, false); activeReasoning.delete(msgId); return; }
     }
-
-    if (elapsed >= REASONING_TIMEOUT && !timeoutTriggered) {
-      timeoutTriggered = true;
-      clearInterval(timer);
-      if (typingEl) typingEl.remove();
-      const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
-      streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-      activeReasoning.delete(msgId);
-    }
+    if (elapsed >= REASONING_TIMEOUT && !timeoutTriggered) { timeoutTriggered = true; clearInterval(timer); if (typingEl) typingEl.remove(); const f = replies.failed[Math.floor(Math.random()*replies.failed.length)]; streamText(f.replaceAll('${userName}',userName).replaceAll('${TEAM_EMAIL}',TEAM_EMAIL),'ai',msgId,false); activeReasoning.delete(msgId); }
   }, 100);
-
   activeReasoning.set(msgId, { timer, attempts: attempt, typingEl });
 }
 
-function addMessage(text, type, msgId) {
-  if (!chatList) return;
-  const msg = document.createElement('div');
-  msg.className = `msg ${type}`;
-  msg.dataset.msgId = msgId;
-  msg.innerHTML = `<div class="avatar">${type === 'user' ? userName[0].toUpperCase() : 'C'}</div><div class="bubble">${text}</div>`;
-  chatList.appendChild(msg);
-  scrollToBottom();
-}
+function addMessage(text, type, msgId) { if (!chatList) return; const m = document.createElement('div'); m.className = `msg ${type}`; m.dataset.msgId = msgId; m.innerHTML = `<div class="avatar">${type==='user'?userName[0].toUpperCase():'C'}</div><div class="bubble">${text}</div>`; chatList.appendChild(m); scrollToBottom(); }
 
-function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
-  if (!chatList) return;
-  if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
-  const msg = document.createElement('div');
-  msg.className = `msg ${type} ${isBlocked ? 'blocked' : ''}`;
-  msg.dataset.msgId = msgId;
-  msg.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="msg-text"></div>${sources && sources.length ? '<div class="sources"></div>' : ''}</div>`;
-  chatList.appendChild(msg);
-  currentMsgElement = msg;
-
-  const bubble = msg.querySelector('.msg-text');
-  const sourcesEl = msg.querySelector('.sources');
-
+function streamTextWithSources(text, sources, type, msgId, isBlocked=false) {
+  if (!chatList) return; if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
+  const m = document.createElement('div'); m.className = `msg ${type} ${isBlocked?'blocked':''}`; m.dataset.msgId = msgId;
+  m.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="msg-text"></div>${sources&&sources.length?'<div class="sources"></div>':''}</div>`; chatList.appendChild(m); currentMsgElement = m;
+  const bubble = m.querySelector('.msg-text'), sourcesEl = m.querySelector('.sources');
   let i = 0;
-  currentStreamInterval = setInterval(() => {
-    if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; }
-    if (bubble) bubble.textContent += text[i]; i++; scrollToBottom();
-    if (i >= text.length) {
-      clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null;
-      if (sources && sources.length && sourcesEl) {
-        sourcesEl.innerHTML = '<div class="sources-title">출처</div>' + sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join('');
-      }
-      setAnsweringState(false);
-    }
-  }, 4);
+  currentStreamInterval = setInterval(() => { if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; } if (bubble) bubble.textContent += text[i]; i++; scrollToBottom(); if (i>=text.length) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; if (sources&&sources.length&&sourcesEl) sourcesEl.innerHTML = '<div class="sources-title">출처</div>'+sources.map(s=>`<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join(''); setAnsweringState(false); } }, 4);
 }
 
-function streamText(text, type, msgId, isBlocked = false) {
-  if (!chatList) return;
-  if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
-  const msg = document.createElement('div');
-  msg.className = `msg ${type} ${isBlocked ? 'blocked' : ''}`;
-  msg.dataset.msgId = msgId;
-  msg.innerHTML = `<div class="avatar">C</div><div class="bubble"></div>`;
-  chatList.appendChild(msg);
-  currentMsgElement = msg;
-
-  const bubble = msg.querySelector('.bubble');
-  let i = 0;
-  currentStreamInterval = setInterval(() => {
-    if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; }
-    if (bubble) bubble.textContent += text[i]; i++; scrollToBottom();
-    if (i >= text.length) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; setAnsweringState(false); }
-  }, 5);
+function streamText(text, type, msgId, isBlocked=false) {
+  if (!chatList) return; if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
+  const m = document.createElement('div'); m.className = `msg ${type} ${isBlocked?'blocked':''}`; m.dataset.msgId = msgId;
+  m.innerHTML = `<div class="avatar">C</div><div class="bubble"></div>`; chatList.appendChild(m); currentMsgElement = m;
+  const bubble = m.querySelector('.bubble'); let i = 0;
+  currentStreamInterval = setInterval(() => { if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; } if (bubble) bubble.textContent += text[i]; i++; scrollToBottom(); if (i>=text.length) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; setAnsweringState(false); } }, 5);
 }
 
-function addTyping(msgId, attempt) {
-  if (!chatList) return null;
-  const msg = document.createElement('div');
-  msg.className = 'msg ai typing';
-  msg.dataset.msgId = msgId;
-  msg.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="loading-wrap"><div class="loading-text">데이터 파고드는 중...</div><div class="loading-bar"></div><div class="loading-time">최대 15초 소요</div></div></div>`;
-  chatList.appendChild(msg);
-  scrollToBottom();
-  return msg;
-}
-
-function autoResize() {
-  if (!userInput) return;
-  userInput.style.height = 'auto';
-  userInput.style.height = userInput.scrollHeight + 'px';
-  if (sendBtn) {
-    if (userInput.value.trim() && !isAnswering) sendBtn.classList.add('has-text');
-    else sendBtn.classList.remove('has-text');
-  }
-}
-
+function addTyping(msgId, attempt) { if (!chatList) return null; const m = document.createElement('div'); m.className = 'msg ai typing'; m.dataset.msgId = msgId; m.innerHTML = `<div class="avatar">C</div><div class="bubble"><div class="loading-wrap"><div class="loading-text">데이터 파고드는 중...</div><div class="loading-bar"></div><div class="loading-time">최대 15초 소요</div></div></div>`; chatList.appendChild(m); scrollToBottom(); return m; }
+function autoResize() { if (!userInput) return; userInput.style.height = 'auto'; userInput.style.height = userInput.scrollHeight+'px'; if (sendBtn) { if (userInput.value.trim()&&!isAnswering) sendBtn.classList.add('has-text'); else sendBtn.classList.remove('has-text'); } }
 function scrollToBottom() { if (chatList) chatList.scrollTop = chatList.scrollHeight; }
 
-function toggleTheme() {
-  document.body.classList.toggle('light');
-  if (!themeToggle) return;
-  const icon = themeToggle.querySelector('.icon');
-  const text = themeToggle.querySelector('.text');
-  if (document.body.classList.contains('light')) { if (icon) icon.textContent = '☀️'; if (text) text.textContent = '라이트'; }
-  else { if (icon) icon.textContent = '🌙'; if (text) text.textContent = '다크'; }
-  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
-}
-
+function toggleTheme() { document.body.classList.toggle('light'); if (!themeToggle) return; const icon = themeToggle.querySelector('.icon'), text = themeToggle.querySelector('.text'); if (document.body.classList.contains('light')) { if(icon)icon.textContent='☀️'; if(text)text.textContent='라이트'; } else { if(icon)icon.textContent='🌙'; if(text)text.textContent='다크'; } localStorage.setItem('theme', document.body.classList.contains('light')?'light':'dark'); }
 function toggleSidebar() { if (sidebar) { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); } }
 function closeSidebar() { if (sidebar) { sidebar.classList.remove('open'); overlay.classList.remove('active'); } }
 
 function startNewChat() {
-  activeReasoning.forEach(({ timer }) => clearInterval(timer));
-  activeReasoning.clear();
-  stopStreaming(false);
-  setAnsweringState(false);
-  if (chatList) {
-    chatList.innerHTML = '';
-    chatList.classList.remove('has-messages');
-    chatList.style.display = '';
-  }
+  activeReasoning.forEach(({timer})=>clearInterval(timer)); activeReasoning.clear(); stopStreaming(false); setAnsweringState(false);
+  if (chatList) { chatList.innerHTML = ''; chatList.classList.remove('has-messages'); chatList.style.display = ''; }
   if (userInput) { userInput.value = ''; autoResize(); }
-  if (welcomeScreen) {
-    welcomeScreen.classList.remove('hidden');
-    welcomeScreen.style.display = 'flex';
-  }
-  updateWelcomeTitle();
-  closeSidebar();
+  if (welcomeScreen) { welcomeScreen.classList.remove('hidden'); welcomeScreen.style.display = 'flex'; }
+  updateWelcomeTitle(); closeSidebar();
 }
 
+// ===== 초기화 (지연 실행 보장) =====
 function init() {
-  if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light');
-    if (themeToggle) {
-      const icon = themeToggle.querySelector('.icon');
-      const text = themeToggle.querySelector('.text');
-      if (icon) icon.textContent = '☀️';
-      if (text) text.textContent = '라이트';
-    }
-  }
+  getElements();
+  if (localStorage.getItem('theme')==='light') { document.body.classList.add('light'); if(themeToggle){const i=themeToggle.querySelector('.icon'),t=themeToggle.querySelector('.text');if(i)i.textContent='☀️';if(t)t.textContent='라이트';} }
   updateWelcomeTitle();
-  if (chatList && chatList.children.length === 0 && welcomeScreen) {
-    welcomeScreen.classList.remove('hidden');
-    welcomeScreen.style.display = 'flex';
-  }
+  if (chatList && chatList.children.length===0 && welcomeScreen) { welcomeScreen.classList.remove('hidden'); welcomeScreen.style.display = 'flex'; }
 
-  if (sendBtn) {
-    sendBtn.addEventListener('click', (e) => { e.preventDefault(); sendMessage(); });
-    sendBtn.addEventListener('touchend', (e) => { e.preventDefault(); sendMessage(); });
-  }
-
-  if (userInput) {
-    userInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    });
-    userInput.addEventListener('input', autoResize);
-  }
-
-  if (themeToggle) {
-    themeToggle.addEventListener('click', toggleTheme);
-    themeToggle.addEventListener('touchend', (e) => { e.preventDefault(); toggleTheme(); });
-  }
-
-  if (menuBtn) {
-    menuBtn.addEventListener('click', toggleSidebar);
-    menuBtn.addEventListener('touchend', (e) => { e.preventDefault(); toggleSidebar(); });
-  }
-
-  if (newChatBtn) {
-    newChatBtn.addEventListener('click', startNewChat);
-    newChatBtn.addEventListener('touchend', (e) => { e.preventDefault(); startNewChat(); });
-  }
-
-  if (overlay) {
-    overlay.addEventListener('click', closeSidebar);
-    overlay.addEventListener('touchend', (e) => { e.preventDefault(); closeSidebar(); });
-  }
+  if (sendBtn) { sendBtn.addEventListener('click', (e)=>{e.preventDefault();sendMessage();}); sendBtn.addEventListener('touchend', (e)=>{e.preventDefault();sendMessage();}); }
+  if (userInput) { userInput.addEventListener('keydown', (e)=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}); userInput.addEventListener('input', autoResize); }
+  if (themeToggle) { themeToggle.addEventListener('click', toggleTheme); themeToggle.addEventListener('touchend', (e)=>{e.preventDefault();toggleTheme();}); }
+  if (menuBtn) { menuBtn.addEventListener('click', toggleSidebar); menuBtn.addEventListener('touchend', (e)=>{e.preventDefault();toggleSidebar();}); }
+  if (newChatBtn) { newChatBtn.addEventListener('click', startNewChat); newChatBtn.addEventListener('touchend', (e)=>{e.preventDefault();startNewChat();}); }
+  if (overlay) { overlay.addEventListener('click', closeSidebar); overlay.addEventListener('touchend', (e)=>{e.preventDefault();closeSidebar();}); }
 }
 
 function initExampleCards() {
   document.querySelectorAll('.example-card').forEach(card => {
-    card.addEventListener('click', () => {
-      if (isAnswering) return;
-      if (userInput) { userInput.value = card.dataset.prompt; autoResize(); }
-      sendMessage();
-    });
-    card.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      if (isAnswering) return;
-      if (userInput) { userInput.value = card.dataset.prompt; autoResize(); }
-      sendMessage();
-    });
+    card.addEventListener('click', ()=>{if(isAnswering)return;getElements();if(userInput){userInput.value=card.dataset.prompt;autoResize();}sendMessage();});
+    card.addEventListener('touchend', (e)=>{e.preventDefault();if(isAnswering)return;getElements();if(userInput){userInput.value=card.dataset.prompt;autoResize();}sendMessage();});
   });
 }
 
-// DOM 로드 대기 + 즉시 실행
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    init();
-    initExampleCards();
-  });
-} else {
-  init();
-  initExampleCards();
-}
+// ===== 전역 노출 =====
+window.sendMessage = sendMessage;
+window.toggleSidebar = toggleSidebar;
+window.toggleTheme = toggleTheme;
+window.startNewChat = startNewChat;
+
+// ===== 강제 부팅 =====
+function boot() { if (window._booted) return; window._booted = true; init(); initExampleCards(); }
+document.addEventListener('DOMContentLoaded', boot);
+window.addEventListener('load', boot);
+setTimeout(boot, 50); setTimeout(boot, 200); setTimeout(boot, 500); setTimeout(boot, 1000);
+document.addEventListener('click', boot, { once: true });
+document.addEventListener('touchend', boot, { once: true });
