@@ -446,16 +446,17 @@ function updateWelcomeTitle() {
 
 function setAnsweringState(state) {
   isAnswering = state;
+  if (!sendBtn) return;
   sendBtn.disabled = false;
-  userInput.disabled = state;
+  if (userInput) userInput.disabled = state;
   if (state) {
     sendBtn.innerHTML = `<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
     sendBtn.style.background = 'var(--danger)';
-    userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
+    if (userInput) userInput.placeholder = '답변 생성 중... (클릭하면 중단)';
   } else {
     sendBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
     sendBtn.style.background = '';
-    userInput.placeholder = '메시지 입력...';
+    if (userInput) userInput.placeholder = '메시지 입력...';
   }
 }
 
@@ -463,7 +464,7 @@ function stopStreaming(showMessage = true) {
   if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
-  const typingEl = chatList.querySelector('.msg.ai.typing');
+  const typingEl = chatList ? chatList.querySelector('.msg.ai.typing') : null;
   if (typingEl) typingEl.remove();
   if (currentMsgElement) {
     const bubble = currentMsgElement.querySelector('.bubble,.msg-text');
@@ -471,7 +472,7 @@ function stopStreaming(showMessage = true) {
   }
   currentMsgElement = null;
   setAnsweringState(false);
-  if (showMessage) {
+  if (showMessage && chatList) {
     const stoppedMsg = replies.stopped[Math.floor(Math.random() * replies.stopped.length)];
     const msg = document.createElement('div');
     msg.className = 'msg ai';
@@ -509,13 +510,11 @@ function searchKnowledge(text) {
     return { data: knowledgeBase["아이폰"], confidence: 1.0, direct: true };
   }
 
-  // 종교 키워드 특별 처리
   const religionKeywords = ['종교', '기독교', '불교', '이슬람', '힌두교', '유교', '하나님', '예수', '부처', '석가', '성경', '교회', '기도', '성당', '절', '코란', '쿠란', '공자', '천주교', '개신교'];
   if (religionKeywords.some(k => normalizedText.includes(k))) {
     return { data: knowledgeBase["종교"], confidence: 1.0, direct: true };
   }
 
-  // 개발 키워드 특별 처리
   const devKeywords = ['개발', '프로그래밍', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node', '타입스크립트', '풀스택', '프론트엔드', '백엔드', '버그', '디버깅', '코딩'];
   if (devKeywords.some(k => normalizedText.includes(k))) {
     return { data: knowledgeBase["개발"], confidence: 1.0, direct: true };
@@ -562,7 +561,7 @@ function deepReasoning(query, attempt) {
 function sendMessage() {
   if (isAnswering) { stopStreaming(true); return; }
 
-  const text = userInput.value.trim();
+  const text = userInput ? userInput.value.trim() : '';
   if (!text) return;
 
   if (isInappropriateContent(text)) {
@@ -570,9 +569,8 @@ function sendMessage() {
     closeSidebar();
     const msgId = Date.now();
     addMessage(text, 'user', msgId);
-    userInput.value = '';
-    autoResize();
-    sendBtn.classList.remove('has-text');
+    if (userInput) { userInput.value = ''; autoResize(); }
+    if (sendBtn) sendBtn.classList.remove('has-text');
     const blocked = replies.blocked[Math.floor(Math.random() * replies.blocked.length)];
     setTimeout(() => { streamText(blocked.replaceAll('${userName}', userName), 'ai', msgId, true); }, 300);
     return;
@@ -583,9 +581,8 @@ function sendMessage() {
 
   const msgId = Date.now();
   addMessage(text, 'user', msgId);
-  userInput.value = '';
-  autoResize();
-  sendBtn.classList.remove('has-text');
+  if (userInput) { userInput.value = ''; autoResize(); }
+  if (sendBtn) sendBtn.classList.remove('has-text');
   setAnsweringState(true);
 
   const nameMatch = text.match(nameSetPattern);
@@ -595,7 +592,7 @@ function sendMessage() {
     updateWelcomeTitle();
     const typingEl = addTyping(msgId, 0);
     setTimeout(() => {
-      typingEl.remove();
+      if (typingEl) typingEl.remove();
       const reply = replies.nameSet[Math.floor(Math.random() * replies.nameSet.length)];
       streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
     }, 400);
@@ -605,7 +602,7 @@ function sendMessage() {
   const typingEl = addTyping(msgId, 0);
 
   if (identityPatterns.test(text)) {
-    setTimeout(() => { typingEl.remove(); streamText(MODEL_IDENTITY.desc, 'ai', msgId, false); }, 400);
+    setTimeout(() => { if (typingEl) typingEl.remove(); streamText(MODEL_IDENTITY.desc, 'ai', msgId, false); }, 400);
     return;
   }
 
@@ -614,7 +611,7 @@ function sendMessage() {
   if (kb1) {
     if (kb1.type === 'greeting') {
       setTimeout(() => {
-        typingEl.remove();
+        if (typingEl) typingEl.remove();
         const reply = replies.greeting[Math.floor(Math.random() * replies.greeting.length)];
         streamText(reply.replaceAll('${userName}', userName), 'ai', msgId, false);
       }, 400);
@@ -622,20 +619,20 @@ function sendMessage() {
     }
 
     if (kb1.useSummary) {
-      setTimeout(() => { typingEl.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false); }, 500);
+      setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', msgId, false); }, 500);
       return;
     }
 
     if (kb1.subKey && kb1.data.details) {
       const detailText = kb1.data.details[kb1.subKey];
       if (detailText) {
-        setTimeout(() => { typingEl.remove(); streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false); }, 500);
+        setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(detailText, kb1.data.sources, 'ai', msgId, false); }, 500);
         return;
       }
     }
 
     if (kb1.direct && kb1.data.text) {
-      setTimeout(() => { typingEl.remove(); streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false); }, 500);
+      setTimeout(() => { if (typingEl) typingEl.remove(); streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', msgId, false); }, 500);
       return;
     }
   }
@@ -649,6 +646,7 @@ function startReasoning(query, msgId, typingEl) {
   let timeoutTriggered = false;
 
   const updateLoadingText = (attemptNum) => {
+    if (!typingEl) return;
     const textEl = typingEl.querySelector('.loading-text');
     if (textEl) textEl.textContent = (replies.reasoning[attemptNum - 1] || replies.reasoning[0]).replaceAll('${userName}', userName);
   };
@@ -664,7 +662,7 @@ function startReasoning(query, msgId, typingEl) {
       if (attempt > MAX_RETRY_ATTEMPTS) {
         timeoutTriggered = true;
         clearInterval(timer);
-        typingEl.remove();
+        if (typingEl) typingEl.remove();
         const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
         streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
         activeReasoning.delete(msgId);
@@ -674,7 +672,7 @@ function startReasoning(query, msgId, typingEl) {
       updateLoadingText(attempt);
       const result = deepReasoning(query, attempt);
       if (result && result.confidence >= 0.25) {
-        clearInterval(timer); typingEl.remove();
+        clearInterval(timer); if (typingEl) typingEl.remove();
         streamTextWithSources(result.data.text, result.data.sources || [], 'ai', msgId, false);
         activeReasoning.delete(msgId);
         return;
@@ -684,7 +682,7 @@ function startReasoning(query, msgId, typingEl) {
     if (elapsed >= REASONING_TIMEOUT && !timeoutTriggered) {
       timeoutTriggered = true;
       clearInterval(timer);
-      typingEl.remove();
+      if (typingEl) typingEl.remove();
       const failed = replies.failed[Math.floor(Math.random() * replies.failed.length)];
       streamText(failed.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
       activeReasoning.delete(msgId);
@@ -695,6 +693,7 @@ function startReasoning(query, msgId, typingEl) {
 }
 
 function addMessage(text, type, msgId) {
+  if (!chatList) return;
   const msg = document.createElement('div');
   msg.className = `msg ${type}`;
   msg.dataset.msgId = msgId;
@@ -704,6 +703,7 @@ function addMessage(text, type, msgId) {
 }
 
 function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
+  if (!chatList) return;
   if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked ? 'blocked' : ''}`;
@@ -718,7 +718,7 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
   let i = 0;
   currentStreamInterval = setInterval(() => {
     if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; }
-    bubble.textContent += text[i]; i++; scrollToBottom();
+    if (bubble) bubble.textContent += text[i]; i++; scrollToBottom();
     if (i >= text.length) {
       clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null;
       if (sources && sources.length && sourcesEl) {
@@ -730,6 +730,7 @@ function streamTextWithSources(text, sources, type, msgId, isBlocked = false) {
 }
 
 function streamText(text, type, msgId, isBlocked = false) {
+  if (!chatList) return;
   if (currentStreamInterval) { clearInterval(currentStreamInterval); currentStreamInterval = null; }
   const msg = document.createElement('div');
   msg.className = `msg ${type} ${isBlocked ? 'blocked' : ''}`;
@@ -742,12 +743,13 @@ function streamText(text, type, msgId, isBlocked = false) {
   let i = 0;
   currentStreamInterval = setInterval(() => {
     if (!isAnswering) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; return; }
-    bubble.textContent += text[i]; i++; scrollToBottom();
+    if (bubble) bubble.textContent += text[i]; i++; scrollToBottom();
     if (i >= text.length) { clearInterval(currentStreamInterval); currentStreamInterval = null; currentMsgElement = null; setAnsweringState(false); }
   }, 5);
 }
 
 function addTyping(msgId, attempt) {
+  if (!chatList) return null;
   const msg = document.createElement('div');
   msg.className = 'msg ai typing';
   msg.dataset.msgId = msgId;
@@ -758,34 +760,37 @@ function addTyping(msgId, attempt) {
 }
 
 function autoResize() {
+  if (!userInput) return;
   userInput.style.height = 'auto';
   userInput.style.height = userInput.scrollHeight + 'px';
-  if (userInput.value.trim() && !isAnswering) sendBtn.classList.add('has-text');
-  else sendBtn.classList.remove('has-text');
+  if (sendBtn) {
+    if (userInput.value.trim() && !isAnswering) sendBtn.classList.add('has-text');
+    else sendBtn.classList.remove('has-text');
+  }
 }
 
-function scrollToBottom() { chatList.scrollTop = chatList.scrollHeight; }
+function scrollToBottom() { if (chatList) chatList.scrollTop = chatList.scrollHeight; }
 
 function toggleTheme() {
   document.body.classList.toggle('light');
+  if (!themeToggle) return;
   const icon = themeToggle.querySelector('.icon');
   const text = themeToggle.querySelector('.text');
-  if (document.body.classList.contains('light')) { icon.textContent = '☀️'; text.textContent = '라이트'; }
-  else { icon.textContent = '🌙'; text.textContent = '다크'; }
+  if (document.body.classList.contains('light')) { if (icon) icon.textContent = '☀️'; if (text) text.textContent = '라이트'; }
+  else { if (icon) icon.textContent = '🌙'; if (text) text.textContent = '다크'; }
   localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
 }
 
-function toggleSidebar() { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); }
-function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+function toggleSidebar() { if (sidebar) { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); } }
+function closeSidebar() { if (sidebar) { sidebar.classList.remove('open'); overlay.classList.remove('active'); } }
 
 function startNewChat() {
   activeReasoning.forEach(({ timer }) => clearInterval(timer));
   activeReasoning.clear();
   stopStreaming(false);
   setAnsweringState(false);
-  chatList.innerHTML = '';
-  userInput.value = '';
-  autoResize();
+  if (chatList) chatList.innerHTML = '';
+  if (userInput) { userInput.value = ''; autoResize(); }
   if (welcomeScreen) welcomeScreen.classList.remove('hidden');
   updateWelcomeTitle();
   closeSidebar();
@@ -794,35 +799,72 @@ function startNewChat() {
 function init() {
   if (localStorage.getItem('theme') === 'light') {
     document.body.classList.add('light');
-    themeToggle.querySelector('.icon').textContent = '☀️';
-    themeToggle.querySelector('.text').textContent = '라이트';
+    if (themeToggle) {
+      const icon = themeToggle.querySelector('.icon');
+      const text = themeToggle.querySelector('.text');
+      if (icon) icon.textContent = '☀️';
+      if (text) text.textContent = '라이트';
+    }
   }
   updateWelcomeTitle();
-  if (chatList.children.length === 0 && welcomeScreen) welcomeScreen.classList.remove('hidden');
+  if (chatList && chatList.children.length === 0 && welcomeScreen) welcomeScreen.classList.remove('hidden');
 
-  sendBtn.addEventListener('click', (e) => { e.preventDefault(); sendMessage(); });
-  userInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-  });
-  userInput.addEventListener('input', autoResize);
-  themeToggle.addEventListener('click', toggleTheme);
-  menuBtn.addEventListener('click', toggleSidebar);
-  if (newChatBtn) newChatBtn.addEventListener('click', startNewChat);
-  overlay.addEventListener('click', closeSidebar);
+  if (sendBtn) {
+    sendBtn.addEventListener('click', (e) => { e.preventDefault(); sendMessage(); });
+    sendBtn.addEventListener('touchend', (e) => { e.preventDefault(); sendMessage(); });
+  }
+
+  if (userInput) {
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    userInput.addEventListener('input', autoResize);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+    themeToggle.addEventListener('touchend', (e) => { e.preventDefault(); toggleTheme(); });
+  }
+
+  if (menuBtn) {
+    menuBtn.addEventListener('click', toggleSidebar);
+    menuBtn.addEventListener('touchend', (e) => { e.preventDefault(); toggleSidebar(); });
+  }
+
+  if (newChatBtn) {
+    newChatBtn.addEventListener('click', startNewChat);
+    newChatBtn.addEventListener('touchend', (e) => { e.preventDefault(); startNewChat(); });
+  }
+
+  if (overlay) {
+    overlay.addEventListener('click', closeSidebar);
+    overlay.addEventListener('touchend', (e) => { e.preventDefault(); closeSidebar(); });
+  }
 }
 
 function initExampleCards() {
   document.querySelectorAll('.example-card').forEach(card => {
     card.addEventListener('click', () => {
       if (isAnswering) return;
-      userInput.value = card.dataset.prompt;
-      autoResize();
+      if (userInput) { userInput.value = card.dataset.prompt; autoResize(); }
+      sendMessage();
+    });
+    card.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      if (isAnswering) return;
+      if (userInput) { userInput.value = card.dataset.prompt; autoResize(); }
       sendMessage();
     });
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// DOM 로드 대기 + 즉시 실행
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+    initExampleCards();
+  });
+} else {
   init();
   initExampleCards();
-});
+}
