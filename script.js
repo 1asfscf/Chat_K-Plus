@@ -32,7 +32,7 @@ let currentMsgElement = null;
 
 const REASONING_TIMEOUT = 15000;
 const RETRY_INTERVAL = 5000;
-const MAX_RETRY_ATTEMPTS = 3; // 강제 종료
+const MAX_RETRY_ATTEMPTS = 3;
 const activeReasoning = new Map();
 
 // 의학 화이트리스트
@@ -61,10 +61,10 @@ const BANNED_EMOJIS = [
 function normalizeText(text) {
   return text
  .toLowerCase()
- .normalize('NFKD') // 자모 분리
- .replace(/[\u0300-\u036f]/g, '') // 조합 문자 제거
- .replace(/[\s\-_\.·ㆍ‥…0-9]/g, '') // 공백, 특수문자, 숫자 제거
- .replace(/ㅍㅐㅇㅔㄴㅌㅣ|패엔티|페엔티|팬ㅌㅣ|p4nty|p@nty|panty|panties/g, '팬티') // 변형 통일
+ .normalize('NFKD')
+ .replace(/[\u0300-\u036f]/g, '')
+ .replace(/[\s\-_\.·ㆍ‥…0-9]/g, '')
+ .replace(/ㅍㅐㅇㅔㄴㅌㅣ|패엔티|페엔티|팬ㅌㅣ|p4nty|p@nty|panty|panties/g, '팬티')
  .replace(/ㅅㅔㄱㅅㅡ|섹ㅅ/g, '섹스');
 }
 
@@ -639,7 +639,7 @@ function startReasoning(query, msgId, typingEl) {
     if (elapsed % RETRY_INTERVAL === 0 && elapsed < REASONING_TIMEOUT) {
       attempt++;
 
-      // 강제 종료 조건 추가
+      // 강제 종료 조건
       if (attempt > MAX_RETRY_ATTEMPTS) {
         timeoutTriggered = true;
         clearInterval(timer);
@@ -871,4 +871,16 @@ function initExampleCards() {
   });
 }
 
-function init()
+function init() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    const icon = themeToggle.querySelector('.icon');
+    const text = themeToggle.querySelector('.text');
+    icon.textContent = '☀️';
+    text.textContent = '라이트';
+  }
+
+  updateWelcomeTitle();
+
+  if (chatList.children.length === 0 && welcomeScreen) {
+    welcomeScreen.classList.remove
