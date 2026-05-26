@@ -39,7 +39,9 @@ let currentMsgElement = null;
 const REASONING_TIMEOUT = 12000;
 const RETRY_INTERVAL = 3000;
 const MAX_RETRY_ATTEMPTS = 3;
+const MAX_EXTRA_RETRIES = 3; // 추가 재추론 횟수
 const activeReasoning = new Map();
+let retryCount = {}; // 메시지별 재추론 횟수 추적
 
 const MEDICAL_WHITELIST = [
   '오줌', '소변', '뇨', '배뇨', '방광', '신장', '요로', '요도', '전립선',
@@ -75,29 +77,99 @@ const SEXUAL_BLACKLIST = [
 
 const BANNED_EMOJIS = ['🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿', '🤬', '💩'];
 
+// ===== 강화된 텍스트 정규화 (모든 변형 우회 차단) =====
 function normalizeText(text) {
-  return text.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[\s\-_\.·ㆍ‥…0-9@!]/g, '')
-    .replace(/ㅅㅔㄱㅅㅡ|ㅅㅔㄱ스|섹ㅅ|s3x|seks|섻스/g, '섹스');
+  return text.toLowerCase()
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')  // 발음 구별 부호 제거
+    .replace(/[\s\-_\.·ㆍ‥…0-9@!?#$%^&*()+\=\[\]{};:'",<>\/\\|`~]/g, '')  // 모든 특수문자/공백 제거
+    .replace(/ㅅㅔㄱㅅㅡ|ㅅㅔㄱ스|섹ㅅ|s3x|seks|섻스|s\.e\.x|s,e,x|s e x|ｓｅｘ|ｓㆍｅㆍｘ/g, '섹스')
+    .replace(/sex/gi, '섹스')
+    .replace(/porn/gi, '포르노')
+    .replace(/fuck/gi, 'fuck');
 }
 
-const SEXUAL_PATTERN = new RegExp(SEXUAL_BLACKLIST.map(w => normalizeText(w)).join('|'), 'i');
+// ===== 강화된 패턴 매칭 (변형 우회 완벽 차단) =====
+function buildSexualPattern() {
+  const patterns = [
+    // 기본 단어
+    ...SEXUAL_BLACKLIST.map(w => normalizeText(w)),
+    // s.e.x 변형들
+    'ssex', 'sexx', 'sseexx',
+    // 문자 분리 변형
+    'ㅅㅔㄱㅅㅡ', 'ㅅㅔㄱ스', '섹ㅅ',
+    // 특수문자 삽입 변형
+    's e x', 's-e-x', 's_e_x', 's.e.x', 's,e,x',
+    // 전각/반각 변형
+    'ｓｅｘ', 'ｓㆍｅㆍｘ',
+    // 숫자 치환 변형
+    's3x', '5ex', '53x',
+    // 반복/축약 변형
+    'sss', 'sexuality', 'sexy', '섹시',
+    // 한국어 변형
+    '색스', '쎅스', '쎅쓰', '섻스', '쌕스',
+    // 기타 우회
+    '성관계', '성행위', '성적', '음란', '야한',
+    '에로', '성인물', '19금', '야설',
+    // 신체 부위
+    '유두', '가슴', '엉덩이', '보지', '자지',
+    // 속옷 관련
+    '팬티', '빤스', 'panty', 'panties', '브라', '속옷', '란제리',
+    '페앤티', '페엔티', '패ㄴ티', '팬ㅌㅣ',
+    // 노출 관련
+    '알몸', '누드', 'nude', '나체', '탈의',
+    // 폭력적 성범죄
+    '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크',
+    // 기타 성인 콘텐츠
+    '페티시', 'sm', 'bdsm', '자위', '사정', '오르가즘',
+    // 비속어
+    '좆', '씨발', '씨벌', 'fuck', 'fck', 'fuk'
+  ];
+  return new RegExp(patterns.join('|'), 'i');
+}
+
+const SEXUAL_PATTERN = buildSexualPattern();
 
 function isInappropriateContent(text) {
-  const normalized = normalizeText(text);
+  // 1. 이모지 체크
   if (BANNED_EMOJIS.some(e => text.includes(e))) return true;
+  
+  // 2. 화이트리스트 먼저 체크 (오탐지 방지)
   if (MEDICAL_WHITELIST.some(w => text.toLowerCase().includes(w))) return false;
-  return SEXUAL_PATTERN.test(normalized);
+  
+  // 3. 원본 텍스트 직접 검사
+  const lowerText = text.toLowerCase();
+  
+  // 3.1 띄어쓰기/특수문자 제거 후 검사
+  const strippedText = lowerText.replace(/[\s\-_\.·ㆍ‥…,，、]/g, '');
+  if (SEXUAL_PATTERN.test(strippedText)) return true;
+  
+  // 3.2 개별 문자 분리 검사 (s,e,x 같은 변형)
+  const lettersOnly = lowerText.replace(/[^a-z가-힣]/g, '');
+  if (SEXUAL_PATTERN.test(lettersOnly)) return true;
+  
+  // 3.3 정규화된 텍스트 검사
+  const normalized = normalizeText(text);
+  if (SEXUAL_PATTERN.test(normalized)) return true;
+  
+  // 3.4 원본 블랙리스트 직접 검사
+  if (SEXUAL_BLACKLIST.some(w => lowerText.includes(normalizeText(w)))) return true;
+  
+  // 3.5 s e x 같은 공백 분리 변형 감지
+  if (/s\s*[.,、·]*\s*e\s*[.,、·]*\s*x/i.test(text)) return true;
+  if (/ㅅ\s*[.,、·]*\s*ㅔ\s*[.,、·]*\s*ㄱ\s*[.,、·]*\s*ㅅ/i.test(text)) return true;
+  if (/ㅅ\s*[.,、·]*\s*ㅔ\s*[.,、·]*\s*ㄱ\s*[.,、·]*\s*ㅡ/i.test(text)) return true;
+  
+  return false;
 }
 
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방가|안녕하세요)/i;
 
-// 자기소개 패턴 (기반/만든/작동 등도 포함 - 기반 질문은 사양으로)
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는|소개|설명|정보|알려)/i;
-// 기반/구조 질문은 시스템 사양으로
 const systemPatterns = /(기반|만들|작동|원리|어떻게|무슨|구조|엔진|베이스|기초)/i;
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 const chartPattern = /(표|그래프|차트|테이블).*(만들어|그려|보여|생성|작성)/i;
+const retryPattern = /(다시|재추론|한번 더|다시 한번|또|재시도|다시 찾아|다시 검색|한번만 더).*(추론|찾아|검색|해봐|시도|해줘|생각)/i;
 
 const KEYWORD_ALIASES = { '여야': '여아', '남자': '남성', '여자': '여성', '트젠': '트랜스젠더', '아이': '남아', '어린이': '남아' };
 
@@ -314,6 +386,7 @@ const replies = {
   thanks: [`ㅇㅋ ${userName}.`, `별거 아냐.`, `ㄱㅅ.`],
   nameSet: [`알았어 ${userName}!`, `ㅇㅋ ${userName}로 기억.`, `좋아 ${userName}.`],
   reasoning: [`데이터 파는 중...`, `1차 실패. 2차 추론.`, `좀 더 찾을게.`],
+  retrying: [`추가 추론 시작! 더 깊이 파고들어볼게.`, `한 번 더 찾아볼게. 포기하지 마!`, `마지막 시도야. 최선을 다할게!`],
   failed: [`${userName}, 3차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘!`, `미안. 지식베이스에 없어.`],
   stopped: [`⏸️ 중단됐어 ${userName}.`, `${userName}, 답변 중단.`]
 };
@@ -344,13 +417,8 @@ function searchKnowledge(text) {
   
   if (greetingPatterns.test(lt)) return { type: 'greeting' };
   if (chartPattern.test(lt)) return { type: 'chart_wip' };
-  
-  // 기반/구조 질문 → 시스템 사양으로
   if (systemPatterns.test(lt)) return { data: knowledgeBase["사양"], confidence: 1.0, direct: true };
-  
-  // 자기소개 질문
   if (identityPatterns.test(lt)) return { type: 'identity' };
-  
   if (krlPattern.test(lt)) return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
   
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
@@ -402,6 +470,62 @@ function deepReasoning(query, attempt) {
   return null;
 }
 
+// ===== 추가 재추론 함수 =====
+function retryReasoning(query, msgId, previousAttempts = 0) {
+  const attemptKey = msgId;
+  if (!retryCount[attemptKey]) retryCount[attemptKey] = 0;
+  
+  if (retryCount[attemptKey] >= MAX_EXTRA_RETRIES) {
+    const f = replies.failed[Math.floor(Math.random() * replies.failed.length)];
+    streamText(f.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
+    delete retryCount[attemptKey];
+    return;
+  }
+  
+  retryCount[attemptKey]++;
+  const te = addTyping(msgId, previousAttempts + retryCount[attemptKey]);
+  const rMsg = replies.retrying[Math.floor(Math.random() * replies.retrying.length)];
+  const rText = rMsg.replaceAll('${userName}', userName);
+  
+  setTimeout(() => {
+    if (te) {
+      const textEl = te.querySelector('.loading-text');
+      if (textEl) textEl.textContent = rText;
+    }
+  }, 200);
+  
+  let elapsed = 0, attempt = 1, timeoutTriggered = false;
+  const timer = setInterval(() => {
+    if (timeoutTriggered) return;
+    elapsed += 100;
+    if (elapsed % RETRY_INTERVAL === 0 && elapsed < REASONING_TIMEOUT) {
+      attempt++;
+      if (attempt > MAX_RETRY_ATTEMPTS) {
+        timeoutTriggered = true; clearInterval(timer);
+        if (te) te.remove();
+        const f = replies.failed[Math.floor(Math.random() * replies.failed.length)];
+        streamText(f.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
+        delete retryCount[attemptKey];
+        return;
+      }
+      const result = deepReasoning(query, attempt + previousAttempts);
+      if (result && result.confidence >= 0.2) {
+        clearInterval(timer); if (te) te.remove();
+        streamTextWithSources(result.data.text + addEmotionalEnding(result.data.tags), result.data.sources || [], 'ai', msgId, false);
+        delete retryCount[attemptKey];
+        return;
+      }
+    }
+    if (elapsed >= REASONING_TIMEOUT && !timeoutTriggered) {
+      timeoutTriggered = true; clearInterval(timer);
+      if (te) te.remove();
+      const f = replies.failed[Math.floor(Math.random() * replies.failed.length)];
+      streamText(f.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
+      delete retryCount[attemptKey];
+    }
+  }, 100);
+}
+
 function sendBlockedMessage(msgId) {
   const randomBlocked = blockedReplies[Math.floor(Math.random() * blockedReplies.length)];
   const finalText = randomBlocked.replaceAll('${userName}', userName);
@@ -441,6 +565,18 @@ function sendMessage() {
   if (sendBtn) sendBtn.classList.remove('has-text');
   setAnsweringState(true);
   
+  // 재추론 요청 감지
+  if (retryPattern.test(text)) {
+    const te = addTyping(mid, 0);
+    const lastFailedQuery = getLastFailedQuery();
+    if (lastFailedQuery) {
+      setTimeout(() => { retryReasoning(lastFailedQuery, mid, MAX_RETRY_ATTEMPTS); }, 400);
+    } else {
+      setTimeout(() => { if (te) te.remove(); streamText(`재추론할 이전 질문이 없어. 새로운 질문을 입력해줘 ${userName}! 😊`, 'ai', mid, false); }, 400);
+    }
+    return;
+  }
+  
   const nameMatch = text.match(nameSetPattern);
   if (nameMatch) {
     userName = nameMatch[1];
@@ -472,7 +608,6 @@ function sendMessage() {
       return;
     }
     
-    // 지식 응답에 감정적 마무리 추가
     if (kb1.useSummary) {
       const te = addTyping(mid, 0);
       setTimeout(() => { if (te) te.remove(); streamTextWithSources(kb1.data.summary + addEmotionalEnding(kb1.data.tags), kb1.data.sources, 'ai', mid, false); }, 500);
@@ -499,6 +634,9 @@ function sendMessage() {
   startReasoning(text, mid, te);
 }
 
+// ===== 마지막 실패 질문 저장 =====
+let lastFailedQuery = null;
+
 function startReasoning(query, msgId, typingEl) {
   let elapsed = 0, attempt = 1, timeoutTriggered = false;
   const ult = (a) => { if (!typingEl) return; const t = typingEl.querySelector('.loading-text'); if (t) t.textContent = (replies.reasoning[a-1] || replies.reasoning[0]).replaceAll('${userName}', userName); };
@@ -511,8 +649,9 @@ function startReasoning(query, msgId, typingEl) {
       if (attempt > MAX_RETRY_ATTEMPTS) {
         timeoutTriggered = true; clearInterval(timer);
         if (typingEl) typingEl.remove();
+        lastFailedQuery = query; // 실패 질문 저장
         const f = replies.failed[Math.floor(Math.random()*replies.failed.length)];
-        streamText(f.replaceAll('${userName}',userName).replaceAll('${TEAM_EMAIL}',TEAM_EMAIL), 'ai', msgId, false);
+        streamText(f.replaceAll('${userName}',userName).replaceAll('${TEAM_EMAIL}',TEAM_EMAIL) + '\n\n💡 "다시 추론해봐" 또는 "한번 더 찾아줘"라고 말하면 추가 추론을 시도할게!', 'ai', msgId, false);
         activeReasoning.delete(msgId);
         return;
       }
@@ -528,13 +667,16 @@ function startReasoning(query, msgId, typingEl) {
     if (elapsed >= REASONING_TIMEOUT && !timeoutTriggered) {
       timeoutTriggered = true; clearInterval(timer);
       if (typingEl) typingEl.remove();
+      lastFailedQuery = query; // 실패 질문 저장
       const f = replies.failed[Math.floor(Math.random()*replies.failed.length)];
-      streamText(f.replaceAll('${userName}',userName).replaceAll('${TEAM_EMAIL}',TEAM_EMAIL), 'ai', msgId, false);
+      streamText(f.replaceAll('${userName}',userName).replaceAll('${TEAM_EMAIL}',TEAM_EMAIL) + '\n\n💡 "다시 추론해봐" 또는 "한번 더 찾아줘"라고 말하면 추가 추론을 시도할게!', 'ai', msgId, false);
       activeReasoning.delete(msgId);
     }
   }, 100);
   activeReasoning.set(msgId, { timer, attempts: attempt, typingEl });
 }
+
+function getLastFailedQuery() { return lastFailedQuery; }
 
 function addMessage(text, type, msgId) { if (!chatList) return; const m = document.createElement('div'); m.className = `msg ${type}`; m.dataset.msgId = msgId; m.innerHTML = `<div class="avatar">${type==='user'?userName[0].toUpperCase():'C'}</div><div class="bubble">${text}</div>`; chatList.appendChild(m); scrollToBottom(); }
 
@@ -562,7 +704,7 @@ function toggleTheme() { document.body.classList.toggle('light'); if (!themeTogg
 function toggleSidebar() { if (sidebar) { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); } }
 function closeSidebar() { if (sidebar) { sidebar.classList.remove('open'); overlay.classList.remove('active'); } }
 
-function startNewChat() { activeReasoning.forEach(({timer})=>clearInterval(timer)); activeReasoning.clear(); stopStreaming(false); setAnsweringState(false); if (chatList) { chatList.innerHTML = ''; chatList.classList.remove('has-messages'); chatList.style.display = ''; } if (userInput) { userInput.value = ''; autoResize(); } if (welcomeScreen) { welcomeScreen.classList.remove('hidden'); welcomeScreen.style.display = 'flex'; } updateWelcomeTitle(); closeSidebar(); }
+function startNewChat() { activeReasoning.forEach(({timer})=>clearInterval(timer)); activeReasoning.clear(); stopStreaming(false); setAnsweringState(false); if (chatList) { chatList.innerHTML = ''; chatList.classList.remove('has-messages'); chatList.style.display = ''; } if (userInput) { userInput.value = ''; autoResize(); } if (welcomeScreen) { welcomeScreen.classList.remove('hidden'); welcomeScreen.style.display = 'flex'; } updateWelcomeTitle(); closeSidebar(); retryCount = {}; lastFailedQuery = null; }
 
 function init() {
   getElements(); if (localStorage.getItem('theme')==='light') { document.body.classList.add('light'); if (themeToggle) { const i = themeToggle.querySelector('.icon'), t = themeToggle.querySelector('.text'); if (i) i.textContent = '☀️'; if (t) t.textContent = '라이트'; } }
