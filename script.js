@@ -39,9 +39,9 @@ let currentMsgElement = null;
 const REASONING_TIMEOUT = 12000;
 const RETRY_INTERVAL = 3000;
 const MAX_RETRY_ATTEMPTS = 3;
-const MAX_EXTRA_RETRIES = 3; // 추가 재추론 최대 횟수 (총 6회)
+const MAX_EXTRA_RETRIES = 3;
 const activeReasoning = new Map();
-let retryCount = {}; // 질문 텍스트 기준 재추론 횟수 추적
+let retryCount = {};
 let lastFailedQuery = null;
 
 const MEDICAL_WHITELIST = [
@@ -142,6 +142,24 @@ function isInappropriateContent(text) {
   return false;
 }
 
+// ===== 영어 질문 감지 =====
+function isEnglishQuery(text) {
+  const koreanPattern = /[가-힣]/;
+  const englishPattern = /[a-zA-Z]/;
+  const koreanCount = (text.match(koreanPattern) || []).length;
+  const englishCount = (text.match(englishPattern) || []).length;
+  
+  // 한국어가 거의 없고 영어가 주된 경우
+  if (koreanCount < 2 && englishCount > koreanCount * 2) return true;
+  
+  // 전체 문장의 50% 이상이 영단어인 경우
+  const words = text.split(/\s+/);
+  const englishWords = words.filter(w => /^[a-zA-Z]+$/.test(w));
+  if (englishWords.length > words.length * 0.5) return true;
+  
+  return false;
+}
+
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방가|안녕하세요)/i;
 const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는|소개|설명|정보|알려)/i;
@@ -149,6 +167,9 @@ const systemPatterns = /(기반|만들|작동|원리|어떻게|무슨|구조|엔
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 const chartPattern = /(표|그래프|차트|테이블).*(만들어|그려|보여|생성|작성)/i;
 const retryPattern = /(다시|재추론|한번 더|다시 한번|또|재시도|다시 찾아|다시 검색|한번만 더|다시.*추론|재.*추론|추론.*다시|다시.*생각).*(추론|찾아|검색|해봐|시도|해줘|생각|돌려|해보자)/i;
+
+// ===== 다른 주제 재추론 패턴 =====
+const newTopicRetryPattern = /(다른|새로운|바꿔서|변경).*(주제|질문|내용|키워드).*(추론|검색|찾아|해봐|시도)/i;
 
 const KEYWORD_ALIASES = { '여야': '여아', '남자': '남성', '여자': '여성', '트젠': '트랜스젠더', '아이': '남아', '어린이': '남아' };
 
@@ -187,24 +208,23 @@ const knowledgeBase = {
     needsReasoning: false
   },
   "독도": {
-    text: `**🇰🇷 독도는 대한민국 영토입니다**\n\n독도는 역사적·지리적·국제법적으로 명백한 대한민국의 고유 영토야.\n\n**📜 역사적 증거**\n- **512년 신라 지증왕** 때 우산국(울릉도+독도)을 정복하여 신라 영토로 편입\n- **1432년 세종실록지리지**에 독도가 울릉도와 함께 기록됨\n- **1900년 대한제국 칙령 제41호**로 독도를 공식 행정구역으로 지정\n\n**🗺️ 지리적 사실**\n- 울릉도에서 맑은 날 육안으로 보일 정도로 가까움 (87.4km)\n- 일본 오키섬에서는 157.5km로 훨씬 멀리 떨어져 있음\n\n**📋 국제법적 근거**\n- **1946년 연합군 최고사령부 지령(SCAPIN) 제677호**: 독도를 일본 영토에서 공식 분리\n- **현재**: 대한민국이 실효적으로 지배·관리 중 (경찰·등대·주민 거주)\n\n**🇯🇵 일본의 주장과 반박**\n일본은 \"다케시마(竹島)\"라고 주장하지만:\n- 1905년 시마네현에 편입했다고 주장하나, 당시는 을사늑약으로 외교권이 박탈된 시기\n\n🔗 외교부 독도: https://dokdo.mofa.go.kr`,
+    text: `**🇰🇷 독도는 대한민국 영토입니다**\n\n독도는 역사적·지리적·국제법적으로 명백한 대한민국의 고유 영토야.\n\n**📜 역사적 증거**\n- **512년 신라 지증왕** 때 우산국(울릉도+독도)을 신라 영토로 편입\n- **1432년 세종실록지리지**에 독도가 울릉도와 함께 기록\n- **1900년 대한제국 칙령 제41호**로 공식 행정구역 지정\n\n**🗺️ 지리적 사실**\n- 울릉도에서 87.4km, 일본 오키섬에서 157.5km\n\n**📋 국제법적 근거**\n- **1946년 SCAPIN 제677호**: 독도를 일본 영토에서 공식 분리\n\n🔗 외교부 독도: https://dokdo.mofa.go.kr`,
     sources: [
-      { title: "외교부 독도 공식 웹사이트", url: "https://dokdo.mofa.go.kr" },
-      { title: "동북아역사재단 독도연구소", url: "https://www.nahf.or.kr" }
+      { title: "외교부 독도 공식 웹사이트", url: "https://dokdo.mofa.go.kr" }
     ],
     keywords: ['독도', '대한민국', '일본', '영토', '주권', '울릉도', '동해'],
     tags: ['역사', '정치'],
     needsReasoning: false
   },
   "사양": {
-    text: `**${MODEL_NAME} 시스템 사양**\n\n**엔진**: Studio Ferrari + KRL\n**제작**: 스튜디오 페라리\n**특징**: 이름 기억, 출처 인용, 콘텐츠 필터\n\n💡 나는 계속 성장하고 있어.`,
+    text: `**${MODEL_NAME} 시스템 사양**\n\n**엔진**: Studio Ferrari + KRL\n**제작**: 스튜디오 페라리\n**특징**: 이름 기억, 출처 인용, 콘텐츠 필터, 추론 6단계\n\n💡 나는 계속 성장하고 있어.`,
     sources: [],
     keywords: ['사양', '시스템', '스펙', '정보', '모델', 'krl', '페라리'],
     tags: ['기술'],
     needsReasoning: false
   },
   "KRL": {
-    text: `**KRL(Knowledge Reasoning Layer)**\n\n${MODEL_NAME}의 핵심 추론 엔진이야.\n\n**역할**: 한국어 맥락 이해, 지식 그래프 연결, 팩트 검증, 추론 재시도\n**특징**: 검증 기반. 출처 있는 데이터만 우선 출력.`,
+    text: `**KRL(Knowledge Reasoning Layer)**\n\n${MODEL_NAME}의 핵심 추론 엔진이야.\n\n**역할**: 한국어 맥락 이해, 지식 그래프 연결, 팩트 검증, 키워드 가중치 기반 추론\n**특징**: 단어 길이·일치도·태그로 정밀 스코어링`,
     sources: [],
     keywords: ['krl', '케이알엘', '엔진', '추론', '데이터베이스'],
     tags: ['기술'],
@@ -371,17 +391,21 @@ const replies = {
   nameSet: [`알았어 ${userName}!`, `ㅇㅋ ${userName}로 기억.`, `좋아 ${userName}.`],
   reasoning: [`데이터 파는 중...`, `1차 실패. 2차 추론.`, `좀 더 찾을게.`],
   retrying: [
-    `추가 추론 시작! 더 깊이 파고들어볼게. (추가 ${1}회차)`,
-    `한 번 더 찾아볼게. 포기하지 마! (추가 ${2}회차)`,
-    `마지막 시도야. 최선을 다할게! (추가 ${3}회차)`
+    `추가 추론 시작! 더 깊이 파고들어볼게. (추가 1회차)`,
+    `한 번 더 찾아볼게. 포기하지 마! (추가 2회차)`,
+    `마지막 시도야. 최선을 다할게! (추가 3회차)`
   ],
   failed: [
     `${userName}, 3차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘!\n\n💡 "다시 추론해봐" 또는 "한번 더 찾아줘"라고 말하면 추가 추론을 시도할게!`,
     `미안. 지식베이스에 없어.\n\n💡 "다시 추론해봐"라고 말하면 추가 추론을 시도할게!`
   ],
+  englishRejection: [
+    `${userName}, 영어 질문은 아직 지원하지 않아요. 🚫\n\nChat K Plus는 현재 한국어에 최적화되어 있고, 영어 학습 데이터가 충분하지 않아서 정확한 답변이 어려워요.\n\n💡 같은 질문을 한국어로 해보시겠어요? 한국어로 질문하면 더 정확하고 친절하게 답변해 드릴 수 있어요! 😊`,
+    `${userName}, 죄송합니다. 아직 영어 답변은 학습되지 않았어요. 📚\n\nChat K Plus는 한국어 특화 AI라서 영어보다는 한국어로 질문해 주시면 훨씬 더 도움이 될 거예요.\n\n✨ 한국어로 다시 물어봐 주시겠어요?`
+  ],
   maxRetriesReached: [
-    `${userName}, 이 질문에 대한 추가 추론 횟수를 모두 사용했어. ⚠️\n\n지식베이스에 없는 내용은 아무리 추론해도 찾을 수 없어.\n\n💡 제안:\n- ${TEAM_EMAIL}로 피드백을 보내주면 검토 후 지식베이스에 추가할게\n- 다른 키워드로 질문을 바꿔서 물어봐\n- 새로운 주제로 대화를 시작해보는 건 어때?`,
-    `${userName}, 더 이상의 추가 추론은 불가능해. 🚫\n\n이 주제에 대해서는 지식베이스 검색과 추론을 모두 마쳤어.\n\n📧 더 정확한 정보가 필요하다면 ${TEAM_EMAIL}로 피드백을 보내줘.\n스튜디오 페라리 팀이 검토하고 지식베이스에 반영할게!`
+    `${userName}, 이 질문에 대한 추가 추론 횟수를 모두 사용했어. ⚠️\n\n지식베이스에 없는 내용은 아무리 추론해도 찾을 수 없어.\n\n💡 제안:\n- ${TEAM_EMAIL}로 피드백을 보내주면 검토 후 지식베이스에 추가할게\n- "다른 주제로 추론해봐"라고 말하면 새로운 주제로 추론을 시작할 수 있어\n- 다른 키워드로 질문을 바꿔서 물어봐`,
+    `${userName}, 더 이상의 추가 추론은 불가능해. 🚫\n\n이 주제에 대해서는 지식베이스 검색과 추론을 모두 마쳤어.\n\n📧 더 정확한 정보가 필요하다면 ${TEAM_EMAIL}로 피드백을 보내줘.\n💡 "다른 주제로 추론해봐"라고 말해보는 건 어때?`
   ],
   stopped: [`⏸️ 중단됐어 ${userName}.`, `${userName}, 답변 중단.`]
 };
@@ -406,8 +430,13 @@ function stopStreaming(showMessage = true) {
 
 function normalizeKeyword(text) { let n = text.toLowerCase(); for (const [a,t] of Object.entries(KEYWORD_ALIASES)) { if (n.includes(a)) n = n.replace(new RegExp(a,'g'),t); } return n; }
 
+// ===== 검색 함수 (영어 질문 감지 추가) =====
 function searchKnowledge(text) {
   const lt = text.toLowerCase().trim(), nt = normalizeKeyword(lt);
+  
+  // 영어 질문 감지 - 검색 전에 먼저 체크
+  if (isEnglishQuery(text)) return { type: 'english' };
+  
   if (greetingPatterns.test(lt)) return { type: 'greeting' };
   if (chartPattern.test(lt)) return { type: 'chart_wip' };
   if (systemPatterns.test(lt)) return { data: knowledgeBase["사양"], confidence: 1.0, direct: true };
@@ -447,44 +476,76 @@ function searchKnowledge(text) {
   return null;
 }
 
+// ===== 추론 함수 (정밀 스코어링) =====
 function deepReasoning(query, attempt) {
-  const words = normalizeKeyword(query).toLowerCase().replace(/[?!.]/g,' ').split(' ').filter(w => w.length > 1);
-  if (words.length === 0) return null;
+  const rawWords = normalizeKeyword(query).toLowerCase().replace(/[?!.]/g,' ').split(' ').filter(w => w.length > 1);
+  if (rawWords.length === 0) return null;
+  
+  // 단어 가중치: 긴 단어일수록 중요도 높음
+  const words = rawWords.map(w => ({ word: w, weight: Math.min(w.length, 6) }));
+  
   let bestMatch = null, bestScore = 0;
+  
   for (const [key, data] of Object.entries(knowledgeBase)) {
     if (!data.keywords) continue;
     let score = 0;
-    data.keywords.forEach(k => { words.forEach(w => { if (k.includes(w) || w.includes(k)) score += 2; if (k === w) score += 3; }); });
-    if (data.tags) data.tags.forEach(t => { words.forEach(w => { if (t.includes(w) || w.includes(t)) score += 1; }); });
+    
+    data.keywords.forEach(k => {
+      const kwLower = k.toLowerCase();
+      words.forEach(({ word, weight }) => {
+        // 정확히 일치 (높은 가중치)
+        if (word === kwLower) score += 6 * weight;
+        // 키워드가 단어를 포함 (중간 가중치)
+        else if (kwLower.includes(word)) score += 4 * weight;
+        // 단어가 키워드를 포함 (중간 가중치)
+        else if (word.includes(kwLower)) score += 3 * weight;
+        // 부분 일치 (낮은 가중치)
+        else if (word.length >= 3 && kwLower.length >= 3) {
+          if (word.substring(0, 3) === kwLower.substring(0, 3)) score += 2;
+          if (word.slice(-2) === kwLower.slice(-2)) score += 1;
+        }
+      });
+    });
+    
+    // 태그 기반 가중치
+    if (data.tags) {
+      data.tags.forEach(t => {
+        words.forEach(({ word }) => {
+          if (t.includes(word) || word.includes(t)) score += 2;
+        });
+      });
+    }
+    
     if (score > bestScore) { bestScore = score; bestMatch = data; }
   }
-  const threshold = Math.max(1, 4 - attempt);
-  if (bestScore >= threshold && bestMatch) return { data: bestMatch, confidence: bestScore / 10 };
+  
+  // 시도 횟수에 따라 임계값 완화
+  const threshold = Math.max(2, 8 - attempt * 2);
+  if (bestScore >= threshold && bestMatch) {
+    return { data: bestMatch, confidence: Math.min(bestScore / 20, 1.0) };
+  }
+  
   return null;
 }
 
-// ===== 재추론 함수 (질문 기반 횟수 추적) =====
+// ===== 재추론 함수 =====
 function retryReasoning(query, msgId, previousAttempts = 0) {
-  const attemptKey = query.trim(); // 질문 텍스트로 키 생성
+  const attemptKey = query.trim();
   
   if (!retryCount[attemptKey]) retryCount[attemptKey] = 0;
   
-  // 이미 최대 횟수 초과인지 먼저 확인
   if (retryCount[attemptKey] >= MAX_EXTRA_RETRIES) {
     const maxMsg = replies.maxRetriesReached[Math.floor(Math.random() * replies.maxRetriesReached.length)];
     streamText(maxMsg.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
     return;
   }
   
-  // 횟수 증가
   retryCount[attemptKey]++;
   const currentRetry = retryCount[attemptKey];
   
   setAnsweringState(true);
   
   const te = addTyping(msgId, previousAttempts + currentRetry);
-  
-  // 현재 횟수에 맞는 메시지 선택
   const rMsg = replies.retrying[Math.min(currentRetry - 1, replies.retrying.length - 1)];
   const rText = rMsg.replaceAll('${userName}', userName).replace(/\$\{(\d+)\}/g, currentRetry);
   
@@ -513,7 +574,6 @@ function retryReasoning(query, msgId, previousAttempts = 0) {
       if (result && result.confidence >= 0.2) {
         clearInterval(timer); if (te) te.remove();
         streamTextWithSources(result.data.text + addEmotionalEnding(result.data.tags), result.data.sources || [], 'ai', msgId, false);
-        // 성공 시 횟수 초기화
         delete retryCount[attemptKey];
         return;
       }
@@ -566,6 +626,19 @@ function sendMessage() {
   if (userInput) { userInput.value = ''; autoResize(); }
   if (sendBtn) sendBtn.classList.remove('has-text');
   
+  // 다른 주제 재추론 요청 감지
+  if (newTopicRetryPattern.test(text)) {
+    setAnsweringState(true);
+    const te = addTyping(mid, 0);
+    setTimeout(() => {
+      if (te) te.remove();
+      lastFailedQuery = null;
+      retryCount = {};
+      streamText(`🔄 추론 시스템이 초기화되었어! 새로운 주제로 다시 시작할 준비가 됐어.\n\n어떤 주제에 대해 알아보고 싶어? 편하게 물어봐 ${userName}! 😊`, 'ai', mid, false);
+    }, 400);
+    return;
+  }
+  
   // 재추론 요청 감지
   if (retryPattern.test(text)) {
     const lastQ = getLastFailedQuery();
@@ -573,7 +646,6 @@ function sendMessage() {
       const attemptKey = lastQ.trim();
       const currentCount = retryCount[attemptKey] || 0;
       
-      // 이미 최대치면 바로 거부
       if (currentCount >= MAX_EXTRA_RETRIES) {
         const maxMsg = replies.maxRetriesReached[Math.floor(Math.random() * replies.maxRetriesReached.length)];
         addMessage(maxMsg.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', mid);
@@ -606,6 +678,17 @@ function sendMessage() {
   const kb1 = searchKnowledge(text);
   
   if (kb1) {
+    // 영어 질문 처리
+    if (kb1.type === 'english') {
+      const te = addTyping(mid, 0);
+      setTimeout(() => {
+        if (te) te.remove();
+        const engMsg = replies.englishRejection[Math.floor(Math.random() * replies.englishRejection.length)];
+        streamText(engMsg.replaceAll('${userName}', userName), 'ai', mid, false);
+      }, 400);
+      return;
+    }
+    
     if (kb1.type === 'greeting') {
       const te = addTyping(mid, 0);
       setTimeout(() => { if (te) te.remove(); const r = replies.greeting[Math.floor(Math.random()*replies.greeting.length)]; streamText(r.replaceAll('${userName}',userName), 'ai', mid, false); }, 400);
@@ -670,7 +753,7 @@ function startReasoning(query, msgId, typingEl) {
       }
       ult(attempt);
       const result = deepReasoning(query, attempt);
-      if (result && result.confidence >= 0.25) {
+      if (result && result.confidence >= 0.2) {
         clearInterval(timer); if (typingEl) typingEl.remove();
         streamTextWithSources(result.data.text + addEmotionalEnding(result.data.tags), result.data.sources || [], 'ai', msgId, false);
         activeReasoning.delete(msgId);
@@ -713,28 +796,4 @@ function addTyping(msgId, attempt) { if (!chatList) return null; const m = docum
 function autoResize() { if (!userInput) return; userInput.style.height = 'auto'; userInput.style.height = userInput.scrollHeight+'px'; if (sendBtn) { if (userInput.value.trim()&&!isAnswering) sendBtn.classList.add('has-text'); else sendBtn.classList.remove('has-text'); } }
 function scrollToBottom() { if (chatList) chatList.scrollTop = chatList.scrollHeight; }
 
-function toggleTheme() { document.body.classList.toggle('light'); if (!themeToggle) return; const i = themeToggle.querySelector('.icon'), t = themeToggle.querySelector('.text'); if (document.body.classList.contains('light')) { if (i) i.textContent = '☀️'; if (t) t.textContent = '라이트'; } else { if (i) i.textContent = '🌙'; if (t) t.textContent = '다크'; } localStorage.setItem('theme', document.body.classList.contains('light')?'light':'dark'); }
-function toggleSidebar() { if (sidebar) { sidebar.classList.toggle('open'); overlay.classList.toggle('active'); } }
-function closeSidebar() { if (sidebar) { sidebar.classList.remove('open'); overlay.classList.remove('active'); } }
-
-function startNewChat() { activeReasoning.forEach(({timer})=>clearInterval(timer)); activeReasoning.clear(); stopStreaming(false); setAnsweringState(false); if (chatList) { chatList.innerHTML = ''; chatList.classList.remove('has-messages'); chatList.style.display = ''; } if (userInput) { userInput.value = ''; autoResize(); } if (welcomeScreen) { welcomeScreen.classList.remove('hidden'); welcomeScreen.style.display = 'flex'; } updateWelcomeTitle(); closeSidebar(); retryCount = {}; lastFailedQuery = null; }
-
-function init() {
-  getElements(); if (localStorage.getItem('theme')==='light') { document.body.classList.add('light'); if (themeToggle) { const i = themeToggle.querySelector('.icon'), t = themeToggle.querySelector('.text'); if (i) i.textContent = '☀️'; if (t) t.textContent = '라이트'; } }
-  updateWelcomeTitle(); if (chatList && chatList.children.length===0 && welcomeScreen) { welcomeScreen.classList.remove('hidden'); welcomeScreen.style.display = 'flex'; }
-  if (sendBtn) { sendBtn.addEventListener('click', (e)=>{e.preventDefault();sendMessage();}); sendBtn.addEventListener('touchend', (e)=>{e.preventDefault();sendMessage();}); }
-  if (userInput) { userInput.addEventListener('keydown', (e)=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}); userInput.addEventListener('input', autoResize); }
-  if (themeToggle) { themeToggle.addEventListener('click', toggleTheme); themeToggle.addEventListener('touchend', (e)=>{e.preventDefault();toggleTheme();}); }
-  if (menuBtn) { menuBtn.addEventListener('click', toggleSidebar); menuBtn.addEventListener('touchend', (e)=>{e.preventDefault();toggleSidebar();}); }
-  if (newChatBtn) { newChatBtn.addEventListener('click', startNewChat); newChatBtn.addEventListener('touchend', (e)=>{e.preventDefault();startNewChat();}); }
-  if (overlay) { overlay.addEventListener('click', closeSidebar); overlay.addEventListener('touchend', (e)=>{e.preventDefault();closeSidebar();}); }
-}
-
-function initExampleCards() { document.querySelectorAll('.example-card').forEach(card => { card.addEventListener('click', ()=>{if(isAnswering)return;getElements();if(userInput){userInput.value=card.dataset.prompt;autoResize();}sendMessage();}); card.addEventListener('touchend', (e)=>{e.preventDefault();if(isAnswering)return;getElements();if(userInput){userInput.value=card.dataset.prompt;autoResize();}sendMessage();}); }); }
-
-window.sendMessage = sendMessage; window.toggleSidebar = toggleSidebar; window.toggleTheme = toggleTheme; window.startNewChat = startNewChat;
-
-function boot() { if (window._booted) return; window._booted = true; init(); initExampleCards(); }
-document.addEventListener('DOMContentLoaded', boot); window.addEventListener('load', boot);
-setTimeout(boot, 50); setTimeout(boot, 200); setTimeout(boot, 500); setTimeout(boot, 1000);
-document.addEventListener('click', boot, { once: true }); document.addEventListener('touchend', boot, { once: true });
+function toggleTheme() { document.body.classList.toggle('light'); if (!
