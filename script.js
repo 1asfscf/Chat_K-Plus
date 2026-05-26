@@ -92,17 +92,49 @@ function isInappropriateContent(text) {
 const nameSetPattern = /(?:나는|저는|내 이름은|난)\s*([가-힣a-zA-Z0-9]{1,10})\s*(야|입니다|이에요)?/;
 const greetingPatterns = /^(안녕|하이|ㅎㅇ|hello|hi|반가워|처음|방가|안녕하세요)/i;
 
-// ===== 자기소개 패턴 대폭 확장 =====
-const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗|너의|자기소개|소개).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는|소개|설명|정보|알려|기반|만들|작동|원리|어떻게|무슨|구조)/i;
+// 자기소개 패턴 (기반/만든/작동 등도 포함 - 기반 질문은 사양으로)
+const identityPatterns = /(너는|너|니|네가|당신은|모델|ai|챗).*(누구|뭐|무엇|정체|이름|누구세요|뭐야|뭐하는|소개|설명|정보|알려)/i;
+// 기반/구조 질문은 시스템 사양으로
+const systemPatterns = /(기반|만들|작동|원리|어떻게|무슨|구조|엔진|베이스|기초)/i;
 const krlPattern = /krl.*(뭐|무엇|뭔데|뭔지|설명|알려|뜻)/i;
 const chartPattern = /(표|그래프|차트|테이블).*(만들어|그려|보여|생성|작성)/i;
 
 const KEYWORD_ALIASES = { '여야': '여아', '남자': '남성', '여자': '여성', '트젠': '트랜스젠더', '아이': '남아', '어린이': '남아' };
 
+// ===== 감정적 마무리 멘트 =====
+function addEmotionalEnding(tags) {
+  const endings = {
+    '과학': '\n\n🌌 호기심이 세상을 바꿔. 또 궁금한 게 생기면 언제든 물어봐!',
+    '교육': '\n\n💪 꾸준함이 가장 큰 무기야. 넌 충분히 잘할 수 있어!',
+    '기술': '\n\n🚀 기술은 결국 사람을 위한 거야. 더 편리한 세상을 함께 만들어가자!',
+    '건강': '\n\n🌱 작은 습관이 너를 바꿔. 오늘도 건강한 하루 보내!',
+    '감정': '\n\n💙 언제나 여기 있을게. 혼자가 아니야.',
+    '의학': '\n\n🏥 건강이 제일 중요해. 몸이 보내는 신호를 잘 살펴봐!',
+    '종교': '\n\n🕊️ 믿음은 각자의 소중한 여정이야. 평화로운 하루 보내!',
+    '철학': '\n\n🧠 생각이 깊어질수록 세상이 더 넓어 보여. 좋은 질문이야!',
+    '역사': '\n\n📖 역사를 아는 것은 더 나은 내일을 위한 발걸음이야.',
+    '애니메이션': '\n\n✨ 좋아하는 걸 찾았다면 그걸로 이미 행복한 거야!',
+    '일상': '\n\n🧶 소소한 것에서 행복을 찾는 게 진짜 실력이야!',
+    '문화': '\n\n🎬 좋은 영화는 인생을 바꾸기도 해. 오늘도 좋은 하루!',
+    '식품': '\n\n🥤 뭐 마실지 고민될 땐 나한테 물어봐. 항상 도와줄게!',
+    '패션': '\n\n🧦 작은 디테일이 하루를 완성해. 멋진 하루 보내!'
+  };
+
+  if (!tags || tags.length === 0) return '\n\n😊 또 궁금한 게 있으면 언제든 물어봐!';
+
+  for (const [tag, ending] of Object.entries(endings)) {
+    if (tags.some(t => t.includes(tag) || tag.includes(t))) {
+      return ending;
+    }
+  }
+
+  return '\n\n😊 또 궁금한 게 있으면 언제든 물어봐!';
+}
+
 // ===== 지식베이스 =====
 const knowledgeBase = {
   "5.18": {
-    text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**\n\n이 주제는 많은 사람들에게 아픈 역사이자 진실을 지켜야 할 소중한 유산이야.\n\n**1. 북한군 개입설** - 국방부/국정원 근거 없음 결론.\n**2. 폭동 프레임** - 계엄군 선발포, 시민군 최후 방어수단.\n**3. 희생자 수 축소** - 사망 166명, 부상 3,139명.\n**4. 유공자 가짜설** - 법원 판결로 확정.\n**5. 전두환 미화** - 1996년 내란죄 유죄 판결.\n\n💡 역사를 바로 아는 것은 미래를 위한 가장 소중한 발걸음이야.`,
+    text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**\n\n이 주제는 많은 사람들에게 아픈 역사이자 진실을 지켜야 할 소중한 유산이야.\n\n**1. 북한군 개입설** - 국방부/국정원 근거 없음 결론.\n**2. 폭동 프레임** - 계엄군 선발포, 시민군 최후 방어수단.\n**3. 희생자 수 축소** - 사망 166명, 부상 3,139명.\n**4. 유공자 가짜설** - 법원 판결로 확정.\n**5. 전두환 미화** - 1996년 내란죄 유죄 판결.`,
     sources: [{ title: "5·18기념재단", url: "https://518.org" }],
     keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄'],
     tags: ['역사', '정치'],
@@ -123,7 +155,7 @@ const knowledgeBase = {
     needsReasoning: false
   },
   "오줌": {
-    summary: `**오줌(소변) 건강 정보**\n\n건강은 작은 신호에서 시작돼. 소변은 몸의 거울이야!\n\n**기본 체크**: 색(연노랑 정상), 횟수(하루 6~8회), 냄새(약한 암모니아)\n**위험 신호**: 혈뇨, 배뇨통, 발열 동반시 즉시 병원.\n\n더 자세한 정보는 '남성', '여성', '트랜스젠더', '남아', '여아' 중 선택해서 물어봐 ${userName}. 💙`,
+    summary: `**오줌(소변) 건강 정보**\n\n건강은 작은 신호에서 시작돼. 소변은 몸의 거울이야!\n\n**기본 체크**: 색(연노랑 정상), 횟수(하루 6~8회), 냄새(약한 암모니아)\n**위험 신호**: 혈뇨, 배뇨통, 발열 동반시 즉시 병원.\n\n더 자세한 정보는 '남성', '여성', '트랜스젠더', '남아', '여아' 중 선택해서 물어봐 ${userName}.`,
     details: {
       남성: `**성인 남성 배뇨 가이드**\n- 전립선 비대: 50대 이상 잔뇨감, 야간뇨 증가시 비뇨기과\n- 요도 20cm. 요로감염 드물지만 중증\n- 아침 첫 소변 거품은 단백뇨 의심`,
       여성: `**성인 여성 배뇨 가이드**\n- 요도 4cm. 방광염 빈발\n- 배뇨 후 앞에서 뒤로 닦기\n- 임신시 빈뇨 정상. 통증/혈뇨는 병원`,
@@ -137,7 +169,7 @@ const knowledgeBase = {
     needsReasoning: true
   },
   "영화": {
-    text: `**한국 영화 지식**\n\n한국 영화는 세계적으로 인정받는 예술이야! 🇰🇷\n\n**1. 기생충 (2019)** - 봉준호. 칸 황금종려상, 아카데미 작품상.\n**2. 올드보이 (2003)** - 박찬욱. 칸 심사위원대상.\n**3. 부산행 (2016)** - 연상호. K-좀비 세계화.\n**4. 헤어질 결심 (2022)** - 박찬욱. 칸 감독상.\n\n🎬 영화는 우리 삶의 거울이야.`,
+    text: `**한국 영화 지식**\n\n한국 영화는 세계적으로 인정받는 예술이야! 🇰🇷\n\n**1. 기생충 (2019)** - 봉준호. 칸 황금종려상, 아카데미 작품상.\n**2. 올드보이 (2003)** - 박찬욱. 칸 심사위원대상.\n**3. 부산행 (2016)** - 연상호. K-좀비 세계화.\n**4. 헤어질 결심 (2022)** - 박찬욱. 칸 감독상.`,
     sources: [{ title: "한국영화데이터베이스 KMDb", url: "https://www.kmdb.or.kr" }],
     keywords: ['영화', '시네마', '무비', '감독', '배우', '기생충', '봉준호', '박찬욱'],
     tags: ['문화', '예술'],
@@ -172,56 +204,56 @@ const knowledgeBase = {
     needsReasoning: false
   },
   "감정위로": {
-    text: `**💙 감정과 위로**\n\n모든 감정은 자연스러운 반응이야.\n\n**힘들 땐**: 깊은 호흡, 운동, 친구와 대화, 취미\n항상 혼자가 아니야 ${userName}. 💙`,
+    text: `**💙 감정과 위로**\n\n모든 감정은 자연스러운 반응이야.\n\n**힘들 땐**: 깊은 호흡, 운동, 친구와 대화, 취미`,
     sources: [],
     keywords: ['힘들어', '슬퍼', '외로워', '불안', '화나', '위로', '우울', '고민', '스트레스', '감정'],
     tags: ['감정', '건강'],
     needsReasoning: false
   },
   "공부법": {
-    text: `**📚 과학적 공부법**\n\n1. 능동적 회상 - 책 덮고 쓰기\n2. 간격 반복 - 1/3/7일 복습\n3. 파인만 테크닉 - 설명하듯 정리\n4. 뽀모도로 - 25분 집중 5분 휴식\n\n꾸준함이 핵심이야 ${userName}!`,
+    text: `**📚 과학적 공부법**\n\n1. 능동적 회상 - 책 덮고 쓰기\n2. 간격 반복 - 1/3/7일 복습\n3. 파인만 테크닉 - 설명하듯 정리\n4. 뽀모도로 - 25분 집중 5분 휴식`,
     sources: [],
     keywords: ['공부', '공부법', '학습', '영어', '수학', '암기', '시험'],
     tags: ['교육'],
     needsReasoning: false
   },
   "과학": {
-    text: `**🔬 과학**\n\n과학은 호기심에서 시작돼.\n**물리학** - 중력, 전기\n**화학** - 물질의 변화\n**생물학** - 세포, DNA\n**우주** - 태양계, 블랙홀\n\n🌌 우리가 아는 건 우주의 5%도 안 돼!`,
+    text: `**🔬 과학**\n\n과학은 호기심에서 시작돼.\n**물리학** - 중력, 전기\n**화학** - 물질의 변화\n**생물학** - 세포, DNA\n**우주** - 태양계, 블랙홀`,
     sources: [],
     keywords: ['과학', '물리', '화학', '생물', '중력', '우주', 'DNA', '블랙홀'],
     tags: ['교육', '과학'],
     needsReasoning: false
   },
   "기술": {
-    text: `**💻 기술/컴퓨터**\n\n**컴퓨터** - CPU, RAM, SSD\n**인터넷** - 1969년 ARPANET\n**프로그래밍** - Python, JavaScript, Java, C++\n**AI** - 머신러닝, 딥러닝\n\nChat K Plus도 AI 기술로 만들어졌어! 🤖`,
+    text: `**💻 기술/컴퓨터**\n\n**컴퓨터** - CPU, RAM, SSD\n**인터넷** - 1969년 ARPANET\n**프로그래밍** - Python, JavaScript, Java, C++\n**AI** - 머신러닝, 딥러닝`,
     sources: [],
     keywords: ['컴퓨터', '코딩', '프로그래밍', '인터넷', 'AI', '파이썬', 'python'],
     tags: ['기술', '교육'],
     needsReasoning: false
   },
   "건강": {
-    text: `**💪 건강**\n\n**운동** - 주 150분. 하루 30분 걷기\n**수면** - 7~9시간\n**영양** - 탄수화물 45-65%, 물 2L\n\n작은 습관부터 ${userName}! 🌱`,
+    text: `**💪 건강**\n\n**운동** - 주 150분. 하루 30분 걷기\n**수면** - 7~9시간\n**영양** - 탄수화물 45-65%, 물 2L`,
     sources: [],
     keywords: ['운동', '건강', '다이어트', '수면', '영양', '식단', '헬스'],
     tags: ['건강'],
     needsReasoning: false
   },
   "양말": {
-    text: `**🧦 양말 (Socks)**\n\n**종류**: 스니커즈 삭스, 크루 삭스, 니삭스, 드레스 삭스\n**소재**: 면(통기성), 울(보온), 나일론(내구)\n**관리**: 뒤집어 세탁, 색상별 분리\n\n🧦 양말 하나로 하루가 더 편안해져!`,
+    text: `**🧦 양말 (Socks)**\n\n**종류**: 스니커즈 삭스, 크루 삭스, 니삭스, 드레스 삭스\n**소재**: 면(통기성), 울(보온), 나일론(내구)\n**관리**: 뒤집어 세탁, 색상별 분리`,
     sources: [],
     keywords: ['양말', '삭스', 'socks', '발', '니삭스', '스니커즈'],
     tags: ['일상', '패션'],
     needsReasoning: false
   },
   "개발": {
-    text: `**💻 개발자 정보**\n\n**언어**: Python, JavaScript, TypeScript, Java, C++\n**웹**: 프론트(React/Vue), 백엔드(Django/Spring)\n**GitHub**: git push/pull/commit\n**CSS 팁**: F12, flex→grid, box-sizing 체크\n\n🚀 꾸준한 연습이 실력을 만든다!`,
+    text: `**💻 개발자 정보**\n\n**언어**: Python, JavaScript, TypeScript, Java, C++\n**웹**: 프론트(React/Vue), 백엔드(Django/Spring)\n**GitHub**: git push/pull/commit\n**CSS 팁**: F12, flex→grid, box-sizing 체크`,
     sources: [{ title: "GitHub Docs", url: "https://docs.github.com" }, { title: "MDN Web Docs", url: "https://developer.mozilla.org" }],
     keywords: ['개발', '프로그래밍', '깃허브', 'github', 'css', 'html', '리액트', 'react', '노드', 'node', '풀스택', '버그'],
     tags: ['기술', '개발'],
     needsReasoning: false
   },
   "종교": {
-    text: `**🙏 주요 종교 정보**\n\nChat K Plus는 모든 종교를 존중해.\n\n**기독교** - 성경, 예수. 천주교/개신교/정교회\n**불교** - 팔만대장경, 석가모니, 윤회\n**이슬람** - 쿠란, 무함마드\n**힌두교** - 베다, 윤회, 해탈\n**유교** - 사서삼경, 공자/맹자\n\n🕊️ 믿음은 다르지만 존중은 하나야.`,
+    text: `**🙏 주요 종교 정보**\n\nChat K Plus는 모든 종교를 존중해.\n\n**기독교** - 성경, 예수. 천주교/개신교/정교회\n**불교** - 팔만대장경, 석가모니, 윤회\n**이슬람** - 쿠란, 무함마드\n**힌두교** - 베다, 윤회, 해탈\n**유교** - 사서삼경, 공자/맹자`,
     sources: [],
     keywords: ['종교', '기독교', '불교', '이슬람', '힌두교', '유교', '하나님', '예수', '부처', '성경', '교회', '기도', '코란', '공자'],
     tags: ['종교', '문화'],
@@ -242,7 +274,7 @@ const knowledgeBase = {
     needsReasoning: false
   },
   "예수": {
-    text: `**✝️ 예수 그리스도**\n\n- 탄생: 베들레헴 마구간\n- 공생애: 3년간 복음 전파, 12사도\n- 수난: 십자가형, 부활\n- 핵심: 하느님 사랑과 이웃 사랑, 산상수훈\n\n🕊️ "서로 사랑하라"`,
+    text: `**✝️ 예수 그리스도**\n\n- 탄생: 베들레헴 마구간\n- 공생애: 3년간 복음 전파, 12사도\n- 수난: 십자가형, 부활\n- 핵심: 하느님 사랑과 이웃 사랑, 산상수훈`,
     sources: [{ title: "가톨릭 교회", url: "https://www.catholic.or.kr" }],
     keywords: ['예수', '그리스도', 'jesus', 'christ', '십자가', '부활', '메시아'],
     tags: ['종교', '기독교', '역사'],
@@ -263,7 +295,7 @@ const knowledgeBase = {
     needsReasoning: false
   },
   "음료": {
-    text: `**🥤 음료 정보**\n\n☕ **커피**\n- 아메리카노: 5kcal, 카페인 150mg\n- 카페라떼: 120kcal\n\n🍵 **차**\n- 녹차: 항산화, 카테킨\n- 홍차: 완전 발효\n\n더 궁금한 거 있으면 물어봐 ${userName}! 🥤`,
+    text: `**🥤 음료 정보**\n\n☕ **커피**\n- 아메리카노: 5kcal, 카페인 150mg\n- 카페라떼: 120kcal\n\n🍵 **차**\n- 녹차: 항산화, 카테킨\n- 홍차: 완전 발효`,
     sources: [{ title: "식품의약품안전처", url: "https://www.foodsafetykorea.go.kr" }],
     keywords: ['음료', '커피', '차', '녹차', '홍차', '콜라', '사이다', '주스', '물', '라떼', '아메리카노'],
     tags: ['일상', '건강', '식품'],
@@ -311,9 +343,15 @@ function searchKnowledge(text) {
   const lt = text.toLowerCase().trim(), nt = normalizeKeyword(lt);
   
   if (greetingPatterns.test(lt)) return { type: 'greeting' };
-  if (identityPatterns.test(lt)) return { type: 'identity' };
-  if (krlPattern.test(lt)) return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
   if (chartPattern.test(lt)) return { type: 'chart_wip' };
+  
+  // 기반/구조 질문 → 시스템 사양으로
+  if (systemPatterns.test(lt)) return { data: knowledgeBase["사양"], confidence: 1.0, direct: true };
+  
+  // 자기소개 질문
+  if (identityPatterns.test(lt)) return { type: 'identity' };
+  
+  if (krlPattern.test(lt)) return { data: knowledgeBase["KRL"], confidence: 1.0, direct: true };
   
   const urineKeywords = ['오줌', '소변', '쉬', '화장실', '뇨', '방광', '배뇨'];
   if (urineKeywords.some(k => nt.includes(k))) {
@@ -424,19 +462,20 @@ function sendMessage() {
     
     if (kb1.type === 'identity') {
       const te = addTyping(mid, 0);
-      setTimeout(() => { if (te) te.remove(); streamText(MODEL_IDENTITY.desc, 'ai', mid, false); }, 400);
+      setTimeout(() => { if (te) te.remove(); streamText(MODEL_IDENTITY.desc + addEmotionalEnding(['기술']), 'ai', mid, false); }, 400);
       return;
     }
     
     if (kb1.type === 'chart_wip') {
       const te = addTyping(mid, 0);
-      setTimeout(() => { if (te) te.remove(); streamText(`**📊 표/그래프 기능 안내**\n\n표와 그래프 기능은 현재 준비 중이에요! 🛠️\n\n조금만 기다려 주시면 더 예쁘고 정확한 표와 그래프로 찾아올게요.\n\n지금은 텍스트로 정보를 보여드릴 수 있으니, 궁금한 주제를 말씀해 주세요! 😊`, 'ai', mid, false); }, 400);
+      setTimeout(() => { if (te) te.remove(); streamText(`**📊 표/그래프 기능 안내**\n\n표와 그래프 기능은 현재 준비 중이에요! 🛠️\n\n조금만 기다려 주시면 더 예쁘고 정확한 표와 그래프로 찾아올게요.\n\n지금은 텍스트로 정보를 보여드릴 수 있으니, 궁금한 주제를 말씀해 주세요!` + addEmotionalEnding(['기술']), 'ai', mid, false); }, 400);
       return;
     }
     
+    // 지식 응답에 감정적 마무리 추가
     if (kb1.useSummary) {
       const te = addTyping(mid, 0);
-      setTimeout(() => { if (te) te.remove(); streamTextWithSources(kb1.data.summary, kb1.data.sources, 'ai', mid, false); }, 500);
+      setTimeout(() => { if (te) te.remove(); streamTextWithSources(kb1.data.summary + addEmotionalEnding(kb1.data.tags), kb1.data.sources, 'ai', mid, false); }, 500);
       return;
     }
     
@@ -444,19 +483,18 @@ function sendMessage() {
       const dt = kb1.data.details[kb1.subKey];
       if (dt) {
         const te = addTyping(mid, 0);
-        setTimeout(() => { if (te) te.remove(); streamTextWithSources(dt, kb1.data.sources, 'ai', mid, false); }, 500);
+        setTimeout(() => { if (te) te.remove(); streamTextWithSources(dt + addEmotionalEnding(kb1.data.tags), kb1.data.sources, 'ai', mid, false); }, 500);
         return;
       }
     }
     
     if (kb1.direct && kb1.data.text) {
       const te = addTyping(mid, 0);
-      setTimeout(() => { if (te) te.remove(); streamTextWithSources(kb1.data.text, kb1.data.sources || [], 'ai', mid, false); }, 500);
+      setTimeout(() => { if (te) te.remove(); streamTextWithSources(kb1.data.text + addEmotionalEnding(kb1.data.tags), kb1.data.sources || [], 'ai', mid, false); }, 500);
       return;
     }
   }
   
-  // 추론 시작
   const te = addTyping(mid, 0);
   startReasoning(text, mid, te);
 }
@@ -482,7 +520,7 @@ function startReasoning(query, msgId, typingEl) {
       const result = deepReasoning(query, attempt);
       if (result && result.confidence >= 0.25) {
         clearInterval(timer); if (typingEl) typingEl.remove();
-        streamTextWithSources(result.data.text, result.data.sources || [], 'ai', msgId, false);
+        streamTextWithSources(result.data.text + addEmotionalEnding(result.data.tags), result.data.sources || [], 'ai', msgId, false);
         activeReasoning.delete(msgId);
         return;
       }
