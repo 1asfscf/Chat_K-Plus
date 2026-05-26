@@ -39,9 +39,9 @@ let currentMsgElement = null;
 const REASONING_TIMEOUT = 12000;
 const RETRY_INTERVAL = 3000;
 const MAX_RETRY_ATTEMPTS = 3;
-const MAX_EXTRA_RETRIES = 3;
+const MAX_EXTRA_RETRIES = 3; // 추가 재추론 최대 횟수 (총 6회)
 const activeReasoning = new Map();
-let retryCount = {};
+let retryCount = {}; // 질문 텍스트 기준 재추론 횟수 추적
 let lastFailedQuery = null;
 
 const MEDICAL_WHITELIST = [
@@ -187,39 +187,7 @@ const knowledgeBase = {
     needsReasoning: false
   },
   "독도": {
-    text: `**🇰🇷 독도는 대한민국 영토입니다**
-
-독도는 역사적·지리적·국제법적으로 명백한 대한민국의 고유 영토야.
-
-**📜 역사적 증거**
-- **512년 신라 지증왕** 때 우산국(울릉도+독도)을 정복하여 신라 영토로 편입
-- **1432년 세종실록지리지**에 독도가 울릉도와 함께 기록됨
-- **1900년 대한제국 칙령 제41호**로 독도를 공식 행정구역으로 지정
-
-**🗺️ 지리적 사실**
-- 울릉도에서 맑은 날 육안으로 보일 정도로 가까움 (87.4km)
-- 일본 오키섬에서는 157.5km로 훨씬 멀리 떨어져 있음
-- 동해 중간에 위치한 울릉도와 독도는 한반도의 자연스러운 연장
-
-**📋 국제법적 근거**
-- **1946년 연합군 최고사령부 지령(SCAPIN) 제677호**: 독도를 일본 영토에서 공식 분리
-- **1952년 평화조약(샌프란시스코 조약)** 발효와 함께 이승만 라인 선포
-- **현재**: 대한민국이 실효적으로 지배·관리 중 (경찰·등대·주민 거주)
-
-**🇯🇵 일본의 주장과 반박**
-일본은 "다케시마(竹島)"라고 주장하지만:
-- 1905년 시마네현에 편입했다고 주장하나, 당시는 을사늑약으로 외교권이 박탈된 시기
-- 독도를 '주인 없는 섬'으로 편입했다는 주장은 역사 기록과 모순됨
-- 국제사법재판소(ICJ) 회부 제안을 한국이 거부한 것은 '분쟁'이 아니라 '확정된 영토'이기 때문
-
-**✅ 국제사회 인정**
-- 미국 의회도서관, CIA 월드팩트북 등은 독도를 대한민국 영토로 표기
-- 2008년 미국 지명위원회(BGN)도 독도를 한국 영토로 최종 결정
-
-**🔗 관련 기관**
-- 외교부 독도: https://dokdo.mofa.go.kr
-- 경상북도 독도재단: https://www.dokdo.re.kr
-- 동북아역사재단: https://www.nahf.or.kr`,
+    text: `**🇰🇷 독도는 대한민국 영토입니다**\n\n독도는 역사적·지리적·국제법적으로 명백한 대한민국의 고유 영토야.\n\n**📜 역사적 증거**\n- **512년 신라 지증왕** 때 우산국(울릉도+독도)을 정복하여 신라 영토로 편입\n- **1432년 세종실록지리지**에 독도가 울릉도와 함께 기록됨\n- **1900년 대한제국 칙령 제41호**로 독도를 공식 행정구역으로 지정\n\n**🗺️ 지리적 사실**\n- 울릉도에서 맑은 날 육안으로 보일 정도로 가까움 (87.4km)\n- 일본 오키섬에서는 157.5km로 훨씬 멀리 떨어져 있음\n\n**📋 국제법적 근거**\n- **1946년 연합군 최고사령부 지령(SCAPIN) 제677호**: 독도를 일본 영토에서 공식 분리\n- **현재**: 대한민국이 실효적으로 지배·관리 중 (경찰·등대·주민 거주)\n\n**🇯🇵 일본의 주장과 반박**\n일본은 \"다케시마(竹島)\"라고 주장하지만:\n- 1905년 시마네현에 편입했다고 주장하나, 당시는 을사늑약으로 외교권이 박탈된 시기\n\n🔗 외교부 독도: https://dokdo.mofa.go.kr`,
     sources: [
       { title: "외교부 독도 공식 웹사이트", url: "https://dokdo.mofa.go.kr" },
       { title: "동북아역사재단 독도연구소", url: "https://www.nahf.or.kr" }
@@ -402,8 +370,15 @@ const replies = {
   thanks: [`ㅇㅋ ${userName}.`, `별거 아냐.`, `ㄱㅅ.`],
   nameSet: [`알았어 ${userName}!`, `ㅇㅋ ${userName}로 기억.`, `좋아 ${userName}.`],
   reasoning: [`데이터 파는 중...`, `1차 실패. 2차 추론.`, `좀 더 찾을게.`],
-  retrying: [`추가 추론 시작! 더 깊이 파고들어볼게.`, `한 번 더 찾아볼게. 포기하지 마!`, `마지막 시도야. 최선을 다할게!`],
-  failed: [`${userName}, 3차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘!\n\n💡 "다시 추론해봐" 또는 "한번 더 찾아줘"라고 말하면 추가 추론을 시도할게!`, `미안. 지식베이스에 없어.\n\n💡 "다시 추론해봐"라고 말하면 추가 추론을 시도할게!`],
+  retrying: [
+    `추가 추론 시작! 더 깊이 파고들어볼게. (추가 ${1}회차)`,
+    `한 번 더 찾아볼게. 포기하지 마! (추가 ${2}회차)`,
+    `마지막 시도야. 최선을 다할게! (추가 ${3}회차)`
+  ],
+  failed: [
+    `${userName}, 3차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘!\n\n💡 "다시 추론해봐" 또는 "한번 더 찾아줘"라고 말하면 추가 추론을 시도할게!`,
+    `미안. 지식베이스에 없어.\n\n💡 "다시 추론해봐"라고 말하면 추가 추론을 시도할게!`
+  ],
   maxRetriesReached: [
     `${userName}, 이 질문에 대한 추가 추론 횟수를 모두 사용했어. ⚠️\n\n지식베이스에 없는 내용은 아무리 추론해도 찾을 수 없어.\n\n💡 제안:\n- ${TEAM_EMAIL}로 피드백을 보내주면 검토 후 지식베이스에 추가할게\n- 다른 키워드로 질문을 바꿔서 물어봐\n- 새로운 주제로 대화를 시작해보는 건 어때?`,
     `${userName}, 더 이상의 추가 추론은 불가능해. 🚫\n\n이 주제에 대해서는 지식베이스 검색과 추론을 모두 마쳤어.\n\n📧 더 정확한 정보가 필요하다면 ${TEAM_EMAIL}로 피드백을 보내줘.\n스튜디오 페라리 팀이 검토하고 지식베이스에 반영할게!`
@@ -488,25 +463,30 @@ function deepReasoning(query, attempt) {
   return null;
 }
 
-// ===== 추가 재추론 함수 (6회 초과 시 강제 거부) =====
+// ===== 재추론 함수 (질문 기반 횟수 추적) =====
 function retryReasoning(query, msgId, previousAttempts = 0) {
-  const attemptKey = msgId;
+  const attemptKey = query.trim(); // 질문 텍스트로 키 생성
+  
   if (!retryCount[attemptKey]) retryCount[attemptKey] = 0;
   
-  // 6회(기본3+추가3) 초과 시 강제 거부
+  // 이미 최대 횟수 초과인지 먼저 확인
   if (retryCount[attemptKey] >= MAX_EXTRA_RETRIES) {
     const maxMsg = replies.maxRetriesReached[Math.floor(Math.random() * replies.maxRetriesReached.length)];
     streamText(maxMsg.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-    delete retryCount[attemptKey];
     return;
   }
   
+  // 횟수 증가
   retryCount[attemptKey]++;
+  const currentRetry = retryCount[attemptKey];
+  
   setAnsweringState(true);
   
-  const te = addTyping(msgId, previousAttempts + retryCount[attemptKey]);
-  const rMsg = replies.retrying[Math.floor(Math.random() * replies.retrying.length)];
-  const rText = rMsg.replaceAll('${userName}', userName);
+  const te = addTyping(msgId, previousAttempts + currentRetry);
+  
+  // 현재 횟수에 맞는 메시지 선택
+  const rMsg = replies.retrying[Math.min(currentRetry - 1, replies.retrying.length - 1)];
+  const rText = rMsg.replaceAll('${userName}', userName).replace(/\$\{(\d+)\}/g, currentRetry);
   
   setTimeout(() => {
     if (te) {
@@ -533,6 +513,7 @@ function retryReasoning(query, msgId, previousAttempts = 0) {
       if (result && result.confidence >= 0.2) {
         clearInterval(timer); if (te) te.remove();
         streamTextWithSources(result.data.text + addEmotionalEnding(result.data.tags), result.data.sources || [], 'ai', msgId, false);
+        // 성공 시 횟수 초기화
         delete retryCount[attemptKey];
         return;
       }
@@ -585,10 +566,22 @@ function sendMessage() {
   if (userInput) { userInput.value = ''; autoResize(); }
   if (sendBtn) sendBtn.classList.remove('has-text');
   
-  // 재추론 요청
+  // 재추론 요청 감지
   if (retryPattern.test(text)) {
     const lastQ = getLastFailedQuery();
     if (lastQ) {
+      const attemptKey = lastQ.trim();
+      const currentCount = retryCount[attemptKey] || 0;
+      
+      // 이미 최대치면 바로 거부
+      if (currentCount >= MAX_EXTRA_RETRIES) {
+        const maxMsg = replies.maxRetriesReached[Math.floor(Math.random() * replies.maxRetriesReached.length)];
+        addMessage(maxMsg.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', mid);
+        setAnsweringState(false);
+        autoResize();
+        return;
+      }
+      
       retryReasoning(lastQ, mid, MAX_RETRY_ATTEMPTS);
     } else {
       setAnsweringState(true);
