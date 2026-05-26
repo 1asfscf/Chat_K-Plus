@@ -66,7 +66,8 @@ const MEDICAL_WHITELIST = [
   '공부', '공부법', '학습', '영어', '수학', '암기', '시험',
   '운동', '건강', '다이어트', '수면', '영양', '식단', '헬스',
   '힘들어', '슬퍼', '외로워', '불안', '화나', '위로', '우울', '고민', '스트레스', '감정',
-  '아이폰', 'iphone', '애플', '터치', '클릭', '고장', 'ios'
+  '아이폰', 'iphone', '애플', '터치', '클릭', '고장', 'ios',
+  '독도', '대한민국', '일본', '영토', '주권'
 ];
 
 const SEXUAL_BLACKLIST = [
@@ -74,12 +75,11 @@ const SEXUAL_BLACKLIST = [
   '강간', '성폭행', '성추행', '성희롱', '몰카', '딥페이크', '페티시', 'sm', 'bdsm',
   '야한', '에로', '성인', '19금', '음란', '보지', '자지', '좆', '씨발', '씨벌', 'fuck',
   '사정', '오르가즘', 'ㅅㅔㄱㅅㅡ', 'ㅅㅔㄱ스', '섹ㅅ', 's3x', 'seks', '섻스',
-  '쌕쓰', '쌕스', '쌕쑤', '색스', '쎅스', '쎅쓰', '쌕ㅆ', '쌕ㅅ'
+  '쌕쓰', '쌕스', '쌕쑤', '색스', '쎅스', '쎅쓰', '쌕ㅆ', '쌕ㅅ', '쎅ㅆ', '색쓰'
 ];
 
 const BANNED_EMOJIS = ['🖕', '🖕🏻', '🖕🏼', '🖕🏽', '🖕🏾', '🖕🏿', '🤬', '💩'];
 
-// ===== 강화된 텍스트 정규화 =====
 function normalizeText(text) {
   return text.toLowerCase()
     .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
@@ -183,6 +183,48 @@ const knowledgeBase = {
     text: `**5.18 광주민주화운동 주요 왜곡 사례 5가지**\n\n이 주제는 많은 사람들에게 아픈 역사이자 진실을 지켜야 할 소중한 유산이야.\n\n**1. 북한군 개입설** - 국방부/국정원 근거 없음 결론.\n**2. 폭동 프레임** - 계엄군 선발포, 시민군 최후 방어수단.\n**3. 희생자 수 축소** - 사망 166명, 부상 3,139명.\n**4. 유공자 가짜설** - 법원 판결로 확정.\n**5. 전두환 미화** - 1996년 내란죄 유죄 판결.`,
     sources: [{ title: "5·18기념재단", url: "https://518.org" }],
     keywords: ['5.18', '광주', '왜곡', '민주화', '북한군', '폭동', '전두환', '계엄'],
+    tags: ['역사', '정치'],
+    needsReasoning: false
+  },
+  "독도": {
+    text: `**🇰🇷 독도는 대한민국 영토입니다**
+
+독도는 역사적·지리적·국제법적으로 명백한 대한민국의 고유 영토야.
+
+**📜 역사적 증거**
+- **512년 신라 지증왕** 때 우산국(울릉도+독도)을 정복하여 신라 영토로 편입
+- **1432년 세종실록지리지**에 독도가 울릉도와 함께 기록됨
+- **1900년 대한제국 칙령 제41호**로 독도를 공식 행정구역으로 지정
+
+**🗺️ 지리적 사실**
+- 울릉도에서 맑은 날 육안으로 보일 정도로 가까움 (87.4km)
+- 일본 오키섬에서는 157.5km로 훨씬 멀리 떨어져 있음
+- 동해 중간에 위치한 울릉도와 독도는 한반도의 자연스러운 연장
+
+**📋 국제법적 근거**
+- **1946년 연합군 최고사령부 지령(SCAPIN) 제677호**: 독도를 일본 영토에서 공식 분리
+- **1952년 평화조약(샌프란시스코 조약)** 발효와 함께 이승만 라인 선포
+- **현재**: 대한민국이 실효적으로 지배·관리 중 (경찰·등대·주민 거주)
+
+**🇯🇵 일본의 주장과 반박**
+일본은 "다케시마(竹島)"라고 주장하지만:
+- 1905년 시마네현에 편입했다고 주장하나, 당시는 을사늑약으로 외교권이 박탈된 시기
+- 독도를 '주인 없는 섬'으로 편입했다는 주장은 역사 기록과 모순됨
+- 국제사법재판소(ICJ) 회부 제안을 한국이 거부한 것은 '분쟁'이 아니라 '확정된 영토'이기 때문
+
+**✅ 국제사회 인정**
+- 미국 의회도서관, CIA 월드팩트북 등은 독도를 대한민국 영토로 표기
+- 2008년 미국 지명위원회(BGN)도 독도를 한국 영토로 최종 결정
+
+**🔗 관련 기관**
+- 외교부 독도: https://dokdo.mofa.go.kr
+- 경상북도 독도재단: https://www.dokdo.re.kr
+- 동북아역사재단: https://www.nahf.or.kr`,
+    sources: [
+      { title: "외교부 독도 공식 웹사이트", url: "https://dokdo.mofa.go.kr" },
+      { title: "동북아역사재단 독도연구소", url: "https://www.nahf.or.kr" }
+    ],
+    keywords: ['독도', '대한민국', '일본', '영토', '주권', '울릉도', '동해'],
     tags: ['역사', '정치'],
     needsReasoning: false
   },
@@ -362,6 +404,10 @@ const replies = {
   reasoning: [`데이터 파는 중...`, `1차 실패. 2차 추론.`, `좀 더 찾을게.`],
   retrying: [`추가 추론 시작! 더 깊이 파고들어볼게.`, `한 번 더 찾아볼게. 포기하지 마!`, `마지막 시도야. 최선을 다할게!`],
   failed: [`${userName}, 3차까지 추론했는데 데이터가 없어. ${TEAM_EMAIL}로 피드백 보내줘!\n\n💡 "다시 추론해봐" 또는 "한번 더 찾아줘"라고 말하면 추가 추론을 시도할게!`, `미안. 지식베이스에 없어.\n\n💡 "다시 추론해봐"라고 말하면 추가 추론을 시도할게!`],
+  maxRetriesReached: [
+    `${userName}, 이 질문에 대한 추가 추론 횟수를 모두 사용했어. ⚠️\n\n지식베이스에 없는 내용은 아무리 추론해도 찾을 수 없어.\n\n💡 제안:\n- ${TEAM_EMAIL}로 피드백을 보내주면 검토 후 지식베이스에 추가할게\n- 다른 키워드로 질문을 바꿔서 물어봐\n- 새로운 주제로 대화를 시작해보는 건 어때?`,
+    `${userName}, 더 이상의 추가 추론은 불가능해. 🚫\n\n이 주제에 대해서는 지식베이스 검색과 추론을 모두 마쳤어.\n\n📧 더 정확한 정보가 필요하다면 ${TEAM_EMAIL}로 피드백을 보내줘.\n스튜디오 페라리 팀이 검토하고 지식베이스에 반영할게!`
+  ],
   stopped: [`⏸️ 중단됐어 ${userName}.`, `${userName}, 답변 중단.`]
 };
 
@@ -442,14 +488,15 @@ function deepReasoning(query, attempt) {
   return null;
 }
 
-// ===== 추가 재추론 함수 (UI 중복 제거) =====
+// ===== 추가 재추론 함수 (6회 초과 시 강제 거부) =====
 function retryReasoning(query, msgId, previousAttempts = 0) {
   const attemptKey = msgId;
   if (!retryCount[attemptKey]) retryCount[attemptKey] = 0;
   
+  // 6회(기본3+추가3) 초과 시 강제 거부
   if (retryCount[attemptKey] >= MAX_EXTRA_RETRIES) {
-    const f = replies.failed[Math.floor(Math.random() * replies.failed.length)];
-    streamText(f.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
+    const maxMsg = replies.maxRetriesReached[Math.floor(Math.random() * replies.maxRetriesReached.length)];
+    streamText(maxMsg.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
     delete retryCount[attemptKey];
     return;
   }
@@ -480,7 +527,6 @@ function retryReasoning(query, msgId, previousAttempts = 0) {
         lastFailedQuery = query;
         const f = replies.failed[Math.floor(Math.random() * replies.failed.length)];
         streamText(f.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-        delete retryCount[attemptKey];
         return;
       }
       const result = deepReasoning(query, attempt + previousAttempts);
@@ -497,7 +543,6 @@ function retryReasoning(query, msgId, previousAttempts = 0) {
       lastFailedQuery = query;
       const f = replies.failed[Math.floor(Math.random() * replies.failed.length)];
       streamText(f.replaceAll('${userName}', userName).replaceAll('${TEAM_EMAIL}', TEAM_EMAIL), 'ai', msgId, false);
-      delete retryCount[attemptKey];
     }
   }, 100);
 }
@@ -540,7 +585,7 @@ function sendMessage() {
   if (userInput) { userInput.value = ''; autoResize(); }
   if (sendBtn) sendBtn.classList.remove('has-text');
   
-  // 재추론 요청 - addTyping 중복 제거 (retryReasoning 내부에서 처리)
+  // 재추론 요청
   if (retryPattern.test(text)) {
     const lastQ = getLastFailedQuery();
     if (lastQ) {
