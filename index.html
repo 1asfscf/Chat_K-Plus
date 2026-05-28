@@ -1,27 +1,81 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="2026년형 AI 점검 페이지 - 새로운 경험 준비 중">
+  <title>NOVA | 준비 중</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="flex h-dvh flex-col bg-[#1a1a1a]">
-    <div class="relative min-h-0 flex-1">
-      <div class="absolute inset-0 flex items-center justify-center" id="loadingSpinner">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" 
-             class="animate-spin size-8 text-white">
-          <path d="M12 2.75A9.25 9.25 0 0 1 21.25 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M21.25 12A9.25 9.25 0 0 1 12 21.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-          <path d="M12 21.25A9.25 9.25 0 0 1 2.75 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
-        </svg>
+  <div class="noise"></div>
+  
+  <main class="container">
+    <div class="orb-bg"></div>
+
+    <div class="header">
+      <div class="logo">
+        <span class="logo-icon">✦</span>
+        <span class="logo-text">NOVA</span>
       </div>
-      <iframe id="artifactFrame" sandbox="allow-scripts allow-forms allow-same-origin" 
-              class="h-full w-full border-0" style="background-color:#ffffff; opacity:0" 
-              title="공유 아티팩트"></iframe>
+      <div class="status-badge">
+        <span class="dot"></span>
+        점검 중
+      </div>
     </div>
-  </div>
+
+    <div class="hero">
+      <h1 class="hero-title">
+        <span class="gradient-text">새로운 차원의 AI</span>
+        <br>
+        곧 여러분을 찾아갑니다
+      </h1>
+      <p class="hero-desc">
+        우리는 더 똑똑하고, 더 빠르고, 더 인간적인 경험을 만들고 있어요.<br>
+        잠시만 기다려주세요 — 놀라운 변화가 시작됩니다.
+      </p>
+    </div>
+
+    <div class="grid-3d">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>실시간 추론</h3>
+        <p>2026년형 KRL 엔진, 인간의 사고를 따라잡습니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <h3>이미지 & 영상 생성</h3>
+        <p>텍스트만으로 완성되는 창작의 새로운 지평.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h3>멀티모달 연결</h3>
+        <p>앱, 웹, 문서 — 모든 콘텐츠와 대화하세요.</p>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>업데이트 진행률</span>
+        <span id="progressPercent">73</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <p class="progress-note">예상 완료: 추후 공지</p>
+    </div>
+
+    <div class="footer">
+      <div class="footer-links">
+        <a href="#">상태 페이지</a>
+        <a href="#">개발 일지</a>
+        <a href="#">알림 받기</a>
+      </div>
+      <p class="copyright">© 2026 NOVA — Meta AI에서 영감을 받은 독립적 프로젝트</p>
+    </div>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
