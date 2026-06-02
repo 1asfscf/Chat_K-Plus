@@ -1,39 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>성민이의 AI 챗봇 🤖</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Chat MVP</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <div class="chat-container">
-    <!-- 헤더 -->
-    <div class="chat-header">
-      <div class="avatar">🤖</div>
-      <div class="header-info">
-        <h2>성민이 AI</h2>
-        <span class="status">● 온라인</span>
+<body class="theme-dark">
+  <main class="app" role="application" aria-label="AI 채팅 앱">
+    <header class="app-header">
+      <div class="logo" aria-hidden="true">AI</div>
+      <h1>AI Chat</h1>
+    </header>
+
+    <section class="chat" aria-live="polite">
+      <div id="messages" class="messages">
+        <div class="msg ai">안녕하세요. 무엇을 도와드릴까요?</div>
       </div>
-    </div>
+    </section>
 
-    <!-- 채팅 영역 -->
-    <div class="chat-messages" id="chatMessages">
-      <div class="message bot">
-        <div class="bubble">
-          안녕 성민아! 나는 네 전용 AI야 🧠 뭐 물어볼 거 있어? 😄
-        </div>
-        <span class="time">방금</span>
-      </div>
-    </div>
+    <form id="composer" class="composer" autocomplete="off" aria-label="메시지 입력">
+      <input id="input" class="input" type="text" placeholder="메시지를 입력하세요" aria-label="메시지" />
+      <button type="submit" class="send">전송</button>
+    </form>
+  </main>
 
-    <!-- 입력창 -->
-    <div class="chat-input">
-      <input type="text" id="userInput" placeholder="메시지를 입력하세요..." autocomplete="off">
-      <button id="sendBtn" onclick="sendMessage()">➤</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
