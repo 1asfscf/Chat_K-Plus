@@ -1,80 +1,38 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="2026년형 AI 점검 페이지 - 새로운 경험 준비 중">
-  <title>chat k plus | 준비 중</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>성민이의 AI 챗봇 🤖</title>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="noise"></div>
-  
-  <main class="container">
-    <div class="orb-bg"></div>
-
-    <div class="header">
-      <div class="logo">
-        <span class="logo-icon">✦</span>
-        <span class="logo-text">chat k plus</span>
-      </div>
-      <div class="status-badge">
-        <span class="dot"></span>
-        점검 중
+  <div class="chat-container">
+    <!-- 헤더 -->
+    <div class="chat-header">
+      <div class="avatar">🤖</div>
+      <div class="header-info">
+        <h2>성민이 AI</h2>
+        <span class="status">● 온라인</span>
       </div>
     </div>
 
-    <div class="hero">
-      <h1 class="hero-title">
-        <span class="gradient-text">V10 기반 | chat k plus | AI</span>
-        <br>
-        곧 여러분을 찾아갑니다
-      </h1>
-      <p class="hero-desc">
-        우리는 더 똑똑하고, 더 빠르고, 더 인간적인 경험을 만들고 있어요.<br>
-        잠시만 기다려주세요 — 놀라운 변화가 시작됩니다.
-      </p>
-    </div>
-
-    <div class="grid-3d">
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>실시간 추론</h3>
-        <p>2026년형 KRL 엔진, 인간의 사고를 따라잡습니다.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎨</div>
-        <h3>이미지 & 영상 생성</h3>
-        <p>텍스트만으로 완성되는 창작의 새로운 지평.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔗</div>
-        <h3>멀티모달 연결</h3>
-        <p>앱, 웹, 문서 — 모든 콘텐츠와 대화하세요.</p>
+    <!-- 채팅 영역 -->
+    <div class="chat-messages" id="chatMessages">
+      <div class="message bot">
+        <div class="bubble">
+          안녕 성민아! 나는 네 전용 AI야 🧠 뭐 물어볼 거 있어? 😄
+        </div>
+        <span class="time">방금</span>
       </div>
     </div>
 
-    <div class="progress-section">
-      <div class="progress-header">
-        <span>업데이트 진행률</span>
-        <span id="progressPercent">73</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <p class="progress-note">예상 완료: 추후 공지</p>
+    <!-- 입력창 -->
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="메시지를 입력하세요..." autocomplete="off">
+      <button id="sendBtn" onclick="sendMessage()">➤</button>
     </div>
-
-    <div class="footer">
-      <div class="footer-links">
-        <a href="#">상태 페이지</a>
-        <a href="#">개발 일지</a>
-        <a href="#">알림 받기</a>
-      </div>
-      <p class="copyright">© 2026 NOVA — Meta AI에서 영감을 받은 독립적 프로젝트</p>
-    </div>
-  </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
