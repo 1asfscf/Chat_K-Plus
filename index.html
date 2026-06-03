@@ -2,20 +2,15 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 모바일 꽉 채우기 핵심 설정! -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Chat K plus</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- 앱 전체를 감싸는 틀 (PC에서 폰 모양으로 만들기 위함) -->
+    <!-- 앱 전체 래퍼 (여기엔 헤더 없음! JS가 알아서 넣게 함) -->
     <div id="app-wrapper">
-
-        <!-- 0. 상단 고정 해더 -->
-        <header id="app-header">
-            <div class="header-logo">◆</div>
-            <h2 class="header-title">Chat K plus</h2>
-        </header>
 
         <!-- 홈 화면 (초기 화면) -->
         <div id="home-screen">
@@ -40,16 +35,15 @@
                 <span class="question-tag" data-query="너에 대하여서">너에 대하여서</span>
             </div>
 
-            <!-- 4. 하단 경고문 (강조 버전) -->
+            <!-- 4. 하단 경고문 -->
             <footer id="home-footer">
                 <p>⚠️ 해당 <strong>Chat K plus</strong>는 실수할 수 있습니다.</p>
             </footer>
 
         </div>
 
-        <!-- 챗팅 화면 (나중에 JS로 보이게 할 거임, 지금은 숨김) -->
+        <!-- 챗팅 화면 (JS가 헤더랑 채팅방 구조를 이 안에 조립할 거임) -->
         <div id="chat-screen" class="hidden">
-            <!-- 여기엔 저번에 만든 채팅방 구조가 들어갈 예정! -->
         </div>
 
     </div>
