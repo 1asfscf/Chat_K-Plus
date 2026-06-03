@@ -1,12 +1,12 @@
 // ==========================================
-// 🧠 Chat K plus v2.0 - 두뇌 (script.js) + 추론 시스템 + 이슈 업데이트
+// 🧠 Chat K plus v2.1 - 두뇌 (script.js) + 페이지 전환 애니메이션
 // ==========================================
 
-// 1. 지식 창고 (Knowledge Base) - 2026.06.04 기준 업데이트
+// 1. 지식 창고 (Knowledge Base) - 2026.06.04 기준
 const knowledgeBase = [
     // === 기본 ===
     { keywords: ["아바타", "아바타2", "아바타 2가 뭐죠"], response: "아바타 2는 제임스 카메론 감독의 SF 영화로, 판도라 행성에서 벌어지는 나비족의 이야기를 다루고 있어. 엄청난 시각 효과가 포인트야!" },
-    { keywords: ["너", "너는", "너에", "대하여서", "누구"], response: "나는 Chat K plus v2.0이야! API 없이 내장된 지식 베이스로 대화하는 로컬 AI지. 2026년 6월 이슈까지 업데이트됐어 ㅋㅋ" },
+    { keywords: ["너", "너는", "너에", "대하여서", "누구"], response: "나는 Chat K plus v2.1이야! 페이지 전환 애니메이션까지 탑재된 로컬 AI지. 2026년 6월 이슈 업데이트 완료 ㅋㅋ" },
     { keywords: ["안녕", "하이", "반가워", "헬로"], response: "안녕! 반가워 ㅋㅋ 오늘 뭐하고 싶어? 6월 3일 지방선거 얘기나 AI 모델 얘기 어때?" },
     
     // === 중국 데이터 ===
@@ -48,8 +48,8 @@ const exampleQuestions = document.getElementById('example-questions');
 
 // 채팅방 요소들
 let chatBox, chatInput, chatSendBtn;
-// ★ 보완1: 타이머 누수 방지용 배열
 let thinkingTimers = [];
+let isAnimating = false; // ★ 애니메이션 중복 실행 방지
 
 // ==========================================
 // ⚙️ 시스템 초기화 (화면 세팅)
@@ -59,7 +59,7 @@ function buildChatScreen() {
     chatScreen.innerHTML = `
         <div id="chat-header-bar">
             <button id="back-btn">← 뒤로</button>
-            <h3>Chat K plus v2.0</h3>
+            <h3>Chat K plus v2.1</h3>
         </div>
         <div id="chat-box"></div>
         <div id="chat-input-area">
@@ -80,28 +80,63 @@ function buildChatScreen() {
     backBtn.addEventListener('click', goHome);
 }
 
+// ★ 페이지 전환 애니메이션 추가 - 홈 → 채팅
 function startChat(query) {
-    if (!query.trim()) return;
+    if (!query.trim() || isAnimating) return;
+    isAnimating = true;
 
-    homeScreen.classList.add('hidden');
+    // 1. 홈 화면 왼쪽으로 밀어내기
+    homeScreen.classList.add('slide-out');
+    homeScreen.classList.remove('slide-in');
+    
+    // 2. 채팅 화면 준비
     chatScreen.classList.remove('hidden');
+    
+    // 3. 브라우저 리플로우 강제 - 애니메이션 트리거
+    void chatScreen.offsetWidth;
+    
+    // 4. 채팅 화면 오른쪽에서 슬라이드인
+    chatScreen.classList.add('slide-in');
+    chatScreen.classList.remove('slide-out');
     
     if (!chatBox) {
         buildChatScreen();
     }
 
-    addMessage(query, 'user');
-    startReasoning(query);
+    // 5. 애니메이션 끝나고 메시지 표시 (400ms)
+    setTimeout(() => {
+        addMessage(query, 'user');
+        startReasoning(query);
+        isAnimating = false;
+    }, 400);
+
     searchInput.value = '';
 }
 
-// ★ 보완1: 뒤로가기 시 타이머 전부 취소
+// ★ 페이지 전환 애니메이션 추가 - 채팅 → 홈
 function goHome() {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    // 1. 타이머 전부 취소
     thinkingTimers.forEach(clearTimeout);
     thinkingTimers = [];
-    chatScreen.classList.add('hidden');
-    homeScreen.classList.remove('hidden');
-    if(chatBox) chatBox.innerHTML = '';
+    
+    // 2. 채팅 화면 오른쪽으로 밀어내기
+    chatScreen.classList.add('slide-out');
+    chatScreen.classList.remove('slide-in');
+    
+    // 3. 홈 화면 왼쪽에서 들어오기
+    homeScreen.classList.remove('slide-out');
+    homeScreen.classList.add('slide-in');
+    
+    // 4. 애니메이션 끝나고 채팅 화면 숨기기 + 초기화
+    setTimeout(() => {
+        chatScreen.classList.add('hidden');
+        chatScreen.classList.remove('slide-out');
+        if(chatBox) chatBox.innerHTML = '';
+        isAnimating = false;
+    }, 400);
 }
 
 // ==========================================
@@ -117,7 +152,7 @@ function handleChatSubmit() {
     startReasoning(query);
 }
 
-// ★★★ 추론 시스템 v2 - 타이머 누수 해결 ★★★
+// 추론 시스템 - 타이머 누수 해결
 function startReasoning(query) {
     // 이전 추론 중이면 전부 취소
     thinkingTimers.forEach(clearTimeout);
@@ -144,7 +179,7 @@ function startReasoning(query) {
     }, 2400));
 }
 
-// ★ 보완2: 검색 점수제 알고리즘 - 정확도 향상
+// 검색 점수제 알고리즘
 function findResponse(query) {
     const userWords = query.toLowerCase().replace(/[?.,!]/g, '').split(/\s+/);
     let bestScore = 0;
@@ -176,7 +211,6 @@ function findResponse(query) {
         }
     }
 
-    // ★ 보완3: 점수 5점 미만이면 못 찾은 걸로 처리
     if (bestMatch && bestScore >= 5) {
         return bestMatch.response;
     } else {
@@ -221,4 +255,10 @@ exampleQuestions.addEventListener('click', (e) => {
         const query = e.target.getAttribute('data-query');
         startChat(query);
     }
+});
+
+// ★ 초기 상태 세팅 - 홈 화면만 보이게
+document.addEventListener('DOMContentLoaded', () => {
+    homeScreen.classList.add('slide-in');
+    chatScreen.classList.add('hidden');
 });
