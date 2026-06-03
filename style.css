@@ -1,215 +1,134 @@
-/* --- RESET & FONT --- */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* 기본 배경색 어둡게 설정 */
 body {
-    font-family: 'Pretendard Variable', sans-serif;
-    background-color: #050505;
-    color: #e0e0e0;
-    height: 100dvh;
-    overflow: hidden;
+    background-color: #343541; /* 사진에 보이는 회색 배경 */
+    color: white;
+    font-family: 'Malgun Gothic', sans-serif; /* 윈도우 기본 폰트 */
+    margin: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* --- BACKGROUND ATMOSPHERE --- */
-.bg-glow {
-    position: fixed;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle at 50% 50%, rgba(76, 201, 240, 0.08) 0%, transparent 60%);
-    z-index: -1;
-    animation: pulse 8s infinite alternate;
-}
-@keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
-
-/* --- MAIN CHAT WRAPPER (The Glass Capsule) --- */
-.chat-wrapper {
-    width: 95%;
-    max-width: 600px;
-    height: 90dvh;
-    background: rgba(10, 10, 15, 0.6); /* 배경 불투명도 약간 증가 */
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 32px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-    overflow: hidden;
+/* 화면 가운데 있는 커다란 틀 */
+.container {
+    width: 600px;
+    height: 700px;
+    background-color: #343541;
     position: relative;
-}
-
-/* --- TOP BAR --- */
-.top-bar {
-    padding: 20px 24px 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* 헤더 구분선 추가 */
-}
-.logo-text { font-size: 1.1rem; font-weight: 800; letter-spacing: -1px; color: #fff; }
-.accent { color: #4cc9f0; text-shadow: 0 0 10px rgba(76, 201, 240, 0.5); }
-.status-indicator { font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 6px; }
-.dot { width: 6px; height: 6px; background: #4cc9f0; border-radius: 50%; display: inline-block; box-shadow: 0 0 6px #4cc9f0; }
-
-/* --- MESSAGE AREA --- */
-.msg-area {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    scroll-behavior: smooth;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    align-items: center;
+    padding-top: 100px;
+    box-sizing: border-box;
 }
-.msg-area::-webkit-scrollbar { display: none; }
 
-/* --- MESSAGES --- */
-.msg { display: flex; align-items: flex-end; gap: 10px; max-width: 85%; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.avatar-sm {
-    width: 32px; height: 32px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.8rem;
-    color: #4cc9f0;
-    flex-shrink: 0;
-    border: 1px solid rgba(76, 201, 240, 0.3);
-}
-.content {
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #ccc;
-}
-.user-msg { align-self: flex-end; flex-direction: row-reverse; }
-.user-content {
-    background: #4cc9f0;
-    color: #000;
-    font-weight: 600;
-    border-bottom-right-radius: 4px;
-    border: none;
-}
-.bot-msg { align-self: flex-start; }
-.bot-msg .content { border-bottom-left-radius: 4px; }
-
-@keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-/* --- 🧠 REASONING UI (New Design) --- */
-.reasoning-box {
-    align-self: center;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-    transition: opacity 0.3s;
-    z-index: 5;
-}
-.hidden { display: none !important; opacity: 0; pointer-events: none; }
-
-/* 개별 추론 단계 카드 */
-.reasoning-step {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(76, 201, 240, 0.2);
-    border-radius: 16px;
-    padding: 12px 18px;
-    width: fit-content;
-    max-width: 90%;
-    box-shadow: 0 0 20px rgba(76, 201, 240, 0.1);
+/* 로고 스타일 */
+.logo {
+    position: absolute;
+    top: 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    opacity: 0; /* 초기 숨김 */
-    transform: translateY(10px);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    gap: 10px;
+}
+.logo-icon {
+    font-size: 24px;
+    color: white;
+}
+.logo h1 {
+    margin: 0;
+    font-size: 20px;
 }
 
-/* 활성화 상태 (JS로 클래스 추가 예정) */
-.reasoning-step.active {
-    opacity: 1;
-    transform: translateY(0);
+/* 인사말 */
+.greeting {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
 }
 
-.reasoning-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-.reasoning-text {
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    color: #e0e0e0;
-    line-height: 1.4;
-}
-
-/* --- INPUT AREA --- */
-.input-wrapper {
-    padding: 16px 20px 24px;
+/* 검색창 묶음 */
+.search-box {
     display: flex;
-    gap: 12px;
-    align-items: center;
-    background: rgba(0,0,0,0.2);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    flex-shrink: 0;
+    width: 80%;
+    background-color: #465362;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #565d68;
 }
-
-#user-input {
+.search-box input {
     flex: 1;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50px;
-    padding: 14px 20px;
-    color: #fff;
-    font-size: 0.9rem;
-    outline: none;
-    transition: 0.3s;
-    font-family: 'Pretendard Variable', sans-serif;
-}
-#user-input:focus {
-    border-color: #4cc9f0;
-    box-shadow: 0 0 15px rgba(76, 201, 240, 0.2);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* 전송 버튼 비활성화 상태 */
-#send-btn {
-    width: 44px; height: 44px;
-    border-radius: 50%;
+    background: transparent;
     border: none;
-    background: #333; /* 비활성화 시 어두운 회색 */
-    color: #666;
-    display: flex; align-items: center; justify-content: center;
-    cursor: not-allowed;
-    transition: all 0.3s;
-    flex-shrink: 0;
-    opacity: 0.5;
+    padding: 15px;
+    color: white;
+    font-size: 15px;
+    outline: none; /* 클릭했을 때 테두리 안 생기게 함 */
 }
-
-/* 전송 버튼 활성화 상태 (JS로 클래스 추가 예정) */
-#send-btn.active {
-    background: #4cc9f0;
-    color: #000;
+.search-box button {
+    background-color: #465362;
+    color: white;
+    border: none;
+    padding: 0 20px;
     cursor: pointer;
-    opacity: 1;
-    box-shadow: 0 0 15px rgba(76, 201, 240, 0.4);
+    font-weight: bold;
 }
-#send-btn.active:active { transform: scale(0.9); }
 
-/* --- MOBILE SPECIFIC ADJUSTMENTS --- */
-@media (max-width: 600px) {
-    .chat-wrapper {
-        width: 100%;
-        height: 100dvh;
-        border-radius: 0;
-        border: none;
-    }
-    .top-bar { padding: 16px; }
-    .msg-area { padding: 16px; }
-    .input-wrapper { padding: 12px 16px 20px; }
+/* 예시 질문 버튼들 */
+.examples {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2줄 2칸으로 배치 */
+    gap: 10px;
+    width: 80%;
+    margin-top: 20px;
+}
+.example-btn {
+    background-color: transparent;
+    border: 1px solid #565d68;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.example-btn:hover {
+    background-color: #465362; /* 마우스 올렸을 때 살짝 밝아짐 */
+}
+
+/* 채팅 내용 영역 (JS에서 쓸 거라 미리 만들어둠) */
+.chat-area {
+    display: none; /* 처음엔 안 보이게 설정 */
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 맨 밑 경고문 */
+.disclaimer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 12px;
+    color: #8e8ea0;
+}
+
+/* 유저와 AI의 말풍선 기본 틀 (JS에서 붙일 거임) */
+.message {
+    margin-bottom: 20px;
+    display: flex;
+}
+.user .msg-box {
+    background-color: #343541;
+    margin-left: auto;
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+.ai .msg-box {
+    background-color: #444654;
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 10px;
 }
