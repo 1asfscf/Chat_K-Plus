@@ -1,121 +1,115 @@
-/* 기본 세팅: 장식 다 빼고 다크 회색 배경, 글씨는 연한 회색 */
-body {
+/* 기본 세팅 */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #212121; /* 사진의 정확한 배경색 */
-    color: #a1a1aa; /* 기본 연한 회색 글씨 */
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+    font-family: 'Malgun Gothic', sans-serif;
+    background-color: #f9f9f9; /* 약간 밝은 회색 배경 */
+    height: 100vh; /* 모바일 화면 꽉 채우기 */
+    overflow: hidden; /* 스크롤 방지 */
+}
+
+/* 클래스 유틸리티 */
+.hidden {
+    display: none !important; /* JS에서 화면 전환할 때 쓸 거임 */
+}
+
+/* --- 홈 화면 --- */
+#home-screen {
     height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* 상단 로고바 (화면 꼭대기에 딱 붙임) */
-.logo {
-    width: 100%;
-    max-width: 600px;
-    padding: 15px 20px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #e4e4e7; /* 로고 글씨만 좀 더 밝게 */
-}
-
-/* 시작 화면 (가운데 정렬 아님! 위에서부터 쭉 내려옴) */
-.start-screen {
-    width: 100%;
-    max-width: 600px;
-    padding: 0 20px;
-    box-sizing: border-box;
-    margin-top: 40px; /* 위에서부터 띄우는 간격 */
-}
-
-/* 인사말 */
-.greeting {
-    font-size: 22px;
-    font-weight: 500; /* 굵지 않게 */
-    color: #e4e4e7;
-    margin: 0 0 30px 0; /* 아래 검색창과의 넓은 간격 */
-}
-
-/* 검색창 (테두리 없고 그림자 없는 깨끗한 블록) */
-.search-box {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    background-color: #2c2c2c; /* 배경보다 아주 살짝 밝음 */
-    border-radius: 10px; /* 살짝만 둥글게 */
-    padding: 0 15px;
-    height: 50px;
-}
-
-.search-box input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #ffffff;
-    font-size: 14px;
-}
-
-/* 검색창 안의 기본 회색 글씨 */
-.search-box input::placeholder {
-    color: #71717a; /* 아주 연한 회색 */
-}
-
-/* Search 버튼 (배경 없이 글씨만 있는 느낌) */
-.search-box button {
-    background: transparent;
-    color: #a1a1aa;
-    border: none;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0;
-}
-
-/* 예시 질문 버튼 2x2 그리드 */
-.examples {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    width: 100%;
-    margin-top: 20px; /* 검색창과의 간격 */
-}
-
-.example-btn {
-    background-color: #2c2c2c; /* 검색창이랑 똑같은 색 */
-    border: none; /* 테두리 제거 */
-    color: #a1a1aa;
-    padding: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 13px;
-    text-align: left;
-}
-
-/* 채팅 내용 영역 (JS 때 씀) */
-.chat-area {
-    display: none;
-    width: 100%;
-    max-width: 600px;
-    flex: 1;
-    overflow-y: auto;
+    flex-direction: column; /* 위에서 아래로 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
     padding: 20px;
-    box-sizing: border-box;
 }
 
-/* 맨 아래 경고문 (바닥에 찰싹 붙임) */
-.disclaimer {
-    width: 100%;
-    max-width: 600px;
+/* 1. 로고 및 타이틀 */
+#home-header {
     text-align: center;
-    font-size: 11px;
-    color: #52525b; /* 제일 어두운 회색 */
-    padding: 20px;
-    box-sizing: border-box;
-    margin-top: auto; /* 남은 공간을 밀어내서 바닥으로 보냄 */
+    margin-bottom: 40px;
+}
+
+#logo {
+    font-size: 60px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#home-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* 2. 검색 영역 */
+#search-area {
+    display: flex;
+    width: 100%;
+    max-width: 400px; /* 모바일에서 너무 안 넓어지게 */
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 은은한 그림자 */
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#search-input {
+    flex: 1; /* 남은 공간 다 차지 */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-right: none;
+    font-size: 16px;
+    outline: none;
+}
+
+#search-btn {
+    padding: 15px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#search-btn:hover {
+    background-color: #555;
+}
+
+/* 3. 예시 질문 버튼 */
+#example-questions {
+    display: flex;
+    flex-wrap: wrap; /* 화면 넘어가면 다음 줄로 */
+    justify-content: center;
+    gap: 10px;
+    max-width: 400px;
+    margin-bottom: 50px;
+}
+
+.question-tag {
+    background-color: #f0f0f0;
+    padding: 10px 18px;
+    border-radius: 20px; /* 동그란 알약 모양 */
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: all 0.2s; /* 애니메이션 부드럽게 */
+}
+
+.question-tag:hover {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+/* 4. 하단 경고문 */
+#home-footer {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    color: #888;
+    font-size: 12px;
 }
