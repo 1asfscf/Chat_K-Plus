@@ -2,52 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chat GOL</title>
-    <!-- CSS 파일 연결하는 코드 (스타일을 여기서 가져옴) -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <!-- 전체 화면을 감싸는 커다란 박스 -->
-    <div class="container">
+    <!-- 홈 화면 (초기 화면) -->
+    <div id="home-screen">
         
-        <!-- 로고 부분 -->
-        <div class="logo">
-            <span class="logo-icon">▲</span>
-            <h1>Chat GOL</h1>
+        <!-- 1. 로고 및 타이틀 -->
+        <header id="home-header">
+            <div id="logo">▲</div>
+            <h1>무엇을 도와드릴까요?</h1>
+        </header>
+
+        <!-- 2. 검색 입력 영역 -->
+        <div id="search-area">
+            <input type="text" id="search-input" placeholder="검색을 입력하세요.">
+            <button id="search-btn">Search</button>
         </div>
 
-        <!-- 시작 화면 (채팅 시작 전 보이는 부분) -->
-        <div class="start-screen" id="startScreen">
-            <p class="greeting">무엇을 도와드릴까요?</p>
-            
-            <!-- 검색창 -->
-            <div class="search-box">
-                <input type="text" id="userInput" placeholder="질문을 입력해주세요...">
-                <button id="searchBtn">Search</button>
-            </div>
-
-            <!-- 예시 질문 버튼들 -->
-            <div class="examples">
-                <button class="example-btn" onclick="askExample('아바타 2가 필요?')">아바타 2가 필요?</button>
-                <button class="example-btn" onclick="askExample('정치')">정치</button>
-                <button class="example-btn" onclick="askExample('사회/정치2')">사회/정치2</button>
-                <button class="example-btn" onclick="askExample('너에 대하여')">너에 대하여</button>
-            </div>
+        <!-- 3. 예시 질문 버튼 영역 -->
+        <div id="example-questions">
+            <span class="question-tag" data-query="아바타 2가 뭐죠?">아바타 2가 뭐죠?</span>
+            <span class="question-tag" data-query="정치">정치</span>
+            <span class="question-tag" data-query="사회/정치2">사회/정치2</span>
+            <span class="question-tag" data-query="너에 대하여서">너에 대하여서</span>
         </div>
 
-        <!-- 채팅 내용이 나오는 곳 (처음엔 숨김) -->
-        <div class="chat-area" id="chatArea">
-            <!-- 여기에 js가 채팅 내용을 추가할 거야 -->
-        </div>
-
-        <!-- 맨 밑에 작은 글씨 경고문 -->
-        <div class="disclaimer">해당 Chat GOL (는) 실수할수 있습니다.</div>
+        <!-- 4. 하단 경고문 -->
+        <footer id="home-footer">
+            <p>해당 Chat GOL (는) 실수할 수 있습니다.</p>
+        </footer>
 
     </div>
 
-    <!-- JS 파일 연결하는 코드 (두뇌를 여기서 가져옴) -->
-    <script src="script.js"></script>
+    <!-- 챗팅 화면 (나중에 JS로 보이게 할 거임, 지금은 숨김) -->
+    <div id="chat-screen" class="hidden">
+        <!-- 여기엔 저번에 만든 채팅방 구조가 들어갈 예정! -->
+    </div>
+
+    <script src="js/script.js"></script>
 </body>
 </html>
