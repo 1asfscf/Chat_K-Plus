@@ -2,82 +2,64 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat K Plus | Modern Reasoning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat K Plus</title>
     <link rel="stylesheet" href="style.css">
-    <!-- 폰트: Pretendard (모던한 느낌) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 </head>
 <body>
 
-    <!-- 배경 블러 효과용 -->
-    <div class="bg-blur"></div>
+    <!-- 배경 효과 -->
+    <div class="bg-glow"></div>
 
-    <div class="container">
+    <!-- 메인 컨테이너 (모바일: 전체 화면 / PC: 중앙 카드) -->
+    <div class="chat-wrapper">
         
-        <!-- 사이드바 (나중에 추가 가능, 지금은 심플하게) -->
-        <aside class="sidebar">
-            <div class="logo">CHAT <span class="highlight">K+</span></div>
-            <div class="menu-item active">New Chat</div>
-            <div class="menu-item">History</div>
-            <div class="menu-item">Settings</div>
-        </aside>
+        <!-- 상단 헤더 (심플하게) -->
+        <header class="top-bar">
+            <div class="logo-text">CHAT <span class="accent">K+</span></div>
+            <div class="status-indicator">
+                <span class="dot"></span> Online
+            </div>
+        </header>
 
-        <!-- 메인 채팅 영역 -->
-        <main class="chat-area">
+        <!-- 메시지 영역 -->
+        <div class="msg-area" id="chat-box">
             
-            <!-- 헤더 -->
-            <header class="chat-header">
-                <div class="status">
-                    <div class="status-dot"></div>
-                    <span>System Online</span>
+            <!-- 🧠 추론 UI 박스 (모바일에서도 잘림 없음) -->
+            <div id="reasoning-container" class="reasoning-box hidden">
+                <div class="glass-panel">
+                    <div class="reasoning-text" id="reasoning-text"></div>
                 </div>
-                <div class="user-info">User</div>
-            </header>
-
-            <!-- 채팅 메시지 영역 -->
-            <div class="messages-container" id="chat-box">
-                
-                <!-- 🧠 여기가 핵심: 추론 UI 박스 (초기엔 숨겨짐) -->
-                <div id="reasoning-container" class="reasoning-box hidden">
-                    <div class="glass-card">
-                        <div class="reasoning-text" id="reasoning-text">
-                            <!-- JS가 여기에 텍스트를 타이핑해서 넣음 -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 환영 메시지 -->
-                <div class="message bot-msg">
-                    <div class="avatar">K</div>
-                    <div class="bubble">
-                        질문을 입력해. 팩트 기반으로 추론 후 답변한다.
-                    </div>
-                </div>
-
             </div>
 
-            <!-- 입력창 영역 -->
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="질문을 입력하세요 (예: 요즘 중국 유행 뭐야?)" autocomplete="off">
-                <button id="send-btn" onclick="handleSend()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                </button>
+            <!-- 첫 인사 -->
+            <div class="msg bot-msg">
+                <div class="avatar-sm">K</div>
+                <div class="content">
+                    질문을 입력해. 팩트 기반 추론 후 답변한다.
+                </div>
             </div>
 
-        </main>
+        </div>
+
+        <!-- 입력 영역 (하단 고정) -->
+        <div class="input-wrapper">
+            <input type="text" id="user-input" placeholder="질문 입력..." autocomplete="off">
+            <button id="send-btn" onclick="handleSend()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+        </div>
+
     </div>
 
-    <!-- 시스템 JS 연결 (나중에 만들 파일) -->
-    <!-- <script src="system.js"></script> --> 
     <script>
-        // 테스트용 임시 로직 (나중에 system.js로 교체 예정)
+        // (테스트용 로직은 이전과 동일하게 유지)
         const chatBox = document.getElementById('chat-box');
         const reasoningContainer = document.getElementById('reasoning-container');
         const reasoningText = document.getElementById('reasoning-text');
         const userInput = document.getElementById('user-input');
 
-        // 엔터키 전송
         userInput.addEventListener('keypress', (e) => {
             if(e.key === 'Enter') handleSend();
         });
@@ -86,46 +68,38 @@
             const text = userInput.value.trim();
             if(!text) return;
 
-            // 1. 유저 메시지 출력
-            appendMessage(text, 'user');
+            appendMsg(text, 'user');
             userInput.value = '';
 
-            // 2. 추론 UI 활성화 (테스트용 더미 데이터)
-            await runReasoningAnimation("질문 분석 중... 키워드 추출 완료... 지식 베이스 검색 중...");
+            // 추론 애니메이션 실행 (더미)
+            await runReasoningAnimation("🔍 Analyzing... Keywords extracted.\n🧠 Searching Knowledge Base...\n✅ Finalizing Answer...");
 
-            // 3. 봇 답변 출력 (나중에 system.js에서 받아올 답변)
-            appendMessage("(여기에 System.js에서 온 팩트 답변이 들어감)", 'bot');
+            appendMsg("System.js 연결 대기 중... (팩트 답변 예정)", 'bot');
         }
 
-        function appendMessage(text, type) {
+        function appendMsg(text, type) {
             const div = document.createElement('div');
-            div.className = `message ${type === 'user' ? 'user-msg' : 'bot-msg'}`;
+            div.className = `msg ${type}-msg`;
             
             if(type === 'user') {
-                div.innerHTML = `<div class="bubble user-bubble">${text}</div>`;
+                div.innerHTML = `<div class="content user-content">${text}</div>`;
             } else {
-                div.innerHTML = `<div class="avatar">K</div><div class="bubble">${text}</div>`;
+                div.innerHTML = `<div class="avatar-sm">K</div><div class="content">${text}</div>`;
             }
-            
             chatBox.appendChild(div);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // 추론 애니메이션 함수 (타이핑 효과)
         async function runReasoningAnimation(finalText) {
             reasoningContainer.classList.remove('hidden');
             reasoningText.innerHTML = "";
             
-            // 한 글자씩 타이핑
             for (let i = 0; i < finalText.length; i++) {
                 reasoningText.innerHTML += finalText.charAt(i);
-                // 박스가 텍스트에 맞춰 늘어나도록 스크롤 처리
                 reasoningContainer.scrollTop = reasoningContainer.scrollHeight;
-                await new Promise(r => setTimeout(r, 30)); // 타이핑 속도
+                await new Promise(r => setTimeout(r, 40));
             }
-
-            // 1.5초 대기 후 사라짐
-            await new Promise(r => setTimeout(r, 1500));
+            await new Promise(r => setTimeout(r, 1000));
             reasoningContainer.classList.add('hidden');
         }
     </script>
