@@ -2,153 +2,52 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chat K Plus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat GOL</title>
+    <!-- CSS 파일 연결하는 코드 (스타일을 여기서 가져옴) -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 </head>
 <body>
 
-    <!-- 배경 효과 -->
-    <div class="bg-glow"></div>
-
-    <!-- 메인 컨테이너 (모바일: 전체 화면 / PC: 중앙 카드) -->
-    <div class="chat-wrapper">
+    <!-- 전체 화면을 감싸는 커다란 박스 -->
+    <div class="container">
         
-        <!-- 상단 헤더 (심플하게) -->
-        <header class="top-bar">
-            <div class="logo-text">CHAT <span class="accent">K+</span></div>
-            <div class="status-indicator">
-                <span class="dot"></span> Online
-            </div>
-        </header>
+        <!-- 로고 부분 -->
+        <div class="logo">
+            <span class="logo-icon">▲</span>
+            <h1>Chat GOL</h1>
+        </div>
 
-        <!-- 메시지 영역 -->
-        <div class="msg-area" id="chat-box">
+        <!-- 시작 화면 (채팅 시작 전 보이는 부분) -->
+        <div class="start-screen" id="startScreen">
+            <p class="greeting">무엇을 도와드릴까요?</p>
             
-            <!-- 🧠 추론 UI 박스 (New Design) -->
-            <div id="reasoning-container" class="reasoning-box hidden">
-                
-                <!-- 1단계: 분석 -->
-                <div class="reasoning-step" id="step-analyzing">
-                    <span class="reasoning-icon">🔍</span>
-                    <span class="reasoning-text">Analyzing... Keywords extracted.</span>
-                </div>
-
-                <!-- 2단계: 검색 -->
-                <div class="reasoning-step" id="step-searching">
-                    <span class="reasoning-icon">🧠</span>
-                    <span class="reasoning-text">Searching Knowledge Base...</span>
-                </div>
-
-                <!-- 3단계: 마무리 -->
-                <div class="reasoning-step" id="step-finalizing">
-                    <span class="reasoning-icon">✅</span>
-                    <span class="reasoning-text">Finalizing Answer...</span>
-                </div>
-
+            <!-- 검색창 -->
+            <div class="search-box">
+                <input type="text" id="userInput" placeholder="질문을 입력해주세요...">
+                <button id="searchBtn">Search</button>
             </div>
 
-            <!-- 첫 인사 -->
-            <div class="msg bot-msg">
-                <div class="avatar-sm">K</div>
-                <div class="content">
-                    질문을 입력해. 팩트 기반 추론 후 답변한다.
-                </div>
+            <!-- 예시 질문 버튼들 -->
+            <div class="examples">
+                <button class="example-btn" onclick="askExample('아바타 2가 필요?')">아바타 2가 필요?</button>
+                <button class="example-btn" onclick="askExample('정치')">정치</button>
+                <button class="example-btn" onclick="askExample('사회/정치2')">사회/정치2</button>
+                <button class="example-btn" onclick="askExample('너에 대하여')">너에 대하여</button>
             </div>
-
         </div>
 
-        <!-- 입력 영역 (하단 고정) -->
-        <div class="input-wrapper">
-            <input type="text" id="user-input" placeholder="질문 입력..." autocomplete="off">
-            <button id="send-btn" onclick="handleSend()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-            </button>
+        <!-- 채팅 내용이 나오는 곳 (처음엔 숨김) -->
+        <div class="chat-area" id="chatArea">
+            <!-- 여기에 js가 채팅 내용을 추가할 거야 -->
         </div>
+
+        <!-- 맨 밑에 작은 글씨 경고문 -->
+        <div class="disclaimer">해당 Chat GOL (는) 실수할수 있습니다.</div>
 
     </div>
 
-    
-<script>
-    // DOM 요소 선택
-    const chatBox = document.getElementById('chat-box');
-    const reasoningContainer = document.getElementById('reasoning-container');
-    const userInput = document.getElementById('user-input');
-    const sendBtn = document.getElementById('send-btn');
-
-    // 추론 단계별 요소 선택
-    const step1 = document.getElementById('step-analyzing');
-    const step2 = document.getElementById('step-searching');
-    const step3 = document.getElementById('step-finalizing');
-
-    // 1. 전송 버튼 활성화 로직
-    userInput.addEventListener('input', () => {
-        if (userInput.value.trim().length > 0) {
-            sendBtn.classList.add('active');
-        } else {
-            sendBtn.classList.remove('active');
-        }
-    });
-
-    // 2. 메시지 전송 핸들러
-    async function handleSend() {
-        const text = userInput.value.trim();
-        if (!text) return;
-
-        appendMsg(text, 'user');
-        userInput.value = '';
-        sendBtn.classList.remove('active'); // 전송 후 버튼 비활성화
-
-        // 3. 추론 애니메이션 실행 (새로운 방식)
-        await runReasoningAnimation();
-
-        // 4. 봇 응답 추가 (더미 답변)
-        appendMsg("System.js 연결 대기 중... (팩트 답변 예정)", 'bot');
-    }
-
-    // 5. 메시지 추가 함수
-    function appendMsg(text, type) {
-        const div = document.createElement('div');
-        div.className = `msg ${type}-msg`;
-        
-        if (type === 'user') {
-            div.innerHTML = `<div class="content user-content">${text}</div>`;
-        } else {
-            div.innerHTML = `<div class="avatar-sm">K</div><div class="content">${text}</div>`;
-        }
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    // 6. 추론 애니메이션 함수 (새로운 디자인용)
-    async function runReasoningAnimation() {
-        // 모든 단계 초기화 (숨김)
-        [step1, step2, step3].forEach(step => step.classList.remove('active'));
-        reasoningContainer.classList.remove('hidden');
-
-        // 1단계: 분석 (1.5초 대기)
-        step1.classList.add('active');
-        await new Promise(r => setTimeout(r, 1500));
-
-        // 2단계: 검색 (1.5초 대기)
-        step2.classList.add('active');
-        await new Promise(r => setTimeout(r, 1500));
-
-        // 3단계: 마무리 (1.5초 대기)
-        step3.classList.add('active');
-        await new Promise(r => setTimeout(r, 1500));
-
-        // 모든 단계 숨기기
-        reasoningContainer.classList.add('hidden');
-    }
-
-    // 이벤트 리스너 등록
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
-    sendBtn.addEventListener('click', handleSend);
-
-    // 초기 상태 설정
-    sendBtn.classList.remove('active');
-</script>
+    <!-- JS 파일 연결하는 코드 (두뇌를 여기서 가져옴) -->
+    <script src="script.js"></script>
+</body>
+</html>
