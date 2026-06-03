@@ -69,69 +69,86 @@
 
     </div>
 
-    <script>
-        // (테스트용 로직은 이전과 동일하게 유지)
-        const chatBox = document.getElementById('chat-box');
-        const reasoningContainer = document.getElementById('reasoning-container');
-        const reasoningText = document.getElementById('reasoning-text');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
+    
+<script>
+    // DOM 요소 선택
+    const chatBox = document.getElementById('chat-box');
+    const reasoningContainer = document.getElementById('reasoning-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
 
-        // 입력창 감지 시 전송 버튼 활성화
-        userInput.addEventListener('input', () => {
-            if(userInput.value.trim().length > 0) {
-                sendBtn.classList.add('active');
-            } else {
-                sendBtn.classList.remove('active');
-            }
-        });
+    // 추론 단계별 요소 선택
+    const step1 = document.getElementById('step-analyzing');
+    const step2 = document.getElementById('step-searching');
+    const step3 = document.getElementById('step-finalizing');
+
+    // 1. 전송 버튼 활성화 로직
+    userInput.addEventListener('input', () => {
+        if (userInput.value.trim().length > 0) {
+            sendBtn.classList.add('active');
+        } else {
+            sendBtn.classList.remove('active');
+        }
+    });
+
+    // 2. 메시지 전송 핸들러
+    async function handleSend() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        appendMsg(text, 'user');
+        userInput.value = '';
+        sendBtn.classList.remove('active'); // 전송 후 버튼 비활성화
+
+        // 3. 추론 애니메이션 실행 (새로운 방식)
+        await runReasoningAnimation();
+
+        // 4. 봇 응답 추가 (더미 답변)
+        appendMsg("System.js 연결 대기 중... (팩트 답변 예정)", 'bot');
+    }
+
+    // 5. 메시지 추가 함수
+    function appendMsg(text, type) {
+        const div = document.createElement('div');
+        div.className = `msg ${type}-msg`;
         
-        // 초기 상태 설정
-        sendBtn.classList.remove('active');
-
-        userInput.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') handleSend();
-        });
-
-        async function handleSend() {
-            const text = userInput.value.trim();
-            if(!text) return;
-
-            appendMsg(text, 'user');
-            userInput.value = '';
-            sendBtn.classList.remove('active'); // 전송 후 비활성화
-
-            // 추론 애니메이션 실행 (더미)
-            await runReasoningAnimation("🔍 Analyzing... Keywords extracted.\n🧠 Searching Knowledge Base...\n✅ Finalizing Answer...");
-
-            appendMsg("System.js 연결 대기 중... (팩트 답변 예정)", 'bot');
+        if (type === 'user') {
+            div.innerHTML = `<div class="content user-content">${text}</div>`;
+        } else {
+            div.innerHTML = `<div class="avatar-sm">K</div><div class="content">${text}</div>`;
         }
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-        function appendMsg(text, type) {
-            const div = document.createElement('div');
-            div.className = `msg ${type}-msg`;
-            
-            if(type === 'user') {
-                div.innerHTML = `<div class="content user-content">${text}</div>`;
-            } else {
-                div.innerHTML = `<div class="avatar-sm">K</div><div class="content">${text}</div>`;
-            }
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+    // 6. 추론 애니메이션 함수 (새로운 디자인용)
+    async function runReasoningAnimation() {
+        // 모든 단계 초기화 (숨김)
+        [step1, step2, step3].forEach(step => step.classList.remove('active'));
+        reasoningContainer.classList.remove('hidden');
 
-        async function runReasoningAnimation(finalText) {
-            reasoningContainer.classList.remove('hidden');
-            reasoningText.innerHTML = "";
-            
-            for (let i = 0; i < finalText.length; i++) {
-                reasoningText.innerHTML += finalText.charAt(i);
-                reasoningContainer.scrollTop = reasoningContainer.scrollHeight;
-                await new Promise(r => setTimeout(r, 40));
-            }
-            await new Promise(r => setTimeout(r, 1000));
-            reasoningContainer.classList.add('hidden');
-        }
-    </script>
-</body>
-</html>
+        // 1단계: 분석 (1.5초 대기)
+        step1.classList.add('active');
+        await new Promise(r => setTimeout(r, 1500));
+
+        // 2단계: 검색 (1.5초 대기)
+        step2.classList.add('active');
+        await new Promise(r => setTimeout(r, 1500));
+
+        // 3단계: 마무리 (1.5초 대기)
+        step3.classList.add('active');
+        await new Promise(r => setTimeout(r, 1500));
+
+        // 모든 단계 숨기기
+        reasoningContainer.classList.add('hidden');
+    }
+
+    // 이벤트 리스너 등록
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSend();
+    });
+    sendBtn.addEventListener('click', handleSend);
+
+    // 초기 상태 설정
+    sendBtn.classList.remove('active');
+</script>
