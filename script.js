@@ -90,10 +90,11 @@ let currentSchool = '';
 let currentGrade = '';
 
 function initTimetableSystem() {
-    // 모달 HTML 동적 생성 (CSS는 니가 나중에)
+    // 모달 HTML 동적 생성 - 닫기 버튼 추가됨
     const modalHTML = `
         <div id="timetable-modal" class="modal hidden">
             <div class="modal-content">
+                <button id="modal-close" class="modal-close-btn">✕</button>
                 <div id="modal-step1">
                     <h2>학교 선택</h2>
                     <div class="school-list" id="school-list"></div>
@@ -134,6 +135,17 @@ function initTimetableSystem() {
 
     document.getElementById('modal-next1').onclick = goToStep2;
     document.getElementById('modal-confirm').onclick = confirmTimetable;
+    document.getElementById('modal-close').onclick = closeTimetableModal; // ← 닫기 추가
+
+    // ESC 키로 닫기
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('timetable-modal');
+            if (modal &&!modal.classList.contains('hidden')) {
+                closeTimetableModal();
+            }
+        }
+    });
 }
 
 function selectSchool(school) {
@@ -151,6 +163,13 @@ function openTimetableModal() {
     document.getElementById('modal-step1').classList.remove('hidden');
     document.getElementById('modal-step2').classList.add('hidden');
     document.getElementById('modal-loading').classList.add('hidden');
+}
+
+function closeTimetableModal() {
+    document.getElementById('timetable-modal').classList.add('hidden');
+    currentSchool = '';
+    document.getElementById('custom-school-input').value = '';
+    document.querySelectorAll('.school-option').forEach(b => b.classList.remove('selected'));
 }
 
 function goToStep2() {
