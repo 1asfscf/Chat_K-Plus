@@ -1,5 +1,5 @@
 // ==========================================
-// 🧠 Chat K plus v2.4.1 - FULL ORIGINAL + Timetable Patch
+// 🧠 Chat K plus v2.4.1 - FULL ORIGINAL + Timetable Patch (Fixed)
 // ==========================================
 
 const knowledgeBase = [
@@ -81,41 +81,11 @@ let isAnimating = false;
 
 let timetableData = JSON.parse(localStorage.getItem('timetableData')) || {};
 let currentSchool = '';
-let currentGrade = '';
 
-// 시간표 시스템 초기화
 function initTimetableSystem() {
-    const modalHTML = `
-        <div id="timetable-modal" class="modal hidden">
-            <div class="modal-content">
-                <div id="modal-step1">
-                    <h2>학교 선택</h2>
-                    <div class="school-list" id="school-list"></div>
-                    <div class="custom-school">
-                        <input type="text" id="custom-school-input" placeholder="기타 학교 직접 입력">
-                    </div>
-                    <button id="modal-next1" class="modal-btn">다음</button>
-                </div>
-                <div id="modal-step2" class="hidden">
-                    <h2>시간표 등록</h2>
-                    <div id="timetable-grid"></div>
-                    <button id="modal-confirm" class="modal-btn">확인</button>
-                </div>
-                <div id="modal-loading" class="hidden">
-                    <div class="loading-spinner"></div>
-                    <p>시간표 저장 중...</p>
-                </div>
-            </div>
-        </div>
-    `;
+    const modalHTML = `<div id="timetable-modal" class="modal hidden"><div class="modal-content"><div id="modal-step1"><h2>학교 선택</h2><div class="school-list" id="school-list"></div><div class="custom-school"><input type="text" id="custom-school-input" placeholder="기타 학교 직접 입력"></div><button id="modal-next1" class="modal-btn">다음</button></div><div id="modal-step2" class="hidden"><h2>시간표 등록</h2><div id="timetable-grid"></div><button id="modal-confirm" class="modal-btn">확인</button></div><div id="modal-loading" class="hidden"><div class="loading-spinner"></div><p>시간표 저장 중...</p></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-    const schools = [
-        '인천국제고', '경기과학고', '서울과학고', '대원외고', '한영외고',
-        '상산고', '민족사관고', '현대청운고', '포항제철고', '광양제철고',
-        '기타'
-    ];
-
+    const schools = ['인천국제고','경기과학고','서울과학고','대원외고','한영외고','상산고','민족사관고','현대청운고','포항제철고','광양제철고','기타'];
     const schoolList = document.getElementById('school-list');
     schools.forEach(school => {
         const btn = document.createElement('button');
@@ -124,7 +94,6 @@ function initTimetableSystem() {
         btn.onclick = (e) => selectSchool(school, e);
         schoolList.appendChild(btn);
     });
-
     document.getElementById('modal-next1').onclick = goToStep2;
     document.getElementById('modal-confirm').onclick = confirmTimetable;
 }
@@ -133,65 +102,33 @@ function selectSchool(school, e) {
     document.querySelectorAll('.school-option').forEach(b => b.classList.remove('selected'));
     e.target.classList.add('selected');
     currentSchool = school;
-    if (school === '기타') {
-        document.getElementById('custom-school-input').focus();
-    }
 }
 
 function openTimetableModal() {
     document.getElementById('timetable-modal').classList.remove('hidden');
-    document.getElementById('modal-step1').classList.remove('hidden');
-    document.getElementById('modal-step2').classList.add('hidden');
-    document.getElementById('modal-loading').classList.add('hidden');
 }
 
 function goToStep2() {
-    const customInput = document.getElementById('custom-school-input').value.trim();
-    if (currentSchool === '기타' && customInput) {
-        currentSchool = customInput;
-    }
-    if (!currentSchool) {
-        alert('학교를 선택해주세요');
-        return;
-    }
+    const custom = document.getElementById('custom-school-input').value.trim();
+    if (currentSchool === '기타' && custom) currentSchool = custom;
+    if (!currentSchool) { alert('학교를 선택해주세요'); return; }
     document.getElementById('modal-step1').classList.add('hidden');
     document.getElementById('modal-step2').classList.remove('hidden');
-
     const grid = document.getElementById('timetable-grid');
-    grid.innerHTML = `
-        <table class="timetable-table">
-            <tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr>
-            ${Array.from({length: 7}, (_, i) => `
-                <tr>
-                    <td>${i+1}</td>
-                    ${['mon','tue','wed','thu','fri'].map(day =>
-                        `<td><input type="text" data-day="${day}" data-period="${i+1}" placeholder="과목" value="${timetableData.timetable?.[day]?.[i+1] || ''}"></td>`
-                    ).join('')}
-                </tr>
-            `).join('')}
-        </table>
-    `;
+    grid.innerHTML = `<table class="timetable-table"><tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr>${Array.from({length:7},(_,i)=>`<tr><td>${i+1}</td>${['mon','tue','wed','thu','fri'].map(d=>`<td><input type="text" data-day="${d}" data-period="${i+1}" value="${timetableData.timetable?.[d]?.[i+1]||''}"></td>`).join('')}</tr>`).join('')}</table>`;
 }
 
 function confirmTimetable() {
     const inputs = document.querySelectorAll('#timetable-grid input');
     const timetable = {};
     inputs.forEach(input => {
-        const day = input.dataset.day;
-        const period = input.dataset.period;
+        const day = input.dataset.day; const period = input.dataset.period;
         if (!timetable[day]) timetable[day] = {};
         timetable[day][period] = input.value.trim();
     });
-
-    timetableData = {
-        school: currentSchool,
-        timetable: timetable,
-        updatedAt: new Date().toISOString()
-    };
-
+    timetableData = { school: currentSchool, timetable, updatedAt: new Date().toISOString() };
     document.getElementById('modal-step2').classList.add('hidden');
     document.getElementById('modal-loading').classList.remove('hidden');
-
     setTimeout(() => {
         localStorage.setItem('timetableData', JSON.stringify(timetableData));
         document.getElementById('timetable-modal').classList.add('hidden');
@@ -202,227 +139,112 @@ function confirmTimetable() {
 }
 
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-    }
-    const toggleBtn = document.createElement('button');
-    toggleBtn.id = 'theme-toggle';
-    toggleBtn.textContent = document.body.classList.contains('dark-mode')? '☀️' : '🌙';
-    toggleBtn.onclick = toggleTheme;
-    document.getElementById('app-wrapper').appendChild(toggleBtn);
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('theme', isDark? 'dark' : 'light');
-    document.getElementById('theme-toggle').textContent = isDark? '☀️' : '🌙';
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+    const btn = document.createElement('button');
+    btn.id = 'theme-toggle';
+    btn.textContent = document.body.classList.contains('dark-mode')? '☀️' : '🌙';
+    btn.onclick = () => { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode')?'dark':'light'); btn.textContent = document.body.classList.contains('dark-mode')?'☀️':'🌙'; };
+    document.getElementById('app-wrapper').appendChild(btn);
 }
 
 function buildChatScreen() {
-    chatScreen.innerHTML = `
-        <div id="chat-header-bar">
-            <button id="back-btn">← 뒤로</button>
-            <h3>Chat K plus v2.4.1</h3>
-        </div>
-        <div id="chat-box"></div>
-        <div id="chat-input-area">
-            <button id="timetable-btn" title="시간표">📅</button>
-            <input type="text" id="chat-input" placeholder="2026년 이슈 물어봐...">
-            <button id="chat-send-btn" disabled>전송</button>
-        </div>
-    `;
-    chatBox = document.getElementById('chat-box');
-    chatInput = document.getElementById('chat-input');
-    chatSendBtn = document.getElementById('chat-send-btn');
-
-    document.getElementById('timetable-btn').addEventListener('click', openTimetableModal);
-    chatInput.addEventListener('input', () => {
-        chatSendBtn.disabled =!chatInput.value.trim();
-    });
-    chatSendBtn.addEventListener('click', handleChatSubmit);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' &&!chatSendBtn.disabled) handleChatSubmit();
-    });
-    document.getElementById('back-btn').addEventListener('click', goHome);
+    chatScreen.innerHTML = `<div id="chat-header-bar"><button id="back-btn">← 뒤로</button><h3>Chat K plus v2.4.1</h3></div><div id="chat-box"></div><div id="chat-input-area"><button id="timetable-btn">📅</button><input type="text" id="chat-input" placeholder="2026년 이슈 물어봐..."><button id="chat-send-btn" disabled>전송</button></div>`;
+    chatBox = document.getElementById('chat-box'); chatInput = document.getElementById('chat-input'); chatSendBtn = document.getElementById('chat-send-btn');
+    document.getElementById('timetable-btn').onclick = openTimetableModal;
+    chatInput.oninput = () => chatSendBtn.disabled =!chatInput.value.trim();
+    chatSendBtn.onclick = handleChatSubmit;
+    chatInput.onkeypress = e => { if (e.key === 'Enter' &&!chatSendBtn.disabled) handleChatSubmit(); };
+    document.getElementById('back-btn').onclick = goHome;
 }
 
 function startChat(query) {
     if (!query.trim() || isAnimating) return;
     isAnimating = true;
-
-    homeScreen.classList.add('slide-out');
-    chatScreen.classList.remove('hidden');
-    chatScreen.classList.add('slide-in');
-
+    homeScreen.classList.add('slide-out'); chatScreen.classList.remove('hidden'); chatScreen.classList.add('slide-in');
     if (!chatBox) buildChatScreen();
-
     setTimeout(() => {
-        const justSaved = localStorage.getItem('timetableJustSaved');
-        if (justSaved === 'true') {
-            const school = localStorage.getItem('timetableSchool') || timetableData.school;
-            addMessage(`✅ ${school} 시간표 저장 완료!`, 'ai');
+        if (localStorage.getItem('timetableJustSaved') === 'true') {
+            addMessage(`✅ ${localStorage.getItem('timetableSchool')} 시간표 저장 완료!`, 'ai');
             localStorage.removeItem('timetableJustSaved');
         }
-
         addMessage(query, 'user');
-
-        // 시간표 질문 먼저 체크
-        if (!checkTimetableQuery(query)) {
-            startReasoning(query);
-        }
+        if (!checkTimetableQuery(query)) startReasoning(query);
         isAnimating = false;
     }, 400);
-
-    searchInput.value = '';
-    searchBtn.disabled = true;
+    searchInput.value = ''; searchBtn.disabled = true;
 }
 
 function goHome() {
-    if (isAnimating) return;
-    isAnimating = true;
-    thinkingTimers.forEach(clearTimeout);
-    thinkingTimers = [];
-
-    chatScreen.classList.add('slide-out');
-    homeScreen.classList.add('slide-in');
-
-    setTimeout(() => {
-        chatScreen.classList.add('hidden');
-        if(chatBox) chatBox.innerHTML = '';
-        isAnimating = false;
-    }, 400);
+    if (isAnimating) return; isAnimating = true;
+    thinkingTimers.forEach(clearTimeout); thinkingTimers = [];
+    chatScreen.classList.add('slide-out'); homeScreen.classList.add('slide-in');
+    setTimeout(() => { chatScreen.classList.add('hidden'); if(chatBox) chatBox.innerHTML = ''; isAnimating = false; }, 400);
 }
 
-// 시간표 질문 처리 - 핵심 패치
 function checkTimetableQuery(query) {
     const q = query.toLowerCase();
-    if (!q.includes('시간표') &&!q.includes('교시') &&!q.includes('수업')) {
-        return false;
-    }
-
-    // 항상 최신 데이터 로드
+    if (!q.includes('시간표') &&!q.includes('교시') &&!q.includes('수업')) return false;
     timetableData = JSON.parse(localStorage.getItem('timetableData')) || {};
+    if (!timetableData.school) { addMessage('시간표가 없어! 📅 버튼 눌러 등록해', 'ai'); return true; }
+    const map = {0:'sun',1:'mon',2:'tue',3:'wed',4:'thu',5:'fri',6:'sat'};
+    const kor = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'};
+    const today = new Date(); let day = map[today.getDay()];
+    if (q.includes('내일')) day = map[(today.getDay()+1)%7];
+    else if (q.includes('월요')) day='mon'; else if (q.includes('화요')) day='tue'; else if (q.includes('수요')) day='wed'; else if (q.includes('목요')) day='thu'; else if (q.includes('금요')) day='fri';
+    if (day==='sun'||day==='sat') { addMessage(`📅 ${timetableData.school} 주말은 수업 없어!`, 'ai'); return true; }
+    const table = timetableData.timetable[day] || {};
+    const list = []; for(let i=1;i<=7;i++) if(table[i]) list.push(`${i}교시: ${table[i]}`);
+    addMessage(list.length? `📅 ${timetableData.school} ${kor[day]}요일
 
-    if (!timetableData.school ||!timetableData.timetable) {
-        addMessage('시간표가 아직 없어! 📅 버튼 눌러서 등록해줘', 'ai');
-        return true;
-    }
-
-    const dayMap = {0:'sun',1:'mon',2:'tue',3:'wed',4:'thu',5:'fri',6:'sat'};
-    const dayKor = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sun:'일',sat:'토'};
-    const today = new Date();
-    let targetDay = dayMap[today.getDay()];
-
-    if (q.includes('내일')) {
-        targetDay = dayMap[(today.getDay() + 1) % 7];
-    } else if (q.includes('월요')) targetDay = 'mon';
-    else if (q.includes('화요')) targetDay = 'tue';
-    else if (q.includes('수요')) targetDay = 'wed';
-    else if (q.includes('목요')) targetDay = 'thu';
-    else if (q.includes('금요')) targetDay = 'fri';
-
-    if (targetDay === 'sun' || targetDay === 'sat') {
-        addMessage(`📅 ${timetableData.school} - 주말은 수업 없어!`, 'ai');
-        return true;
-    }
-
-    const dayTable = timetableData.timetable[targetDay] || {};
-    const classes = [];
-    for (let i = 1; i <= 7; i++) {
-        if (dayTable[i]) classes.push(`${i}교시: ${dayTable[i]}`);
-    }
-
-    const result = classes.length > 0
-       ? `📅 ${timetableData.school} ${dayKor[targetDay]}요일 시간표\n\n${classes.join('\n')}`
-        : `📅 ${dayKor[targetDay]}요일은 등록된 수업이 없어`;
-
-    addMessage(result, 'ai');
+${list.join('
+')}` : `📅 ${kor[day]}요일 시간표 비어있어`, 'ai');
     return true;
 }
 
 function handleChatSubmit() {
-    const query = chatInput.value;
-    if (!query.trim()) return;
-
-    addMessage(query, 'user');
-    chatInput.value = '';
-    chatSendBtn.disabled = true;
-
-    if (!checkTimetableQuery(query)) {
-        startReasoning(query);
-    }
+    const q = chatInput.value; if (!q.trim()) return;
+    addMessage(q, 'user'); chatInput.value = ''; chatSendBtn.disabled = true;
+    if (!checkTimetableQuery(q)) startReasoning(q);
 }
 
 function startReasoning(query) {
-    thinkingTimers.forEach(clearTimeout);
-    thinkingTimers = [];
-
-    const thinkingDiv = addMessage("🔍 질문 핵심 키워드 추출 중...", 'thinking');
-
-    thinkingTimers.push(setTimeout(() => {
-        if(thinkingDiv) thinkingDiv.textContent = "🧠 2026.06 DB에서 연관 정보 탐색 중...";
-    }, 800));
-
-    thinkingTimers.push(setTimeout(() => {
-        if(thinkingDiv) thinkingDiv.textContent = "💡 최신 이슈 + 팩트 크로스체크 중...";
-    }, 1600));
-
-    thinkingTimers.push(setTimeout(() => {
-        if(thinkingDiv) thinkingDiv.textContent = "✅ 추론 완료! 답변 생성";
-        thinkingTimers.push(setTimeout(() => {
-            if(thinkingDiv) thinkingDiv.remove();
-            const aiResponse = findResponse(query);
-            addMessage(aiResponse, 'ai');
-        }, 400));
-    }, 2400));
+    thinkingTimers.forEach(clearTimeout); thinkingTimers = [];
+    const div = addMessage("🔍 키워드 추출 중...", 'thinking');
+    thinkingTimers.push(setTimeout(()=>div.textContent="🧠 DB 탐색 중...",800));
+    thinkingTimers.push(setTimeout(()=>div.textContent="💡 팩트 체크 중...",1600));
+    thinkingTimers.push(setTimeout(()=>{div.remove(); addMessage(findResponse(query),'ai');},2400));
 }
 
 function findResponse(query) {
-    const userWords = query.toLowerCase().replace(/[?.,!]/g, '').split(/\s+/);
-    let bestScore = 0;
-    let bestMatch = null;
-
-    for (const item of knowledgeBase) {
-        let score = 0;
-        for (const kw of item.keywords) {
-            const kwLower = kw.toLowerCase();
-            if (userWords.includes(kwLower)) {
-                score += 10;
-            } else if (userWords.some(w => w.includes(kwLower) || kwLower.includes(w))) {
-                score += kwLower.length;
-            }
-        }
-        if (score > 0 && item.keywords.length > 1) {
-            score *= 1.2;
-        }
-        if (score > bestScore) {
-            bestScore = score;
-            bestMatch = item;
-        }
+    const words = query.toLowerCase().replace(/[?.,!]/g,'').split(/\s+/);
+    let best=null,score=0;
+    for(const item of knowledgeBase){
+        let s=0; for(const k of item.keywords){ const kw=k.toLowerCase(); if(words.includes(kw)) s+=10; else if(words.some(w=>w.includes(kw)||kw.includes(w))) s+=kw.length; }
+        if(s>score){score=s;best=item;}
     }
-
-    if (bestMatch && bestScore >= 5) {
-        return bestMatch.response;
-    } else {
-        return "음... 2026년 6월 DB엔 그 내용 없어 ㅠㅠ '시간표' 물어봐!";
-    }
+    return best&&score>=5?best.response:"음... 2026년 DB에 없어 ㅠㅠ '시간표' 물어봐!";
 }
 
-function addMessage(text, type) {
-    const msgDiv = document.createElement('div');
-    if (type === 'thinking') {
-        msgDiv.classList.add('message', 'thinking-msg');
-    } else if (type === 'user') {
-        msgDiv.classList.add('message', 'user-msg');
-    } else {
-        msgDiv.classList.add('message', 'ai-msg');
-    }
-    msgDiv.textContent = text;
-    if (chatBox) {
-        chatBox.appendChild(msgDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-    return msgDiv;
+function addMessage(text,type){
+    const d=document.createElement('div');
+    d.className='message '+(type==='user'?'user-msg':type==='thinking'?'thinking-msg':'ai-msg');
+    d.textContent=text;
+    if(chatBox){chatBox.appendChild(d); chatBox.scrollTop=chatBox.scrollHeight;}
+    return d;
 }
+
+// 초기화 - 중복 제거 버전
+function initApp() {
+    searchInput.oninput = () => searchBtn.disabled = !searchInput.value.trim();
+    searchBtn.onclick = () => startChat(searchInput.value);
+    searchInput.onkeypress = e => { if (e.key === 'Enter' && !searchBtn.disabled) startChat(searchInput.value); };
+    exampleQuestions.onclick = e => { if (e.target.classList.contains('question-tag')) startChat(e.target.dataset.query); };
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    initTheme();
+    initTimetableSystem();
+    initApp();
+    homeScreen.classList.add('slide-in');
+    chatScreen.classList.add('hidden');
+});
