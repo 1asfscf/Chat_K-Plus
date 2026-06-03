@@ -426,30 +426,3 @@ function addMessage(text, type) {
     }
     return msgDiv;
 }
-
-// 이벤트 리스너
-searchInput.addEventListener('input', () => {
-    searchBtn.disabled =!searchInput.value.trim();
-});
-searchBtn.disabled = true;
-searchBtn.addEventListener('click', () => {
-    startChat(searchInput.value);
-});
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' &&!searchBtn.disabled) {
-        startChat(searchInput.value);
-    }
-});
-exampleQuestions.addEventListener('click', (e) => {
-    if (e.target.classList.contains('question-tag')) {
-        const query = e.target.getAttribute('data-query');
-        startChat(query);
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    initTimetableSystem();
-    homeScreen.classList.add('slide-in');
-    chatScreen.classList.add('hidden');
-});
