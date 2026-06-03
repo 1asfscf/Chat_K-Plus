@@ -26,11 +26,27 @@
         <!-- 메시지 영역 -->
         <div class="msg-area" id="chat-box">
             
-            <!-- 🧠 추론 UI 박스 (모바일에서도 잘림 없음) -->
+            <!-- 🧠 추론 UI 박스 (New Design) -->
             <div id="reasoning-container" class="reasoning-box hidden">
-                <div class="glass-panel">
-                    <div class="reasoning-text" id="reasoning-text"></div>
+                
+                <!-- 1단계: 분석 -->
+                <div class="reasoning-step" id="step-analyzing">
+                    <span class="reasoning-icon">🔍</span>
+                    <span class="reasoning-text">Analyzing... Keywords extracted.</span>
                 </div>
+
+                <!-- 2단계: 검색 -->
+                <div class="reasoning-step" id="step-searching">
+                    <span class="reasoning-icon">🧠</span>
+                    <span class="reasoning-text">Searching Knowledge Base...</span>
+                </div>
+
+                <!-- 3단계: 마무리 -->
+                <div class="reasoning-step" id="step-finalizing">
+                    <span class="reasoning-icon">✅</span>
+                    <span class="reasoning-text">Finalizing Answer...</span>
+                </div>
+
             </div>
 
             <!-- 첫 인사 -->
@@ -59,6 +75,19 @@
         const reasoningContainer = document.getElementById('reasoning-container');
         const reasoningText = document.getElementById('reasoning-text');
         const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        // 입력창 감지 시 전송 버튼 활성화
+        userInput.addEventListener('input', () => {
+            if(userInput.value.trim().length > 0) {
+                sendBtn.classList.add('active');
+            } else {
+                sendBtn.classList.remove('active');
+            }
+        });
+        
+        // 초기 상태 설정
+        sendBtn.classList.remove('active');
 
         userInput.addEventListener('keypress', (e) => {
             if(e.key === 'Enter') handleSend();
@@ -70,6 +99,7 @@
 
             appendMsg(text, 'user');
             userInput.value = '';
+            sendBtn.classList.remove('active'); // 전송 후 비활성화
 
             // 추론 애니메이션 실행 (더미)
             await runReasoningAnimation("🔍 Analyzing... Keywords extracted.\n🧠 Searching Knowledge Base...\n✅ Finalizing Answer...");
