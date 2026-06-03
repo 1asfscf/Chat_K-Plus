@@ -1,20 +1,20 @@
-/* 기본 세팅: 여백 없애고, 차가운 다크그레이 배경, 글꼴 설정 */
+/* 기본 세팅: 장식 다 빼고 다크 회색 배경, 글씨는 연한 회색 */
 body {
     margin: 0;
     padding: 0;
-    background-color: #202123; /* 사진의 배경색 */
-    color: #c5c5d2; /* 기본 글씨색 (완전 하양보다 눈이 편안함) */
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* 요즘 앱들이 쓰는 깔끔한 폰트 */
-    height: 100vh; /* 화면 세로 꽉 채우기 */
+    background-color: #212121; /* 사진의 정확한 배경색 */
+    color: #a1a1aa; /* 기본 연한 회색 글씨 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* 상단 로고바 (아이콘 + Chat GOL) */
+/* 상단 로고바 (화면 꼭대기에 딱 붙임) */
 .logo {
     width: 100%;
-    max-width: 600px; /* PC에서 너무 안 넓어지게 고정 */
+    max-width: 600px;
     padding: 15px 20px;
     box-sizing: border-box;
     display: flex;
@@ -22,40 +22,35 @@ body {
     gap: 10px;
     font-size: 18px;
     font-weight: bold;
-    color: #ececf1;
+    color: #e4e4e7; /* 로고 글씨만 좀 더 밝게 */
 }
 
-/* 시작 화면 전체를 감싸는 영역 (가운데 정렬용) */
+/* 시작 화면 (가운데 정렬 아님! 위에서부터 쭉 내려옴) */
 .start-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* 화면 딱 중앙에 오게 함 */
     width: 100%;
     max-width: 600px;
     padding: 0 20px;
     box-sizing: border-box;
+    margin-top: 40px; /* 위에서부터 띄우는 간격 */
 }
 
-/* 인사말 텍스트 */
+/* 인사말 */
 .greeting {
-    font-size: 24px;
-    font-weight: 600;
-    color: #ececf1; /* 로고랑 같은 밝은 흰색 */
-    margin: 0 0 30px 0;
+    font-size: 22px;
+    font-weight: 500; /* 굵지 않게 */
+    color: #e4e4e7;
+    margin: 0 0 30px 0; /* 아래 검색창과의 넓은 간격 */
 }
 
-/* 검색창 영역 (가장 중요한 포인트) */
+/* 검색창 (테두리 없고 그림자 없는 깨끗한 블록) */
 .search-box {
     width: 100%;
     display: flex;
     align-items: center;
-    background-color: #2f2f36; /* 배경보다 살짝 밝은 회색 */
-    border-radius: 24px; /* 길쭉한 둥근 모양 */
-    padding: 12px 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* 화면 아래로 그림자를 주어 푹 파인 느낌 부여 */
-    border: 1px solid rgba(255, 255, 255, 0.05); /* 아주 연한 테두리 */
+    background-color: #2c2c2c; /* 배경보다 아주 살짝 밝음 */
+    border-radius: 10px; /* 살짝만 둥글게 */
+    padding: 0 15px;
+    height: 50px;
 }
 
 .search-box input {
@@ -63,56 +58,46 @@ body {
     background: transparent;
     border: none;
     outline: none;
-    color: #ececf1;
-    font-size: 15px;
+    color: #ffffff;
+    font-size: 14px;
 }
 
-/* input 안에 기본으로 적히는 회색 글씨(placeholder) 색상 */
+/* 검색창 안의 기본 회색 글씨 */
 .search-box input::placeholder {
-    color: #8e8ea0;
+    color: #71717a; /* 아주 연한 회색 */
 }
 
+/* Search 버튼 (배경 없이 글씨만 있는 느낌) */
 .search-box button {
-    background-color: white;
-    color: #202123;
+    background: transparent;
+    color: #a1a1aa;
     border: none;
-    padding: 8px 16px;
-    border-radius: 12px;
-    font-weight: bold;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.2s;
+    padding: 0;
 }
 
-.search-box button:hover {
-    background-color: #d1d1d6; /* 버튼에 마우스 올렸을 때 */
-}
-
-/* 예시 질문 버튼들 그리드 */
+/* 예시 질문 버튼 2x2 그리드 */
 .examples {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2줄 2칸 */
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 20px; /* 검색창과의 간격 */
 }
 
 .example-btn {
-    background-color: transparent;
-    border: 1px solid #4d4d5a; /* 얇고 어두운 테두리 */
-    color: #c5c5d2;
-    padding: 12px;
-    border-radius: 12px; /* 버튼도 살짝 둥글게 */
+    background-color: #2c2c2c; /* 검색창이랑 똑같은 색 */
+    border: none; /* 테두리 제거 */
+    color: #a1a1aa;
+    padding: 15px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 13px; /* 사진처럼 작고 심플하게 */
+    font-size: 13px;
     text-align: left;
-    transition: 0.2s;
 }
 
-.example-btn:hover {
-    background-color: #2f2f36; /* 검색창 색상과 통일감 */
-}
-
-/* 채팅 내용 영역 (나중에 JS 붙일 때 쓸 거) */
+/* 채팅 내용 영역 (JS 때 씀) */
 .chat-area {
     display: none;
     width: 100%;
@@ -123,13 +108,14 @@ body {
     box-sizing: border-box;
 }
 
-/* 맨 아래 경고문 */
+/* 맨 아래 경고문 (바닥에 찰싹 붙임) */
 .disclaimer {
     width: 100%;
     max-width: 600px;
     text-align: center;
-    font-size: 12px;
-    color: #8e8ea0;
-    padding: 15px;
+    font-size: 11px;
+    color: #52525b; /* 제일 어두운 회색 */
+    padding: 20px;
     box-sizing: border-box;
+    margin-top: auto; /* 남은 공간을 밀어내서 바닥으로 보냄 */
 }
