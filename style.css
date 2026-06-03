@@ -4,7 +4,7 @@ body {
     font-family: 'Pretendard Variable', sans-serif;
     background-color: #050505;
     color: #e0e0e0;
-    height: 100dvh; /* 모바일 주소창 무시 높이 */
+    height: 100dvh;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -19,19 +19,18 @@ body {
     z-index: -1;
     animation: pulse 8s infinite alternate;
 }
-
 @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
 
 /* --- MAIN CHAT WRAPPER (The Glass Capsule) --- */
 .chat-wrapper {
     width: 95%;
     max-width: 600px;
-    height: 90dvh; /* 모바일 전체 높이 활용 */
-    background: rgba(255, 255, 255, 0.03); /*  almost transparent */
+    height: 90dvh;
+    background: rgba(10, 10, 15, 0.6); /* 배경 불투명도 약간 증가 */
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 32px; /* 둥근 모서리 */
+    border-radius: 32px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
@@ -46,6 +45,7 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* 헤더 구분선 추가 */
 }
 .logo-text { font-size: 1.1rem; font-weight: 800; letter-spacing: -1px; color: #fff; }
 .accent { color: #4cc9f0; text-shadow: 0 0 10px rgba(76, 201, 240, 0.5); }
@@ -61,9 +61,8 @@ body {
     flex-direction: column;
     gap: 16px;
     scroll-behavior: smooth;
-    /* 스크롤바 숨기기 */
-    -ms-overflow-style: none; /* IE */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 .msg-area::-webkit-scrollbar { display: none; }
 
@@ -101,7 +100,7 @@ body {
 
 @keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-/* --- 🧠 REASONING UI (Pure Glass Stage) --- */
+/* --- 🧠 REASONING UI (New Design) --- */
 .reasoning-box {
     align-self: center;
     width: 100%;
@@ -113,36 +112,41 @@ body {
 }
 .hidden { display: none !important; opacity: 0; pointer-events: none; }
 
-.glass-panel {
-    background: rgba(0, 0, 0, 0.6);
+/* 개별 추론 단계 카드 */
+.reasoning-step {
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(76, 201, 240, 0.3);
-    border-radius: 20px;
-    padding: 16px 20px;
-    width: fit-content; /* 텍스트 길이에 맞춰 자동 너비 */
-    max-width: 90%; /* 모바일 화면 꽉 차지 않게 */
-    box-shadow: 0 0 30px rgba(76, 201, 240, 0.15);
+    border: 1px solid rgba(76, 201, 240, 0.2);
+    border-radius: 16px;
+    padding: 12px 18px;
+    width: fit-content;
+    max-width: 90%;
+    box-shadow: 0 0 20px rgba(76, 201, 240, 0.1);
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: 12px;
+    opacity: 0; /* 초기 숨김 */
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* 활성화 상태 (JS로 클래스 추가 예정) */
+.reasoning-step.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reasoning-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
 .reasoning-text {
     font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
-    color: #4cc9f0;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-break: break-all; /* 모바일 긴 텍스트 줄바꿈 */
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    line-height: 1.4;
 }
-/* 타이핑 커서 */
-.reasoning-text::after {
-    content: '▌';
-    animation: blink 1s infinite;
-    color: #4cc9f0;
-}
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 /* --- INPUT AREA --- */
 .input-wrapper {
@@ -159,7 +163,7 @@ body {
     flex: 1;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50px; /* 알약 모양 */
+    border-radius: 50px;
     padding: 14px 20px;
     color: #fff;
     font-size: 0.9rem;
@@ -173,18 +177,29 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/* 전송 버튼 비활성화 상태 */
 #send-btn {
     width: 44px; height: 44px;
     border-radius: 50%;
     border: none;
+    background: #333; /* 비활성화 시 어두운 회색 */
+    color: #666;
+    display: flex; align-items: center; justify-content: center;
+    cursor: not-allowed;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    opacity: 0.5;
+}
+
+/* 전송 버튼 활성화 상태 (JS로 클래스 추가 예정) */
+#send-btn.active {
     background: #4cc9f0;
     color: #000;
-    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s;
-    flex-shrink: 0;
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(76, 201, 240, 0.4);
 }
-#send-btn:active { transform: scale(0.9); }
+#send-btn.active:active { transform: scale(0.9); }
 
 /* --- MOBILE SPECIFIC ADJUSTMENTS --- */
 @media (max-width: 600px) {
