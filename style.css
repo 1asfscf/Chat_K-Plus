@@ -6,70 +6,107 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* 2026 트렌드 시스템 폰트 */
-    background-color: #f5f5f7; /* 애플 느낌의 미세한 회색 배경 */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f5f5f7; 
     height: 100vh;
     overflow: hidden;
+    display: flex; /* PC에서 가운데 정렬하기 위함 */
+    justify-content: center;
+    align-items: center;
 }
 
 .hidden {
     display: none !important;
 }
 
+/* --- 앱 래퍼 (PC에서 폰 모양 유지용) --- */
+#app-wrapper {
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f7;
+    position: relative;
+    overflow-y: auto; /* 내용 길어지면 스크롤 */
+}
+
+/* --- 0. 상단 고정 해더 --- */
+#app-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background-color: #1d1d1f; /* 진한 블랙 */
+    color: white;
+    position: sticky; /* 스크롤해도 상단에 딱 붙어있음 */
+    top: 0;
+    z-index: 100; /* 다른 요소 위로 올라오게 */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.header-logo {
+    font-size: 20px;
+    color: #4cd964; /* 네온 그린 포인트 컬러 */
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
 /* --- 홈 화면 --- */
 #home-screen {
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    /* 해더 높이만큼 밀어주기 (대충 50px) */
+    margin-top: -50px; 
+    min-height: calc(100vh - 50px); 
 }
 
-/* 1. 로고 및 타이틀 (현대적 스타일링) */
+/* 1. 로고 및 타이틀 */
 #home-header {
     text-align: center;
-    margin-bottom: 50px; /* 검색창이랑 거리 두기 */
+    margin-bottom: 40px;
 }
 
 #logo {
     font-size: 50px;
-    color: #1d1d1f; /* 완전 블랙보다 약간 부드러운 블랙 */
+    color: #1d1d1f;
     margin-bottom: 20px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); /* 은은한 그림자 */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 #home-header h1 {
     font-size: 26px;
-    font-weight: 800; /* 꽉 찬 볼드체 */
+    font-weight: 800;
     color: #1d1d1f;
-    letter-spacing: -0.5px; /* 한글은 약간 좁히는 게 트렌드 */
+    letter-spacing: -0.5px;
 }
 
-/* 2. 검색 영역 (2026 현대적 스타일) */
+/* 2. 검색 영역 */
 #search-area {
     display: flex;
     width: 100%;
     max-width: 450px;
-    gap: 12px; /* 입력창이랑 버튼 사이 여백 */
-    margin-bottom: 40px;
+    gap: 12px;
+    margin-bottom: 35px;
 }
 
 #search-input {
     flex: 1;
     padding: 18px 24px;
-    border: none; /* 테두리 제거 */
-    border-radius: 16px; /* 크고 둥글게 */
+    border: none;
+    border-radius: 16px;
     background-color: #ffffff;
     font-size: 16px;
     outline: none;
-    /* 현대적인 떠 있는 느낌의 그림자 */
     box-shadow: 0 4px 12px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.08);
     transition: box-shadow 0.3s ease;
 }
 
 #search-input:focus {
-    /* 클릭하면 그림자 살짝 진해지면서 올라온 느낌 주기 */
     box-shadow: 0 8px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.12);
 }
 
@@ -78,45 +115,44 @@ body {
     background-color: #1d1d1f;
     color: white;
     border: none;
-    border-radius: 16px; /* 입력창이랑 통일감 */
+    border-radius: 16px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    /* 호버 효과 부드럽게 전환 */
     transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 #search-btn:hover {
     background-color: #333;
-    transform: scale(1.03); /* 살짝 커지는 느낌 */
+    transform: scale(1.03);
 }
 
 #search-btn:active {
-    transform: scale(0.97); /* 누르면 살짝 작아지는 쫀득이 느낌 */
+    transform: scale(0.97);
     box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
-/* 3. 예시 질문 버튼 (사이즈업 및 알약 스타일) */
+/* 3. 예시 질문 버튼 */
 #example-questions {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px; /* 버튼 간격 */
+    gap: 12px;
     max-width: 450px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .question-tag {
-    background-color: rgba(255, 255, 255, 0.8); /* 반투명 유리 느낌 */
-    backdrop-filter: blur(10px); /* 뒷배경 살짝 흐리게 (지원하는 브라우저만) */
-    padding: 14px 22px; /* 크기 확 늘림 */
-    border-radius: 50px; /* 완전한 알약 모양 */
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 14px 22px;
+    border-radius: 50px;
     font-size: 15px;
     font-weight: 500;
     color: #333;
     cursor: pointer;
-    border: 1px solid rgba(0,0,0,0.04); /* 아주 연한 테두리 */
+    border: 1px solid rgba(0,0,0,0.04);
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     transition: all 0.2s ease;
 }
@@ -124,16 +160,62 @@ body {
 .question-tag:hover {
     background-color: #1d1d1f;
     color: white;
-    transform: translateY(-2px); /* 살짝 위로 떠오르는 느낌 */
+    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* 4. 하단 경고문 */
+/* 4. 하단 경고문 (강조형) */
 #home-footer {
     position: absolute;
-    bottom: 30px;
+    bottom: 25px;
     text-align: center;
-    color: #86868b; /* 애플 스타일 회색 글씨 */
-    font-size: 12px;
-    letter-spacing: -0.2px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+#home-footer p {
+    color: #86868b;
+    font-size: 15px; /* 크기 키움 */
+    font-weight: 500; /* 두께 올림 */
+    letter-spacing: -0.3px;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 10px 20px;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+#home-footer p strong {
+    color: #ff3b30; /* 아이폰 레드 경고색으로 쫀득하게 강조 */
+    font-weight: 800;
+}
+
+/* ========================================= */
+/* 💻 PC 버전 반응형 (화면 넓을 때)         */
+/* ========================================= */
+@media (min-width: 768px) {
+    body {
+        background-color: #e8e8ed; /* PC 배경은 조금 더 진하게 */
+    }
+
+    #app-wrapper {
+        /* PC에서는 폰 모양으로 가운데 띄우기 */
+        width: 420px; 
+        height: 90vh; /* 화면 높이의 90% */
+        max-height: 850px;
+        border-radius: 30px; /* 모서리 둥글게 */
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05); /* 진짜 폰 테두리 그림자 느낌 */
+        overflow: hidden;
+    }
+
+    #app-header {
+        border-radius: 30px 30px 0 0; /* 상단 모서리 둥글게 맞추기 */
+    }
+
+    #home-footer {
+        position: relative;
+        bottom: auto;
+        margin-top: auto;
+        padding-bottom: 20px;
+    }
 }
