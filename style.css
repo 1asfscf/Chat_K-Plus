@@ -22,7 +22,7 @@
     --surface-alt-dark: #27272A;
 
     --border-light: rgba(0, 0, 0, 0.06);
-    --border-dark: rgba(255, 255, 0.08);
+    --border-dark: rgba(255, 255, 255, 0.08); /* ★★★ 여기 수정됨: 255 하나 추가 ★★★ */
 
     --text-primary-light: #111827;
     --text-primary-dark: #FAFAFA;
@@ -527,7 +527,7 @@ body.dark-mode #theme-toggle{
 }
 
 /* ========================================== */
-/* 5. MODAL - data-state 호환 + 레이아웃 수정 */
+/* 5. MODAL - 레이아웃 수정됨 */
 /* ========================================== */
 .modal {
     position: fixed;
@@ -641,7 +641,6 @@ body.dark-mode .modal-close-btn:hover {
     color: var(--text-primary-dark);
 }
 
-/* ★★★ data-state 호환 - 핵심 수정 ★★★ */
 #modal-step1[data-state="hidden"],
 #modal-step2[data-state="hidden"],
 #modal-loading[data-state="hidden"] { 
@@ -651,11 +650,14 @@ body.dark-mode .modal-close-btn:hover {
 #modal-step1[data-state="active"],
 #modal-step2[data-state="active"],
 #modal-loading[data-state="active"] { 
-    display: block; 
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
 }
 
 .modal-body {
-    padding: 20px 24px;
+    padding: 20px 24px 0;
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1 1 auto;
@@ -905,6 +907,7 @@ body.dark-mode .loading-spinner {
 #modal-loading { 
     text-align: center; 
     padding: 48px 24px; 
+    justify-content: center;
 }
 
 #modal-loading.hidden, 
