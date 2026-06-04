@@ -64,144 +64,61 @@ body.dark-mode {
 }
 
 /* ========================================== */
-/* 2. Home Screen - Minimal White */
+/* 2. Home Screen */
 /* ========================================== */
 #home-screen {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 24px;
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 24px; position: absolute; top: 0; left: 0;
     background: #FFFFFF;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
 }
-
-body.dark-mode #home-screen {
-    background: radial-gradient(at 50% 0%, rgba(124, 58, 237, 0.1) 0px, transparent 60%), var(--bg-dark);
-}
-
+body.dark-mode #home-screen { background: radial-gradient(at 50% 0%, rgba(124, 58, 237, 0.1) 0px, transparent 60%), var(--bg-dark); }
 #home-screen.slide-out { transform: translateX(-100%); }
 #home-screen.slide-in { transform: translateX(0); }
 
-#home-header {
-    text-align: center;
-    margin-bottom: 48px;
-}
-
+#home-header { text-align: center; margin-bottom: 48px; }
 #logo {
-    font-size: 64px;
-    font-weight: 800;
-    margin-bottom: 16px;
-    color: var(--text-primary-light);
-    transition: color 0.4s ease;
+    font-size: 64px; font-weight: 800; margin-bottom: 16px;
+    color: var(--text-primary-light); transition: color 0.4s ease;
     animation: logoFloat 3s ease-in-out infinite;
 }
-
 body.dark-mode #logo {
     background: linear-gradient(135deg, #A78BFA 0%, #F472B6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
-@keyframes logoFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
-}
+@keyframes logoFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
 
 #home-header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--text-secondary-light);
-    transition: color 0.4s ease;
+    font-size: 28px; font-weight: 700; letter-spacing: -0.5px;
+    color: var(--text-secondary-light); transition: color 0.4s ease;
 }
-
 body.dark-mode #home-header h1 { color: var(--text-secondary-dark); }
 
-#search-area {
-    width: 100%;
-    max-width: 560px;
-    display: flex;
-    gap: 10px;
-    margin-bottom: 32px;
-}
-
+#search-area { width: 100%; max-width: 560px; display: flex; gap: 10px; margin-bottom: 32px; }
 #search-input {
-    flex: 1;
-    padding: 16px 20px;
-    border: 1.5px solid var(--border-light);
-    border-radius: 16px;
-    font-size: 15px;
-    outline: none;
-    background: var(--surface-alt-light);
-    transition: all 0.3s ease;
+    flex: 1; padding: 16px 20px; border: 1.5px solid var(--border-light);
+    border-radius: 16px; font-size: 15px; outline: none; background: var(--surface-alt-light); transition: all 0.3s ease;
 }
-
-#search-input:focus {
-    border-color: var(--text-primary-light);
-    box-shadow: 0 0 0 3px var(--primary-glow);
-}
-
-body.dark-mode #search-input {
-    background: var(--surface-alt-dark);
-    border-color: var(--border-dark);
-    color: var(--text-primary-dark);
-}
-
-body.dark-mode #search-input:focus {
-    border-color: var(--dark-primary);
-    box-shadow: 0 0 0 3px var(--dark-primary-glow);
-}
+#search-input:focus { border-color: var(--text-primary-light); box-shadow: 0 0 0 3px var(--primary-glow); }
+body.dark-mode #search-input { background: var(--surface-alt-dark); border-color: var(--border-dark); color: var(--text-primary-dark); }
+body.dark-mode #search-input:focus { border-color: var(--dark-primary); box-shadow: 0 0 0 3px var(--dark-primary-glow); }
 
 #search-btn {
-    padding: 0 28px;
-    background: var(--text-primary-light);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 16px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 0 28px; background: var(--text-primary-light); color: #FFFFFF;
+    border: none; border-radius: 16px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
 }
-
-#search-btn:hover { opacity: 0.85; }
-#search-btn:active { transform: scale(0.96); }
+#search-btn:hover { opacity: 0.85; } #search-btn:active { transform: scale(0.96); }
 #search-btn:disabled { background: #D1D5DB; cursor: not-allowed; }
+body.dark-mode #search-btn { background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); box-shadow: 0 4px 16px var(--dark-primary-glow); }
 
-body.dark-mode #search-btn {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    box-shadow: 0 4px 16px var(--dark-primary-glow);
-}
-
-#example-questions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    max-width: 560px;
-}
-
+#example-questions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 560px; }
 .question-tag {
-    padding: 10px 18px;
-    background: transparent;
-    border: 1.5px solid var(--border-light);
-    border-radius: 24px;
-    font-size: 14px;
-    color: var(--text-secondary-light);
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 10px 18px; background: transparent; border: 1.5px solid var(--border-light);
+    border-radius: 24px; font-size: 14px; color: var(--text-secondary-light); cursor: pointer; transition: all 0.2s ease;
 }
-
 .question-tag:hover { border-color: var(--text-primary-light); color: var(--text-primary-light); }
 .question-tag:active { transform: scale(0.96); }
-
 body.dark-mode .question-tag { border-color: var(--border-dark); color: var(--text-secondary-dark); }
 body.dark-mode .question-tag:hover { border-color: var(--dark-primary); color: var(--dark-primary); background: rgba(167, 139, 250, 0.1); }
 
@@ -209,169 +126,91 @@ body.dark-mode .question-tag:hover { border-color: var(--dark-primary); color: v
 body.dark-mode #home-footer { color: var(--text-secondary-dark); }
 
 /* ========================================== */
-/* 3. Chat Screen & Modern Floating Input Bar */
+/* 3. Chat Screen & Input Bar */
 /* ========================================== */
 #chat-screen {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: var(--bg-light);
+    width: 100%; height: 100%; display: flex; flex-direction: column;
+    position: absolute; top: 0; left: 0; background: var(--bg-light);
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s ease;
 }
-
 body.dark-mode #chat-screen { background: var(--bg-dark); }
-#chat-screen.hidden { display: none; }
-#chat-screen.slide-in { transform: translateX(0); }
-#chat-screen.slide-out { transform: translateX(100%); }
+#chat-screen.hidden { display: none; } #chat-screen.slide-in { transform: translateX(0); } #chat-screen.slide-out { transform: translateX(100%); }
 
 #chat-header-bar {
-    display: flex;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-light);
-    background: var(--bg-light);
-    transition: all 0.4s ease;
+    display: flex; align-items: center; padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light); background: var(--bg-light); transition: all 0.4s ease;
 }
-
 body.dark-mode #chat-header-bar { background: var(--bg-dark); border-bottom-color: var(--border-dark); }
 
 #back-btn {
     background: none; border: none; font-size: 18px; cursor: pointer;
-    padding: 8px 12px; margin-right: 12px; color: var(--text-primary-light);
-    border-radius: 8px; transition: background 0.2s;
+    padding: 8px 12px; margin-right: 12px; color: var(--text-primary-light); border-radius: 8px; transition: background 0.2s;
 }
 #back-btn:hover { background: var(--primary-subtle); }
 body.dark-mode #back-btn { color: var(--text-primary-dark); }
 body.dark-mode #back-btn:hover { background: rgba(255, 255, 255, 0.05); }
 #chat-header-bar h3 { font-size: 17px; font-weight: 700; }
 
-#chat-box {
-    flex: 1; overflow-y: auto; padding: 24px 20px;
-    display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth;
-}
+#chat-box { flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+.message { max-width: 80%; padding: 14px 18px; border-radius: 20px; word-wrap: break-word; line-height: 1.6; font-size: 15px; animation: messageEnter 0.3s ease-out; }
+@keyframes messageEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-.message {
-    max-width: 80%; padding: 14px 18px; border-radius: 20px;
-    word-wrap: break-word; line-height: 1.6; font-size: 15px;
-    animation: messageEnter 0.3s ease-out;
-}
-
-@keyframes messageEnter {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.user-msg {
-    align-self: flex-end; background: var(--text-primary-light);
-    color: #FFFFFF; border-bottom-right-radius: 6px;
-}
-
-body.dark-mode .user-msg {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    box-shadow: 0 4px 12px var(--dark-primary-glow);
-}
-
-.ai-msg {
-    align-self: flex-start; background: var(--surface-alt-light);
-    color: var(--text-primary-light); border-bottom-left-radius: 6px;
-}
-
+.user-msg { align-self: flex-end; background: var(--text-primary-light); color: #FFFFFF; border-bottom-right-radius: 6px; }
+body.dark-mode .user-msg { background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); box-shadow: 0 4px 12px var(--dark-primary-glow); }
+.ai-msg { align-self: flex-start; background: var(--surface-alt-light); color: var(--text-primary-light); border-bottom-left-radius: 6px; }
 body.dark-mode .ai-msg { background: var(--surface-alt-dark); color: var(--text-primary-dark); }
-
-.thinking-msg {
-    align-self: flex-start; background: transparent;
-    color: var(--text-secondary-light); font-size: 13px; font-style: italic; padding: 8px 4px;
-}
-
+.thinking-msg { align-self: flex-start; background: transparent; color: var(--text-secondary-light); font-size: 13px; font-style: italic; padding: 8px 4px; }
 body.dark-mode .thinking-msg { color: var(--dark-primary); }
 
 #chat-input-area {
-    display: flex; align-items: center; gap: 8px;
-    margin: 0 16px 16px 16px; padding: 8px;
-    background: var(--surface-alt-light); border: 1.5px solid var(--border-light);
-    border-radius: 24px; transition: all 0.3s ease;
-    box-shadow: var(--shadow-md); padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; gap: 8px; margin: 0 16px 16px 16px; padding: 8px;
+    background: var(--surface-alt-light); border: 1.5px solid var(--border-light); border-radius: 24px;
+    transition: all 0.3s ease; box-shadow: var(--shadow-md); padding-bottom: calc(8px + env(safe-area-inset-bottom));
 }
-
-body.dark-mode #chat-input-area {
-    background: var(--surface-alt-dark); border-color: var(--border-dark);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-}
-
-#chat-input-area:focus-within {
-    border-color: var(--text-primary-light);
-    box-shadow: 0 0 0 3px var(--primary-glow), var(--shadow-lg);
-}
-
-body.dark-mode #chat-input-area:focus-within {
-    border-color: var(--dark-primary);
-    box-shadow: 0 0 0 3px var(--dark-primary-glow), 0 8px 32px rgba(0,0,0,0.4);
-}
+body.dark-mode #chat-input-area { background: var(--surface-alt-dark); border-color: var(--border-dark); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+#chat-input-area:focus-within { border-color: var(--text-primary-light); box-shadow: 0 0 0 3px var(--primary-glow), var(--shadow-lg); }
+body.dark-mode #chat-input-area:focus-within { border-color: var(--dark-primary); box-shadow: 0 0 0 3px var(--dark-primary-glow), 0 8px 32px rgba(0,0,0,0.4); }
 
 #timetable-btn, #chat-send-btn {
-    width: 42px; height: 42px; border-radius: 50%; border: none;
-    font-size: 18px; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; flex-shrink: 0; transition: all 0.2s ease;
+    width: 42px; height: 42px; border-radius: 50%; border: none; font-size: 18px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s ease;
 }
-
 #timetable-btn { background: transparent; color: var(--text-secondary-light); }
 #timetable-btn:hover { color: var(--text-primary-light); background: var(--primary-subtle); }
 body.dark-mode #timetable-btn { color: var(--text-secondary-dark); }
 body.dark-mode #timetable-btn:hover { color: var(--dark-accent); background: rgba(244, 114, 182, 0.1); }
 
-#chat-input {
-    flex: 1; border: none; background: transparent; font-size: 15px;
-    outline: none; padding: 0 8px; color: var(--text-primary-light);
-}
+#chat-input { flex: 1; border: none; background: transparent; font-size: 15px; outline: none; padding: 0 8px; color: var(--text-primary-light); }
 body.dark-mode #chat-input { color: var(--text-primary-dark); }
 
 #chat-send-btn { background: var(--text-primary-light); color: #FFFFFF; }
-#chat-send-btn:hover:not(:disabled) { opacity: 0.85; }
-#chat-send-btn:active:not(:disabled) { transform: scale(0.9); }
+#chat-send-btn:hover:not(:disabled) { opacity: 0.85; } #chat-send-btn:active:not(:disabled) { transform: scale(0.9); }
 #chat-send-btn:disabled { background: #E5E7EB; color: #9CA3AF; cursor: not-allowed; }
-
-body.dark-mode #chat-send-btn:not(:disabled) {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
-    color: #FFFFFF; box-shadow: 0 4px 12px var(--dark-primary-glow);
-}
+body.dark-mode #chat-send-btn:not(:disabled) { background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); color: #FFFFFF; box-shadow: 0 4px 12px var(--dark-primary-glow); }
 
 /* ========================================== */
 /* 4. Theme Toggle */
 /* ========================================== */
 #theme-toggle {
     position: fixed; top: 16px; right: 16px; width: 44px; height: 44px;
-    background: var(--bg-light); border: 1.5px solid var(--border-light);
-    border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 999;
-    box-shadow: var(--shadow-md); transition: all 0.3s ease;
-    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-light); border: 1.5px solid var(--border-light); border-radius: 50%;
+    font-size: 20px; cursor: pointer; z-index: 999; box-shadow: var(--shadow-md);
+    transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;
 }
 #theme-toggle:hover { transform: scale(1.1); }
 body.dark-mode #theme-toggle { background: var(--surface-alt-dark); border-color: var(--border-dark); color: var(--dark-primary); }
 
 
 /* ========================================== */
-/* 5. MODAL OVERHAUL - True Bottom Sheet & PC Center */
+/* 5. MODAL - 완벽한 모바일 앱 뷰 (Safe Area & Flex Fix) */
 /* ========================================== */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* 배경을 더 어둡게 해서 시트가 돋보이게 함 */
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end; /* 모바일 기본: 하단 정렬 */
-    z-index: 1000;
-    animation: modalFade 0.2s ease;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    display: flex; justify-content: center; align-items: flex-end;
+    z-index: 1000; animation: modalFade 0.2s ease;
 }
-
 @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
 .modal.hidden { display: none !important; }
 
@@ -380,291 +219,151 @@ body.dark-mode #theme-toggle { background: var(--surface-alt-dark); border-color
     background: var(--surface-light);
     display: flex;
     flex-direction: column;
-    /* 화면을 꽉 채우지 않고 내용물만큼만 높이가 확보됨 (핵심) */
-    max-height: 85vh; 
-    border-radius: 28px 28px 0 0; /* 둥근 상단 모서리 */
+    /* 핵심 수정: 상태바 노치 영역을 피하기 위해 상단 패딩 강제 */
+    padding-top: env(safe-area-inset-top, 0px);
+    /* 핵심 수정: 하단 홈 인디케이터 영역을 빼고 최대 높이 설정하여 절대 짤리지 않게 함 */
+    max-height: calc(100vh - env(safe-area-inset-bottom, 0px)); 
+    border-radius: 28px 28px 0 0;
     position: relative;
-    /* 창이 배경에서 완전히 떨어져 나와 보이도록 강한 그림자 추가 (핵심) */
-    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.3); 
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.3);
     animation: mobileSheetUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    /* 내부 요소가 적어도 하단에 찰싹 붙도록 유지 */
-    margin-top: auto; 
 }
 
-/* 다크 모드 시트 외형 */
 body.dark-mode .modal-content {
     background: var(--surface-dark);
     box-shadow: 0 -20px 80px rgba(0, 0, 0, 0.7);
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* 상단 가장자리 은은한 구분선 */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 상단 드래그 핸들 (바텀시트의 정체성) */
+/* 상단 드래그 핸들 (상태바 아래로 안착) */
 .modal-content::before {
-    content: '';
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 48px;
-    height: 5px;
-    background: #D1D5DB;
-    border-radius: 10px;
-    z-index: 10;
+    content: ''; position: absolute;
+    /* 상단 안전영역만큼 내려서 그림자 표시 */
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    left: 50%; transform: translateX(-50%);
+    width: 48px; height: 5px;
+    background: #D1D5DB; border-radius: 10px; z-index: 10;
 }
-
 body.dark-mode .modal-content::before { background: #52525B; }
 
-@keyframes mobileSheetUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-}
+@keyframes mobileSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-/* --- PC 환경 (가로 768px 이상) --- */
+/* --- PC 환경 (768px 이상) --- */
 @media (min-width: 768px) {
-    .modal {
-        align-items: center; /* PC: 정중앙 */
-    }
-    
+    .modal { align-items: center; }
     .modal-content {
-        max-width: 480px;
-        width: 90%;
-        max-height: 80vh;
-        border-radius: 28px; /* PC: 전체 둥근 모서리 */
-        box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+        max-width: 480px; width: 90%; max-height: 80vh;
+        border-radius: 28px; box-shadow: 0 32px 80px rgba(0,0,0,0.3);
         animation: pcModalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        margin-top: 0;
+        padding-top: 0; /* PC는 안전영역 필요 없음 */
         border: 1px solid var(--border-light);
     }
-    
-    body.dark-mode .modal-content {
-        box-shadow: 0 32px 80px rgba(0,0,0,0.7);
-        border-color: var(--border-dark);
-    }
-    
-    /* PC는 가운데 뜨는 창이므로 핸들바 제거 */
-    body.dark-mode .modal-content::before, .modal-content::before {
-        display: none;
-    }
+    body.dark-mode .modal-content { box-shadow: 0 32px 80px rgba(0,0,0,0.7); border-color: var(--border-dark); }
+    body.dark-mode .modal-content::before, .modal-content::before { display: none; } /* PC는 핸들바 숨김 */
 }
+@keyframes pcModalPop { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-@keyframes pcModalPop {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* --- 모달 내부 레이아웃 --- */
+/* 모달 헤더 (X버튼 겹침 완벽 방지를 위해 absolute 해제) */
 .modal-header {
-    padding: 36px 24px 16px 24px; /* 핸들바 공간 때문에 상단 패딩 넉넉히 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* 핸들바 공간 확보 */
+    padding: 32px 24px 16px 24px;
     flex-shrink: 0;
 }
 
-.modal-header h2 {
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
+.modal-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
 
+/* 핵심: X버튼을 absolute에서 빼서 텍스트와 나란히 배치 */
 .modal-close-btn {
-    position: absolute;
-    top: 32px;
-    right: 20px;
-    width: 32px;
-    height: 32px;
-    background: var(--surface-alt-light);
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: var(--text-secondary-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s ease;
+    position: static; /* 겹침 방지 핵심 */
+    width: 32px; height: 32px; flex-shrink: 0;
+    background: var(--surface-alt-light); border: none; font-size: 18px;
+    cursor: pointer; color: var(--text-secondary-light);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; transition: all 0.2s ease;
 }
-
 .modal-close-btn:hover { background: var(--border-light); color: var(--text-primary-light); }
 body.dark-mode .modal-close-btn { background: var(--surface-alt-dark); color: var(--text-secondary-dark); }
 body.dark-mode .modal-close-btn:hover { background: var(--border-dark); color: var(--text-primary-dark); }
 
+/* 스크롤 바디 (짤림 방지 핵심 삼총사) */
 .modal-body {
     padding: 0 24px 20px 24px;
     overflow-y: auto;
-    /* 내용이 적을 때 공간을 다 안 먹게 하려면 flex-grow를 주지 않거나 0으로 설정 */
-    flex-grow: 0; 
+    flex: 1 1 0%; /* 남은 공간을 차지하되 늘어나지 않게 */
+    min-height: 0;  /* 이게 없으면 내용이 많을 때 버튼이 짤림 (매우 중요) */
 }
 
-/* --- 알약(Pill) 리스트 --- */
-.school-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 8px 0 24px 0;
-}
-
+/* --- Pill 리스트 --- */
+.school-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 24px 0; }
 .school-option {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 15px;
-    font-weight: 500;
-    background: var(--surface-alt-light);
-    color: var(--text-primary-light);
+    padding: 12px 20px; border: none; border-radius: 50px; cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); font-size: 15px; font-weight: 500;
+    background: var(--surface-alt-light); color: var(--text-primary-light);
 }
-
-.school-option:hover {
-    background: #E5E7EB;
-    transform: translateY(-1px);
-}
-
-.school-option.selected {
-    background: var(--text-primary-light);
-    color: #FFFFFF;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
+.school-option:hover { background: #E5E7EB; transform: translateY(-1px); }
+.school-option.selected { background: var(--text-primary-light); color: #FFFFFF; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 body.dark-mode .school-option { background: var(--surface-alt-dark); color: var(--text-secondary-dark); }
 body.dark-mode .school-option:hover { background: #3F3F46; }
-body.dark-mode .school-option.selected {
-    background: var(--dark-primary);
-    color: #09090B;
-    font-weight: 700;
-    box-shadow: 0 4px 16px var(--dark-primary-glow);
-}
+body.dark-mode .school-option.selected { background: var(--dark-primary); color: #09090B; font-weight: 700; box-shadow: 0 4px 16px var(--dark-primary-glow); }
 
-/* --- 기타 직접 입력 (알약과 통일된 인풋) --- */
-.custom-school {
-    margin-bottom: 8px; /* 하단 버튼과의 간격 좁힘 */
-}
-
+/* --- 직접 입력 --- */
+.custom-school { margin-bottom: 8px; }
 .custom-school input {
-    width: 100%;
-    padding: 14px 20px;
-    border: 1.5px solid var(--border-light);
-    border-radius: 50px; /* 알약 형태와 동일하게 */
-    background: transparent;
-    font-size: 15px;
-    outline: none;
-    color: var(--text-primary-light);
-    transition: all 0.2s ease;
+    width: 100%; padding: 14px 20px; border: 1.5px solid var(--border-light); border-radius: 50px;
+    background: transparent; font-size: 15px; outline: none; color: var(--text-primary-light); transition: all 0.2s ease;
 }
-
 .custom-school input::placeholder { color: var(--text-secondary-light); }
-
-.custom-school input:focus {
-    border-color: var(--text-primary-light);
-    background: var(--primary-subtle);
-}
-
-body.dark-mode .custom-school input { 
-    border-color: var(--border-dark); 
-    color: var(--text-primary-dark);
-}
+.custom-school input:focus { border-color: var(--text-primary-light); background: var(--primary-subtle); }
+body.dark-mode .custom-school input { border-color: var(--border-dark); color: var(--text-primary-dark); }
 body.dark-mode .custom-school input::placeholder { color: var(--text-secondary-dark); }
-body.dark-mode .custom-school input:focus {
-    border-color: var(--dark-primary);
-    background: rgba(167, 139, 250, 0.05);
-}
+body.dark-mode .custom-school input:focus { border-color: var(--dark-primary); background: rgba(167, 139, 250, 0.05); }
 
-/* --- 하단 고정 액션 버튼 (다음) --- */
+/* 하단 고정 액션 (다음 버튼 절대 짤림 방지) */
 .modal-actions {
     padding: 16px 24px;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom));
-    flex-shrink: 0;
-    /* 시트 내부에서 버튼을 최하단으로 밀어내는 효과 */
-    margin-top: auto; 
+    /* 핵심: 아이폰 하단 밑줄(홈 인디케이터) 영역만큼 여백 추가 */
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    flex-shrink: 0; /* 이 영역은 절대 줄어들지 않음 */
+    margin-top: 0;
+    border-top: 1px solid var(--border-light);
 }
+body.dark-mode .modal-actions { border-top-color: var(--border-dark); }
 
 .modal-btn {
-    width: 100%;
-    height: 56px; /* 버튼을 크고 묵직하게 */
-    border-radius: 16px;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%; height: 56px; border-radius: 16px; font-size: 17px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease; border: none;
+    display: flex; align-items: center; justify-content: center;
 }
+.modal-btn.primary { background: var(--text-primary-light); color: #FFFFFF; }
+.modal-btn.primary:hover { opacity: 0.9; } .modal-btn.primary:active { transform: scale(0.98); }
+body.dark-mode .modal-btn.primary { background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); box-shadow: 0 8px 24px var(--dark-primary-glow); }
 
-.modal-btn.primary {
-    background: var(--text-primary-light);
-    color: #FFFFFF;
-}
-
-.modal-btn.primary:hover { opacity: 0.9; }
-.modal-btn.primary:active { transform: scale(0.98); }
-
-body.dark-mode .modal-btn.primary {
-    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-    box-shadow: 0 8px 24px var(--dark-primary-glow); /* 다크모드에서 빛나는 버튼 */
-}
-
-.modal-btn.secondary {
-    background: var(--surface-alt-light);
-    color: var(--text-primary-light);
-    margin-top: 10px;
-    height: 50px;
-    font-weight: 600;
-    font-size: 15px;
-}
-
-body.dark-mode .modal-btn.secondary {
-    background: var(--surface-alt-dark);
-    color: var(--text-primary-dark);
-}
+.modal-btn.secondary { background: var(--surface-alt-light); color: var(--text-primary-light); margin-top: 10px; height: 50px; font-weight: 600; font-size: 15px; }
+body.dark-mode .modal-btn.secondary { background: var(--surface-alt-dark); color: var(--text-primary-dark); }
 
 /* 시간표 테이블 */
-.timetable-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 13px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border-light);
-}
-
+.timetable-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); }
 body.dark-mode .timetable-table { border-color: var(--border-dark); }
-
-.timetable-table th, .timetable-table td {
-    border: 1px solid var(--border-light);
-    padding: 12px 8px;
-    text-align: center;
-}
-
+.timetable-table th, .timetable-table td { border: 1px solid var(--border-light); padding: 12px 8px; text-align: center; }
 body.dark-mode .timetable-table th, body.dark-mode .timetable-table td { border-color: var(--border-dark); }
 .timetable-table th { font-weight: 700; background: var(--surface-alt-light); }
 body.dark-mode .timetable-table th { background: var(--surface-alt-dark); }
-
-.timetable-table input {
-    width: 100%; border: none; background: transparent; text-align: center;
-    font-size: 13px; padding: 4px; outline: none; border-radius: 6px;
-}
+.timetable-table input { width: 100%; border: none; background: transparent; text-align: center; font-size: 13px; padding: 4px; outline: none; border-radius: 6px; }
 .timetable-table input:focus { background: var(--primary-subtle); outline: 2px solid var(--text-primary-light); }
 body.dark-mode .timetable-table input { color: var(--text-primary-dark); }
 body.dark-mode .timetable-table input:focus { background: rgba(167, 139, 250, 0.1); outline-color: var(--dark-primary); }
 
 /* 로딩 */
-.loading-spinner {
-    width: 36px; height: 36px; border: 3px solid var(--border-light);
-    border-top-color: var(--text-primary-light); border-radius: 50%;
-    animation: spin 0.8s linear infinite; margin: 24px auto;
-}
+.loading-spinner { width: 36px; height: 36px; border: 3px solid var(--border-light); border-top-color: var(--text-primary-light); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 24px auto; }
 body.dark-mode .loading-spinner { border-color: var(--border-dark); border-top-color: var(--dark-primary); }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 #modal-loading { text-align: center; padding: 40px 24px; }
 #modal-loading.hidden, #modal-step1.hidden, #modal-step2.hidden { display: none !important; }
 
-.typing-cursor::after {
-    content: ''; display: inline-block; width: 2px; height: 1em;
-    background: var(--text-primary-light); margin-left: 2px;
-    vertical-align: text-bottom; animation: blink 0.8s infinite;
-}
+.typing-cursor::after { content: ''; display: inline-block; width: 2px; height: 1em; background: var(--text-primary-light); margin-left: 2px; vertical-align: text-bottom; animation: blink 0.8s infinite; }
 body.dark-mode .typing-cursor::after { background: var(--dark-primary); }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
