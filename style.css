@@ -1034,3 +1034,12 @@ body.dark-mode .typing-cursor::after {
     0%, 100% { opacity: 1; } 
     50% { opacity: 0; } 
 }
+/* JS v2.5 data-state 호환 */
+.modal[data-state="hidden"] { display: none !important; }
+#modal-step1[data-state="hidden"],
+#modal-step2[data-state="hidden"],
+#modal-loading[data-state="hidden"] { display: none !important; }
+#modal-step1[data-state="active"],
+#modal-step2[data-state="active"],
+#modal-loading[data-state="active"] { display: block; }
+
