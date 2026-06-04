@@ -1,33 +1,21 @@
 // ==========================================
-// 🧠 Chat K plus v2.5.2 - 외부링크 경고 모달 추가
+// 🧠 Chat K plus v2.5.2 - 외부링크 경고 모달 포함
 // ==========================================
 // WARNING: 2026.06.04 09:00 KST 기준 데이터. 개표 진행중이라 실시간 아님
 // 최종 결과는 중앙선관위 확인 필수
 
-// 1. 지식 창고 - lastUpdated 필드 추가
+// 1. 지식 창고
 const knowledgeBase = {
     lastUpdated: "2026.06.04 09:00 KST",
     items: [
-        // === 기본 ===
         { keywords: ["아바타", "아바타2", "아바타 2가 뭐죠"], response: "아바타 2는 제임스 카메론 감독의 SF 영화로, 판도라 행성에서 벌어지는 나비족의 이야기를 다루고 있어. 엄청난 시각 효과가 포인트야!" },
         { keywords: ["너", "너는", "너에", "대하여서", "누구", "자기소개"], response: "나는 Chat K plus v2.5.2야! 시간표 모달 + 정치 상세 데이터 탑재된 로컬 AI지. 2026.06.04 기준 업데이트 ㅋㅋ 개표중이라 데이터 변동 가능" },
         { keywords: ["안녕", "하이", "반가워", "헬로"], response: "안녕! 반가워 ㅋㅋ 오늘 뭐하고 싶어? 6월 3일 지방선거 개표중인데 결과 볼래?" },
         { keywords: ["고마워", "감사", "땡큐"], response: "ㅎ 별말을! 또 궁금한 거 있으면 물어봐" },
         { keywords: ["잘가", "바이", "끝"], response: "응 다음에 또 봐! 시간표도 설정해봤지?" },
-
-        // === 이슈 질문 - 우선순위 최상단 ===
         { keywords: ["요즘 이슈", "최근 이슈", "이슈 뭐야", "핫이슈", "뉴스", "요즘 뭐", "요즘 뉴스"], response: "2026년 6월 최대 이슈는 6.3 지방선거 개표야. 6/4 09:00 기준 민주당이 광역단체장 17곳 중 10곳 우세. 서울 오세훈, 경기 김동연, 인천 박찬대 재선 유력. 투표율 58.2%로 역대급. 그 외에 의대 증원 의료대란 3년차, 비트코인 1.5억 돌파, 엔화 160엔 돌파도 핫해.", priority: 10 },
         { keywords: ["오늘 이슈", "오늘 뉴스", "오늘 뭐"], response: "오늘 2026.06.04 핵심은 지방선거 개표 진행중이야. 인천 박찬대 54%대 1위, 서울 오세훈 52% 재선 유력. 최종 결과는 밤 늦게 나올 듯.", priority: 10 },
-
-        // ★★★ 다음 사이트 주소 - 신규 추가 ★★★
-        { 
-            keywords: ["다음 사이트 주소", "다음 주소", "다음 링크", "daum 주소", "다음 공식 사이트", "다음 홈페이지"], 
-            response: "다음(Daum) 공식 사이트야.\n\n🔗 주소: {{LINK:https://www.daum.net|다음 바로가기}}\n\n다음은 카카오가 운영하는 대한민국 대표 포털 사이트야. 뉴스, 메일, 카페, 검색, 지도, 쇼핑 등 다양한 서비스를 제공해. 1995년 설립된 1세대 포털로 지금도 네이버랑 양대산맥이지.", 
-            priority: 15,
-            type: "external_link"
-        },
-
-        // === 2026 지방선거 - 개표중 데이터 ===
+        { keywords: ["다음 사이트 주소", "다음 주소", "다음 링크", "daum 주소", "다음 공식 사이트", "다음 홈페이지"], response: "다음(Daum) 공식 사이트야.\n\n🔗 주소: {{LINK:https://www.daum.net|다음 바로가기}}\n\n다음은 카카오가 운영하는 대한민국 대표 포털 사이트야. 뉴스, 메일, 카페, 검색, 지도, 쇼핑 등 다양한 서비스를 제공해. 1995년 설립된 1세대 포털로 지금도 네이버랑 양대산맥이지.", priority: 15, type: "external_link" },
         { keywords: ["지방선거", "6월 3일 선거", "지선 결과", "개표", "선거 결과"], response: "2026년 6월 3일 지방선거 개표 진행중이야. 6/4 09:00 기준 민주당이 광역단체장 17곳 중 10곳 우세 보이고 있어. 서울 오세훈, 경기 김동연, 인천 박찬대 재선 유력. 투표율 58.2%." },
         { keywords: ["인천시장", "박찬대", "인천 선거"], response: "2026.06.04 09:00 기준 인천시장 개표중 박찬대 후보 54%대 득표율로 1위 달리는 중이야. 출구조사랑 비슷하게 나오는 중. 단, 최종 확정은 선관위 발표 봐야 함." },
         { keywords: ["민주당", "더불어민주당", "이재명"], response: "더불어민주당은 2026년 현재 국회 다수당(171석). 이재명 대표 체제. 6.3 지선 개표중 수도권 우세 보이며 2027 대선 교두보 마련 분위기. 주요 정책은 기본소득 확대, 부동산 공공성 강화." },
@@ -35,16 +23,10 @@ const knowledgeBase = {
         { keywords: ["대통령", "윤석열", "현 대통령"], response: "2026년 6월 기준 대한민국 대통령은 윤석열. 임기는 2027년 5월 9일까지. 지지율 34%대. 주요 성과는 한미동맹 강화, 주요 쟁점은 의료대란, 경제 침체." },
         { keywords: ["서울시장", "오세훈"], response: "서울시장 오세훈 후보 재선 유력. 6/4 09:00 기준 개표중 52% 득표율. 정원오 후보 35%." },
         { keywords: ["부산시장", "박형준", "전재수"], response: "부산시장 개표 접전중. 6/4 09:00 기준 전재수 48%, 박형준 44%. 출구조사보다 격차 줄어듦." },
-
-        // === 중국 ===
         { keywords: ["중국 국가주석", "현 중국 지도자", "중국 대통령", "시진핑"], response: "2026년 현재 중국 국가주석은 시진핑이야. 2013년부터 집권 중이고 2023년에 3연임이 확정됐어." },
         { keywords: ["중국 수도", "베이징", "북경"], response: "중국 수도는 베이징이야. 인구 약 2,150만명으로 중국의 정치 중심지지." },
-        
-        // === 경제 ===
         { keywords: ["최저임금", "2026 최저임금"], response: "2026년 최저임금은 시간당 10,200원이야. 월급 2,131,800원이지. 편의점 알바 4대보험 떼면 실수령 190만원대야." },
         { keywords: ["비트코인", "코인", "가상화폐"], response: "비트코인 1.5억 찍었어. 트럼프가 비트코인 지지해서 떡상했지. 한국은 김치프리미엄 8%야." },
-        
-        // === 사회 ===
         { keywords: ["의대 정원", "의료 대란", "전공의"], response: "의대 2000명 증원으로 시작된 의료대란 3년째야. 2026년 6월 기준 전공의 복귀율 62%. 응급실 뺑뺑이 여전하고 지방의료 공백 심각해." },
         { keywords: ["BTS", "방탄소년단"], response: "BTS 2025년 완전체 컴백했어. 진, 제이홉 전역하고 7인 완전체 앨범 냈어. 2026년 월드투어 진행 중." }
     ]
@@ -64,7 +46,7 @@ let isAnimating = false;
 let animationQueue = [];
 
 // ==========================================
-// ⚠️ 외부링크 경고 모달 시스템 - 신규 추가
+// ⚠️ 외부링크 경고 모달 시스템
 // ==========================================
 
 function initExternalLinkWarning() {
@@ -93,6 +75,9 @@ function initExternalLinkWarning() {
         </div>
     `;
     appWrapper.insertAdjacentHTML('beforeend', warningModalHTML);
+    
+    document.getElementById('warning-cancel')?.addEventListener('click', closeExternalLinkWarning);
+    document.getElementById('warning-confirm')?.addEventListener('click', confirmExternalLink);
 }
 
 let pendingExternalUrl = '';
@@ -185,10 +170,6 @@ function initTimetableSystem() {
     document.getElementById('modal-confirm')?.addEventListener('click', confirmTimetable);
     document.getElementById('modal-close')?.addEventListener('click', closeTimetableModal);
     document.addEventListener('keydown', handleEscKey);
-    
-    // 경고 모달 이벤트
-    document.getElementById('warning-cancel')?.addEventListener('click', closeExternalLinkWarning);
-    document.getElementById('warning-confirm')?.addEventListener('click', confirmExternalLink);
 }
 
 function handleEscKey(e) {
@@ -482,7 +463,6 @@ function startReasoning(query) {
     }, 2400));
 }
 
-// ★★★ 핵심 수정: 키워드 매칭 로직 전면 교체 + 외부링크 파싱 ★★★
 function findResponse(query) {
     const normalizedQuery = query.toLowerCase().replace(/[?.,!]/g, ' ').replace(/\s+/g, ' ').trim();
     const userWords = normalizedQuery.split(' ').filter(w => w.length > 0);
@@ -497,19 +477,16 @@ function findResponse(query) {
         for (const kw of item.keywords) {
             const kwLower = kw.toLowerCase();
             
-            // 1. 완전 일치: 최고점
             if (normalizedQuery === kwLower) {
                 score += 100 + priority * 10;
                 continue;
             }
             
-            // 2. 단어 단위 완전 일치: 높은 점수
             if (userWords.includes(kwLower)) {
                 score += 50 + priority * 5;
                 continue;
             }
             
-            // 3. 포함 관계: 낮은 점수, 길이 짧으면 제외
             if (kwLower.length > 2 && normalizedQuery.includes(kwLower)) {
                 score += 10 + priority;
             }
@@ -521,11 +498,9 @@ function findResponse(query) {
         }
     }
 
-    // 최소 스코어 20 이상이어야 답변
     if (bestMatch && bestScore >= 20) {
         let response = bestMatch.response;
         
-        // ★★★ 외부링크 파싱 ★★★
         if (bestMatch.type === 'external_link') {
             response = response.replace(/\{\{LINK:(.*?)\|(.*?)\}\}/g, (match, url, text) => {
                 const siteName = text.replace(' 바로가기', '');
@@ -550,7 +525,6 @@ function addMessage(text, type) {
         msgDiv.classList.add('message', 'ai-msg');
     }
     
-    // HTML 파싱 허용 - 외부링크용
     if (text.includes('<a href=')) {
         msgDiv.innerHTML = text.replace(/\n/g, '<br>');
     } else {
@@ -591,7 +565,7 @@ exampleQuestions?.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initTimetableSystem();
-    initExternalLinkWarning(); // ★★★ 신규 추가
+    initExternalLinkWarning();
     homeScreen.classList.add('slide-in');
     chatScreen.classList.add('hidden');
 });
