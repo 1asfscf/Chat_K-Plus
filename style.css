@@ -70,7 +70,7 @@ body.dark-mode {
 }
 
 /* ========================================== */
-/* 2. Home Screen
+/* 2. Home Screen */
 /* ========================================== */
 #home-screen {
     width: 100%; 
@@ -162,35 +162,20 @@ body.dark-mode #search-input:focus {
     box-shadow: 0 0 0 3px var(--dark-primary-glow); 
 }
 
-/*
- * ════════════════════════════════════════════
- * ★★★ [FIX 1] 검색 버튼 - 초기 비활성화 ★★★
- * ════════════════════════════════════════════
- * 
- * 기본 상태: 비활성화 (회색)
- * 활성화 조건: JS에서 input 값 있을 때 disabled 제거
- */
 #search-btn {
     padding: 0 28px; 
-    
-    /* [FIX] 기본 비활성화 스타일 */
     background: #E5E7EB;
     color: #9CA3AF;
-    
     border: none; 
     border-radius: 16px; 
     font-size: 15px; 
     font-weight: 600; 
-    cursor: not-allowed; /* 비활성화 커서 */
-    
-    /* 인터랙션 없음 (기본) */
+    cursor: not-allowed;
     pointer-events: none;
     opacity: 0.8;
-    
     transition: all 0.25s ease;
 }
 
-/* [FIX] 활성화 상태 (JS로 class 'active' 추가 시) */
 #search-btn.active,
 #search-btn:not(:disabled) {
     background: var(--text-primary-light);
@@ -210,13 +195,11 @@ body.dark-mode #search-input:focus {
     transform: scale(0.96); 
 }
 
-/* 다크모드 - 비활성화 */
 body.dark-mode #search-btn {
     background: #3F3F46;
     color: #71717A;
 }
 
-/* 다크모드 - 활성화 */
 body.dark-mode #search-btn.active,
 body.dark-mode #search-btn:not(:disabled) { 
     background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); 
@@ -270,7 +253,7 @@ body.dark-mode .question-tag:hover {
 body.dark-mode #home-footer { color: var(--text-secondary-dark); }
 
 /* ========================================== */
-/* 3. Chat Screen & Input Bar
+/* 3. Chat Screen & Input Bar */
 /* ========================================== */
 #chat-screen {
     width: 100%; 
@@ -285,11 +268,8 @@ body.dark-mode #home-footer { color: var(--text-secondary-dark); }
 }
 
 body.dark-mode #chat-screen { background: var(--bg-dark); }
-
 #chat-screen.hidden { display: none; } 
-
 #chat-screen.slide-in { transform: translateX(0); } 
-
 #chat-screen.slide-out { transform: translateX(100%); }
 
 #chat-header-bar{
@@ -319,9 +299,7 @@ body.dark-mode #chat-header-bar{
 }
 
 #back-btn:hover{ background: var(--primary-subtle); }
-
 body.dark-mode #back-btn{ color: var(--text-primary-dark); }
-
 body.dark-mode #back-btn:hover{ background: rgba(255, 255, 255, 0.05); }
 
 #chat-header-bar h3{ 
@@ -380,16 +358,54 @@ body.dark-mode .ai-msg{
     color: var(--text-primary-dark); 
 }
 
+/* ========================================== */
+/* ★★★ THINKING ANIMATION - 핵심 수정 ★★★ */
+/* ========================================== */
 .thinking-msg{ 
     align-self: flex-start; 
-    background: transparent; 
-    color: var(--text-secondary-light); 
+    background: linear-gradient(90deg, 
+        var(--text-secondary-light) 0%, 
+        var(--dark-primary) 50%, 
+        var(--text-secondary-light) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 13px; 
-    font-style: italic; 
-    padding: 8px 4px; 
+    font-weight: 600;
+    padding: 8px 4px;
+    animation: thinkingShimmer 1.5s ease-in-out infinite;
 }
 
-body.dark-mode .thinking-msg{ color: var(--dark-primary); }
+@keyframes thinkingShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+body.dark-mode .thinking-msg{ 
+    background: linear-gradient(90deg, 
+        var(--dark-primary) 0%, 
+        var(--dark-accent) 50%, 
+        var(--dark-primary) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 펄스 점 애니메이션 */
+.thinking-msg::after {
+    content: '...';
+    display: inline-block;
+    animation: thinkingDots 1.4s infinite;
+    margin-left: 2px;
+}
+
+@keyframes thinkingDots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
 
 #chat-input-area{
     display: flex; 
@@ -470,7 +486,6 @@ body.dark-mode #chat-input{ color: var(--text-primary-dark); }
 }
 
 #chat-send-btn:hover:not(:disabled){ opacity: 0.85; } 
-
 #chat-send-btn:active:not(:disabled){ transform: scale(0.9); }
 
 #chat-send-btn:disabled{ 
@@ -486,7 +501,7 @@ body.dark-mode #chat-send-btn:not(:disabled){
 }
 
 /* ========================================== */
-/* 4. Theme Toggle
+/* 4. Theme Toggle */
 /* ========================================== */
 #theme-toggle{
     position: fixed; 
@@ -515,13 +530,9 @@ body.dark-mode #theme-toggle{
     color: var(--dark-primary); 
 }
 
-
 /* ========================================== */
-/* ════════════════════════════════════════════ */
-/* 5. MODAL - 중앙 팝업 창 (헤더 위치 수정)   */
-/* ════════════════════════════════════════════ */
-
-/* ----- 오버레이 ----- */
+/* 5. MODAL - data-state 호환 추가 */
+/* ========================================== */
 .modal {
     position: fixed;
     inset: 0;
@@ -540,76 +551,40 @@ body.dark-mode #theme-toggle{
     to { opacity: 1; }
 }
 
-.modal.hidden {
-    display: none !important;
-}
+.modal.hidden { display: none !important; }
+.modal[data-state="hidden"] { display: none !important; }
 
-/* ========================================== */
-/* 모달 컨테이너
-/* ========================================== */
 .modal-content {
     width: calc(100% - 32px);
     max-width: 420px;
     max-height: 85vh;
-    min-height: auto;
-    
     background: var(--surface-light);
     border-radius: 20px;
-    
-    box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.25),
-        0 0 0 1px rgba(0, 0, 0, 0.05);
-    
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    
     animation: modalPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 @keyframes modalPopIn {
-    from {
-        opacity: 0;
-        transform: scale(0.92) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 body.dark-mode .modal-content {
     background: var(--surface-dark);
-    box-shadow: 
-        0 25px 70px -12px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 70px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-/* ========================================== */
-/* ★★★ [FIX 2] 모달 헤더 - 위치 재조정 ★★★
-/* ==========================================
- *
- * ┌─────────────────────────────────────┐
- * │  [X]              학교 선택          │
- * ├─────────────────────────────────────┤
- *
- * • X버튼: 좌측 상단 고정
- * • 제목: 중앙 정렬 (또는 좌측)
- * • 여백 최적화
- */
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
-    /* [FIX] 여백 조정 */
     padding: 18px 20px 14px 20px;
-    
     flex-shrink: 0;
     border-bottom: 1px solid var(--border-light);
-    
-    /* [FIX] 간격 관리를 위한 gap */
     gap: 12px;
 }
 
@@ -617,75 +592,40 @@ body.dark-mode .modal-header {
     border-bottom-color: var(--border-dark);
 }
 
-/* 
- * [FIX] 타이틀 위치 옵션
- * 
- * Option A: 중앙 정렬 (기본)
- * Option B: 좌측 정렬 (주석 해제 시)
- */
 .modal-header h2 {
     font-size: 19px;
     font-weight: 800;
     letter-spacing: -0.3px;
     color: var(--text-primary-light);
-    
-    /* [FIX A] 중앙 정렬 + 유연한 너비 */
     flex: 1;
     text-align: center;
     margin: 0 8px;
-    
-    /* [FIX B] 좌측 정렬을 원하면 아래 주석 해제 */
-    /* text-align: left; */
 }
 
 body.dark-mode .modal-header h2 {
     color: var(--text-primary-dark);
 }
 
-/* ==========================================
- * [FIX 2] X 닫기 버튼 - 위치/스타일 조정
- * ==========================================
- *
- * • 위치: 좌측 상단 (또는 우측 - order로 조정)
- * • 크기: 34x34px (터치 타겟 44px 확보)
- * • 디자인: 둥근 배경 + 아이콘
- */
 .modal-close-btn {
-    position: static;
-    
-    /* [FIX] 크기 */
     width: 34px;
     height: 34px;
-    
-    /* [FIX] 스타일 - 더 작고 깔끔하게 */
     background: transparent;
     border: 1.5px solid var(--border-light);
     border-radius: 10px;
-    
-    /* 텍스트 */
     font-size: 15px;
     font-weight: 500;
     color: var(--text-secondary-light);
-    
-    /* 레이아웃 */
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    
-    /* 순서: 첫 번째 (좌측) */
     order: -1;
-    
-    /* 인터랙션 */
     cursor: pointer;
     transition: all 0.2s ease;
-    
-    /* 접근성 */
     min-width: 44px;
     min-height: 44px;
 }
 
-/* 호버 효과 */
 .modal-close-btn:hover {
     background: var(--surface-alt-light);
     border-color: var(--text-secondary-light);
@@ -693,7 +633,6 @@ body.dark-mode .modal-header h2 {
     transform: rotate(90deg);
 }
 
-/* 다크모드 */
 body.dark-mode .modal-close-btn {
     background: transparent;
     border-color: var(--border-dark);
@@ -706,9 +645,19 @@ body.dark-mode .modal-close-btn:hover {
     color: var(--text-primary-dark);
 }
 
-/* ========================================== */
-/* 모달 바디 (스크롤 영역)
-/* ========================================== */
+/* ★★★ data-state 호환 추가 ★★★ */
+#modal-step1[data-state="hidden"],
+#modal-step2[data-state="hidden"],
+#modal-loading[data-state="hidden"] { 
+    display: none !important; 
+}
+
+#modal-step1[data-state="active"],
+#modal-step2[data-state="active"],
+#modal-loading[data-state="active"] { 
+    display: block; 
+}
+
 .modal-body {
     padding: 20px 24px;
     overflow-y: auto;
@@ -721,14 +670,8 @@ body.dark-mode .modal-close-btn:hover {
     scrollbar-color: var(--border-light) transparent;
 }
 
-.modal-body::-webkit-scrollbar {
-    width: 5px;
-}
-
-.modal-body::-webkit-scrollbar-track {
-    background: transparent;
-}
-
+.modal-body::-webkit-scrollbar { width: 5px; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
 .modal-body::-webkit-scrollbar-thumb {
     background: var(--border-light);
     border-radius: 10px;
@@ -738,9 +681,6 @@ body.dark-mode .modal-body::-webkit-scrollbar-thumb {
     background: var(--border-dark);
 }
 
-/* ========================================== */
-/* 학교 선택 Pill 리스트
-/* ========================================== */
 .school-list {
     display: flex;
     flex-wrap: wrap;
@@ -794,12 +734,7 @@ body.dark-mode .school-option.selected {
     box-shadow: 0 4px 16px var(--dark-primary-glow);
 }
 
-/* ========================================== */
-/* 직접 입력 필드
-/* ========================================== */
-.custom-school {
-    margin-bottom: 4px;
-}
+.custom-school { margin-bottom: 4px; }
 
 .custom-school input {
     width: 100%;
@@ -813,9 +748,7 @@ body.dark-mode .school-option.selected {
     transition: all 0.2s ease;
 }
 
-.custom-school input::placeholder {
-    color: var(--text-secondary-light);
-}
+.custom-school input::placeholder { color: var(--text-secondary-light); }
 
 .custom-school input:focus {
     border-color: var(--text-primary-light);
@@ -829,9 +762,7 @@ body.dark-mode .custom-school input {
     color: var(--text-primary-dark);
 }
 
-body.dark-mode .custom-school input::placeholder {
-    color: var(--text-secondary-dark);
-}
+body.dark-mode .custom-school input::placeholder { color: var(--text-secondary-dark); }
 
 body.dark-mode .custom-school input:focus {
     border-color: var(--dark-primary);
@@ -839,9 +770,6 @@ body.dark-mode .custom-school input:focus {
     box-shadow: 0 0 0 3px var(--dark-primary-glow);
 }
 
-/* ========================================== */
-/* 모달 하단 액션 영역
-/* ========================================== */
 .modal-actions {
     padding: 16px 24px 20px 24px;
     flex-shrink: 0;
@@ -849,9 +777,7 @@ body.dark-mode .custom-school input:focus {
     background: inherit;
 }
 
-body.dark-mode .modal-actions {
-    border-top-color: var(--border-dark);
-}
+body.dark-mode .modal-actions { border-top-color: var(--border-dark); }
 
 .modal-btn {
     width: 100%;
@@ -880,18 +806,14 @@ body.dark-mode .modal-actions {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.modal-btn.primary:active {
-    transform: scale(0.98) translateY(0);
-}
+.modal-btn.primary:active { transform: scale(0.98) translateY(0); }
 
 body.dark-mode .modal-btn.primary {
     background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
     box-shadow: 0 6px 24px var(--dark-primary-glow);
 }
 
-body.dark-mode .modal-btn.primary:hover {
-    box-shadow: 0 8px 30px var(--dark-primary-glow);
-}
+body.dark-mode .modal-btn.primary:hover { box-shadow: 0 8px 30px var(--dark-primary-glow); }
 
 .modal-btn.secondary {
     background: var(--surface-alt-light);
@@ -902,26 +824,16 @@ body.dark-mode .modal-btn.primary:hover {
     font-size: 14px;
 }
 
-.modal-btn.secondary:hover {
-    background: var(--border-light);
-}
-
-.modal-btn.secondary:active {
-    transform: scale(0.98);
-}
+.modal-btn.secondary:hover { background: var(--border-light); }
+.modal-btn.secondary:active { transform: scale(0.98); }
 
 body.dark-mode .modal-btn.secondary {
     background: var(--surface-alt-dark);
     color: var(--text-primary-dark);
 }
 
-body.dark-mode .modal-btn.secondary:hover {
-    background: var(--border-dark);
-}
+body.dark-mode .modal-btn.secondary:hover { background: var(--border-dark); }
 
-/* ========================================== */
-/* 시간표 테이블
-/* ========================================== */
 .timetable-table { 
     width: 100%; 
     border-collapse: collapse; 
@@ -932,9 +844,7 @@ body.dark-mode .modal-btn.secondary:hover {
     border: 1px solid var(--border-light); 
 }
 
-body.dark-mode .timetable-table { 
-    border-color: var(--border-dark); 
-}
+body.dark-mode .timetable-table { border-color: var(--border-dark); }
 
 .timetable-table th, .timetable-table td { 
     border: 1px solid var(--border-light); 
@@ -943,18 +853,14 @@ body.dark-mode .timetable-table {
 }
 
 body.dark-mode .timetable-table th, 
-body.dark-mode .timetable-table td { 
-    border-color: var(--border-dark); 
-}
+body.dark-mode .timetable-table td { border-color: var(--border-dark); }
 
 .timetable-table th { 
     font-weight: 700; 
     background: var(--surface-alt-light); 
 }
 
-body.dark-mode .timetable-table th { 
-    background: var(--surface-alt-dark); 
-}
+body.dark-mode .timetable-table th { background: var(--surface-alt-dark); }
 
 .timetable-table input { 
     width: 100%; 
@@ -964,7 +870,8 @@ body.dark-mode .timetable-table th {
     font-size: 13px; 
     padding: 4px; 
     outline: none; 
-    border-radius: 6px; 
+    border-radius: 6px;
+    min-height: 44px;
 }
 
 .timetable-table input:focus { 
@@ -972,18 +879,13 @@ body.dark-mode .timetable-table th {
     outline: 2px solid var(--text-primary-light); 
 }
 
-body.dark-mode .timetable-table input { 
-    color: var(--text-primary-dark); 
-}
+body.dark-mode .timetable-table input { color: var(--text-primary-dark); }
 
 body.dark-mode .timetable-table input:focus { 
     background: rgba(167, 139, 250, 0.1); 
     outline-color: var(--dark-primary); 
 }
 
-/* ========================================== */
-/* 로딩 스피너
-/* ========================================== */
 .loading-spinner { 
     width: 36px; 
     height: 36px; 
@@ -1026,20 +928,9 @@ body.dark-mode .loading-spinner {
     animation: blink 0.8s infinite; 
 }
 
-body.dark-mode .typing-cursor::after { 
-    background: var(--dark-primary); 
-}
+body.dark-mode .typing-cursor::after { background: var(--dark-primary); }
 
 @keyframes blink { 
     0%, 100% { opacity: 1; } 
     50% { opacity: 0; } 
 }
-/* JS v2.5 data-state 호환 */
-.modal[data-state="hidden"] { display: none !important; }
-#modal-step1[data-state="hidden"],
-#modal-step2[data-state="hidden"],
-#modal-loading[data-state="hidden"] { display: none !important; }
-#modal-step1[data-state="active"],
-#modal-step2[data-state="active"],
-#modal-loading[data-state="active"] { display: block; }
-
