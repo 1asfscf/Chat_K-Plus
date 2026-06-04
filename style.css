@@ -22,7 +22,7 @@
     --surface-alt-dark: #27272A;
 
     --border-light: rgba(0, 0, 0, 0.06);
-    --border-dark: rgba(255, 255, 255, 0.08);
+    --border-dark: rgba(255, 255, 0.08);
 
     --text-primary-light: #111827;
     --text-primary-dark: #FAFAFA;
@@ -358,9 +358,6 @@ body.dark-mode .ai-msg{
     color: var(--text-primary-dark); 
 }
 
-/* ========================================== */
-/* ★★★ THINKING ANIMATION - 핵심 수정 ★★★ */
-/* ========================================== */
 .thinking-msg{ 
     align-self: flex-start; 
     background: linear-gradient(90deg, 
@@ -393,7 +390,6 @@ body.dark-mode .thinking-msg{
     background-clip: text;
 }
 
-/* 펄스 점 애니메이션 */
 .thinking-msg::after {
     content: '...';
     display: inline-block;
@@ -531,7 +527,7 @@ body.dark-mode #theme-toggle{
 }
 
 /* ========================================== */
-/* 5. MODAL - data-state 호환 추가 */
+/* 5. MODAL - data-state 호환 + 레이아웃 수정 */
 /* ========================================== */
 .modal {
     position: fixed;
@@ -645,7 +641,7 @@ body.dark-mode .modal-close-btn:hover {
     color: var(--text-primary-dark);
 }
 
-/* ★★★ data-state 호환 추가 ★★★ */
+/* ★★★ data-state 호환 - 핵심 수정 ★★★ */
 #modal-step1[data-state="hidden"],
 #modal-step2[data-state="hidden"],
 #modal-loading[data-state="hidden"] { 
