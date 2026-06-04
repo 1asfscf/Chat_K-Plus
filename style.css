@@ -32,15 +32,6 @@
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
-
-    /* [NEW] Z-Index 시스템 */
-    --z-base: 1;
-    --z-dropdown: 100;
-    --z-sticky: 200;
-    --z-header: 300;
-    --z-modal-backdrop: 900;
-    --z-modal: 1000;
-    --z-toast: 1100;
 }
 
 * {
@@ -60,7 +51,6 @@ html, body {
     transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* [FIX] 모달 열릴 때 body 스크롤 잠금 */
 body.modal-open {
     overflow: hidden;
     position: fixed;
@@ -312,8 +302,6 @@ body.dark-mode #back-btn:hover { background: rgba(255, 255, 255, 0.05); }
     flex-direction: column; 
     gap: 12px; 
     scroll-behavior: smooth;
-    
-    /* [FIX] iOS 스크롤 최적화 */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
 }
@@ -368,7 +356,7 @@ body.dark-mode .ai-msg {
 
 body.dark-mode .thinking-msg { color: var(--dark-primary); }
 
-#chat-input-area {
+#chat-input-area{
     display: flex; 
     align-items: center; 
     gap: 8px; 
@@ -398,7 +386,7 @@ body.dark-mode #chat-input-area:focus-within {
     box-shadow: 0 0 0 3px var(--dark-primary-glow), 0 8px 32px rgba(0,0,0,0.4); 
 }
 
-#timetable-btn, #chat-send-btn {
+#timetable-btn, #chat-send-btn{
     width: 42px; 
     height: 42px; 
     border-radius: 50%; 
@@ -412,24 +400,24 @@ body.dark-mode #chat-input-area:focus-within {
     transition: all 0.2s ease;
 }
 
-#timetable-btn { 
+#timetable-btn{ 
     background: transparent; 
     color: var(--text-secondary-light); 
 }
 
-#timetable-btn:hover { 
+#timetable-btn:hover{ 
     color: var(--text-primary-light); 
     background: var(--primary-subtle); 
 }
 
-body.dark-mode #timetable-btn { color: var(--text-secondary-dark); }
+body.dark-mode #timetable-btn{ color: var(--text-secondary-dark); }
 
-body.dark-mode #timetable-btn:hover { 
+body.dark-mode #timetable-btn:hover{ 
     color: var(--dark-accent); 
     background: rgba(244, 114, 182, 0.1); 
 }
 
-#chat-input { 
+#chat-input{ 
     flex: 1; 
     border: none; 
     background: transparent; 
@@ -439,24 +427,24 @@ body.dark-mode #timetable-btn:hover {
     color: var(--text-primary-light); 
 }
 
-body.dark-mode #chat-input { color: var(--text-primary-dark); }
+body.dark-mode #chat-input{ color: var(--text-primary-dark); }
 
-#chat-send-btn { 
+#chat-send-btn{ 
     background: var(--text-primary-light); 
     color: #FFFFFF; 
 }
 
-#chat-send-btn:hover:not(:disabled) { opacity: 0.85; } 
+#chat-send-btn:hover:not(:disabled){ opacity: 0.85; } 
 
-#chat-send-btn:active:not(:disabled) { transform: scale(0.9); }
+#chat-send-btn:active:not(:disabled){ transform: scale(0.9); }
 
-#chat-send-btn:disabled { 
+#chat-send-btn:disabled{ 
     background: #E5E7EB; 
     color: #9CA3AF; 
     cursor: not-allowed; 
 }
 
-body.dark-mode #chat-send-btn:not(:disabled) { 
+body.dark-mode #chat-send-btn:not(:disabled){ 
     background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); 
     color: #FFFFFF; 
     box-shadow: 0 4px 12px var(--dark-primary-glow); 
@@ -465,7 +453,7 @@ body.dark-mode #chat-send-btn:not(:disabled) {
 /* ========================================== */
 /* 4. Theme Toggle
 /* ========================================== */
-#theme-toggle {
+#theme-toggle{
     position: fixed; 
     top: 16px; 
     right: 16px; 
@@ -476,7 +464,7 @@ body.dark-mode #chat-send-btn:not(:disabled) {
     border-radius: 50%;
     font-size: 20px; 
     cursor: pointer; 
-    z-index: var(--z-header); /* [FIX] 변수 사용 */
+    z-index: 999; 
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease; 
     display: flex; 
@@ -484,9 +472,9 @@ body.dark-mode #chat-send-btn:not(:disabled) {
     justify-content: center;
 }
 
-#theme-toggle:hover { transform: scale(1.1); }
+#theme-toggle:hover{ transform: scale(1.1); }
 
-body.dark-mode #theme-toggle { 
+body.dark-mode #theme-toggle{ 
     background: var(--surface-alt-dark); 
     border-color: var(--border-dark); 
     color: var(--dark-primary); 
@@ -494,429 +482,443 @@ body.dark-mode #theme-toggle {
 
 
 /* ========================================== */
-/* 5. MODAL - PWA/아이폰 홈화면 앱 최적화 버전 ★★★
-/* ========================================== */
+/* ════════════════════════════════════════════ */
+/* 5. MODAL - ★★★ 중앙 팝업 창 리디자인 ★★★ */
+/* ════════════════════════════════════════════ */
 
+/*
+ * ┌─────────────────────────────────────────────┐
+ * │  디자인 컨셉: 깔끔한 중앙 다이얼로그          │
+ * │                                             │
+ * │  ┌─────────────────────────────────┐        │
+ * │  │          ✕  학교 선택            │        │
+ * │  ├─────────────────────────────────┤        │
+ * │  │                                 │        │
+ * │  │  [인천광제고] [경기과학고]      │        │
+ * │  │  [서울과학고] [대원외고]        │        │
+ * │  │  ...                            │        │
+ * │  │                                 │        │
+ * │  ├─────────────────────────────────┤        │
+ * │  │            [ 다음 ]             │        │
+ * │  └─────────────────────────────────┘        │
+ * │                                             │
+ * └─────────────────────────────────────────────┘
+ */
+
+/* ----- 오버레이 (배경) ----- */
 .modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     
-    /* [FIX] 성능 최적화: 저사양 기기 대비 */
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    
+    /* 중앙 정렬 */
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    z-index: var(--z-modal); /* [FIX] 변수 사용 */
-    animation: modalFade 0.2s ease;
+    align-items: center;
+    
+    z-index: 1000;
+    
+    /* 페이드인 애니메이션 */
+    animation: modalOverlayFadeIn 0.25s ease-out;
 }
 
-@keyframes modalFade { 
-    from { opacity: 0; } 
-    to { opacity: 1; } 
+@keyframes modalOverlayFadeIn {
+    from { 
+        opacity: 0; 
+    }
+    to { 
+        opacity: 1; 
+    }
 }
 
-.modal.hidden { 
-    display: none !important; 
+.modal.hidden {
+    display: none !important;
 }
 
 /* ========================================== */
-/* ★★★ .modal-content - 핵심 수정 영역 ★★★
+/* ★★★ 모달 컨테이너 (창 본체) ★★★
 /* ========================================== */
 .modal-content {
-    width: 100%;
+    /* 기본 크기 설정 */
+    width: calc(100% - 32px); /* 좌우 16px 여백 */
+    max-width: 420px;
+    
+    /* 높이: 화면의 85%를 최대로, 최소 300px 보장 */
+    max-height: 85vh;
+    min-height: auto;
+    
+    /* 외형 */
     background: var(--surface-light);
+    border-radius: 20px;
+    
+    /* 그림자 (깊이감) */
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    
+    /* 레이아웃 */
     display: flex;
     flex-direction: column;
-    
-    /*
-     * [FIX 1] Safe Area 변수 정의 (상단 최대 20px로 제한)
-     * PWA 모드에서 safe-area-inset-top이 과대측정되는 문제 해결
-     * 아이폰 노치/Dynamic Island에서도 적절한 여백 보장
-     */
-    --modal-safe-top: min(env(safe-area-inset-top, 0px), 20px);
-    
-    /*
-     * [FIX 2] 정확한 max-height 계산
-     * 상단 safe area + 하단 safe area 모두 차감
-     */
-    max-height: calc(
-        100vh 
-        - var(--modal-safe-top) 
-        - env(safe-area-inset-bottom, 0px)
-    );
-    
-    /*
-     * [FIX 3] 상단 패딩 (제한된 safe area 값 사용)
-     */
-    padding-top: var(--modal-safe-top);
-    
-    border-radius: 24px 24px 0 0;
-    position: relative;
-    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.3);
-    
-    /* [FIX 4] overflow 추가 (flex 레이아웃 안정화) */
     overflow: hidden;
     
-    animation: mobileSheetUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* 애니메이션: 스케업 + 페이드 */
+    animation: modalPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     
-    /* [FIX 5] 다크모드 전환 시 깜빡임 방지 */
+    /* 전환 효과 */
     transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* 모달 진입 애니메이션 */
+@keyframes modalPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* 다크모드 */
 body.dark-mode .modal-content {
     background: var(--surface-dark);
-    box-shadow: 0 -20px 80px rgba(0, 0, 0, 0.7);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 25px 70px -12px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 /* ========================================== */
-/* ★★★ 드래그 핸들바 (::before) - 위치 수정 ★★★
-/* ========================================== */
-.modal-content::before {
-    content: '';
-    position: absolute;
-    
-    /*
-     * [FIX 6] 핸들바 위치 최적화
-     * safe area가 너무 커도 핸들은 적절한 위치에 유지
-     */
-    top: calc(var(--modal-safe-top, 0px) + 10px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 48px;
-    height: 5px;
-    background: #D1D5DB;
-    border-radius: 10px;
-    z-index: 10;
-    
-    /* [FIX 7] 터치 영역 확대 (모바일 UX 개선) */
-    padding: 8px 20px;
-    margin: -8px -20px;
-}
-
-body.dark-mode .modal-content::before { 
-    background: #52525B; 
-}
-
-@keyframes mobileSheetUp { 
-    from { transform: translateY(100%); } 
-    to { transform: translateY(0); } 
-}
-
-/* --- PC 환경 (768px 이상) --- */
-@media (min-width: 768px) {
-    .modal { 
-        align-items: center; 
-    }
-    
-    .modal-content {
-        max-width: 480px;
-        width: 90%;
-        
-        /* PC는 더 넉넉한 높이 */
-        max-height: 85vh;
-        
-        border-radius: 24px;
-        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.3);
-        animation: pcModalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        
-        /* PC는 safe area 불필요 */
-        --modal-safe-top: 0px;
-        padding-top: 24px; /* 적당한 헤더 여백 */
-        
-        border: 1px solid var(--border-light);
-    }
-    
-    body.dark-mode .modal-content { 
-        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7); 
-        border-color: var(--border-dark); 
-    }
-    
-    /* PC는 핸들바 숨김 */
-    body.dark-mode .modal-content::before,
-    .modal-content::before { 
-        display: none; 
-    }
-}
-
-@keyframes pcModalPop { 
-    from { 
-        opacity: 0; 
-        transform: scale(0.95) translateY(10px); 
-    } 
-    to { 
-        opacity: 1; 
-        transform: scale(1) translateY(0); 
-    } 
-}
-
-/* ========================================== */
-/* 모달 헤더 (동적 패딩)
+/* 모달 헤더
 /* ========================================== */
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     
-    /*
-     * [FIX 8] 헤더 패딩 동적 계산
-     * 핸들바 공간 + 적절한 여백 확보
-     */
-    padding: calc(var(--modal-safe-top, 0px) + 28px) 24px 16px 24px;
+    /* 여백 */
+    padding: 20px 24px 16px 24px;
     
+    /* 줄어들지 않음 */
     flex-shrink: 0;
+    
+    /* 하단 구분선 */
+    border-bottom: 1px solid var(--border-light);
 }
 
-.modal-header h2 { 
-    font-size: 22px; 
-    font-weight: 800; 
-    letter-spacing: -0.5px; 
+body.dark-mode .modal-header {
+    border-bottom-color: var(--border-dark);
 }
 
-/* X 닫기 버튼 */
+/* 타이틀 */
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--text-primary-light);
+}
+
+body.dark-mode .modal-header h2 {
+    color: var(--text-primary-dark);
+}
+
+/* 닫기 버튼 */
 .modal-close-btn {
-    position: static; /* 겹침 방지 */
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    background: var(--surface-alt-light); 
-    border: none; 
-    font-size: 18px;
-    cursor: pointer; 
+    position: static;
+    
+    /* 크기 */
+    width: 34px;
+    height: 34px;
+    
+    /* 스타일 */
+    background: var(--surface-alt-light);
+    border: none;
+    border-radius: 50%;
+    
+    /* 텍스트 */
+    font-size: 16px;
     color: var(--text-secondary-light);
-    display: flex; 
-    align-items: center; 
+    
+    /* 레이아웃 */
+    display: flex;
+    align-items: center;
     justify-content: center;
-    border-radius: 50%; 
+    flex-shrink: 0;
+    
+    /* 인터랙션 */
+    cursor: pointer;
     transition: all 0.2s ease;
     
-    /* [FIX 9] 접근성: 터치 타겟 크기 증가 */
+    /* 접근성 */
     min-width: 44px;
     min-height: 44px;
 }
 
-.modal-close-btn:hover { 
-    background: var(--border-light); 
-    color: var(--text-primary-light); 
+.modal-close-btn:hover {
+    background: var(--border-light);
+    color: var(--text-primary-light);
+    transform: rotate(90deg);
 }
 
-body.dark-mode .modal-close-btn { 
-    background: var(--surface-alt-dark); 
-    color: var(--text-secondary-dark); 
+body.dark-mode .modal-close-btn {
+    background: var(--surface-alt-dark);
+    color: var(--text-secondary-dark);
 }
 
-body.dark-mode .modal-close-btn:hover { 
-    background: var(--border-dark); 
-    color: var(--text-primary-dark); 
+body.dark-mode .modal-close-btn:hover {
+    background: var(--border-dark);
+    color: var(--text-primary-dark);
 }
 
 /* ========================================== */
-/* ★★★ .modal-body - 스크롤 영역 최적화 ★★★
+/* ★★★ 모달 바디 (스크롤 영역) ★★★
 /* ========================================== */
 .modal-body {
-    padding: 0 24px 20px 24px;
+    /* 여백 */
+    padding: 20px 24px;
+    
+    /* 스크롤 설정 */
     overflow-y: auto;
+    overflow-x: hidden;
     
-    /* [FIX 10] Flex 스크롤 최적화 삼총사 */
-    flex: 1 1 auto;      /* 남은 공간 차지 */
-    min-height: 0;       /* 필수! flex shrink 허용 */
-    min-width: 0;        /* 가로 overflow 방지 */
+    /* Flex 스크롤 최적화 */
+    flex: 1 1 auto;
+    min-height: 0;
     
-    /* [FIX 11] iOS 스크롤 성능 최적화 */
-    -webkit-overflow-scrolling: touch; /* 부드러운 모멘텀 스크롤 */
-    overscroll-behavior: contain;      /* 스크롤 체이닝 방지 */
+    /* iOS 스크롤 최적화 */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     
-    /* [FIX 12] 스크롤바 스타일링 */
+    /* 스크롤바 스타일 */
     scrollbar-width: thin;
     scrollbar-color: var(--border-light) transparent;
 }
 
-/* 웹킷 스크롤바 커스터마이징 */
+/* 웹킷 스크롤바 */
 .modal-body::-webkit-scrollbar {
-    width: 4px;
+    width: 5px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-    background-color: var(--border-light);
+    background: var(--border-light);
     border-radius: 10px;
 }
 
 body.dark-mode .modal-body::-webkit-scrollbar-thumb {
-    background-color: var(--border-dark);
+    background: var(--border-dark);
 }
 
-/* --- Pill 리스트 (학교 선택) --- */
-.school-list { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 10px; 
-    margin: 8px 0 24px 0; 
+/* ========================================== */
+/* 학교 선택 Pill 리스트
+/* ========================================== */
+.school-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 4px 0 20px 0;
 }
 
+/* 개별 옵션 버튼 */
 .school-option {
-    padding: 12px 18px; 
-    border: none; 
-    border-radius: 50px; 
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-    font-size: 14px; /* [FIX 13] 폰트 약간 축소 */
+    /* 크기 */
+    padding: 11px 18px;
+    
+    /* 외형 */
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    background: transparent;
+    
+    /* 텍스트 */
+    font-size: 14px;
     font-weight: 500;
-    background: var(--surface-alt-light); 
     color: var(--text-primary-light);
     
-    /* [FIX 14] 긴 텍스트 말줄임 처리 */
+    /* 인터랙션 */
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 말줄임 */
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.school-option:hover { 
-    background: #E5E7EB; 
-    transform: translateY(-1px); 
+/* 호버 상태 */
+.school-option:hover {
+    border-color: var(--text-primary-light);
+    background: var(--primary-subtle);
 }
 
-.school-option.selected { 
-    background: var(--text-primary-light); 
-    color: #FFFFFF; 
-    font-weight: 700; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+/* 선택된 상태 */
+.school-option.selected {
+    background: var(--text-primary-light);
+    color: #FFFFFF;
+    border-color: var(--text-primary-light);
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
-body.dark-mode .school-option { 
-    background: var(--surface-alt-dark); 
-    color: var(--text-secondary-dark); 
+/* 다크모드 옵션 */
+body.dark-mode .school-option {
+    border-color: var(--border-dark);
+    color: var(--text-secondary-dark);
 }
 
-body.dark-mode .school-option:hover { 
-    background: #3F3F46; 
+body.dark-mode .school-option:hover {
+    border-color: var(--dark-primary);
+    background: rgba(167, 139, 250, 0.08);
 }
 
-body.dark-mode .school-option.selected { 
-    background: var(--dark-primary); 
-    color: #09090B; 
-    font-weight: 700; 
-    box-shadow: 0 4px 16px var(--dark-primary-glow); 
+body.dark-mode .school-option.selected {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    color: #FFFFFF;
+    border-color: transparent;
+    box-shadow: 0 4px 16px var(--dark-primary-glow);
 }
 
-/* --- 직접 입력 필드 --- */
-.custom-school { 
-    margin-bottom: 8px; 
+/* ========================================== */
+/* 직접 입력 필드
+/* ========================================== */
+.custom-school {
+    margin-bottom: 4px;
 }
 
 .custom-school input {
-    width: 100%; 
-    padding: 14px 20px; 
-    border: 1.5px solid var(--border-light); 
-    border-radius: 50px;
-    background: transparent; 
-    font-size: 15px; 
-    outline: none; 
-    color: var(--text-primary-light); 
+    width: 100%;
+    padding: 13px 18px;
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    background: var(--surface-alt-light);
+    font-size: 14px;
+    color: var(--text-primary-light);
+    outline: none;
     transition: all 0.2s ease;
 }
 
-.custom-school input::placeholder { 
-    color: var(--text-secondary-light); 
+.custom-school input::placeholder {
+    color: var(--text-secondary-light);
 }
 
-.custom-school input:focus { 
-    border-color: var(--text-primary-light); 
-    background: var(--primary-subtle); 
+.custom-school input:focus {
+    border-color: var(--text-primary-light);
+    background: var(--surface-light);
+    box-shadow: 0 0 0 3px var(--primary-glow);
 }
 
-body.dark-mode .custom-school input { 
-    border-color: var(--border-dark); 
-    color: var(--text-primary-dark); 
+/* 다크모드 입력필드 */
+body.dark-mode .custom-school input {
+    border-color: var(--border-dark);
+    background: var(--surface-alt-dark);
+    color: var(--text-primary-dark);
 }
 
-body.dark-mode .custom-school input::placeholder { 
-    color: var(--text-secondary-dark); 
+body.dark-mode .custom-school input::placeholder {
+    color: var(--text-secondary-dark);
 }
 
-body.dark-mode .custom-school input:focus { 
-    border-color: var(--dark-primary); 
-    background: rgba(167, 139, 250, 0.05); 
+body.dark-mode .custom-school input:focus {
+    border-color: var(--dark-primary);
+    background: rgba(167, 139, 250, 0.05);
+    box-shadow: 0 0 0 3px var(--dark-primary-glow);
 }
 
 /* ========================================== */
-/* ★★★ .modal-actions - 하단 버튼 영역 ★★★
+/* ★★★ 모달 하단 액션 영역 ★★★
 /* ========================================== */
 .modal-actions {
-    padding: 16px 24px;
+    /* 여백 */
+    padding: 16px 24px 20px 24px;
     
-    /* [FIX 15] 하단 Safe Area 처리 */
-    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    /* 줄어들지 않음 */
+    flex-shrink: 0;
     
-    flex-shrink: 0; /* 절대 줄어들지 않음 */
-    margin-top: auto; /* 항상 하단에 붙이기 */
+    /* 상단 구분선 */
     border-top: 1px solid var(--border-light);
     
-    /* 배경 상속 (투명 처리 방지) */
+    /* 배경 */
     background: inherit;
 }
 
-body.dark-mode .modal-actions { 
-    border-top-color: var(--border-dark); 
+body.dark-mode .modal-actions {
+    border-top-color: var(--border-dark);
 }
 
 /* 기본 버튼 스타일 */
 .modal-btn {
     width: 100%;
-    height: 54px; /* [FIX 16] 약간 축소 (56→54) */
-    border-radius: 16px; 
-    font-size: 17px; 
+    height: 52px;
+    border-radius: 14px;
+    font-size: 16px;
     font-weight: 700;
-    cursor: pointer; 
-    transition: all 0.2s ease; 
     border: none;
-    display: flex; 
-    align-items: center; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    
-    /* [FIX 17] 터치 피드백 최적화 */
+    transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
-/* Primary 버튼 (다음/확인) */
-.modal-btn.primary { 
-    background: var(--text-primary-light); 
-    color: #FFFFFF; 
+/* Primary 버튼 (주요 액션) */
+.modal-btn.primary {
+    background: var(--text-primary-light);
+    color: #FFFFFF;
 }
 
-.modal-btn.primary:hover { 
-    opacity: 0.9; 
-} 
-
-.modal-btn.primary:active { 
-    transform: scale(0.98); 
+.modal-btn.primary:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-body.dark-mode .modal-btn.primary { 
-    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); 
-    box-shadow: 0 8px 24px var(--dark-primary-glow); 
+.modal-btn.primary:active {
+    transform: scale(0.98) translateY(0);
 }
 
-/* Secondary 버튼 (취소 등) */
-.modal-btn.secondary { 
-    background: var(--surface-alt-light); 
-    color: var(--text-primary-light); 
-    margin-top: 10px; 
-    height: 48px; 
-    font-weight: 600; 
-    font-size: 15px; 
+/* 다크모드 Primary */
+body.dark-mode .modal-btn.primary {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    box-shadow: 0 6px 24px var(--dark-primary-glow);
 }
 
-body.dark-mode .modal-btn.secondary { 
-    background: var(--surface-alt-dark); 
-    color: var(--text-primary-dark); 
+body.dark-mode .modal-btn.primary:hover {
+    box-shadow: 0 8px 30px var(--dark-primary-glow);
+}
+
+/* Secondary 버튼 (보조 액션) */
+.modal-btn.secondary {
+    background: var(--surface-alt-light);
+    color: var(--text-primary-light);
+    margin-top: 10px;
+    height: 46px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.modal-btn.secondary:hover {
+    background: var(--border-light);
+}
+
+.modal-btn.secondary:active {
+    transform: scale(0.98);
+}
+
+/* 다크모드 Secondary */
+body.dark-mode .modal-btn.secondary {
+    background: var(--surface-alt-dark);
+    color: var(--text-primary-dark);
+}
+
+body.dark-mode .modal-btn.secondary:hover {
+    background: var(--border-dark);
 }
 
 /* ========================================== */
@@ -925,7 +927,7 @@ body.dark-mode .modal-btn.secondary {
 .timetable-table { 
     width: 100%; 
     border-collapse: collapse; 
-    margin: 20px 0; 
+    margin: 16px 0; 
     font-size: 13px; 
     border-radius: 12px; 
     overflow: hidden; 
@@ -938,7 +940,7 @@ body.dark-mode .timetable-table {
 
 .timetable-table th, .timetable-table td { 
     border: 1px solid var(--border-light); 
-    padding: 12px 8px; 
+    padding: 10px 8px; 
     text-align: center; 
 }
 
@@ -991,7 +993,7 @@ body.dark-mode .timetable-table input:focus {
     border-top-color: var(--text-primary-light); 
     border-radius: 50%; 
     animation: spin 0.8s linear infinite; 
-    margin: 24px auto; 
+    margin: 32px auto; 
 }
 
 body.dark-mode .loading-spinner { 
@@ -1006,7 +1008,7 @@ body.dark-mode .loading-spinner {
 
 #modal-loading { 
     text-align: center; 
-    padding: 40px 24px; 
+    padding: 48px 24px; 
 }
 
 #modal-loading.hidden, 
@@ -1015,7 +1017,7 @@ body.dark-mode .loading-spinner {
     display: none !important; 
 }
 
-/* 타이핑 커서 애니메이션 */
+/* 타이핑 커서 */
 .typing-cursor::after { 
     content: ''; 
     display: inline-block; 
