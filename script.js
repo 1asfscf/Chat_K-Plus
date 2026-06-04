@@ -1,5 +1,5 @@
 // ==========================================
-// 🧠 Chat K plus v2.5.1 - 키워드 매칭 버그픽스
+// 🧠 Chat K plus v2.5.2 - 외부링크 경고 모달 추가
 // ==========================================
 // WARNING: 2026.06.04 09:00 KST 기준 데이터. 개표 진행중이라 실시간 아님
 // 최종 결과는 중앙선관위 확인 필수
@@ -10,7 +10,7 @@ const knowledgeBase = {
     items: [
         // === 기본 ===
         { keywords: ["아바타", "아바타2", "아바타 2가 뭐죠"], response: "아바타 2는 제임스 카메론 감독의 SF 영화로, 판도라 행성에서 벌어지는 나비족의 이야기를 다루고 있어. 엄청난 시각 효과가 포인트야!" },
-        { keywords: ["너", "너는", "너에", "대하여서", "누구", "자기소개"], response: "나는 Chat K plus v2.5.1이야! 시간표 모달 + 정치 상세 데이터 탑재된 로컬 AI지. 2026.06.04 기준 업데이트 ㅋㅋ 개표중이라 데이터 변동 가능" },
+        { keywords: ["너", "너는", "너에", "대하여서", "누구", "자기소개"], response: "나는 Chat K plus v2.5.2야! 시간표 모달 + 정치 상세 데이터 탑재된 로컬 AI지. 2026.06.04 기준 업데이트 ㅋㅋ 개표중이라 데이터 변동 가능" },
         { keywords: ["안녕", "하이", "반가워", "헬로"], response: "안녕! 반가워 ㅋㅋ 오늘 뭐하고 싶어? 6월 3일 지방선거 개표중인데 결과 볼래?" },
         { keywords: ["고마워", "감사", "땡큐"], response: "ㅎ 별말을! 또 궁금한 거 있으면 물어봐" },
         { keywords: ["잘가", "바이", "끝"], response: "응 다음에 또 봐! 시간표도 설정해봤지?" },
@@ -18,6 +18,14 @@ const knowledgeBase = {
         // === 이슈 질문 - 우선순위 최상단 ===
         { keywords: ["요즘 이슈", "최근 이슈", "이슈 뭐야", "핫이슈", "뉴스", "요즘 뭐", "요즘 뉴스"], response: "2026년 6월 최대 이슈는 6.3 지방선거 개표야. 6/4 09:00 기준 민주당이 광역단체장 17곳 중 10곳 우세. 서울 오세훈, 경기 김동연, 인천 박찬대 재선 유력. 투표율 58.2%로 역대급. 그 외에 의대 증원 의료대란 3년차, 비트코인 1.5억 돌파, 엔화 160엔 돌파도 핫해.", priority: 10 },
         { keywords: ["오늘 이슈", "오늘 뉴스", "오늘 뭐"], response: "오늘 2026.06.04 핵심은 지방선거 개표 진행중이야. 인천 박찬대 54%대 1위, 서울 오세훈 52% 재선 유력. 최종 결과는 밤 늦게 나올 듯.", priority: 10 },
+
+        // ★★★ 다음 사이트 주소 - 신규 추가 ★★★
+        { 
+            keywords: ["다음 사이트 주소", "다음 주소", "다음 링크", "daum 주소", "다음 공식 사이트", "다음 홈페이지"], 
+            response: "다음(Daum) 공식 사이트야.\n\n🔗 주소: {{LINK:https://www.daum.net|다음 바로가기}}\n\n다음은 카카오가 운영하는 대한민국 대표 포털 사이트야. 뉴스, 메일, 카페, 검색, 지도, 쇼핑 등 다양한 서비스를 제공해. 1995년 설립된 1세대 포털로 지금도 네이버랑 양대산맥이지.", 
+            priority: 15,
+            type: "external_link"
+        },
 
         // === 2026 지방선거 - 개표중 데이터 ===
         { keywords: ["지방선거", "6월 3일 선거", "지선 결과", "개표", "선거 결과"], response: "2026년 6월 3일 지방선거 개표 진행중이야. 6/4 09:00 기준 민주당이 광역단체장 17곳 중 10곳 우세 보이고 있어. 서울 오세훈, 경기 김동연, 인천 박찬대 재선 유력. 투표율 58.2%." },
@@ -56,6 +64,70 @@ let isAnimating = false;
 let animationQueue = [];
 
 // ==========================================
+// ⚠️ 외부링크 경고 모달 시스템 - 신규 추가
+// ==========================================
+
+function initExternalLinkWarning() {
+    const warningModalHTML = `
+        <div id="external-link-warning" class="modal" data-state="hidden">
+            <div class="modal-content" style="max-width: 360px;">
+                <div class="modal-header" style="justify-content: center;">
+                    <h2>⚠️ 외부 사이트 이동</h2>
+                </div>
+                <div class="modal-body" style="text-align: center; padding: 24px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🔗</div>
+                    <p style="font-size: 15px; line-height: 1.6; color: var(--text-primary-light); margin-bottom: 12px;">
+                        <strong id="warning-site-name">사이트</strong>로 이동합니다
+                    </p>
+                    <p style="font-size: 13px; color: var(--text-secondary-light); line-height: 1.5;">
+                        외부 사이트는 악성코드, 피싱 위험이 있을 수 있습니다.<br>
+                        신뢰할 수 있는 사이트인지 확인 후 이동하세요.
+                    </p>
+                    <div id="warning-url" style="margin-top: 16px; padding: 12px; background: var(--surface-alt-light); border-radius: 8px; font-size: 12px; word-break: break-all; color: var(--text-secondary-light);"></div>
+                </div>
+                <div class="modal-actions" style="flex-direction: row; gap: 8px;">
+                    <button id="warning-cancel" class="modal-btn secondary" style="flex: 1;">취소</button>
+                    <button id="warning-confirm" class="modal-btn primary" style="flex: 1;">이동</button>
+                </div>
+            </div>
+        </div>
+    `;
+    appWrapper.insertAdjacentHTML('beforeend', warningModalHTML);
+}
+
+let pendingExternalUrl = '';
+
+function showExternalLinkWarning(url, siteName) {
+    const modal = document.getElementById('external-link-warning');
+    const urlDiv = document.getElementById('warning-url');
+    const nameSpan = document.getElementById('warning-site-name');
+    
+    if (!modal) return;
+    
+    pendingExternalUrl = url;
+    urlDiv.textContent = url;
+    nameSpan.textContent = siteName || '외부 사이트';
+    
+    document.body.classList.add('modal-open');
+    modal.dataset.state = 'visible';
+}
+
+function closeExternalLinkWarning() {
+    const modal = document.getElementById('external-link-warning');
+    if (!modal) return;
+    document.body.classList.remove('modal-open');
+    modal.dataset.state = 'hidden';
+    pendingExternalUrl = '';
+}
+
+function confirmExternalLink() {
+    if (pendingExternalUrl) {
+        window.open(pendingExternalUrl, '_blank', 'noopener,noreferrer');
+    }
+    closeExternalLinkWarning();
+}
+
+// ==========================================
 // 📅 시간표 모달 시스템
 // ==========================================
 
@@ -84,6 +156,7 @@ function initTimetableSystem() {
                     <div class="modal-actions">
                         <button id="modal-confirm" class="modal-btn primary">확인</button>
                     </div>
+                </div>
                 <div id="modal-loading" class="modal-body" data-state="hidden">
                     <div class="loading-spinner"></div>
                     <p>시간표 저장 중...</p>
@@ -112,13 +185,20 @@ function initTimetableSystem() {
     document.getElementById('modal-confirm')?.addEventListener('click', confirmTimetable);
     document.getElementById('modal-close')?.addEventListener('click', closeTimetableModal);
     document.addEventListener('keydown', handleEscKey);
+    
+    // 경고 모달 이벤트
+    document.getElementById('warning-cancel')?.addEventListener('click', closeExternalLinkWarning);
+    document.getElementById('warning-confirm')?.addEventListener('click', confirmExternalLink);
 }
 
 function handleEscKey(e) {
     if (e.key === 'Escape') {
         const modal = document.getElementById('timetable-modal');
+        const warningModal = document.getElementById('external-link-warning');
         if (modal && modal.dataset.state === 'visible') {
             closeTimetableModal();
+        } else if (warningModal && warningModal.dataset.state === 'visible') {
+            closeExternalLinkWarning();
         }
     }
 }
@@ -257,7 +337,7 @@ function buildChatScreen() {
     chatScreen.innerHTML = `
         <div id="chat-header-bar">
             <button id="back-btn">← 뒤로</button>
-            <h3>Chat K plus v2.5.1</h3>
+            <h3>Chat K plus v2.5.2</h3>
         </div>
         <div id="chat-box"></div>
         <div id="chat-input-area">
@@ -402,7 +482,7 @@ function startReasoning(query) {
     }, 2400));
 }
 
-// ★★★ 핵심 수정: 키워드 매칭 로직 전면 교체 ★★★
+// ★★★ 핵심 수정: 키워드 매칭 로직 전면 교체 + 외부링크 파싱 ★★★
 function findResponse(query) {
     const normalizedQuery = query.toLowerCase().replace(/[?.,!]/g, ' ').replace(/\s+/g, ' ').trim();
     const userWords = normalizedQuery.split(' ').filter(w => w.length > 0);
@@ -412,8 +492,6 @@ function findResponse(query) {
 
     for (const item of knowledgeBase.items) {
         let score = 0;
-        
-        // priority 높으면 가산점
         const priority = item.priority || 0;
         
         for (const kw of item.keywords) {
@@ -437,7 +515,6 @@ function findResponse(query) {
             }
         }
         
-        // 키워드 개수 보너스 제거 - 이게 문제였음
         if (score > bestScore) {
             bestScore = score;
             bestMatch = item;
@@ -446,7 +523,17 @@ function findResponse(query) {
 
     // 최소 스코어 20 이상이어야 답변
     if (bestMatch && bestScore >= 20) {
-        return `${bestMatch.response}\n\n[DB 기준: ${knowledgeBase.lastUpdated}]`;
+        let response = bestMatch.response;
+        
+        // ★★★ 외부링크 파싱 ★★★
+        if (bestMatch.type === 'external_link') {
+            response = response.replace(/\{\{LINK:(.*?)\|(.*?)\}\}/g, (match, url, text) => {
+                const siteName = text.replace(' 바로가기', '');
+                return `<a href="#" onclick="event.preventDefault(); showExternalLinkWarning('${url}', '${siteName}')" style="color: var(--dark-primary); text-decoration: underline; font-weight: 600;">${text}</a>`;
+            });
+        }
+        
+        return `${response}\n\n[DB 기준: ${knowledgeBase.lastUpdated}]`;
     } else {
         return `음... 2026.06.04 DB엔 그 내용 없어 ㅠㅠ '인천시장', '개표', '오늘 이슈' 이런 거 물어봐!\n\n[DB 기준: ${knowledgeBase.lastUpdated}]`;
     }
@@ -462,7 +549,14 @@ function addMessage(text, type) {
     } else {
         msgDiv.classList.add('message', 'ai-msg');
     }
-    msgDiv.textContent = text;
+    
+    // HTML 파싱 허용 - 외부링크용
+    if (text.includes('<a href=')) {
+        msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+    } else {
+        msgDiv.textContent = text;
+    }
+    
     chatBox.appendChild(msgDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
     return msgDiv;
@@ -497,6 +591,7 @@ exampleQuestions?.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initTimetableSystem();
+    initExternalLinkWarning(); // ★★★ 신규 추가
     homeScreen.classList.add('slide-in');
     chatScreen.classList.add('hidden');
 });
