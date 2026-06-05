@@ -358,49 +358,63 @@ body.dark-mode .ai-msg{
     color: var(--text-primary-dark); 
 }
 
+/* ★★★ Thinking Animation - 부드러운 몽환적 그라데이션 ★★★ */
 .thinking-msg{ 
     align-self: flex-start; 
     background: linear-gradient(90deg, 
         var(--text-secondary-light) 0%, 
-        var(--dark-primary) 50%, 
+        var(--dark-primary) 25%, 
+        var(--dark-accent) 50%, 
+        var(--dark-primary) 75%, 
         var(--text-secondary-light) 100%);
-    background-size: 200% 100%;
+    background-size: 300% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: 13px; 
+    font-size: 14px; 
     font-weight: 600;
     padding: 8px 4px;
-    animation: thinkingShimmer 1.5s ease-in-out infinite;
+    animation: smoothShimmer 3s ease-in-out infinite; /* 훨씬 느리고 부드러운 애니메이션 */
 }
 
-@keyframes thinkingShimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+@keyframes smoothShimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
 }
 
 body.dark-mode .thinking-msg{ 
     background: linear-gradient(90deg, 
         var(--dark-primary) 0%, 
-        var(--dark-accent) 50%, 
+        var(--dark-accent) 25%, 
+        #C084FC 50%, 
+        var(--dark-accent) 75%, 
         var(--dark-primary) 100%);
-    background-size: 200% 100%;
+    background-size: 300% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
+/* 기존 딱딱한 ... 대신 은은하게 맥박치는 커서로 변경 */
 .thinking-msg::after {
-    content: '...';
+    content: '';
     display: inline-block;
-    animation: thinkingDots 1.4s infinite;
-    margin-left: 2px;
+    width: 4px;
+    height: 14px;
+    background: var(--dark-primary);
+    border-radius: 2px;
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: softPulse 1.5s ease-in-out infinite;
 }
 
-@keyframes thinkingDots {
-    0%, 20% { content: '.'; }
-    40% { content: '..'; }
-    60%, 100% { content: '...'; }
+body.dark-mode .thinking-msg::after {
+    background: var(--dark-accent);
+}
+
+@keyframes softPulse {
+    0%, 100% { opacity: 0.2; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
 }
 
 #chat-input-area{
@@ -527,22 +541,23 @@ body.dark-mode #theme-toggle{
 }
 
 /* ========================================== */
-/* 5. MODAL - 모바일 레이아웃 전면 개선 */
+/* 5. MODAL - Modern Bottom Sheet & Glassmorphism */
 /* ========================================== */
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end; /* 모바일에서 하단 정렬 */
     z-index: 1000;
-    animation: modalOverlayFadeIn 0.25s ease-out;
+    animation: overlayFadeIn 0.3s ease-out;
+    transition: background 0.3s ease;
 }
 
-@keyframes modalOverlayFadeIn {
+@keyframes overlayFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
 }
@@ -551,34 +566,52 @@ body.dark-mode #theme-toggle{
 .modal[data-state="hidden"] { display: none !important; }
 
 .modal-content {
-    width: calc(100% - 32px);
-    max-width: 420px;
-    max-height: 85vh;
+    position: relative;
+    width: 100%;
+    max-height: 92vh;
     background: var(--surface-light);
-    border-radius: 20px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    border-radius: 24px 24px 0 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: modalPopIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.45s cubic-bezier(0.32, 0.72, 0, 1); /* 자연스러운 바운스 업 효과 */
+    transition: background 0.4s ease, box-shadow 0.4s ease;
 }
 
-@keyframes modalPopIn {
-    from { opacity: 0; transform: scale(0.92) translateY(20px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+/* 모바일 바텀 시트 핸들바 */
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: var(--border-light);
+    border-radius: 4px;
+    transition: background 0.3s ease;
 }
 
 body.dark-mode .modal-content {
     background: var(--surface-dark);
-    box-shadow: 0 25px 70px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .modal-content::before {
+    background: var(--border-dark);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 20px 14px 20px;
+    padding: 28px 24px 16px 24px; /* 핸들바 공간 확보를 위해 상단 패딩 증가 */
     flex-shrink: 0;
     border-bottom: 1px solid var(--border-light);
     gap: 12px;
@@ -589,7 +622,7 @@ body.dark-mode .modal-header {
 }
 
 .modal-header h2 {
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: -0.3px;
     color: var(--text-primary-light);
@@ -603,41 +636,34 @@ body.dark-mode .modal-header h2 {
 }
 
 .modal-close-btn {
-    width: 34px;
-    height: 34px;
-    background: transparent;
-    border: 1.5px solid var(--border-light);
-    border-radius: 10px;
-    font-size: 15px;
+    width: 36px;
+    height: 36px;
+    background: var(--surface-alt-light);
+    border: none;
+    border-radius: 50%;
+    font-size: 16px;
     font-weight: 500;
     color: var(--text-secondary-light);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    order: -1;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 44px;
-    min-height: 44px;
 }
 
 .modal-close-btn:hover {
-    background: var(--surface-alt-light);
-    border-color: var(--text-secondary-light);
-    color: var(--text-primary-light);
-    transform: rotate(90deg);
+    background: var(--border-light);
+    transform: rotate(90deg) scale(1.1);
 }
 
 body.dark-mode .modal-close-btn {
-    background: transparent;
-    border-color: var(--border-dark);
+    background: var(--surface-alt-dark);
     color: var(--text-secondary-dark);
 }
 
 body.dark-mode .modal-close-btn:hover {
-    background: var(--surface-alt-dark);
-    border-color: var(--text-secondary-dark);
+    background: var(--border-dark);
     color: var(--text-primary-dark);
 }
 
@@ -657,9 +683,9 @@ body.dark-mode .modal-close-btn:hover {
 }
 
 .modal-body {
-    padding: 20px 24px 0;
+    padding: 24px;
     overflow-y: auto;
-    overflow-x: auto; /* 시간표 가로 스크롤 허용 */
+    overflow-x: auto;
     flex: 1 1 auto;
     min-height: 0;
     -webkit-overflow-scrolling: touch;
@@ -682,26 +708,27 @@ body.dark-mode .modal-body::-webkit-scrollbar-thumb {
 .school-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px; /* 간격 넓힘 */
-    margin: 8px 0 24px 0; /* 하단 여백 확보 */
+    gap: 12px;
+    margin: 8px 0 24px 0;
 }
 
 .school-option {
-    padding: 12px 18px; /* 패딩 넓힘 */
+    padding: 12px 18px;
     border: 1.5px solid var(--border-light);
-    border-radius: 12px;
+    border-radius: 14px;
     background: transparent;
     font-size: 14px;
     font-weight: 500;
     color: var(--text-primary-light);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-grow: 0; /* 버튼이 억지로 늘어나지 않게 함 */
+    transition: all 0.25s ease;
+    flex-grow: 0;
 }
 
 .school-option:hover {
     border-color: var(--text-primary-light);
     background: var(--primary-subtle);
+    transform: translateY(-2px);
 }
 
 .school-option.selected {
@@ -709,7 +736,8 @@ body.dark-mode .modal-body::-webkit-scrollbar-thumb {
     color: #FFFFFF;
     border-color: var(--text-primary-light);
     font-weight: 700;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 body.dark-mode .school-option {
@@ -719,28 +747,28 @@ body.dark-mode .school-option {
 
 body.dark-mode .school-option:hover {
     border-color: var(--dark-primary);
-    background: rgba(167, 139, 250, 0.08);
+    background: rgba(167, 139, 250, 0.1);
 }
 
 body.dark-mode .school-option.selected {
     background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
     color: #FFFFFF;
     border-color: transparent;
-    box-shadow: 0 4px 16px var(--dark-primary-glow);
+    box-shadow: 0 6px 20px var(--dark-primary-glow);
 }
 
 .custom-school { 
-    margin-top: 12px; /* 입력칸 위쪽 여백 추가 */
+    margin-top: 16px; 
     margin-bottom: 4px; 
 }
 
 .custom-school input {
     width: 100%;
-    padding: 14px 18px; /* 패딩 넓힘 */
+    padding: 16px 20px;
     border: 1.5px solid var(--border-light);
-    border-radius: 12px;
+    border-radius: 14px;
     background: var(--surface-alt-light);
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-primary-light);
     outline: none;
     transition: all 0.2s ease;
@@ -751,7 +779,7 @@ body.dark-mode .school-option.selected {
 .custom-school input:focus {
     border-color: var(--text-primary-light);
     background: var(--surface-light);
-    box-shadow: 0 0 0 3px var(--primary-glow);
+    box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 body.dark-mode .custom-school input {
@@ -765,11 +793,11 @@ body.dark-mode .custom-school input::placeholder { color: var(--text-secondary-d
 body.dark-mode .custom-school input:focus {
     border-color: var(--dark-primary);
     background: rgba(167, 139, 250, 0.05);
-    box-shadow: 0 0 0 3px var(--dark-primary-glow);
+    box-shadow: 0 0 0 4px var(--dark-primary-glow);
 }
 
 .modal-actions {
-    padding: 16px 24px 20px 24px;
+    padding: 20px 24px;
     flex-shrink: 0;
     border-top: 1px solid var(--border-light);
     background: inherit;
@@ -780,9 +808,9 @@ body.dark-mode .modal-actions { border-top-color: var(--border-dark); }
 
 .modal-btn {
     width: 100%;
-    height: 52px;
-    border-radius: 14px;
-    font-size: 16px;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 17px;
     font-weight: 700;
     border: none;
     cursor: pointer;
@@ -801,26 +829,26 @@ body.dark-mode .modal-actions { border-top-color: var(--border-dark); }
 
 .modal-btn.primary:hover {
     opacity: 0.92;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .modal-btn.primary:active { transform: scale(0.98) translateY(0); }
 
 body.dark-mode .modal-btn.primary {
     background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-    box-shadow: 0 6px 24px var(--dark-primary-glow);
+    box-shadow: 0 8px 28px var(--dark-primary-glow);
 }
 
-body.dark-mode .modal-btn.primary:hover { box-shadow: 0 8px 30px var(--dark-primary-glow); }
+body.dark-mode .modal-btn.primary:hover { box-shadow: 0 12px 36px var(--dark-primary-glow); }
 
 .modal-btn.secondary {
     background: var(--surface-alt-light);
     color: var(--text-primary-light);
-    margin-top: 10px;
-    height: 46px;
+    margin-top: 12px;
+    height: 50px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .modal-btn.secondary:hover { background: var(--border-light); }
@@ -833,27 +861,34 @@ body.dark-mode .modal-btn.secondary {
 
 body.dark-mode .modal-btn.secondary:hover { background: var(--border-dark); }
 
-/* 시간표 테이블 전면 수정 */
+/* 시간표 테이블 */
 .timetable-table { 
     width: 100%; 
-    min-width: 450px; /* 모바일에서 찌그러지지 않게 최소너비 확보 */
-    table-layout: fixed; /* 셀 너비 균등 분배 */
-    border-collapse: collapse; 
+    min-width: 460px; 
+    table-layout: fixed; 
+    border-collapse: separate; /* 둥근 모서리 적용을 위해 separate로 변경 */
+    border-spacing: 0;
     margin: 16px 0; 
     font-size: 13px; 
-    border-radius: 12px; 
+    border-radius: 16px; 
     overflow: hidden; 
     border: 1px solid var(--border-light); 
-    word-break: keep-all; /* 단어 끊어짐 방지 */
+    word-break: keep-all; 
 }
 
 body.dark-mode .timetable-table { border-color: var(--border-dark); }
 
 .timetable-table th, .timetable-table td { 
     border: 1px solid var(--border-light); 
-    padding: 10px 6px; /* 좌우 패딩 축소으로 균형 맞춤 */
+    padding: 12px 8px; 
     text-align: center; 
 }
+
+/* 겹치는 테두리 처리 */
+.timetable-table th:not(:last-child), 
+.timetable-table td:not(:last-child) { border-right: 0; }
+.timetable-table tr:not(:last-child) th, 
+.timetable-table tr:not(:last-child) td { border-bottom: 0; }
 
 body.dark-mode .timetable-table th, 
 body.dark-mode .timetable-table td { border-color: var(--border-dark); }
@@ -871,31 +906,32 @@ body.dark-mode .timetable-table th { background: var(--surface-alt-dark); }
     border: none; 
     background: transparent; 
     text-align: center; 
-    font-size: 13px; 
-    padding: 8px 2px; 
+    font-size: 14px; 
+    padding: 8px 4px; 
     outline: none; 
-    border-radius: 6px;
-    box-sizing: border-box; /* 패딩 포함 크기 계산 */
-    min-height: 36px; 
+    border-radius: 8px;
+    box-sizing: border-box; 
+    min-height: 40px; 
+    transition: background 0.2s ease;
 }
 
 .timetable-table input:focus { 
     background: var(--primary-subtle); 
-    outline: 2px solid var(--text-primary-light); 
+    box-shadow: inset 0 0 0 2px var(--text-primary-light); 
 }
 
 body.dark-mode .timetable-table input { color: var(--text-primary-dark); }
 
 body.dark-mode .timetable-table input:focus { 
     background: rgba(167, 139, 250, 0.1); 
-    outline-color: var(--dark-primary); 
+    box-shadow: inset 0 0 0 2px var(--dark-primary); 
 }
 
 .loading-spinner { 
-    width: 36px; 
-    height: 36px; 
+    width: 40px; 
+    height: 40px; 
     border: 3px solid var(--border-light); 
-    border-top-color: var(--text-primary-light); 
+    border-top-color: var(--dark-primary); 
     border-radius: 50%; 
     animation: spin 0.8s linear infinite; 
     margin: 32px auto; 
@@ -903,7 +939,7 @@ body.dark-mode .timetable-table input:focus {
 
 body.dark-mode .loading-spinner { 
     border-color: var(--border-dark); 
-    border-top-color: var(--dark-primary); 
+    border-top-color: var(--dark-accent); 
 }
 
 @keyframes spin { 
@@ -942,47 +978,40 @@ body.dark-mode .typing-cursor::after { background: var(--dark-primary); }
 }
 
 /* ========================================== */
-/* 6. Mobile Responsive Media Query */
+/* 6. Responsive - PC 모달 스타일 분기 */
 /* ========================================== */
-@media (max-width: 480px) {
+@media (min-width: 768px) {
+    .modal {
+        align-items: center; /* PC에서는 중앙 정렬 */
+    }
+    
     .modal-content {
-        width: calc(100% - 24px); /* 모바일에서 모달 좀 더 넓게 */
-        max-height: 90vh;
-        border-radius: 16px;
+        position: relative;
+        width: 100%;
+        max-width: 480px;
+        border-radius: 24px; /* PC에서는 모서리 전부 둥글게 */
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+        animation: pcPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* PC용 팝인 애니메이션 */
     }
+
+    /* PC에서는 핸들바 숨김 */
+    .modal-content::before {
+        display: none;
+    }
+
+    body.dark-mode .modal-content {
+        background: rgba(24, 24, 27, 0.85); /* 글래스모피즘 배경 */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 25px 70px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes pcPopIn {
+        from { opacity: 0; transform: scale(0.9) translateY(20px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
     .modal-header {
-        padding: 16px 18px 12px 18px;
-    }
-    .modal-header h2 {
-        font-size: 18px;
-    }
-    .modal-body {
-        padding: 16px 18px 0;
-    }
-    .school-list {
-        gap: 10px;
-    }
-    .school-option {
-        padding: 10px 14px;
-        font-size: 13px;
-    }
-    .modal-actions {
-        padding: 14px 18px 16px;
-        padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    }
-    .timetable-table {
-        min-width: 400px; /* 조금 더 콤팩트하게 조정 */
-        font-size: 12px;
-    }
-    .timetable-table th {
-        font-size: 13px;
-    }
-    .timetable-table th, .timetable-table td {
-        padding: 8px 4px;
-    }
-    .timetable-table input {
-        font-size: 12px;
-        min-height: 32px;
-        padding: 6px 2px;
+        padding: 20px 24px 16px 24px; /* PC에서 핸들바 공간 제거 */
     }
 }
