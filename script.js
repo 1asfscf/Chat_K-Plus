@@ -1,10 +1,9 @@
 // ==========================================
-// 🧠 Chat K plus v2.5.2 - 외부링크 경고 모달 포함
+// 🧠 Chat K plus v2.5.3 - JS Full Fix
+// Studio Ferrari - 2026.06.05 Hotfix
 // ==========================================
-// WARNING: 2026.06.04 09:00 KST 기준 데이터. 개표 진행중이라 실시간 아님
-// 최종 결과는 중앙선관위 확인 필수
 
-// 1. 지식 창고
+// 1. 전역 변수
 const knowledgeBase = {
     lastUpdated: "2026.06.04 09:00 KST",
     items: [
@@ -32,56 +31,85 @@ const knowledgeBase = {
     ]
 };
 
-// 2. HTML 요소들
-const homeScreen = document.getElementById('home-screen');
-const chatScreen = document.getElementById('chat-screen');
-const searchInput = document.getElementById('search-input');
-const searchBtn = document.getElementById('search-btn');
-const exampleQuestions = document.getElementById('example-questions');
-const appWrapper = document.getElementById('app-wrapper');
-
-let chatBox, chatInput, chatSendBtn;
+// 2. DOM 요소 변수
+let homeScreen, chatScreen, searchInput, searchBtn, exampleQuestions;
+let chatBox, chatInput, chatSendBtn, backBtn, timetableBtn;
 let thinkingTimers = [];
-let isAnimating = false;
-let animationQueue = [];
-
-// ==========================================
-// ⚠️ 외부링크 경고 모달 시스템
-// ==========================================
-
-function initExternalLinkWarning() {
-    const warningModalHTML = `
-        <div id="external-link-warning" class="modal" data-state="hidden">
-            <div class="modal-content" style="max-width: 360px;">
-                <div class="modal-header" style="justify-content: center;">
-                    <h2>⚠️ 외부 사이트 이동</h2>
-                </div>
-                <div class="modal-body" style="text-align: center; padding: 24px;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">🔗</div>
-                    <p style="font-size: 15px; line-height: 1.6; color: var(--text-primary-light); margin-bottom: 12px;">
-                        <strong id="warning-site-name">사이트</strong>로 이동합니다
-                    </p>
-                    <p style="font-size: 13px; color: var(--text-secondary-light); line-height: 1.5;">
-                        외부 사이트는 악성코드, 피싱 위험이 있을 수 있습니다.<br>
-                        신뢰할 수 있는 사이트인지 확인 후 이동하세요.
-                    </p>
-                    <div id="warning-url" style="margin-top: 16px; padding: 12px; background: var(--surface-alt-light); border-radius: 8px; font-size: 12px; word-break: break-all; color: var(--text-secondary-light);"></div>
-                </div>
-                <div class="modal-actions" style="flex-direction: row; gap: 8px;">
-                    <button id="warning-cancel" class="modal-btn secondary" style="flex: 1;">취소</button>
-                    <button id="warning-confirm" class="modal-btn primary" style="flex: 1;">이동</button>
-                </div>
-            </div>
-        </div>
-    `;
-    appWrapper.insertAdjacentHTML('beforeend', warningModalHTML);
-    
-    document.getElementById('warning-cancel')?.addEventListener('click', closeExternalLinkWarning);
-    document.getElementById('warning-confirm')?.addEventListener('click', confirmExternalLink);
-}
-
+let currentSchool = '';
+let timetableData = JSON.parse(localStorage.getItem('timetableData')) || {};
 let pendingExternalUrl = '';
 
+// ==========================================
+// 🌙 다크모드 - 중복 생성 방지
+// ==========================================
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.add('light-mode');
+    }
+    
+    // HTML에 이미 있는 버튼들 재활용
+    const toggleBtns = document.querySelectorAll('#theme-toggle, #theme-toggle-chat');
+    toggleBtns.forEach(btn => {
+        btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        btn.onclick = toggleTheme;
+    });
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('light-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.querySelectorAll('#theme-toggle, #theme-toggle-chat').forEach(btn => {
+        btn.textContent = isDark ? '☀️' : '🌙';
+    });
+}
+
+// ==========================================
+// 🔄 화면 전환 - display 강제 제어
+// ==========================================
+function startChat(query) {
+    if (!query.trim()) return;
+    
+    // 홈화면 강제 숨김
+    homeScreen.style.display = 'none';
+    homeScreen.classList.add('hidden');
+    
+    // 채팅화면 강제 표시
+    chatScreen.style.display = 'flex';
+    chatScreen.classList.remove('hidden');
+    
+    setTimeout(() => {
+        addMessage(query, 'user');
+        startReasoning(query);
+    }, 50);
+    
+    searchInput.value = '';
+    searchBtn.disabled = true;
+    searchBtn.classList.remove('active');
+}
+
+function goHome() {
+    thinkingTimers.forEach(clearTimeout);
+    thinkingTimers = [];
+    
+    // 채팅화면 강제 숨김
+    chatScreen.style.display = 'none';
+    chatScreen.classList.add('hidden');
+    
+    // 홈화면 강제 표시
+    homeScreen.style.display = 'flex';
+    homeScreen.classList.remove('hidden');
+    
+    if(chatBox) chatBox.innerHTML = '';
+}
+
+// ==========================================
+// ⚠️ 외부링크 경고 모달
+// ==========================================
 function showExternalLinkWarning(url, siteName) {
     const modal = document.getElementById('external-link-warning');
     const urlDiv = document.getElementById('warning-url');
@@ -113,44 +141,9 @@ function confirmExternalLink() {
 }
 
 // ==========================================
-// 📅 시간표 모달 시스템
+// 📅 시간표 모달
 // ==========================================
-
-let timetableData = JSON.parse(localStorage.getItem('timetableData')) || {};
-let currentSchool = '';
-
 function initTimetableSystem() {
-    const modalHTML = `
-        <div id="timetable-modal" class="modal" data-state="hidden">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button id="modal-close" class="modal-close-btn">✕</button>
-                    <h2>학교 선택</h2>
-                </div>
-                <div id="modal-step1" class="modal-body" data-state="active">
-                    <div class="school-list" id="school-list"></div>
-                    <div class="custom-school">
-                        <input type="text" id="custom-school-input" placeholder="기타 학교 직접 입력">
-                    </div>
-                    <div class="modal-actions">
-                        <button id="modal-next1" class="modal-btn primary">다음</button>
-                    </div>
-                </div>
-                <div id="modal-step2" class="modal-body" data-state="hidden">
-                    <div id="timetable-grid"></div>
-                    <div class="modal-actions">
-                        <button id="modal-confirm" class="modal-btn primary">확인</button>
-                    </div>
-                </div>
-                <div id="modal-loading" class="modal-body" data-state="hidden">
-                    <div class="loading-spinner"></div>
-                    <p>시간표 저장 중...</p>
-                </div>
-            </div>
-        </div>
-    `;
-    appWrapper.insertAdjacentHTML('beforeend', modalHTML);
-
     const schools = [
         '인천국제고', '경기과학고', '서울과학고', '대원외고', '한영외고',
         '상산고', '민족사관고', '현대청운고', '포항제철고', '광양제철고',
@@ -158,25 +151,36 @@ function initTimetableSystem() {
     ];
 
     const schoolList = document.getElementById('school-list');
-    schools.forEach(school => {
-        const btn = document.createElement('button');
-        btn.className = 'school-option';
-        btn.textContent = school;
-        btn.onclick = (e) => selectSchool(school, e.target);
-        schoolList.appendChild(btn);
-    });
+    if (schoolList) {
+        schoolList.innerHTML = '';
+        schools.forEach(school => {
+            const btn = document.createElement('button');
+            btn.className = 'school-option btn btn-secondary';
+            btn.textContent = school;
+            btn.onclick = (e) => selectSchool(school, e.target);
+            schoolList.appendChild(btn);
+        });
+    }
 
     document.getElementById('modal-next1')?.addEventListener('click', goToStep2);
     document.getElementById('modal-confirm')?.addEventListener('click', confirmTimetable);
     document.getElementById('modal-close')?.addEventListener('click', closeTimetableModal);
+    document.getElementById('warning-cancel')?.addEventListener('click', closeExternalLinkWarning);
+    document.getElementById('warning-confirm')?.addEventListener('click', confirmExternalLink);
+    document.querySelectorAll('.modal-backdrop').forEach(bd => {
+        bd.addEventListener('click', () => {
+            closeTimetableModal();
+            closeExternalLinkWarning();
+        });
+    });
     document.addEventListener('keydown', handleEscKey);
 }
 
 function handleEscKey(e) {
     if (e.key === 'Escape') {
-        const modal = document.getElementById('timetable-modal');
+        const timetableModal = document.getElementById('timetable-modal');
         const warningModal = document.getElementById('external-link-warning');
-        if (modal && modal.dataset.state === 'visible') {
+        if (timetableModal && timetableModal.dataset.state === 'visible') {
             closeTimetableModal();
         } else if (warningModal && warningModal.dataset.state === 'visible') {
             closeExternalLinkWarning();
@@ -200,6 +204,9 @@ function openTimetableModal() {
     document.getElementById('modal-step1').dataset.state = 'active';
     document.getElementById('modal-step2').dataset.state = 'hidden';
     document.getElementById('modal-loading').dataset.state = 'hidden';
+    document.getElementById('modal-next1').style.display = 'flex';
+    document.getElementById('modal-confirm').style.display = 'none';
+    document.querySelector('.modal-title').textContent = '학교 선택';
     modal.dataset.state = 'visible';
 }
 
@@ -225,7 +232,9 @@ function goToStep2() {
     }
     document.getElementById('modal-step1').dataset.state = 'hidden';
     document.getElementById('modal-step2').dataset.state = 'active';
-    document.querySelector('.modal-header h2').textContent = '시간표 등록';
+    document.getElementById('modal-next1').style.display = 'none';
+    document.getElementById('modal-confirm').style.display = 'flex';
+    document.querySelector('.modal-title').textContent = '시간표 등록';
 
     const grid = document.getElementById('timetable-grid');
     if (!grid) return;
@@ -278,131 +287,18 @@ function confirmTimetable() {
 
     setTimeout(() => {
         localStorage.setItem('timetableData', JSON.stringify(timetableData));
-        document.getElementById('timetable-modal').dataset.state = 'hidden';
-        document.body.classList.remove('modal-open');
-        if (!homeScreen.classList.contains('slide-in')) {
-            goHome();
-        }
+        closeTimetableModal();
         addMessage(`✅ ${currentSchool} 시간표 저장 완료!`, 'ai');
-    }, 2000);
-}
-
-// ==========================================
-// 🌙 다크모드
-// ==========================================
-
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-    }
-    const toggleBtn = document.createElement('button');
-    toggleBtn.id = 'theme-toggle';
-    toggleBtn.textContent = document.body.classList.contains('dark-mode')? '☀️' : '🌙';
-    toggleBtn.onclick = toggleTheme;
-    appWrapper.appendChild(toggleBtn);
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('theme', isDark? 'dark' : 'light');
-    document.getElementById('theme-toggle').textContent = isDark? '☀️' : '🌙';
-}
-
-// ==========================================
-// ⚙️ 시스템 초기화
-// ==========================================
-
-function buildChatScreen() {
-    chatScreen.innerHTML = `
-        <div id="chat-header-bar">
-            <button id="back-btn">← 뒤로</button>
-            <h3>Chat K plus v2.5.2</h3>
-        </div>
-        <div id="chat-box"></div>
-        <div id="chat-input-area">
-            <button id="timetable-btn" title="시간표">📅</button>
-            <input type="text" id="chat-input" placeholder="2026년 이슈 물어봐...">
-            <button id="chat-send-btn" disabled>전송</button>
-        </div>
-    `;
-
-    chatBox = document.getElementById('chat-box');
-    chatInput = document.getElementById('chat-input');
-    chatSendBtn = document.getElementById('chat-send-btn');
-    const backBtn = document.getElementById('back-btn');
-    const timetableBtn = document.getElementById('timetable-btn');
-
-    timetableBtn?.addEventListener('click', openTimetableModal);
-    chatInput?.addEventListener('input', () => {
-        if (chatSendBtn) chatSendBtn.disabled = !chatInput.value.trim();
-    });
-    chatSendBtn?.addEventListener('click', handleChatSubmit);
-    chatInput?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && chatSendBtn && !chatSendBtn.disabled) handleChatSubmit();
-    });
-    backBtn?.addEventListener('click', goHome);
-}
-
-function queueAnimation(fn) {
-    if (isAnimating) {
-        animationQueue.push(fn);
-        return;
-    }
-    isAnimating = true;
-    fn(() => {
-        isAnimating = false;
-        const next = animationQueue.shift();
-        if (next) queueAnimation(next);
-    });
-}
-
-function startChat(query) {
-    if (!query.trim()) return;
-    queueAnimation((done) => {
-        homeScreen.classList.add('slide-out');
-        homeScreen.classList.remove('slide-in');
-        chatScreen.classList.remove('hidden');
-        void chatScreen.offsetWidth;
-        chatScreen.classList.add('slide-in');
-        chatScreen.classList.remove('slide-out');
-        if (!chatBox) buildChatScreen();
-        setTimeout(() => {
-            addMessage(query, 'user');
-            startReasoning(query);
-            done();
-        }, 400);
-        searchInput.value = '';
-        searchBtn.disabled = true;
-    });
-}
-
-function goHome() {
-    queueAnimation((done) => {
-        thinkingTimers.forEach(clearTimeout);
-        thinkingTimers = [];
-        chatScreen.classList.add('slide-out');
-        chatScreen.classList.remove('slide-in');
-        homeScreen.classList.remove('slide-out');
-        homeScreen.classList.add('slide-in');
-        setTimeout(() => {
-            chatScreen.classList.add('hidden');
-            chatScreen.classList.remove('slide-out');
-            if(chatBox) chatBox.innerHTML = '';
-            done();
-        }, 400);
-    });
+    }, 1500);
 }
 
 // ==========================================
 // 💬 대화 처리
 // ==========================================
-
 function handleChatSubmit() {
     if (!chatInput) return;
-    const query = chatInput.value;
-    if (!query.trim()) return;
+    const query = chatInput.value.trim();
+    if (!query) return;
 
     if (query.includes('시간표') || query.includes('교시')) {
         if (timetableData.school) {
@@ -411,10 +307,11 @@ function handleChatSubmit() {
             if (dayNum === 0 || dayNum === 6) {
                 addMessage(query, 'user');
                 chatInput.value = '';
-                if (chatSendBtn) chatSendBtn.disabled = true;
+                chatSendBtn.disabled = true;
+                chatSendBtn.classList.remove('active');
                 setTimeout(() => {
                     addMessage(`📅 오늘은 주말이야! ${timetableData.school} 시간표는 평일에 확인해줘`, 'ai');
-                }, 500);
+                }, 300);
                 return;
             }
             const dayMap = {1:'mon', 2:'tue', 3:'wed', 4:'thu', 5:'fri'};
@@ -423,10 +320,11 @@ function handleChatSubmit() {
                 const todayClasses = Object.values(timetableData.timetable[day]).filter(c => c).join(', ');
                 addMessage(query, 'user');
                 chatInput.value = '';
-                if (chatSendBtn) chatSendBtn.disabled = true;
+                chatSendBtn.disabled = true;
+                chatSendBtn.classList.remove('active');
                 setTimeout(() => {
                     addMessage(`📅 ${timetableData.school} 오늘 시간표: ${todayClasses || '등록된 과목 없음'}`, 'ai');
-                }, 500);
+                }, 300);
                 return;
             }
         }
@@ -434,7 +332,8 @@ function handleChatSubmit() {
 
     addMessage(query, 'user');
     chatInput.value = '';
-    if (chatSendBtn) chatSendBtn.disabled = true;
+    chatSendBtn.disabled = true;
+    chatSendBtn.classList.remove('active');
     startReasoning(query);
 }
 
@@ -447,11 +346,11 @@ function startReasoning(query) {
 
     thinkingTimers.push(setTimeout(() => {
         thinkingDiv.textContent = "🧠 2026.06.04 DB 검색 중";
-    }, 800));
+    }, 600));
 
     thinkingTimers.push(setTimeout(() => {
         thinkingDiv.textContent = "💡 개표 데이터 교차 검증 중";
-    }, 1600));
+    }, 1200));
 
     thinkingTimers.push(setTimeout(() => {
         thinkingDiv.textContent = "✅ 답변 생성 완료";
@@ -459,8 +358,8 @@ function startReasoning(query) {
             thinkingDiv.remove();
             const aiResponse = findResponse(query);
             addMessage(aiResponse, 'ai');
-        }, 400));
-    }, 2400));
+        }, 300));
+    }, 1800));
 }
 
 function findResponse(query) {
@@ -504,7 +403,7 @@ function findResponse(query) {
         if (bestMatch.type === 'external_link') {
             response = response.replace(/\{\{LINK:(.*?)\|(.*?)\}\}/g, (match, url, text) => {
                 const siteName = text.replace(' 바로가기', '');
-                return `<a href="#" onclick="event.preventDefault(); showExternalLinkWarning('${url}', '${siteName}')" style="color: var(--dark-primary); text-decoration: underline; font-weight: 600;">${text}</a>`;
+                return `<a href="#" onclick="event.preventDefault(); showExternalLinkWarning('${url}', '${siteName}')" style="color: var(--primary-dark); text-decoration: underline; font-weight: 600;">${text}</a>`;
             });
         }
         
@@ -517,18 +416,26 @@ function findResponse(query) {
 function addMessage(text, type) {
     if (!chatBox) return null;
     const msgDiv = document.createElement('div');
+    
     if (type === 'thinking') {
         msgDiv.classList.add('message', 'thinking-msg');
-    } else if (type === 'user') {
-        msgDiv.classList.add('message', 'user-msg');
-    } else {
-        msgDiv.classList.add('message', 'ai-msg');
-    }
-    
-    if (text.includes('<a href=')) {
-        msgDiv.innerHTML = text.replace(/\n/g, '<br>');
-    } else {
         msgDiv.textContent = text;
+    } else if (type === 'user') {
+        msgDiv.classList.add('message', 'user');
+        const bubble = document.createElement('div');
+        bubble.classList.add('message-bubble');
+        bubble.textContent = text;
+        msgDiv.appendChild(bubble);
+    } else {
+        msgDiv.classList.add('message', 'ai');
+        const bubble = document.createElement('div');
+        bubble.classList.add('message-bubble');
+        if (text.includes('<a href=')) {
+            bubble.innerHTML = text.replace(/\n/g, '<br>');
+        } else {
+            bubble.textContent = text;
+        }
+        msgDiv.appendChild(bubble);
     }
     
     chatBox.appendChild(msgDiv);
@@ -537,35 +444,68 @@ function addMessage(text, type) {
 }
 
 // ==========================================
-// 🚀 프로그램 실행
+// 🚀 초기화
 // ==========================================
-
-searchInput?.addEventListener('input', () => {
-    if (searchBtn) searchBtn.disabled = !searchInput.value.trim();
-});
-if (searchBtn) searchBtn.disabled = true;
-
-searchBtn?.addEventListener('click', () => {
-    startChat(searchInput.value);
-});
-
-searchInput?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && searchBtn && !searchBtn.disabled) {
-        startChat(searchInput.value);
-    }
-});
-
-exampleQuestions?.addEventListener('click', (e) => {
-    if (e.target.classList.contains('question-tag')) {
-        const query = e.target.getAttribute('data-query');
-        if (query) startChat(query);
-    }
-});
-
 document.addEventListener('DOMContentLoaded', () => {
+    // DOM 요소 연결
+    homeScreen = document.getElementById('home-screen');
+    chatScreen = document.getElementById('chat-screen');
+    searchInput = document.getElementById('search-input');
+    searchBtn = document.getElementById('search-btn');
+    exampleQuestions = document.getElementById('example-questions');
+    chatBox = document.getElementById('chat-container');
+    chatInput = document.getElementById('chat-input');
+    chatSendBtn = document.getElementById('chat-send-btn');
+    backBtn = document.getElementById('back-btn');
+    timetableBtn = document.getElementById('timetable-btn');
+    
+    // 이벤트 바인딩
+    backBtn?.addEventListener('click', goHome);
+    timetableBtn?.addEventListener('click', openTimetableModal);
+    
+    searchInput?.addEventListener('input', () => {
+        const hasValue = searchInput.value.trim().length > 0;
+        searchBtn.disabled = !hasValue;
+        searchBtn.classList.toggle('active', hasValue);
+    });
+    
+    searchBtn?.addEventListener('click', () => {
+        if (searchInput.value.trim()) startChat(searchInput.value);
+    });
+    
+    searchInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && searchBtn && !searchBtn.disabled) {
+            startChat(searchInput.value);
+        }
+    });
+    
+    exampleQuestions?.addEventListener('click', (e) => {
+        if (e.target.classList.contains('question-tag')) {
+            const query = e.target.getAttribute('data-query');
+            if (query) startChat(query);
+        }
+    });
+    
+    chatInput?.addEventListener('input', () => {
+        if (chatSendBtn) {
+            const hasValue = chatInput.value.trim().length > 0;
+            chatSendBtn.disabled = !hasValue;
+            chatSendBtn.classList.toggle('active', hasValue);
+        }
+    });
+    
+    chatSendBtn?.addEventListener('click', handleChatSubmit);
+    chatInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && chatSendBtn && !chatSendBtn.disabled) handleChatSubmit();
+    });
+    
+    // 시스템 초기화
     initTheme();
     initTimetableSystem();
-    initExternalLinkWarning();
-    homeScreen.classList.add('slide-in');
+    
+    // 초기 상태: 홈화면만 표시
+    homeScreen.style.display = 'flex';
+    chatScreen.style.display = 'none';
+    homeScreen.classList.remove('hidden');
     chatScreen.classList.add('hidden');
 });
