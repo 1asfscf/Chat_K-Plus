@@ -1,511 +1,1302 @@
-// ==========================================
-// 🧠 Chat K plus v2.5.3 - JS Full Fix
-// Studio Ferrari - 2026.06.05 Hotfix
-// ==========================================
+/* ========================================
+   Chat K plus v2.5.3 - V10 Full Codebase
+   Studio Ferrari - 2026.06.05 Layout Fix
+   ======================================== */
 
-// 1. 전역 변수
-const knowledgeBase = {
-    lastUpdated: "2026.06.04 09:00 KST",
-    items: [
-        { keywords: ["아바타", "아바타2", "아바타 2가 뭐죠"], response: "아바타 2는 제임스 카메론 감독의 SF 영화로, 판도라 행성에서 벌어지는 나비족의 이야기를 다루고 있어. 엄청난 시각 효과가 포인트야!" },
-        { keywords: ["너", "너는", "너에", "대하여서", "누구", "자기소개"], response: "나는 Chat K plus v2.5.2야! 시간표 모달 + 정치 상세 데이터 탑재된 로컬 AI지. 2026.06.04 기준 업데이트 ㅋㅋ 개표중이라 데이터 변동 가능" },
-        { keywords: ["안녕", "하이", "반가워", "헬로"], response: "안녕! 반가워 ㅋㅋ 오늘 뭐하고 싶어? 6월 3일 지방선거 개표중인데 결과 볼래?" },
-        { keywords: ["고마워", "감사", "땡큐"], response: "ㅎ 별말을! 또 궁금한 거 있으면 물어봐" },
-        { keywords: ["잘가", "바이", "끝"], response: "응 다음에 또 봐! 시간표도 설정해봤지?" },
-        { keywords: ["요즘 이슈", "최근 이슈", "이슈 뭐야", "핫이슈", "뉴스", "요즘 뭐", "요즘 뉴스"], response: "2026년 6월 최대 이슈는 6.3 지방선거 개표야. 6/4 09:00 기준 민주당이 광역단체장 17곳 중 10곳 우세. 서울 오세훈, 경기 김동연, 인천 박찬대 재선 유력. 투표율 58.2%로 역대급. 그 외에 의대 증원 의료대란 3년차, 비트코인 1.5억 돌파, 엔화 160엔 돌파도 핫해.", priority: 10 },
-        { keywords: ["오늘 이슈", "오늘 뉴스", "오늘 뭐"], response: "오늘 2026.06.04 핵심은 지방선거 개표 진행중이야. 인천 박찬대 54%대 1위, 서울 오세훈 52% 재선 유력. 최종 결과는 밤 늦게 나올 듯.", priority: 10 },
-        { keywords: ["다음 사이트 주소", "다음 주소", "다음 링크", "daum 주소", "다음 공식 사이트", "다음 홈페이지"], response: "다음(Daum) 공식 사이트야.\n\n🔗 주소: {{LINK:https://www.daum.net|다음 바로가기}}\n\n다음은 카카오가 운영하는 대한민국 대표 포털 사이트야. 뉴스, 메일, 카페, 검색, 지도, 쇼핑 등 다양한 서비스를 제공해. 1995년 설립된 1세대 포털로 지금도 네이버랑 양대산맥이지.", priority: 15, type: "external_link" },
-        { keywords: ["지방선거", "6월 3일 선거", "지선 결과", "개표", "선거 결과"], response: "2026년 6월 3일 지방선거 개표 진행중이야. 6/4 09:00 기준 민주당이 광역단체장 17곳 중 10곳 우세 보이고 있어. 서울 오세훈, 경기 김동연, 인천 박찬대 재선 유력. 투표율 58.2%." },
-        { keywords: ["인천시장", "박찬대", "인천 선거"], response: "2026.06.04 09:00 기준 인천시장 개표중 박찬대 후보 54%대 득표율로 1위 달리는 중이야. 출구조사랑 비슷하게 나오는 중. 단, 최종 확정은 선관위 발표 봐야 함." },
-        { keywords: ["민주당", "더불어민주당", "이재명"], response: "더불어민주당은 2026년 현재 국회 다수당(171석). 이재명 대표 체제. 6.3 지선 개표중 수도권 우세 보이며 2027 대선 교두보 마련 분위기. 주요 정책은 기본소득 확대, 부동산 공공성 강화." },
-        { keywords: ["국민의힘", "국힘", "한동훈"], response: "국민의힘은 2026년 현재 여당(108석). 한동훈 비대위원장 체제. 6.3 지선 개표중 대구·경북·부산·울산·경남 5곳 우세. 수도권 고전 중. 주요 정책은 규제 완화, 친기업." },
-        { keywords: ["대통령", "윤석열", "현 대통령"], response: "2026년 6월 기준 대한민국 대통령은 윤석열. 임기는 2027년 5월 9일까지. 지지율 34%대. 주요 성과는 한미동맹 강화, 주요 쟁점은 의료대란, 경제 침체." },
-        { keywords: ["서울시장", "오세훈"], response: "서울시장 오세훈 후보 재선 유력. 6/4 09:00 기준 개표중 52% 득표율. 정원오 후보 35%." },
-        { keywords: ["부산시장", "박형준", "전재수"], response: "부산시장 개표 접전중. 6/4 09:00 기준 전재수 48%, 박형준 44%. 출구조사보다 격차 줄어듦." },
-        { keywords: ["중국 국가주석", "현 중국 지도자", "중국 대통령", "시진핑"], response: "2026년 현재 중국 국가주석은 시진핑이야. 2013년부터 집권 중이고 2023년에 3연임이 확정됐어." },
-        { keywords: ["중국 수도", "베이징", "북경"], response: "중국 수도는 베이징이야. 인구 약 2,150만명으로 중국의 정치 중심지지." },
-        { keywords: ["최저임금", "2026 최저임금"], response: "2026년 최저임금은 시간당 10,200원이야. 월급 2,131,800원이지. 편의점 알바 4대보험 떼면 실수령 190만원대야." },
-        { keywords: ["비트코인", "코인", "가상화폐"], response: "비트코인 1.5억 찍었어. 트럼프가 비트코인 지지해서 떡상했지. 한국은 김치프리미엄 8%야." },
-        { keywords: ["의대 정원", "의료 대란", "전공의"], response: "의대 2000명 증원으로 시작된 의료대란 3년째야. 2026년 6월 기준 전공의 복귀율 62%. 응급실 뺑뺑이 여전하고 지방의료 공백 심각해." },
-        { keywords: ["BTS", "방탄소년단"], response: "BTS 2025년 완전체 컴백했어. 진, 제이홉 전역하고 7인 완전체 앨범 냈어. 2026년 월드투어 진행 중." }
-    ]
-};
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
-// 2. DOM 요소 변수
-let homeScreen, chatScreen, searchInput, searchBtn, exampleQuestions;
-let chatBox, chatInput, chatSendBtn, backBtn, timetableBtn;
-let thinkingTimers = [];
-let currentSchool = '';
-let timetableData = JSON.parse(localStorage.getItem('timetableData')) || {};
-let pendingExternalUrl = '';
+:root {
+    /* Light Theme */
+    --bg-primary-light: #FFFFFF;
+    --bg-secondary-light: #F8F9FA;
+    --bg-tertiary-light: #F1F3F5;
+    --bg-glass-light: rgba(255, 255, 0.75);
+    --text-primary-light: #1F2937;
+    --text-secondary-light: #6B7280;
+    --text-tertiary-light: #9CA3AF;
+    --border-light: rgba(0, 0, 0, 0.08);
+    --primary-light: #8B5CF6;
+    --primary-hover-light: #7C3AED;
+    --primary-bg-light: rgba(139, 92, 246, 0.1);
+    --shadow-light: 0 4px 24px rgba(139, 92, 246, 0.12);
+    --shadow-light-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
+    
+    /* Dark Theme */
+    --bg-primary-dark: #0B1220;
+    --bg-secondary-dark: #111827;
+    --bg-tertiary-dark: #1F2937;
+    --bg-glass-dark: rgba(17, 24, 39, 0.75);
+    --text-primary-dark: #F9FAFB;
+    --text-secondary-dark: #9CA3AF;
+    --text-tertiary-dark: #6B7280;
+    --border-dark: rgba(255, 255, 255, 0.08);
+    --primary-dark: #A78BFA;
+    --primary-hover-dark: #8B5CF6;
+    --primary-bg-dark: rgba(167, 139, 250, 0.15);
+    --shadow-dark: 0 4px 24px rgba(167, 139, 250, 0.16);
+    --shadow-dark-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
+    
+    /* Common */
+    --danger: #F59E0B;
+    --danger-bg: rgba(245, 158, 11, 0.1);
+    --success: #10B981;
+    --error: #EF4444;
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    --transition-fast: 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+    --transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-// ==========================================
-// 🌙 다크모드 - 중복 생성 방지
-// ==========================================
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.add('light-mode');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background: var(--bg-primary-dark);
+    color: var(--text-primary-dark);
+    overflow: hidden;
+    overscroll-behavior: none;
+    transition: background 0.3s var(--transition);
+}
+
+body.light-mode {
+    background: var(--bg-primary-light);
+    color: var(--text-primary-light);
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* ===== APP WRAPPER ===== */
+#app-wrapper {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-width: 840px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ===== SCREEN CONTROL - 핵심 수정 ===== */
+#home-screen,
+#chat-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+#home-screen.hidden,
+#chat-screen.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+
+/* ===== HOME SCREEN ===== */
+#home-screen {
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg-primary-dark);
+    z-index: 10;
+}
+
+body.light-mode #home-screen {
+    background: var(--bg-primary-light);
+}
+
+.home-content {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.home-title {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--primary-dark), #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-mode .home-title {
+    background: linear-gradient(135deg, var(--primary-light), #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.home-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary-dark);
+    margin-bottom: 40px;
+}
+
+body.light-mode .home-subtitle {
+    color: var(--text-secondary-light);
+}
+
+/* ===== HEADER BAR ===== */
+#chat-header-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 16px 20px 12px;
+    background: linear-gradient(180deg, 
+        var(--bg-primary-dark) 0%, 
+        rgba(11, 18, 32, 0.85) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-dark);
+    transition: all 0.3s var(--transition);
+}
+
+body.light-mode #chat-header-bar {
+    background: linear-gradient(180deg, 
+        var(--bg-primary-light) 0%, 
+        rgba(255, 255, 255, 0.85) 100%);
+    border-bottom-color: var(--border-light);
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+#chat-title {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+
+#theme-toggle,
+#theme-toggle-chat {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-dark);
+    background: var(--bg-secondary-dark);
+    color: var(--text-primary-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s var(--transition);
+    flex-shrink: 0;
+}
+
+body.light-mode #theme-toggle,
+body.light-mode #theme-toggle-chat {
+    border-color: var(--border-light);
+    background: var(--bg-secondary-light);
+    color: var(--text-primary-light);
+}
+
+#theme-toggle:hover,
+#theme-toggle-chat:hover {
+    transform: scale(1.05) rotate(15deg);
+    border-color: var(--primary-dark);
+}
+
+body.light-mode #theme-toggle:hover,
+body.light-mode #theme-toggle-chat:hover {
+    border-color: var(--primary-light);
+}
+
+#theme-toggle:active,
+#theme-toggle-chat:active {
+    transform: scale(0.95);
+}
+
+#back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-dark);
+    background: var(--bg-secondary-dark);
+    color: var(--text-primary-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s var(--transition);
+    flex-shrink: 0;
+}
+
+body.light-mode #back-btn {
+    border-color: var(--border-light);
+    background: var(--bg-secondary-light);
+    color: var(--text-primary-light);
+}
+
+#back-btn:hover {
+    background: var(--bg-tertiary-dark);
+}
+
+body.light-mode #back-btn:hover {
+    background: var(--bg-tertiary-light);
+}
+
+/* ===== SEARCH INPUT ===== */
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+#search-input {
+    width: 100%;
+    height: 52px;
+    padding: 0 20px;
+    padding-right: 54px;
+    background: var(--bg-secondary-dark);
+    border: 1.5px solid var(--border-dark);
+    border-radius: 26px;
+    color: var(--text-primary-dark);
+    font-size: 16px;
+    font-weight: 400;
+    outline: none;
+    transition: all 0.2s var(--transition);
+}
+
+body.light-mode #search-input {
+    background: var(--bg-secondary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+#search-input::placeholder {
+    color: var(--text-tertiary-dark);
+    font-weight: 400;
+}
+
+body.light-mode #search-input::placeholder {
+    color: var(--text-tertiary-light);
+}
+
+#search-input:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 4px var(--primary-bg-dark);
+}
+
+body.light-mode #search-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px var(--primary-bg-light);
+}
+
+#search-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-tertiary-dark);
+    color: var(--text-tertiary-dark);
+    cursor: not-allowed;
+    opacity: 0.5;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.2s var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.light-mode #search-btn {
+    background: var(--bg-tertiary-light);
+    color: var(--text-tertiary-light);
+}
+
+#search-btn.active {
+    background: var(--primary-dark);
+    color: white;
+    cursor: pointer;
+    opacity: 1;
+}
+
+body.light-mode #search-btn.active {
+    background: var(--primary-light);
+}
+
+#search-btn.active:hover {
+    background: var(--primary-hover-dark);
+    transform: translateY(-50%) scale(1.05);
+}
+
+body.light-mode #search-btn.active:hover {
+    background: var(--primary-hover-light);
+}
+
+#search-btn.active:active {
+    transform: translateY(-50%) scale(0.92);
+}
+
+/* ===== EXAMPLE QUESTIONS ===== */
+#example-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.question-tag {
+    padding: 10px 18px;
+    background: var(--bg-secondary-dark);
+    border: 1.5px solid var(--border-dark);
+    border-radius: var(--radius-full);
+    color: var(--text-primary-dark);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s var(--transition-fast);
+}
+
+body.light-mode .question-tag {
+    background: var(--bg-secondary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+.question-tag:hover {
+    border-color: var(--primary-dark);
+    background: var(--primary-bg-dark);
+    transform: translateY(-2px);
+}
+
+body.light-mode .question-tag:hover {
+    border-color: var(--primary-light);
+    background: var(--primary-bg-light);
+}
+
+.question-tag:active {
+    transform: scale(0.97);
+}
+
+/* ===== WARNING BANNER ===== */
+.warning-banner {
+    margin: 0 20px 16px;
+    padding: 12px 16px;
+    background: var(--danger-bg);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary-dark);
+    animation: slideDown 0.3s var(--transition);
+    flex-shrink: 0;
+}
+
+body.light-mode .warning-banner {
+    color: var(--text-secondary-light);
+    background: rgba(245, 158, 11, 0.08);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.warning-banner-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* ===== CHAT SCREEN ===== */
+#chat-screen {
+    background: var(--bg-primary-dark);
+    z-index: 20;
+}
+
+body.light-mode #chat-screen {
+    background: var(--bg-primary-light);
+}
+
+/* ===== CHAT CONTAINER ===== */
+#chat-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+}
+
+#chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chat-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+    background: var(--border-dark);
+    border-radius: 3px;
+}
+
+body.light-mode #chat-container::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+}
+
+/* Welcome State */
+.chat-welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    opacity: 0.4;
+}
+
+.chat-welcome-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.chat-welcome-text {
+    font-size: 15px;
+    color: var(--text-secondary-dark);
+}
+
+body.light-mode .chat-welcome-text {
+    color: var(--text-secondary-light);
+}
+
+/* ===== MESSAGES ===== */
+.message {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: messageIn 0.3s var(--transition);
+}
+
+@keyframes messageIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.user {
+    align-items: flex-end;
+}
+
+.message-bubble {
+    max-width: 85%;
+    padding: 14px 18px;
+    border-radius: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.message.user .message-bubble {
+    background: var(--primary-dark);
+    color: white;
+    border-bottom-right-radius: 6px;
+}
+
+body.light-mode .message.user .message-bubble {
+    background: var(--primary-light);
+}
+
+.message.ai .message-bubble {
+    background: var(--bg-secondary-dark);
+    color: var(--text-primary-dark);
+    border-bottom-left-radius: 6px;
+}
+
+body.light-mode .message.ai .message-bubble {
+    background: var(--bg-secondary-light);
+    color: var(--text-primary-light);
+}
+
+/* Thinking Animation */
+.thinking-msg {
+    background: linear-gradient(90deg, 
+        var(--text-tertiary-dark) 0%, 
+        var(--primary-dark) 50%, 
+        var(--text-tertiary-dark) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: thinkingShimmer 1.5s ease-in-out infinite;
+    font-weight: 600;
+}
+
+body.light-mode .thinking-msg {
+    background: linear-gradient(90deg, 
+        var(--text-tertiary-light) 0%, 
+        var(--primary-light) 50%, 
+        var(--text-tertiary-light) 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes thinkingShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.thinking-msg::after {
+    content: '...';
+    animation: thinkingDots 1.4s infinite;
+}
+
+@keyframes thinkingDots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* ===== CHAT INPUT AREA ===== */
+#chat-input-area {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 20px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    background: var(--bg-glass-dark);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-dark);
+    z-index: 90;
+    flex-shrink: 0;
+}
+
+body.light-mode #chat-input-area {
+    background: var(--bg-glass-light);
+    border-top-color: var(--border-light);
+}
+
+.input-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+#chat-input {
+    flex: 1;
+    min-height: 48px;
+    max-height: 120px;
+    padding: 12px 18px;
+    background: var(--bg-tertiary-dark);
+    border: 1.5px solid var(--border-dark);
+    border-radius: var(--radius-xl);
+    color: var(--text-primary-dark);
+    font-size: 15px;
+    resize: none;
+    outline: none;
+    transition: all 0.2s var(--transition);
+}
+
+body.light-mode #chat-input {
+    background: var(--bg-tertiary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+#chat-input:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 4px var(--primary-bg-dark);
+}
+
+body.light-mode #chat-input:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px var(--primary-bg-light);
+}
+
+#send-btn,
+#timetable-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-tertiary-dark);
+    color: var(--text-tertiary-dark);
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.2s var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+body.light-mode #send-btn,
+body.light-mode #timetable-btn {
+    background: var(--bg-tertiary-light);
+    color: var(--text-tertiary-light);
+}
+
+#send-btn {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#send-btn.active {
+    background: var(--primary-dark);
+    color: white;
+    cursor: pointer;
+    opacity: 1;
+}
+
+body.light-mode #send-btn.active {
+    background: var(--primary-light);
+}
+
+#send-btn.active:hover,
+#timetable-btn:hover {
+    background: var(--primary-hover-dark);
+    transform: scale(1.05);
+}
+
+body.light-mode #send-btn.active:hover,
+body.light-mode #timetable-btn:hover {
+    background: var(--primary-hover-light);
+}
+
+#send-btn.active:active,
+#timetable-btn:active {
+    transform: scale(0.92);
+}
+
+/* ===== MODAL SYSTEM ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.modal[data-state="visible"],
+.modal[data-state="active"] {
+    display: flex;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    animation: fadeIn 0.3s var(--transition);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 840px;
+    max-height: 92vh;
+    background: var(--bg-primary-dark);
+    border-radius: 28px 28px 0 0;
+    box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    animation: slideUpModal 0.4s var(--transition);
+    overflow: hidden;
+}
+
+body.light-mode .modal-content {
+    background: var(--bg-primary-light);
+    box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes slideUpModal {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-handle {
+    width: 48px;
+    height: 5px;
+    background: var(--border-dark);
+    border-radius: 3px;
+    margin: 12px auto 8px;
+    flex-shrink: 0;
+}
+
+body.light-mode .modal-handle {
+    background: var(--border-light);
+}
+
+.modal-header {
+    padding: 8px 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-secondary-dark);
+    color: var(--text-secondary-dark);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s var(--transition);
+}
+
+body.light-mode .modal-close {
+    background: var(--bg-secondary-light);
+    color: var(--text-secondary-light);
+}
+
+.modal-close:hover {
+    background: var(--error);
+    color: white;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 0 24px 24px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--border-dark);
+    border-radius: 3px;
+}
+
+body.light-mode .modal-body::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+}
+
+.modal-actions {
+    padding: 16px 24px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    display: flex;
+    gap: 12px;
+    border-top: 1px solid var(--border-dark);
+    background: var(--bg-primary-dark);
+    flex-shrink: 0;
+}
+
+body.light-mode .modal-actions {
+    border-top-color: var(--border-light);
+    background: var(--bg-primary-light);
+}
+
+.btn {
+    flex: 1;
+    height: 54px;
+    border-radius: 14px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-secondary {
+    background: var(--bg-secondary-dark);
+    color: var(--text-primary-dark);
+}
+
+body.light-mode .btn-secondary {
+    background: var(--bg-secondary-light);
+    color: var(--text-primary-light);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-tertiary-dark);
+}
+
+body.light-mode .btn-secondary:hover {
+    background: var(--bg-tertiary-light);
+}
+
+.btn-primary {
+    background: var(--primary-dark);
+    color: white;
+}
+
+body.light-mode .btn-primary {
+    background: var(--primary-light);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(167, 139, 250, 0.4);
+}
+
+body.light-mode .btn-primary:hover {
+    background: var(--primary-hover-light);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+/* ===== TIMETABLE MODAL STEPS ===== */
+#modal-step1[data-state="hidden"],
+#modal-step2[data-state="hidden"],
+#modal-loading[data-state="hidden"] {
+    display: none !important;
+}
+
+#modal-step1[data-state="active"],
+#modal-step2[data-state="active"],
+#modal-loading[data-state="active"] {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.timetable-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.school-option {
+    padding: 16px;
+    background: var(--bg-secondary-dark);
+    border: 2px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    color: var(--text-primary-dark);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s var(--transition);
+    text-align: center;
+}
+
+body.light-mode .school-option {
+    background: var(--bg-secondary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+.school-option:hover {
+    border-color: var(--primary-dark);
+    background: var(--primary-bg-dark);
+}
+
+body.light-mode .school-option:hover {
+    border-color: var(--primary-light);
+    background: var(--primary-bg-light);
+}
+
+.school-option.selected {
+    border-color: var(--primary-dark);
+    background: var(--primary-bg-dark);
+    color: var(--primary-dark);
+}
+
+body.light-mode .school-option.selected {
+    border-color: var(--primary-light);
+    background: var(--primary-bg-light);
+    color: var(--primary-light);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary-dark);
+    letter-spacing: -0.01em;
+}
+
+body.light-mode .form-label {
+    color: var(--text-secondary-light);
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    height: 54px;
+    padding: 0 18px;
+    background: var(--bg-secondary-dark);
+    border: 1.5px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    color: var(--text-primary-dark);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.2s var(--transition);
+}
+
+body.light-mode .form-input,
+body.light-mode .form-select {
+    background: var(--bg-secondary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+.form-input:focus,
+.form-select:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 4px var(--primary-bg-dark);
+}
+
+body.light-mode .form-input:focus,
+body.light-mode .form-select:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px var(--primary-bg-light);
+}
+
+/* Timetable Table */
+.timetable-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1.5px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+body.light-mode .timetable-table {
+    border-color: var(--border-light);
+}
+
+.timetable-table th,
+.timetable-table td {
+    padding: 14px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-dark);
+    border-right: 1px solid var(--border-dark);
+}
+
+body.light-mode .timetable-table th,
+body.light-mode .timetable-table td {
+    border-color: var(--border-light);
+}
+
+.timetable-table th {
+    background: var(--bg-tertiary-dark);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-secondary-dark);
+}
+
+body.light-mode .timetable-table th {
+    background: var(--bg-tertiary-light);
+    color: var(--text-secondary-light);
+}
+
+.timetable-table tr:last-child td {
+    border-bottom: none;
+}
+
+.timetable-table th:last-child,
+.timetable-table td:last-child {
+    border-right: none;
+}
+
+.timetable-table input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary-dark);
+    outline: none;
+    padding: 4px;
+}
+
+body.light-mode .timetable-table input {
+    color: var(--text-primary-light);
+}
+
+.timetable-table input:focus {
+    background: var(--primary-bg-dark);
+    border-radius: var(--radius-xs);
+}
+
+body.light-mode .timetable-table input:focus {
+    background: var(--primary-bg-light);
+}
+
+/* Loading State */
+#modal-loading {
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 24px;
+}
+
+.loading-spinner {
+    width: 56px;
+    height: 56px;
+    border: 5px solid var(--border-dark);
+    border-top-color: var(--primary-dark);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+body.light-mode .loading-spinner {
+    border-color: var(--border-light);
+    border-top-color: var(--primary-light);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary-dark);
+}
+
+body.light-mode .loading-text {
+    color: var(--text-secondary-light);
+}
+
+/* ===== EXTERNAL LINK WARNING MODAL ===== */
+#external-link-warning .modal-content {
+    max-width: 440px;
+    border-radius: 24px;
+}
+
+#external-link-warning .modal-handle {
+    display: none;
+}
+
+#external-link-warning .modal-header {
+    padding: 32px 24px 0;
+    justify-content: center;
+    text-align: center;
+}
+
+#external-link-warning .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+#external-link-warning .modal-body {
+    text-align: center;
+    padding: 24px 24px 32px;
+}
+
+#warning-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: bounce 0.6s var(--transition);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#warning-site-name {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    word-break: break-word;
+}
+
+#warning-desc {
+    font-size: 14px;
+    color: var(--text-secondary-dark);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+body.light-mode #warning-desc {
+    color: var(--text-secondary-light);
+}
+
+#warning-url {
+    font-size: 13px;
+    color: var(--text-tertiary-dark);
+    word-break: break-all;
+    padding: 14px;
+    background: var(--bg-secondary-dark);
+    border-radius: var(--radius-md);
+    font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+body.light-mode #warning-url {
+    color: var(--text-tertiary-light);
+    background: var(--bg-secondary-light);
+}
+
+#external-link-warning .modal-actions {
+    padding: 0 24px 24px;
+    border-top: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+    #chat-header-bar {
+        padding: 14px 16px 10px;
     }
     
-    // HTML에 이미 있는 버튼들 재활용
-    const toggleBtns = document.querySelectorAll('#theme-toggle, #theme-toggle-chat');
-    toggleBtns.forEach(btn => {
-        btn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        btn.onclick = toggleTheme;
-    });
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    document.body.classList.toggle('light-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    document.querySelectorAll('#theme-toggle, #theme-toggle-chat').forEach(btn => {
-        btn.textContent = isDark ? '☀️' : '🌙';
-    });
-}
-
-// ==========================================
-// 🔄 화면 전환 - display 강제 제어
-// ==========================================
-function startChat(query) {
-    if (!query.trim()) return;
-    
-    // 홈화면 강제 숨김
-    homeScreen.style.display = 'none';
-    homeScreen.classList.add('hidden');
-    
-    // 채팅화면 강제 표시
-    chatScreen.style.display = 'flex';
-    chatScreen.classList.remove('hidden');
-    
-    setTimeout(() => {
-        addMessage(query, 'user');
-        startReasoning(query);
-    }, 50);
-    
-    searchInput.value = '';
-    searchBtn.disabled = true;
-    searchBtn.classList.remove('active');
-}
-
-function goHome() {
-    thinkingTimers.forEach(clearTimeout);
-    thinkingTimers = [];
-    
-    // 채팅화면 강제 숨김
-    chatScreen.style.display = 'none';
-    chatScreen.classList.add('hidden');
-    
-    // 홈화면 강제 표시
-    homeScreen.style.display = 'flex';
-    homeScreen.classList.remove('hidden');
-    
-    if(chatBox) chatBox.innerHTML = '';
-}
-
-// ==========================================
-// ⚠️ 외부링크 경고 모달
-// ==========================================
-function showExternalLinkWarning(url, siteName) {
-    const modal = document.getElementById('external-link-warning');
-    const urlDiv = document.getElementById('warning-url');
-    const nameSpan = document.getElementById('warning-site-name');
-    
-    if (!modal) return;
-    
-    pendingExternalUrl = url;
-    urlDiv.textContent = url;
-    nameSpan.textContent = siteName || '외부 사이트';
-    
-    document.body.classList.add('modal-open');
-    modal.dataset.state = 'visible';
-}
-
-function closeExternalLinkWarning() {
-    const modal = document.getElementById('external-link-warning');
-    if (!modal) return;
-    document.body.classList.remove('modal-open');
-    modal.dataset.state = 'hidden';
-    pendingExternalUrl = '';
-}
-
-function confirmExternalLink() {
-    if (pendingExternalUrl) {
-        window.open(pendingExternalUrl, '_blank', 'noopener,noreferrer');
+    #chat-title {
+        font-size: 22px;
     }
-    closeExternalLinkWarning();
-}
-
-// ==========================================
-// 📅 시간표 모달
-// ==========================================
-function initTimetableSystem() {
-    const schools = [
-        '인천국제고', '경기과학고', '서울과학고', '대원외고', '한영외고',
-        '상산고', '민족사관고', '현대청운고', '포항제철고', '광양제철고',
-        '기타'
-    ];
-
-    const schoolList = document.getElementById('school-list');
-    if (schoolList) {
-        schoolList.innerHTML = '';
-        schools.forEach(school => {
-            const btn = document.createElement('button');
-            btn.className = 'school-option btn btn-secondary';
-            btn.textContent = school;
-            btn.onclick = (e) => selectSchool(school, e.target);
-            schoolList.appendChild(btn);
-        });
+    
+    #chat-container {
+        padding: 0 16px 16px;
+        gap: 16px;
     }
-
-    document.getElementById('modal-next1')?.addEventListener('click', goToStep2);
-    document.getElementById('modal-confirm')?.addEventListener('click', confirmTimetable);
-    document.getElementById('modal-close')?.addEventListener('click', closeTimetableModal);
-    document.getElementById('warning-cancel')?.addEventListener('click', closeExternalLinkWarning);
-    document.getElementById('warning-confirm')?.addEventListener('click', confirmExternalLink);
-    document.querySelectorAll('.modal-backdrop').forEach(bd => {
-        bd.addEventListener('click', () => {
-            closeTimetableModal();
-            closeExternalLinkWarning();
-        });
-    });
-    document.addEventListener('keydown', handleEscKey);
-}
-
-function handleEscKey(e) {
-    if (e.key === 'Escape') {
-        const timetableModal = document.getElementById('timetable-modal');
-        const warningModal = document.getElementById('external-link-warning');
-        if (timetableModal && timetableModal.dataset.state === 'visible') {
-            closeTimetableModal();
-        } else if (warningModal && warningModal.dataset.state === 'visible') {
-            closeExternalLinkWarning();
-        }
+    
+    .message-bubble {
+        max-width: 88%;
+        font-size: 15px;
+    }
+    
+    .modal-content {
+        border-radius: 24px 24px 0 0;
+    }
+    
+    .modal-header {
+        padding: 8px 20px 14px;
+    }
+    
+    .modal-title {
+        font-size: 20px;
+    }
+    
+    .modal-body {
+        padding: 0 20px 20px;
+    }
+    
+    .modal-actions {
+        padding: 14px 20px;
+        padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    }
+    
+    .btn {
+        height: 52px;
+        font-size: 15px;
+    }
+    
+    #theme-toggle,
+    #theme-toggle-chat {
+        width: 44px;
+        height: 44px;
     }
 }
 
-function selectSchool(school, targetElement) {
-    document.querySelectorAll('.school-option').forEach(b => b.classList.remove('selected'));
-    targetElement.classList.add('selected');
-    currentSchool = school;
-    if (school === '기타') {
-        document.getElementById('custom-school-input')?.focus();
+/* ===== SAFE AREA ===== */
+@supports (padding: max(0px)) {
+    #app-wrapper {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+    
+    #chat-header-bar {
+        padding-top: max(16px, env(safe-area-inset-top));
     }
 }
 
-function openTimetableModal() {
-    const modal = document.getElementById('timetable-modal');
-    if (!modal) return;
-    document.body.classList.add('modal-open');
-    document.getElementById('modal-step1').dataset.state = 'active';
-    document.getElementById('modal-step2').dataset.state = 'hidden';
-    document.getElementById('modal-loading').dataset.state = 'hidden';
-    document.getElementById('modal-next1').style.display = 'flex';
-    document.getElementById('modal-confirm').style.display = 'none';
-    document.querySelector('.modal-title').textContent = '학교 선택';
-    modal.dataset.state = 'visible';
-}
-
-function closeTimetableModal() {
-    const modal = document.getElementById('timetable-modal');
-    if (!modal) return;
-    document.body.classList.remove('modal-open');
-    modal.dataset.state = 'hidden';
-    currentSchool = '';
-    const customInput = document.getElementById('custom-school-input');
-    if (customInput) customInput.value = '';
-    document.querySelectorAll('.school-option').forEach(b => b.classList.remove('selected'));
-}
-
-function goToStep2() {
-    const customInput = document.getElementById('custom-school-input')?.value.trim() || '';
-    if (currentSchool === '기타' && customInput) {
-        currentSchool = customInput;
-    }
-    if (!currentSchool) {
-        alert('학교를 선택해주세요');
-        return;
-    }
-    document.getElementById('modal-step1').dataset.state = 'hidden';
-    document.getElementById('modal-step2').dataset.state = 'active';
-    document.getElementById('modal-next1').style.display = 'none';
-    document.getElementById('modal-confirm').style.display = 'flex';
-    document.querySelector('.modal-title').textContent = '시간표 등록';
-
-    const grid = document.getElementById('timetable-grid');
-    if (!grid) return;
-    
-    const table = document.createElement('table');
-    table.className = 'timetable-table';
-    const thead = document.createElement('tr');
-    thead.innerHTML = '<th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>';
-    table.appendChild(thead);
-    
-    const days = ['mon','tue','wed','thu','fri'];
-    for (let i = 0; i < 7; i++) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${i+1}</td>`;
-        days.forEach(day => {
-            const td = document.createElement('td');
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.dataset.day = day;
-            input.dataset.period = i+1;
-            input.placeholder = '과목';
-            input.style.minHeight = '44px';
-            td.appendChild(input);
-            tr.appendChild(td);
-        });
-        table.appendChild(tr);
-    }
-    grid.innerHTML = '';
-    grid.appendChild(table);
-}
-
-function confirmTimetable() {
-    const inputs = document.querySelectorAll('#timetable-grid input');
-    const timetable = {};
-    inputs.forEach(input => {
-        const day = input.dataset.day;
-        const period = input.dataset.period;
-        if (!timetable[day]) timetable[day] = {};
-        timetable[day][period] = input.value.trim();
-    });
-
-    timetableData = {
-        school: currentSchool,
-        timetable: timetable,
-        updatedAt: new Date().toISOString()
-    };
-
-    document.getElementById('modal-step2').dataset.state = 'hidden';
-    document.getElementById('modal-loading').dataset.state = 'active';
-
-    setTimeout(() => {
-        localStorage.setItem('timetableData', JSON.stringify(timetableData));
-        closeTimetableModal();
-        addMessage(`✅ ${currentSchool} 시간표 저장 완료!`, 'ai');
-    }, 1500);
-}
-
-// ==========================================
-// 💬 대화 처리
-// ==========================================
-function handleChatSubmit() {
-    if (!chatInput) return;
-    const query = chatInput.value.trim();
-    if (!query) return;
-
-    if (query.includes('시간표') || query.includes('교시')) {
-        if (timetableData.school) {
-            const today = new Date();
-            const dayNum = today.getDay();
-            if (dayNum === 0 || dayNum === 6) {
-                addMessage(query, 'user');
-                chatInput.value = '';
-                chatSendBtn.disabled = true;
-                chatSendBtn.classList.remove('active');
-                setTimeout(() => {
-                    addMessage(`📅 오늘은 주말이야! ${timetableData.school} 시간표는 평일에 확인해줘`, 'ai');
-                }, 300);
-                return;
-            }
-            const dayMap = {1:'mon', 2:'tue', 3:'wed', 4:'thu', 5:'fri'};
-            const day = dayMap[dayNum];
-            if (day && timetableData.timetable[day]) {
-                const todayClasses = Object.values(timetableData.timetable[day]).filter(c => c).join(', ');
-                addMessage(query, 'user');
-                chatInput.value = '';
-                chatSendBtn.disabled = true;
-                chatSendBtn.classList.remove('active');
-                setTimeout(() => {
-                    addMessage(`📅 ${timetableData.school} 오늘 시간표: ${todayClasses || '등록된 과목 없음'}`, 'ai');
-                }, 300);
-                return;
-            }
-        }
-    }
-
-    addMessage(query, 'user');
-    chatInput.value = '';
-    chatSendBtn.disabled = true;
-    chatSendBtn.classList.remove('active');
-    startReasoning(query);
-}
-
-function startReasoning(query) {
-    thinkingTimers.forEach(clearTimeout);
-    thinkingTimers = [];
-
-    const thinkingDiv = addMessage("🔍 질문 분석 중...", 'thinking');
-    if (!thinkingDiv) return;
-
-    thinkingTimers.push(setTimeout(() => {
-        thinkingDiv.textContent = "🧠 2026.06.04 DB 검색 중";
-    }, 600));
-
-    thinkingTimers.push(setTimeout(() => {
-        thinkingDiv.textContent = "💡 개표 데이터 교차 검증 중";
-    }, 1200));
-
-    thinkingTimers.push(setTimeout(() => {
-        thinkingDiv.textContent = "✅ 답변 생성 완료";
-        thinkingTimers.push(setTimeout(() => {
-            thinkingDiv.remove();
-            const aiResponse = findResponse(query);
-            addMessage(aiResponse, 'ai');
-        }, 300));
-    }, 1800));
-}
-
-function findResponse(query) {
-    const normalizedQuery = query.toLowerCase().replace(/[?.,!]/g, ' ').replace(/\s+/g, ' ').trim();
-    const userWords = normalizedQuery.split(' ').filter(w => w.length > 0);
-    
-    let bestScore = 0;
-    let bestMatch = null;
-
-    for (const item of knowledgeBase.items) {
-        let score = 0;
-        const priority = item.priority || 0;
-        
-        for (const kw of item.keywords) {
-            const kwLower = kw.toLowerCase();
-            
-            if (normalizedQuery === kwLower) {
-                score += 100 + priority * 10;
-                continue;
-            }
-            
-            if (userWords.includes(kwLower)) {
-                score += 50 + priority * 5;
-                continue;
-            }
-            
-            if (kwLower.length > 2 && normalizedQuery.includes(kwLower)) {
-                score += 10 + priority;
-            }
-        }
-        
-        if (score > bestScore) {
-            bestScore = score;
-            bestMatch = item;
-        }
-    }
-
-    if (bestMatch && bestScore >= 20) {
-        let response = bestMatch.response;
-        
-        if (bestMatch.type === 'external_link') {
-            response = response.replace(/\{\{LINK:(.*?)\|(.*?)\}\}/g, (match, url, text) => {
-                const siteName = text.replace(' 바로가기', '');
-                return `<a href="#" onclick="event.preventDefault(); showExternalLinkWarning('${url}', '${siteName}')" style="color: var(--primary-dark); text-decoration: underline; font-weight: 600;">${text}</a>`;
-            });
-        }
-        
-        return `${response}\n\n[DB 기준: ${knowledgeBase.lastUpdated}]`;
-    } else {
-        return `음... 2026.06.04 DB엔 그 내용 없어 ㅠㅠ '인천시장', '개표', '오늘 이슈' 이런 거 물어봐!\n\n[DB 기준: ${knowledgeBase.lastUpdated}]`;
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 
-function addMessage(text, type) {
-    if (!chatBox) return null;
-    const msgDiv = document.createElement('div');
-    
-    if (type === 'thinking') {
-        msgDiv.classList.add('message', 'thinking-msg');
-        msgDiv.textContent = text;
-    } else if (type === 'user') {
-        msgDiv.classList.add('message', 'user');
-        const bubble = document.createElement('div');
-        bubble.classList.add('message-bubble');
-        bubble.textContent = text;
-        msgDiv.appendChild(bubble);
-    } else {
-        msgDiv.classList.add('message', 'ai');
-        const bubble = document.createElement('div');
-        bubble.classList.add('message-bubble');
-        if (text.includes('<a href=')) {
-            bubble.innerHTML = text.replace(/\n/g, '<br>');
-        } else {
-            bubble.textContent = text;
-        }
-        msgDiv.appendChild(bubble);
-    }
-    
-    chatBox.appendChild(msgDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    return msgDiv;
+/* ===== HOTFIX: 중복 렌더링 방지 ===== */
+#app-wrapper > #theme-toggle {
+    display: none !important;
 }
-
-// ==========================================
-// 🚀 초기화
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // DOM 요소 연결
-    homeScreen = document.getElementById('home-screen');
-    chatScreen = document.getElementById('chat-screen');
-    searchInput = document.getElementById('search-input');
-    searchBtn = document.getElementById('search-btn');
-    exampleQuestions = document.getElementById('example-questions');
-    chatBox = document.getElementById('chat-container');
-    chatInput = document.getElementById('chat-input');
-    chatSendBtn = document.getElementById('chat-send-btn');
-    backBtn = document.getElementById('back-btn');
-    timetableBtn = document.getElementById('timetable-btn');
-    
-    // 이벤트 바인딩
-    backBtn?.addEventListener('click', goHome);
-    timetableBtn?.addEventListener('click', openTimetableModal);
-    
-    searchInput?.addEventListener('input', () => {
-        const hasValue = searchInput.value.trim().length > 0;
-        searchBtn.disabled = !hasValue;
-        searchBtn.classList.toggle('active', hasValue);
-    });
-    
-    searchBtn?.addEventListener('click', () => {
-        if (searchInput.value.trim()) startChat(searchInput.value);
-    });
-    
-    searchInput?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && searchBtn && !searchBtn.disabled) {
-            startChat(searchInput.value);
-        }
-    });
-    
-    exampleQuestions?.addEventListener('click', (e) => {
-        if (e.target.classList.contains('question-tag')) {
-            const query = e.target.getAttribute('data-query');
-            if (query) startChat(query);
-        }
-    });
-    
-    chatInput?.addEventListener('input', () => {
-        if (chatSendBtn) {
-            const hasValue = chatInput.value.trim().length > 0;
-            chatSendBtn.disabled = !hasValue;
-            chatSendBtn.classList.toggle('active', hasValue);
-        }
-    });
-    
-    chatSendBtn?.addEventListener('click', handleChatSubmit);
-    chatInput?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && chatSendBtn && !chatSendBtn.disabled) handleChatSubmit();
-    });
-    
-    // 시스템 초기화
-    initTheme();
-    initTimetableSystem();
-    
-    // 초기 상태: 홈화면만 표시
-    homeScreen.style.display = 'flex';
-    chatScreen.style.display = 'none';
-    homeScreen.classList.remove('hidden');
-    chatScreen.classList.add('hidden');
-});
