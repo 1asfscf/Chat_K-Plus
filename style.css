@@ -527,7 +527,7 @@ body.dark-mode #theme-toggle{
 }
 
 /* ========================================== */
-/* 5. MODAL - 모바일 레이아웃 최적화 수정 */
+/* 5. MODAL - 모바일 레이아웃 전면 개선 */
 /* ========================================== */
 .modal {
     position: fixed;
@@ -656,11 +656,10 @@ body.dark-mode .modal-close-btn:hover {
     min-height: 0;
 }
 
-/* ★ 수정: 시간표 가로 스크롤 허용을 위해 overflow-x: hidden 제거 */
 .modal-body {
     padding: 20px 24px 0;
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: auto; /* 시간표 가로 스크롤 허용 */
     flex: 1 1 auto;
     min-height: 0;
     -webkit-overflow-scrolling: touch;
@@ -683,12 +682,12 @@ body.dark-mode .modal-body::-webkit-scrollbar-thumb {
 .school-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin: 4px 0 20px 0;
+    gap: 12px; /* 간격 넓힘 */
+    margin: 8px 0 24px 0; /* 하단 여백 확보 */
 }
 
 .school-option {
-    padding: 11px 18px;
+    padding: 12px 18px; /* 패딩 넓힘 */
     border: 1.5px solid var(--border-light);
     border-radius: 12px;
     background: transparent;
@@ -697,10 +696,7 @@ body.dark-mode .modal-body::-webkit-scrollbar-thumb {
     color: var(--text-primary-light);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    flex-grow: 0; /* 버튼이 억지로 늘어나지 않게 함 */
 }
 
 .school-option:hover {
@@ -733,11 +729,14 @@ body.dark-mode .school-option.selected {
     box-shadow: 0 4px 16px var(--dark-primary-glow);
 }
 
-.custom-school { margin-bottom: 4px; }
+.custom-school { 
+    margin-top: 12px; /* 입력칸 위쪽 여백 추가 */
+    margin-bottom: 4px; 
+}
 
 .custom-school input {
     width: 100%;
-    padding: 13px 18px;
+    padding: 14px 18px; /* 패딩 넓힘 */
     border: 1.5px solid var(--border-light);
     border-radius: 12px;
     background: var(--surface-alt-light);
@@ -774,7 +773,6 @@ body.dark-mode .custom-school input:focus {
     flex-shrink: 0;
     border-top: 1px solid var(--border-light);
     background: inherit;
-    /* 아이폰 하단 안전 영역 확보 */
     padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
 }
 
@@ -835,23 +833,25 @@ body.dark-mode .modal-btn.secondary {
 
 body.dark-mode .modal-btn.secondary:hover { background: var(--border-dark); }
 
-/* ★ 수정: 모바일 시간표 찌그러짐 방지를 위해 min-width 적용 */
+/* 시간표 테이블 전면 수정 */
 .timetable-table { 
     width: 100%; 
-    min-width: 480px; /* 모바일에서 셀이 찌그러지지 않게 최소 너비 고정 */
+    min-width: 450px; /* 모바일에서 찌그러지지 않게 최소너비 확보 */
+    table-layout: fixed; /* 셀 너비 균등 분배 */
     border-collapse: collapse; 
     margin: 16px 0; 
     font-size: 13px; 
     border-radius: 12px; 
     overflow: hidden; 
     border: 1px solid var(--border-light); 
+    word-break: keep-all; /* 단어 끊어짐 방지 */
 }
 
 body.dark-mode .timetable-table { border-color: var(--border-dark); }
 
 .timetable-table th, .timetable-table td { 
     border: 1px solid var(--border-light); 
-    padding: 10px 8px; 
+    padding: 10px 6px; /* 좌우 패딩 축소으로 균형 맞춤 */
     text-align: center; 
 }
 
@@ -861,6 +861,7 @@ body.dark-mode .timetable-table td { border-color: var(--border-dark); }
 .timetable-table th { 
     font-weight: 700; 
     background: var(--surface-alt-light); 
+    font-size: 14px;
 }
 
 body.dark-mode .timetable-table th { background: var(--surface-alt-dark); }
@@ -871,10 +872,11 @@ body.dark-mode .timetable-table th { background: var(--surface-alt-dark); }
     background: transparent; 
     text-align: center; 
     font-size: 13px; 
-    padding: 4px; 
+    padding: 8px 2px; 
     outline: none; 
     border-radius: 6px;
-    min-height: 36px; /* 모바일 터치 영역 확보를 위해 최소 높이 유지 */
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+    min-height: 36px; 
 }
 
 .timetable-table input:focus { 
@@ -944,22 +946,36 @@ body.dark-mode .typing-cursor::after { background: var(--dark-primary); }
 /* ========================================== */
 @media (max-width: 480px) {
     .modal-content {
-        width: calc(100% - 16px);
+        width: calc(100% - 24px); /* 모바일에서 모달 좀 더 넓게 */
         max-height: 90vh;
         border-radius: 16px;
     }
     .modal-header {
-        padding: 14px 16px 10px 16px;
+        padding: 16px 18px 12px 18px;
+    }
+    .modal-header h2 {
+        font-size: 18px;
     }
     .modal-body {
-        padding: 16px 12px 0;
+        padding: 16px 18px 0;
+    }
+    .school-list {
+        gap: 10px;
+    }
+    .school-option {
+        padding: 10px 14px;
+        font-size: 13px;
     }
     .modal-actions {
-        padding: 12px 16px 16px;
+        padding: 14px 18px 16px;
         padding-bottom: calc(16px + env(safe-area-inset-bottom));
     }
     .timetable-table {
+        min-width: 400px; /* 조금 더 콤팩트하게 조정 */
         font-size: 12px;
+    }
+    .timetable-table th {
+        font-size: 13px;
     }
     .timetable-table th, .timetable-table td {
         padding: 8px 4px;
@@ -967,5 +983,6 @@ body.dark-mode .typing-cursor::after { background: var(--dark-primary); }
     .timetable-table input {
         font-size: 12px;
         min-height: 32px;
+        padding: 6px 2px;
     }
 }
