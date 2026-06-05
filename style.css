@@ -22,7 +22,7 @@
     --surface-alt-dark: #27272A;
 
     --border-light: rgba(0, 0, 0, 0.06);
-    --border-dark: rgba(255, 255, 255, 0.08); /* ★★★ 여기 수정됨: 255 하나 추가 ★★★ */
+    --border-dark: rgba(255, 255, 255, 0.08);
 
     --text-primary-light: #111827;
     --text-primary-dark: #FAFAFA;
@@ -527,7 +527,7 @@ body.dark-mode #theme-toggle{
 }
 
 /* ========================================== */
-/* 5. MODAL - 레이아웃 수정됨 */
+/* 5. MODAL - 모바일 레이아웃 최적화 수정 */
 /* ========================================== */
 .modal {
     position: fixed;
@@ -656,10 +656,11 @@ body.dark-mode .modal-close-btn:hover {
     min-height: 0;
 }
 
+/* ★ 수정: 시간표 가로 스크롤 허용을 위해 overflow-x: hidden 제거 */
 .modal-body {
     padding: 20px 24px 0;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     flex: 1 1 auto;
     min-height: 0;
     -webkit-overflow-scrolling: touch;
@@ -668,7 +669,7 @@ body.dark-mode .modal-close-btn:hover {
     scrollbar-color: var(--border-light) transparent;
 }
 
-.modal-body::-webkit-scrollbar { width: 5px; }
+.modal-body::-webkit-scrollbar { width: 5px; height: 5px; }
 .modal-body::-webkit-scrollbar-track { background: transparent; }
 .modal-body::-webkit-scrollbar-thumb {
     background: var(--border-light);
@@ -773,6 +774,8 @@ body.dark-mode .custom-school input:focus {
     flex-shrink: 0;
     border-top: 1px solid var(--border-light);
     background: inherit;
+    /* 아이폰 하단 안전 영역 확보 */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
 }
 
 body.dark-mode .modal-actions { border-top-color: var(--border-dark); }
@@ -832,8 +835,10 @@ body.dark-mode .modal-btn.secondary {
 
 body.dark-mode .modal-btn.secondary:hover { background: var(--border-dark); }
 
+/* ★ 수정: 모바일 시간표 찌그러짐 방지를 위해 min-width 적용 */
 .timetable-table { 
     width: 100%; 
+    min-width: 480px; /* 모바일에서 셀이 찌그러지지 않게 최소 너비 고정 */
     border-collapse: collapse; 
     margin: 16px 0; 
     font-size: 13px; 
@@ -869,7 +874,7 @@ body.dark-mode .timetable-table th { background: var(--surface-alt-dark); }
     padding: 4px; 
     outline: none; 
     border-radius: 6px;
-    min-height: 44px;
+    min-height: 36px; /* 모바일 터치 영역 확보를 위해 최소 높이 유지 */
 }
 
 .timetable-table input:focus { 
@@ -932,4 +937,35 @@ body.dark-mode .typing-cursor::after { background: var(--dark-primary); }
 @keyframes blink { 
     0%, 100% { opacity: 1; } 
     50% { opacity: 0; } 
+}
+
+/* ========================================== */
+/* 6. Mobile Responsive Media Query */
+/* ========================================== */
+@media (max-width: 480px) {
+    .modal-content {
+        width: calc(100% - 16px);
+        max-height: 90vh;
+        border-radius: 16px;
+    }
+    .modal-header {
+        padding: 14px 16px 10px 16px;
+    }
+    .modal-body {
+        padding: 16px 12px 0;
+    }
+    .modal-actions {
+        padding: 12px 16px 16px;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+    .timetable-table {
+        font-size: 12px;
+    }
+    .timetable-table th, .timetable-table td {
+        padding: 8px 4px;
+    }
+    .timetable-table input {
+        font-size: 12px;
+        min-height: 32px;
+    }
 }
