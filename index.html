@@ -2,132 +2,46 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Chat K plus v2.5.2</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat GOL 페이지</title>
 </head>
 <body>
-    <div id="app-wrapper">
-        
-        <!-- 홈 화면 -->
-        <div id="home-screen" class="slide-in">
-            <div class="home-content">
-                <h1 class="home-title">Chat K plus</h1>
-                <p class="home-subtitle">V10 기반 로컬 AI</p>
-                
-                <div id="chat-header-bar">
-                    <div class="header-row">
-                        <h2 id="chat-title">무엇을 도와드릴까요?</h2>
-                        <button id="theme-toggle" title="테마 변경">🌙</button>
-                    </div>
-                    <div class="search-container">
-                        <input type="text" id="search-input" placeholder="검색을 입력하세요.">
-                        <button id="search-btn" disabled>Search</button>
-                    </div>
-                </div>
 
-                <div id="example-questions">
-                    <button class="question-tag" data-query="요즘 이슈">요즘 이슈</button>
-                    <button class="question-tag" data-query="인천시장 박찬대">인천시장 박찬대</button>
-                    <button class="question-tag" data-query="다음 사이트 주소">다음 사이트 주소</button>
-                    <button class="question-tag" data-query="시간표 등록">시간표 등록</button>
-                    <button class="question-tag" data-query="비트코인">비트코인</button>
-                    <button class="question-tag" data-query="2026 최저임금">2026 최저임금</button>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+        <!-- 1. 로고 섹션 -->
+        <header class="logo-section">
+            <div class="logo">▲</div>
+        </header>
 
-        <!-- 채팅 화면 -->
-        <div id="chat-screen" class="hidden">
-            <div id="chat-header-bar">
-                <div class="header-row">
-                    <button id="back-btn">← 뒤로</button>
-                    <h3>Chat K plus v2.5.2</h3>
-                    <button id="theme-toggle-chat" title="테마 변경">🌙</button>
-                </div>
-            </div>
-            
-            <!-- 경고 배너 고정 -->
-            <div id="warning-banner" class="warning-banner">
-                <span class="warning-banner-icon">⚠️</span>
-                <span>해당 Chat K plus는 실수할 수 있습니다. [DB 기준: 2026.06.04 09:00 KST]</span>
+        <!-- 2. 제목 섹션 -->
+        <main class="main-content">
+            <h1>무엇을 도와드릴까요?</h1>
+
+            <!-- 3. 검색창 섹션 -->
+            <div class="search-box">
+                <input type="text" placeholder="질문을 입력하세요.">
+                <button class="search-btn">
+                    <span class="icon">🔍</span> Search
+                </button>
             </div>
 
-            <div id="chat-container">
-                <div class="chat-welcome">
-                    <div class="chat-welcome-icon">💬</div>
-                    <div class="chat-welcome-text">대화를 시작해보세요</div>
+            <!-- 4. 예시 질문 섹션 -->
+            <section class="example-questions">
+                <h3>예시질문</h3>
+                <div class="question-list">
+                    <button class="question-item">아바타 2가 뭐죠?</button>
+                    <button class="question-item">정치</button>
+                    <button class="question-item">사회/정치2</button>
+                    <button class="question-item">너에 대해서</button>
                 </div>
-            </div>
+            </section>
+        </main>
 
-            <div id="chat-input-area">
-                <div class="input-wrapper">
-                    <button id="timetable-btn" title="시간표">📅</button>
-                    <input type="text" id="chat-input" placeholder="메시지를 입력하세요...">
-                    <button id="chat-send-btn" disabled>전송</button>
-                </div>
-            </div>
-        </div>
-
+        <!-- 5. 하단 안내 문구 -->
+        <footer class="footer">
+            <p>해당 Chat GOL (는) 실수 할수 있습니다.</p>
+        </footer>
     </div>
 
-    <!-- 시간표 모달 -->
-    <div id="timetable-modal" class="modal" data-state="hidden">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content">
-            <div class="modal-handle"></div>
-            <div class="modal-header">
-                <h2 class="modal-title">학교 선택</h2>
-                <button id="modal-close" class="modal-close">✕</button>
-            </div>
-            
-            <div id="modal-step1" class="modal-body" data-state="active">
-                <div class="form-group">
-                    <div id="school-list" class="timetable-grid"></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">기타 학교 직접 입력</label>
-                    <input type="text" id="custom-school-input" class="form-input" placeholder="학교명을 입력하세요">
-                </div>
-            </div>
-
-            <div id="modal-step2" class="modal-body" data-state="hidden">
-                <div id="timetable-grid"></div>
-            </div>
-
-            <div id="modal-loading" class="modal-body" data-state="hidden">
-                <div class="loading-spinner"></div>
-                <div class="loading-text">시간표 저장 중...</div>
-            </div>
-
-            <div class="modal-actions">
-                <button id="modal-next1" class="btn btn-primary">다음</button>
-                <button id="modal-confirm" class="btn btn-primary" style="display: none;">저장</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 외부링크 경고 모달 -->
-    <div id="external-link-warning" class="modal" data-state="hidden">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content" style="max-width: 440px; border-radius: 24px;">
-            <div class="modal-header">
-                <h2 class="modal-title">⚠️ 외부 사이트 이동</h2>
-                <button class="modal-close" onclick="closeExternalLinkWarning()">✕</button>
-            </div>
-            <div class="modal-body">
-                <div id="warning-icon">🔗</div>
-                <div id="warning-site-name">사이트</div>
-                <div id="warning-desc">외부 사이트는 악성코드, 피싱 위험이 있을 수 있습니다.<br>신뢰할 수 있는 사이트인지 확인 후 이동하세요.</div>
-                <div id="warning-url"></div>
-            </div>
-            <div class="modal-actions">
-                <button id="warning-cancel" class="btn btn-secondary">취소</button>
-                <button id="warning-confirm" class="btn btn-primary">이동</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
