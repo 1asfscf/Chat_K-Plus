@@ -1,177 +1,104 @@
-/* 1. 기본 스타일 */
+/* =========================================================
+   1. 기본 설정 및 변수
+   ========================================================= */
 :root {
-    --text-main: #111827;
+    --bg-color: #f3f4f6;
+    --main-text: #111827;
+    --primary-gradient: linear-gradient(90deg, #ff7e5f, #feb47b);
+    --disabled-color: #d1d5db;
     --border-color: #e5e7eb;
-    --rainbow-gradient: linear-gradient(90deg, #ff7e5f, #feb47b, #86a8e7, #91eae4, #ff7e5f);
 }
 
 body {
-    font-family: 'Pretendard', -apple-system, sans-serif;
-    background-color: #f3f4f6;
     margin: 0;
+    font-family: 'Pretendard', sans-serif;
+    background-color: var(--bg-color);
+    height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
 }
 
 .app-container {
-    width: 90%;
+    width: 100%;
     max-width: 600px;
-    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* 2. 화면 전환 (JS가 제어) */
+/* =========================================================
+   2. 뷰 전환 제어
+   ========================================================= */
+.view { flex: 1; display: flex; flex-direction: column; }
 .hidden { display: none !important; }
 
-/* 3. 로고 및 타이틀 */
-.logo { font-size: 3.5rem; margin-bottom: 2.5rem; color: #000000; }
+/* =========================================================
+   3. 검색 화면 (Search View)
+   ========================================================= */
+#search-view { justify-content: center; }
 
-.title {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 2.5rem;
-    letter-spacing: -1.5px;
-    background: linear-gradient(to right, #111827, #4b5563);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+.logo { font-size: 3rem; margin-bottom: 1rem; }
+.title { font-size: 2rem; margin-bottom: 2rem; color: var(--main-text); }
 
-/* 4. 검색 입력창 */
 .search-container {
     display: flex;
-    gap: 10px;
-    margin-bottom: 2.5rem;
     background: white;
-    padding: 8px;
+    padding: 10px;
     border-radius: 20px;
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.search-input {
+.search-input { flex: 1; border: none; padding: 15px; font-size: 1rem; outline: none; }
+.search-btn { padding: 10px 25px; border-radius: 15px; border: none; background: var(--primary-gradient); color: white; cursor: pointer; }
+.search-btn:disabled { background: var(--disabled-color) !important; cursor: not-allowed; }
+
+/* =========================================================
+   4. 채팅 화면 (Chat View)
+   ========================================================= */
+#chat-view { height: 100%; }
+
+.chat-header { padding: 10px 0; }
+.back-btn { background: #e5e7eb; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+
+/* 대화 내용 영역 (스크롤 가능) */
+.chat-box {
     flex: 1;
-    padding: 15px 25px;
-    border: none;
-    font-size: 1.1rem;
-    outline: none;
-    background: transparent;
+    overflow-y: auto;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* 무지개 버튼 (활성화 시 애니메이션) */
-.search-btn {
-    padding: 0 30px;
-    background: var(--rainbow-gradient);
-    background-size: 300% 300%;
-    animation: gradientMove 5s ease infinite;
+/* 채팅 입력 바 (고정된 하단 영역) */
+.chat-footer {
+    padding: 20px 0;
+    background: var(--bg-color);
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    outline: none;
+}
+
+.send-btn {
+    padding: 0 20px;
+    background: #000;
     color: white;
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    font-weight: 700;
-    transition: opacity 0.3s;
 }
 
-/* 비활성화 상태 (JS가 disabled 속성을 붙이면 자동으로 스타일 적용) */
-.search-btn:disabled {
-    background: #d1d5db !important;
-    animation: none !important;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* 5. 예시 버튼 및 그룹 */
-.examples { margin-bottom: 2rem; }
-
-.examples-title {
-    font-size: 0.9rem;
-    color: #6b7280;
-    margin-bottom: 1rem;
-}
-
-.button-group { 
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: center; 
-    gap: 12px; 
-}
-
-.example-btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    background: #ffffff;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #374151;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.1s;
-}
-.example-btn:active { transform: translateY(2px); }
-
-/* 6. 채팅 화면 (Chat View) */
-.chat-header { margin-bottom: 20px; text-align: left; }
-
-.back-btn {
-    padding: 8px 16px;
-    background: #e5e7eb;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: #374151;
-}
-
-.chat-box {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    text-align: left;
-    margin-top: 10px;
-    padding-bottom: 20px;
-}
-
-.message {
-    padding: 15px 20px;
-    border-radius: 20px;
-    max-width: 80%;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-.user-msg {
-    align-self: flex-end;
-    background: #000;
-    color: white;
-}
-
-.ai-msg {
-    align-self: flex-start;
-    background: #fff;
-    color: #374151;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.thinking-step {
-    font-size: 0.85rem;
-    color: #6b7280;
-    font-style: italic;
-    margin-left: 5px;
-    padding: 5px;
-}
-
-/* 7. 공통 푸터 */
-.app-footer {
-    margin-top: 3rem;
-    color: #9ca3af;
-    font-size: 0.8rem;
-    padding: 20px;
-}
-
-/* 무지개 애니메이션 */
-@keyframes gradientMove {
-    0% { background-position: 0% 50% }
-    50% { background-position: 100% 50% }
-    100% { background-position: 0% 50% }
-}
+/* =========================================================
+   5. 공통 요소
+   ========================================================= */
+.app-footer { text-align: center; font-size: 0.8rem; color: #9ca3af; padding: 10px; }
+```
