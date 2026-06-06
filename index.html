@@ -9,8 +9,10 @@
 <body>
 
     <div class="app-container">
-        
-        <!-- [View 1: 검색 화면] -->
+
+        <!-- ==============================================
+             [VIEW 1] 검색 화면 (초기 화면)
+             ============================================== -->
         <section id="search-view" class="view">
             <div class="logo">▲</div>
             <h1 class="title">무엇을 도와드릴까요?</h1>
@@ -31,23 +33,57 @@
             </div>
         </section>
 
-        <!-- [View 2: 채팅 화면] -->
+        <!-- ==============================================
+             [VIEW 2] 채팅 화면 (결과 화면)
+             ============================================== -->
         <section id="chat-view" class="view hidden">
+            <!-- 채팅 상단 헤더 -->
             <header class="chat-header">
                 <button id="backBtn" class="back-btn">← 뒤로가기</button>
             </header>
             
+            <!-- 채팅 대화 영역 -->
             <div id="chat-box" class="chat-box">
-                <!-- 결과가 JS를 통해 이곳에 동적으로 출력됨 -->
+                <!-- 여기에 대화 내용이 들어옴 -->
+            </div>
+
+            <!-- 채팅 하단 입력바 -->
+            <div class="chat-footer">
+                <input type="text" id="chatInput" class="chat-input" placeholder="메시지를 입력하세요...">
+                <button id="sendBtn" class="send-btn">전송</button>
             </div>
         </section>
 
-        <!-- [공통 푸터] -->
+        <!-- ==============================================
+             [FOOTER] 안내 문구
+             ============================================== -->
         <footer class="app-footer">
             <p>해당 Chat GOL (는) 실수 할 수 있습니다.</p>
         </footer>
+
     </div>
 
+    <!-- 스크립트 연결 -->
     <script src="script.js"></script>
 </body>
 </html>
+```
+
+### 💡 팁: JS 연결 시 주의할 점!
+이 구조를 쓰면 JS에서 **검색 입력창(`queryInput`)**과 **채팅 입력창(`chatInput`)**이 나뉘게 돼. 
+
+JS의 `UI` 객체 부분을 아래처럼 살짝만 추가해 주면 완벽하게 연동될 거야:
+
+```javascript
+// JS 내 UI 캐싱 부분에 추가:
+const UI = {
+    // ... 기존 코드 ...
+    chatInput: document.getElementById('chatInput'), // 새 입력창
+    sendBtn: document.getElementById('sendBtn')      // 새 전송 버튼
+};
+
+// 그리고 sendBtn 클릭 시에도 runReasoning이 실행되도록 연결해주면 돼!
+UI.sendBtn.addEventListener('click', () => {
+    System.runReasoning(UI.chatInput.value.trim());
+    UI.chatInput.value = ''; // 전송 후 비우기
+});
