@@ -1,16 +1,13 @@
-/* 1. 기본 스타일 및 폰트 */
+/* 1. 기본 스타일 */
 :root {
-    --primary-color: #2563eb;       /* 세련된 블루 */
-    --text-main: #1f2937;          /* 진한 회색 */
-    --text-sub: #6b7280;           /* 연한 회색 */
-    --bg-main: #ffffff;
+    --text-main: #111827;
     --border-color: #e5e7eb;
+    --rainbow-gradient: linear-gradient(90deg, #ff7e5f, #feb47b, #86a8e7, #91eae4, #ff7e5f);
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #f9fafb;
-    color: var(--text-main);
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background-color: #f3f4f6;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -22,102 +19,96 @@ body {
     width: 90%;
     max-width: 600px;
     text-align: center;
-    padding: 20px;
 }
 
-/* 2. 로고 아이콘 - 크기 조정 */
+/* 2. 검정색 세모 로고 */
 .logo {
-    font-size: 3.5rem; /* 세모 크기 키움 */
+    font-size: 3.5rem; 
     margin-bottom: 2.5rem;
-    color: var(--primary-color);
+    color: #000000; 
 }
 
-/* 3. 제목 타이틀 - 더 세련되게 */
+/* 3. 미래지향적 타이틀 */
 .title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    letter-spacing: -0.5px;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    letter-spacing: -1.5px; /* 글자 간격을 좁혀서 좀 더 세련된 미래 느낌 */
+    background: linear-gradient(to right, #111827, #4b5563);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.1));
 }
 
-/* 4. 현대적인 검색 입력창 (모던 스타일) */
+/* 4. 검색창 모던 디자인 */
 .search-container {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 2.5rem;
     background: white;
     padding: 8px;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); /* 깊이감 있는 그림자 */
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .search-input {
     flex: 1;
-    padding: 15px 20px;
+    padding: 15px 25px;
     border: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     outline: none;
     background: transparent;
 }
 
+/* 무지개 검색 버튼 */
 .search-btn {
-    padding: 0 24px;
-    background-color: var(--primary-color);
+    padding: 0 30px;
+    background: var(--rainbow-gradient);
+    background-size: 300% 300%;
+    animation: gradientMove 5s ease infinite;
     color: white;
     border: none;
-    border-radius: 12px;
+    border-radius: 15px;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-weight: 700;
+    transition: transform 0.2s;
 }
 
 .search-btn:hover {
-    background-color: #1d4ed8;
-    transform: translateY(-1px);
+    transform: scale(1.05);
 }
 
-/* 5. 예시 질문 카드 버튼 (모던 칩 스타일) */
+@keyframes gradientMove {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+/* 5. 3D 입체 예시 질문 버튼 */
 .examples-title {
-    font-size: 0.85rem;
-    color: var(--text-sub);
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    color: #9ca3af;
+    margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .button-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .example-btn {
-    padding: 12px 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 25px; /* 더 둥글게 */
-    background: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 15px;
+    background: #ffffff;
     cursor: pointer;
-    transition: all 0.3s ease;
     font-size: 0.95rem;
-    color: var(--text-main);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.example-btn:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    background-color: #eff6ff;
-    transform: scale(1.02);
-}
-
-/* 6. 하단 푸터 */
-.app-footer {
-    margin-top: 4rem;
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
+    font-weight: 600;
+    color: #374151;
+    /* 3D 입체 효과: 아래쪽에 그림자를 두껍게 넣음 */
+    box-shadow: 0 6px 0 #d1d5db; 
+    transition: all 0.1s;
