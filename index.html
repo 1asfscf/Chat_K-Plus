@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Chat GOL</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,59 +11,52 @@
     <div class="app-container">
 
         <!-- ==============================================
-             [VIEW 1] 검색 화면 (초기 화면)
+             [VIEW 1] 검색 화면
              ============================================== -->
-        <section id="search-view" class="view">
-            <div class="logo">▲</div>
-            <h1 class="title">무엇을 도와드릴까요?</h1>
+        <section id="search-view">
+            <div class="search-content">
+                <div class="logo">▲</div>
+                <h1 class="title">무엇을 도와드릴까요?</h1>
 
-            <div class="search-container">
-                <input type="text" id="queryInput" class="search-input" placeholder="질문을 입력하세요.">
-                <button id="searchBtn" class="search-btn" disabled>Search</button>
-            </div>
+                <div class="search-container">
+                    <input type="text" id="queryInput" class="search-input" placeholder="질문을 입력하세요." autocomplete="off">
+                    <button id="searchBtn" class="search-btn" disabled>Search</button>
+                </div>
 
-            <div class="examples">
-                <h3 class="examples-title">예시 질문</h3>
-                <div class="button-group">
-                    <button class="example-btn">아바타 2가 뭐죠?</button>
-                    <button class="example-btn">정치</button>
-                    <button class="example-btn">사회/정치2</button>
-                    <button class="example-btn">너에 대해서</button>
+                <div class="examples">
+                    <h3 class="examples-title">예시 질문</h3>
+                    <div class="button-group">
+                        <button class="example-btn">아바타 2가 뭐죠?</button>
+                        <button class="example-btn">정치</button>
+                        <button class="example-btn">사회/정치2</button>
+                        <button class="example-btn">너에 대해서</button>
+                    </div>
                 </div>
             </div>
+            
+            <footer class="app-footer">
+                <p>Chat GOL은 실수할 수 있습니다.</p>
+            </footer>
         </section>
 
         <!-- ==============================================
-             [VIEW 2] 채팅 화면 (결과 화면)
+             [VIEW 2] 채팅 화면
              ============================================== -->
-        <section id="chat-view" class="view hidden">
-            <!-- 채팅 상단 헤더 -->
+        <section id="chat-view" class="hidden">
             <header class="chat-header">
-                <button id="backBtn" class="back-btn">← 뒤로가기</button>
+                <button id="backBtn" class="back-btn">← 뒤로</button>
             </header>
             
-            <!-- 채팅 대화 영역 -->
-            <div id="chat-box" class="chat-box">
-                <!-- 여기에 대화 내용이 들어옴 -->
-            </div>
+            <div id="chat-box" class="chat-box"></div>
 
-            <!-- 채팅 하단 입력바 -->
             <div class="chat-footer">
-                <input type="text" id="chatInput" class="chat-input" placeholder="메시지를 입력하세요...">
-                <button id="sendBtn" class="send-btn">전송</button>
+                <input type="text" id="chatInput" class="chat-input" placeholder="메시지를 입력하세요..." autocomplete="off">
+                <button id="sendBtn" class="send-btn" disabled>↑</button>
             </div>
         </section>
-
-        <!-- ==============================================
-             [FOOTER] 안내 문구
-             ============================================== -->
-        <footer class="app-footer">
-            <p>해당 Chat GOL (는) 실수 할 수 있습니다.</p>
-        </footer>
 
     </div>
 
-    <!-- 스크립트 연결 -->
     <script src="script.js"></script>
 </body>
 </html>
