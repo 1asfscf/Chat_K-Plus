@@ -10,14 +10,13 @@
 
     <div class="app-container">
         
-        <!-- [View 1: 검색 화면] 초기화면 -->
+        <!-- [View 1: 검색 화면] -->
         <section id="search-view" class="view">
             <div class="logo">▲</div>
             <h1 class="title">무엇을 도와드릴까요?</h1>
 
             <div class="search-container">
                 <input type="text" id="queryInput" class="search-input" placeholder="질문을 입력하세요.">
-                <!-- disabled 속성을 기본으로 넣어서 처음엔 비활성화됨 -->
                 <button id="searchBtn" class="search-btn" disabled>Search</button>
             </div>
 
@@ -32,19 +31,18 @@
             </div>
         </section>
 
-        <!-- [View 2: 채팅 화면] 결과 화면 -->
-        <!-- hidden 클래스로 기본적으로 숨김 처리 -->
+        <!-- [View 2: 채팅 화면] -->
         <section id="chat-view" class="view hidden">
             <header class="chat-header">
                 <button id="backBtn" class="back-btn">← 뒤로가기</button>
             </header>
             
             <div id="chat-box" class="chat-box">
-                <!-- 사고 과정과 답변이 여기 쌓임 -->
+                <!-- 결과가 JS를 통해 이곳에 동적으로 출력됨 -->
             </div>
         </section>
 
-        <!-- 공통 푸터 -->
+        <!-- [공통 푸터] -->
         <footer class="app-footer">
             <p>해당 Chat GOL (는) 실수 할 수 있습니다.</p>
         </footer>
