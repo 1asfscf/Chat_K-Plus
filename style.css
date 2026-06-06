@@ -39,8 +39,8 @@ body {
    ========================================================= */
 #search-view { justify-content: center; }
 
-.logo { font-size: 3rem; margin-bottom: 1rem; }
-.title { font-size: 2rem; margin-bottom: 2rem; color: var(--main-text); }
+.logo { font-size: 3.5rem; margin-bottom: 1rem; text-align: center; }
+.title { font-size: 2rem; margin-bottom: 2rem; color: var(--main-text); text-align: center; }
 
 .search-container {
     display: flex;
@@ -48,18 +48,23 @@ body {
     padding: 10px;
     border-radius: 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
 }
 
-.search-input { flex: 1; border: none; padding: 15px; font-size: 1rem; outline: none; }
-.search-btn { padding: 10px 25px; border-radius: 15px; border: none; background: var(--primary-gradient); color: white; cursor: pointer; }
+.search-input { flex: 1; border: none; padding: 15px; font-size: 1rem; outline: none; background: transparent; }
+.search-btn { padding: 10px 25px; border-radius: 15px; border: none; background: var(--primary-gradient); color: white; cursor: pointer; font-weight: bold; }
 .search-btn:disabled { background: var(--disabled-color) !important; cursor: not-allowed; }
+
+/* 예시 질문 버튼 */
+.button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+.example-btn { padding: 10px 20px; border-radius: 12px; border: 1px solid #ddd; background: white; cursor: pointer; }
 
 /* =========================================================
    4. 채팅 화면 (Chat View)
    ========================================================= */
 #chat-view { height: 100%; }
 
-.chat-header { padding: 10px 0; }
+.chat-header { padding-bottom: 10px; }
 .back-btn { background: #e5e7eb; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
 
 /* 대화 내용 영역 (스크롤 가능) */
@@ -71,6 +76,12 @@ body {
     flex-direction: column;
     gap: 15px;
 }
+
+/* 메시지 디자인 */
+.message { padding: 15px 20px; border-radius: 20px; max-width: 80%; line-height: 1.5; }
+.user-msg { align-self: flex-end; background: #000; color: white; }
+.ai-msg { align-self: flex-start; background: #fff; border: 1px solid #eee; }
+.thinking-step { font-size: 0.85rem; color: #6b7280; font-style: italic; }
 
 /* 채팅 입력 바 (고정된 하단 영역) */
 .chat-footer {
@@ -89,16 +100,22 @@ body {
 }
 
 .send-btn {
-    padding: 0 20px;
+    padding: 0 25px;
     background: #000;
     color: white;
     border: none;
     border-radius: 15px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 /* =========================================================
-   5. 공통 요소
+   5. 기타 요소 (공통 푸터 및 애니메이션)
    ========================================================= */
-.app-footer { text-align: center; font-size: 0.8rem; color: #9ca3af; padding: 10px; }
-```
+.app-footer { text-align: center; font-size: 0.8rem; color: #9ca3af; padding: 20px; }
+
+/* 혹시 애니메이션이 필요하면 여기 추가해 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
