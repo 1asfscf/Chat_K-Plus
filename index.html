@@ -67,23 +67,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-```
-
-### 💡 팁: JS 연결 시 주의할 점!
-이 구조를 쓰면 JS에서 **검색 입력창(`queryInput`)**과 **채팅 입력창(`chatInput`)**이 나뉘게 돼. 
-
-JS의 `UI` 객체 부분을 아래처럼 살짝만 추가해 주면 완벽하게 연동될 거야:
-
-```javascript
-// JS 내 UI 캐싱 부분에 추가:
-const UI = {
-    // ... 기존 코드 ...
-    chatInput: document.getElementById('chatInput'), // 새 입력창
-    sendBtn: document.getElementById('sendBtn')      // 새 전송 버튼
-};
-
-// 그리고 sendBtn 클릭 시에도 runReasoning이 실행되도록 연결해주면 돼!
-UI.sendBtn.addEventListener('click', () => {
-    System.runReasoning(UI.chatInput.value.trim());
-    UI.chatInput.value = ''; // 전송 후 비우기
-});
