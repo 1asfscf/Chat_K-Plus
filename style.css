@@ -1,1 +1,157 @@
+/* 1. 기본 스타일 */
+:root {
+    --text-main: #111827;
+    --border-color: #e5e7eb;
+    --rainbow-gradient: linear-gradient(90deg, #ff7e5f, #feb47b, #86a8e7, #91eae4, #ff7e5f);
+}
 
+body {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+}
+
+/* 2. 화면 전환 처리 */
+.hidden { display: none !important; }
+
+/* 3. 로고 및 타이틀 */
+.logo { font-size: 3.5rem; margin-bottom: 2.5rem; color: #000000; }
+
+.title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    letter-spacing: -1.5px;
+    background: linear-gradient(to right, #111827, #4b5563);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 4. 검색 입력창 (상태별 디자인) */
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2.5rem;
+    background: white;
+    padding: 8px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    font-size: 1.1rem;
+    outline: none;
+    background: transparent;
+}
+
+/* 무지개 버튼 (활성화 시에만 무지개) */
+.search-btn {
+    padding: 0 30px;
+    background: var(--rainbow-gradient);
+    background-size: 300% 300%;
+    animation: gradientMove 5s ease infinite;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s;
+}
+
+/* 비활성화 상태 (disabled) */
+.search-btn:disabled {
+    background: #d1d5db; /* 회색 */
+    animation: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 5. 3D 입체 예시 버튼 */
+.button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+
+.example-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 15px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #374151;
+    box-shadow: 0 6px 0 #d1d5db;
+    transition: all 0.1s;
+}
+.example-btn:active { box-shadow: 0 2px 0 #d1d5db; transform: translateY(4px); }
+
+/* 6. 채팅 화면 디자인 */
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.message {
+    padding: 15px 20px;
+    border-radius: 20px;
+    max-width: 80%;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.user-msg {
+    align-self: flex-end;
+    background: #000;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+.ai-msg {
+    align-self: flex-start;
+    background: #fff;
+    color: #374151;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.thinking-step {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-style: italic;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* 푸터 */
+.app-footer {
+    margin-top: 4rem;
+    background: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: inline-block;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
