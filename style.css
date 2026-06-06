@@ -33,7 +33,7 @@ body {
     font-size: 2.2rem;
     font-weight: 800;
     margin-bottom: 2.5rem;
-    letter-spacing: -1.5px; /* 글자 간격을 좁혀서 좀 더 세련된 미래 느낌 */
+    letter-spacing: -1.5px;
     background: linear-gradient(to right, #111827, #4b5563);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -48,7 +48,7 @@ body {
     background: white;
     padding: 8px;
     border-radius: 20px;
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); /* 깊이감 있는 그림자 */
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
     border: 1px solid rgba(255,255,255,0.1);
 }
 
@@ -109,6 +109,28 @@ body {
     font-size: 0.95rem;
     font-weight: 600;
     color: #374151;
-    /* 3D 입체 효과: 아래쪽에 그림자를 두껍게 넣음 */
-    box-shadow: 0 6px 0 #d1d5db; 
+    box-shadow: 0 6px 0 #d1d5db; /* 3D 효과 */
     transition: all 0.1s;
+}
+
+.example-btn:active {
+    box-shadow: 0 2px 0 #d1d5db;
+    transform: translateY(4px);
+}
+
+.example-btn:hover {
+    background: #f9fafb;
+}
+
+/* 6. 원형 모던 푸터 */
+.app-footer {
+    margin-top: 4rem;
+    background: white;
+    padding: 15px 30px;
+    border-radius: 50px; /* 완전 원형 느낌 */
+    display: inline-block;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    font-size: 0.8rem;
+    color: #6b7280;
+    border: 1px solid var(--border-color);
+}
