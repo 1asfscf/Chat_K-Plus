@@ -1,47 +1,50 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat GOL 페이지</title>
+    <title>Chat GOL</title>
+    <!-- 외부 스타일시트 연결 -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="container">
-        <!-- 1. 로고 섹션 -->
-        <header class="logo-section">
+    <div class="app-container">
+        <!-- 상단 헤더: 로고 영역 -->
+        <header class="app-header">
             <div class="logo">▲</div>
         </header>
 
-        <!-- 2. 제목 섹션 -->
-        <main class="main-content">
-            <h1>무엇을 도와드릴까요?</h1>
+        <!-- 메인 콘텐츠: 핵심 기능 -->
+        <main class="app-main">
+            <h1 class="title">무엇을 도와드릴까요?</h1>
 
-            <!-- 3. 검색창 섹션 -->
-            <div class="search-box">
-                <input type="text" placeholder="질문을 입력하세요.">
-                <button class="search-btn">
-                    <span class="icon">🔍</span> Search
+            <!-- 검색 입력창 및 버튼 -->
+            <div class="search-container">
+                <input type="text" id="queryInput" class="search-input" placeholder="질문을 입력하세요.">
+                <button id="searchBtn" class="search-btn">
+                    <span>🔍</span> Search
                 </button>
             </div>
 
-            <!-- 4. 예시 질문 섹션 -->
-            <section class="example-questions">
-                <h3>예시질문</h3>
-                <div class="question-list">
-                    <button class="question-item">아바타 2가 뭐죠?</button>
-                    <button class="question-item">정치</button>
-                    <button class="question-item">사회/정치2</button>
-                    <button class="question-item">너에 대해서</button>
+            <!-- 예시 질문 리스트 -->
+            <section class="examples">
+                <h3 class="examples-title">예시질문</h3>
+                <div class="button-group">
+                    <button class="example-btn">아바타 2가 뭐죠?</button>
+                    <button class="example-btn">정치</button>
+                    <button class="example-btn">사회/정치2</button>
+                    <button class="example-btn">너에 대해서</button>
                 </div>
             </section>
         </main>
 
-        <!-- 5. 하단 안내 문구 -->
-        <footer class="footer">
-            <p>해당 Chat GOL (는) 실수 할수 있습니다.</p>
+        <!-- 하단 안내 문구 -->
+        <footer class="app-footer">
+            <p>해당 Chat GOL (는) 실수 할 수 있습니다.</p>
         </footer>
     </div>
 
+    <!-- 스크립트 연결 -->
+    <script src="script.js"></script>
 </body>
 </html>
