@@ -1,50 +1,55 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat GOL</title>
-    <!-- 외부 스타일시트 연결 -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- 상단 헤더: 로고 영역 -->
-        <header class="app-header">
-            <div class="logo">▲</div>
-        </header>
 
-        <!-- 메인 콘텐츠: 핵심 기능 -->
-        <main class="app-main">
+    <div class="app-container">
+        
+        <!-- [View 1: 검색 화면] 초기화면 -->
+        <section id="search-view" class="view">
+            <div class="logo">▲</div>
             <h1 class="title">무엇을 도와드릴까요?</h1>
 
-            <!-- 검색 입력창 및 버튼 -->
             <div class="search-container">
                 <input type="text" id="queryInput" class="search-input" placeholder="질문을 입력하세요.">
-                <button id="searchBtn" class="search-btn">
-                    <span>🔍</span> Search
-                </button>
+                <!-- disabled 속성을 기본으로 넣어서 처음엔 비활성화됨 -->
+                <button id="searchBtn" class="search-btn" disabled>Search</button>
             </div>
 
-            <!-- 예시 질문 리스트 -->
-            <section class="examples">
-                <h3 class="examples-title">예시질문</h3>
+            <div class="examples">
+                <h3 class="examples-title">예시 질문</h3>
                 <div class="button-group">
                     <button class="example-btn">아바타 2가 뭐죠?</button>
                     <button class="example-btn">정치</button>
                     <button class="example-btn">사회/정치2</button>
                     <button class="example-btn">너에 대해서</button>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
 
-        <!-- 하단 안내 문구 -->
+        <!-- [View 2: 채팅 화면] 결과 화면 -->
+        <!-- hidden 클래스로 기본적으로 숨김 처리 -->
+        <section id="chat-view" class="view hidden">
+            <header class="chat-header">
+                <button id="backBtn" class="back-btn">← 뒤로가기</button>
+            </header>
+            
+            <div id="chat-box" class="chat-box">
+                <!-- 사고 과정과 답변이 여기 쌓임 -->
+            </div>
+        </section>
+
+        <!-- 공통 푸터 -->
         <footer class="app-footer">
             <p>해당 Chat GOL (는) 실수 할 수 있습니다.</p>
         </footer>
     </div>
 
-    <!-- 스크립트 연결 -->
     <script src="script.js"></script>
 </body>
 </html>
