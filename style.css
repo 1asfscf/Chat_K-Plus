@@ -21,7 +21,7 @@ body {
     text-align: center;
 }
 
-/* 2. 화면 전환 처리 */
+/* 2. 화면 전환 (JS가 제어) */
 .hidden { display: none !important; }
 
 /* 3. 로고 및 타이틀 */
@@ -37,7 +37,7 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-/* 4. 검색 입력창 (상태별 디자인) */
+/* 4. 검색 입력창 */
 .search-container {
     display: flex;
     gap: 10px;
@@ -58,7 +58,7 @@ body {
     background: transparent;
 }
 
-/* 무지개 버튼 (활성화 시에만 무지개) */
+/* 무지개 버튼 (활성화 시 애니메이션) */
 .search-btn {
     padding: 0 30px;
     background: var(--rainbow-gradient);
@@ -69,41 +69,67 @@ body {
     border-radius: 15px;
     cursor: pointer;
     font-weight: 700;
-    transition: all 0.3s;
+    transition: opacity 0.3s;
 }
 
-/* 비활성화 상태 (disabled) */
+/* 비활성화 상태 (JS가 disabled 속성을 붙이면 자동으로 스타일 적용) */
 .search-btn:disabled {
-    background: #d1d5db; /* 회색 */
-    animation: none;
+    background: #d1d5db !important;
+    animation: none !important;
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
-/* 5. 3D 입체 예시 버튼 */
-.button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+/* 5. 예시 버튼 및 그룹 */
+.examples { margin-bottom: 2rem; }
+
+.examples-title {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.button-group { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 12px; 
+}
 
 .example-btn {
-    padding: 12px 25px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 15px;
+    border-radius: 12px;
     background: #ffffff;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: #374151;
-    box-shadow: 0 6px 0 #d1d5db;
-    transition: all 0.1s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.1s;
 }
-.example-btn:active { box-shadow: 0 2px 0 #d1d5db; transform: translateY(4px); }
+.example-btn:active { transform: translateY(2px); }
 
-/* 6. 채팅 화면 디자인 */
+/* 6. 채팅 화면 (Chat View) */
+.chat-header { margin-bottom: 20px; text-align: left; }
+
+.back-btn {
+    padding: 8px 16px;
+    background: #e5e7eb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #374151;
+}
+
 .chat-box {
     display: flex;
     flex-direction: column;
     gap: 15px;
     text-align: left;
-    margin-top: 20px;
+    margin-top: 10px;
+    padding-bottom: 20px;
 }
 
 .message {
@@ -118,14 +144,12 @@ body {
     align-self: flex-end;
     background: #000;
     color: white;
-    border-bottom-right-radius: 5px;
 }
 
 .ai-msg {
     align-self: flex-start;
     background: #fff;
     color: #374151;
-    border-bottom-left-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -134,22 +158,18 @@ body {
     color: #6b7280;
     font-style: italic;
     margin-left: 5px;
-    display: flex;
-    align-items: center;
+    padding: 5px;
 }
 
-/* 푸터 */
+/* 7. 공통 푸터 */
 .app-footer {
-    margin-top: 4rem;
-    background: white;
-    padding: 15px 30px;
-    border-radius: 50px;
-    display: inline-block;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    margin-top: 3rem;
+    color: #9ca3af;
     font-size: 0.8rem;
-    color: #6b7280;
+    padding: 20px;
 }
 
+/* 무지개 애니메이션 */
 @keyframes gradientMove {
     0% { background-position: 0% 50% }
     50% { background-position: 100% 50% }
