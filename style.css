@@ -1,6 +1,6 @@
 /* ========================================
-   Chat K plus v2.5.3 - V10 Full Codebase
-   Studio Ferrari - 2026.06.05 Hotfix
+   Chat K plus v2.5.3 - Layout Fixed
+   Studio Ferrari - 2026.06.06
    ======================================== */
 
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
@@ -92,9 +92,83 @@ body.modal-open {
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
 }
 
-/* ===== HEADER BAR - 사진 문제 해결 ===== */
+/* ===== SCREEN CONTROL - 핵심 수정 ===== */
+#home-screen,
+#chat-screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary-dark);
+}
+
+body.light-mode #home-screen,
+body.light-mode #chat-screen {
+    background: var(--bg-primary-light);
+}
+
+#home-screen {
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#chat-screen {
+    z-index: 20;
+}
+
+/* 강제 숨김 - 이게 없으면 사진처럼 겹침 */
+#home-screen.hidden,
+#chat-screen.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+
+/* ===== HOME SCREEN ===== */
+.home-content {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.home-title {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--primary-dark), #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-mode .home-title {
+    background: linear-gradient(135deg, var(--primary-light), #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.home-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary-dark);
+    margin-bottom: 40px;
+}
+
+body.light-mode .home-subtitle {
+    color: var(--text-secondary-light);
+}
+
+/* ===== HEADER BAR ===== */
 #chat-header-bar {
     position: sticky;
     top: 0;
@@ -107,6 +181,7 @@ body.modal-open {
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-dark);
     transition: all 0.3s var(--transition);
+    flex-shrink: 0;
 }
 
 body.light-mode #chat-header-bar {
@@ -130,7 +205,9 @@ body.light-mode #chat-header-bar {
     line-height: 1.2;
 }
 
-#theme-toggle {
+#theme-toggle,
+#theme-toggle-chat,
+#back-btn {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -143,28 +220,37 @@ body.light-mode #chat-header-bar {
     justify-content: center;
     font-size: 18px;
     transition: all 0.2s var(--transition);
+    flex-shrink: 0;
 }
 
-body.light-mode #theme-toggle {
+body.light-mode #theme-toggle,
+body.light-mode #theme-toggle-chat,
+body.light-mode #back-btn {
     border-color: var(--border-light);
     background: var(--bg-secondary-light);
     color: var(--text-primary-light);
 }
 
-#theme-toggle:hover {
-    transform: scale(1.05) rotate(15deg);
+#theme-toggle:hover,
+#theme-toggle-chat:hover,
+#back-btn:hover {
+    transform: scale(1.05);
     border-color: var(--primary-dark);
 }
 
-body.light-mode #theme-toggle:hover {
+body.light-mode #theme-toggle:hover,
+body.light-mode #theme-toggle-chat:hover,
+body.light-mode #back-btn:hover {
     border-color: var(--primary-light);
 }
 
-#theme-toggle:active {
+#theme-toggle:active,
+#theme-toggle-chat:active,
+#back-btn:active {
     transform: scale(0.95);
 }
 
-/* ===== SEARCH INPUT - 사진 문제 해결 ===== */
+/* ===== SEARCH INPUT ===== */
 .search-container {
     position: relative;
     width: 100%;
@@ -222,7 +308,6 @@ body.light-mode #search-input:focus {
     background: var(--bg-tertiary-dark);
     color: var(--text-tertiary-dark);
     cursor: not-allowed;
-    pointer-events: none;
     opacity: 0.5;
     font-size: 18px;
     font-weight: 600;
@@ -241,7 +326,6 @@ body.light-mode #search-btn {
     background: var(--primary-dark);
     color: white;
     cursor: pointer;
-    pointer-events: auto;
     opacity: 1;
 }
 
@@ -262,7 +346,49 @@ body.light-mode #search-btn.active:hover {
     transform: translateY(-50%) scale(0.92);
 }
 
-/* ===== WARNING BANNER - 사진 속 경고문 정리 ===== */
+/* ===== EXAMPLE QUESTIONS ===== */
+#example-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.question-tag {
+    padding: 10px 18px;
+    background: var(--bg-secondary-dark);
+    border: 1.5px solid var(--border-dark);
+    border-radius: var(--radius-full);
+    color: var(--text-primary-dark);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s var(--transition-fast);
+}
+
+body.light-mode .question-tag {
+    background: var(--bg-secondary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+.question-tag:hover {
+    border-color: var(--primary-dark);
+    background: var(--primary-bg-dark);
+    transform: translateY(-2px);
+}
+
+body.light-mode .question-tag:hover {
+    border-color: var(--primary-light);
+    background: var(--primary-bg-light);
+}
+
+.question-tag:active {
+    transform: scale(0.97);
+}
+
+/* ===== WARNING BANNER ===== */
 .warning-banner {
     margin: 0 20px 16px;
     padding: 12px 16px;
@@ -275,6 +401,7 @@ body.light-mode #search-btn.active:hover {
     font-size: 13px;
     color: var(--text-secondary-dark);
     animation: slideDown 0.3s var(--transition);
+    flex-shrink: 0;
 }
 
 body.light-mode .warning-banner {
@@ -308,6 +435,7 @@ body.light-mode .warning-banner {
     flex-direction: column;
     gap: 20px;
     scroll-behavior: smooth;
+    min-height: 0;
 }
 
 #chat-container::-webkit-scrollbar {
@@ -450,7 +578,7 @@ body.light-mode .thinking-msg {
 
 /* ===== CHAT INPUT AREA ===== */
 #chat-input-area {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 0;
     right: 0;
@@ -461,6 +589,7 @@ body.light-mode .thinking-msg {
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--border-dark);
     z-index: 90;
+    flex-shrink: 0;
 }
 
 body.light-mode #chat-input-area {
@@ -507,16 +636,15 @@ body.light-mode #chat-input:focus {
     box-shadow: 0 0 0 4px var(--primary-bg-light);
 }
 
-#send-btn {
+#chat-send-btn,
+#timetable-btn {
     width: 48px;
     height: 48px;
     border-radius: 50%;
     border: none;
     background: var(--bg-tertiary-dark);
     color: var(--text-tertiary-dark);
-    cursor: not-allowed;
-    pointer-events: none;
-    opacity: 0.5;
+    cursor: pointer;
     font-size: 20px;
     transition: all 0.2s var(--transition);
     display: flex;
@@ -525,37 +653,45 @@ body.light-mode #chat-input:focus {
     flex-shrink: 0;
 }
 
-body.light-mode #send-btn {
+body.light-mode #chat-send-btn,
+body.light-mode #timetable-btn {
     background: var(--bg-tertiary-light);
     color: var(--text-tertiary-light);
 }
 
-#send-btn.active {
+#chat-send-btn {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#chat-send-btn.active {
     background: var(--primary-dark);
     color: white;
     cursor: pointer;
-    pointer-events: auto;
     opacity: 1;
 }
 
-body.light-mode #send-btn.active {
+body.light-mode #chat-send-btn.active {
     background: var(--primary-light);
 }
 
-#send-btn.active:hover {
+#chat-send-btn.active:hover,
+#timetable-btn:hover {
     background: var(--primary-hover-dark);
     transform: scale(1.05);
 }
 
-body.light-mode #send-btn.active:hover {
+body.light-mode #chat-send-btn.active:hover,
+body.light-mode #timetable-btn:hover {
     background: var(--primary-hover-light);
 }
 
-#send-btn.active:active {
+#chat-send-btn.active:active,
+#timetable-btn:active {
     transform: scale(0.92);
 }
 
-/* ===== MODAL SYSTEM V10 - 완전 재설계 ===== */
+/* ===== MODAL SYSTEM ===== */
 .modal {
     position: fixed;
     inset: 0;
@@ -775,7 +911,54 @@ body.light-mode .btn-primary:hover {
     min-height: 0;
 }
 
-/* Form Elements */
+.timetable-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.school-option {
+    padding: 16px;
+    background: var(--bg-secondary-dark);
+    border: 2px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    color: var(--text-primary-dark);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s var(--transition);
+    text-align: center;
+}
+
+body.light-mode .school-option {
+    background: var(--bg-secondary-light);
+    border-color: var(--border-light);
+    color: var(--text-primary-light);
+}
+
+.school-option:hover {
+    border-color: var(--primary-dark);
+    background: var(--primary-bg-dark);
+}
+
+body.light-mode .school-option:hover {
+    border-color: var(--primary-light);
+    background: var(--primary-bg-light);
+}
+
+.school-option.selected {
+    border-color: var(--primary-dark);
+    background: var(--primary-bg-dark);
+    color: var(--primary-dark);
+}
+
+body.light-mode .school-option.selected {
+    border-color: var(--primary-light);
+    background: var(--primary-bg-light);
+    color: var(--primary-light);
+}
+
 .form-group {
     margin-bottom: 20px;
 }
@@ -952,138 +1135,3 @@ body.light-mode .loading-text {
 }
 
 #external-link-warning .modal-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-}
-
-#external-link-warning .modal-body {
-    text-align: center;
-    padding: 24px 24px 32px;
-}
-
-#warning-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
-    animation: bounce 0.6s var(--transition);
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-#warning-site-name {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 10px;
-    word-break: break-word;
-}
-
-#warning-desc {
-    font-size: 14px;
-    color: var(--text-secondary-dark);
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-body.light-mode #warning-desc {
-    color: var(--text-secondary-light);
-}
-
-#warning-url {
-    font-size: 13px;
-    color: var(--text-tertiary-dark);
-    word-break: break-all;
-    padding: 14px;
-    background: var(--bg-secondary-dark);
-    border-radius: var(--radius-md);
-    font-family: 'SF Mono', 'Monaco', monospace;
-}
-
-body.light-mode #warning-url {
-    color: var(--text-tertiary-light);
-    background: var(--bg-secondary-light);
-}
-
-#external-link-warning .modal-actions {
-    padding: 0 24px 24px;
-    border-top: none;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-    #chat-header-bar {
-        padding: 14px 16px 10px;
-    }
-    
-    #chat-title {
-        font-size: 22px;
-    }
-    
-    #chat-container {
-        padding: 0 16px 16px;
-        gap: 16px;
-    }
-    
-    .message-bubble {
-        max-width: 88%;
-        font-size: 15px;
-    }
-    
-    .modal-content {
-        border-radius: 24px 24px 0 0;
-    }
-    
-    .modal-header {
-        padding: 8px 20px 14px;
-    }
-    
-    .modal-title {
-        font-size: 20px;
-    }
-    
-    .modal-body {
-        padding: 0 20px 20px;
-    }
-    
-    .modal-actions {
-        padding: 14px 20px;
-        padding-bottom: calc(14px + env(safe-area-inset-bottom));
-    }
-    
-    .btn {
-        height: 52px;
-        font-size: 15px;
-    }
-    
-    #theme-toggle {
-        width: 44px;
-        height: 44px;
-        bottom: 20px;
-        right: 16px;
-    }
-}
-
-/* ===== SAFE AREA ===== */
-@supports (padding: max(0px)) {
-    #app-wrapper {
-        padding-left: max(0px, env(safe-area-inset-left));
-        padding-right: max(0px, env(safe-area-inset-right));
-    }
-    
-    #chat-header-bar {
-        padding-top: max(16px, env(safe-area-inset-top));
-    }
-}
-
-/* ===== ACCESSIBILITY ===== */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
