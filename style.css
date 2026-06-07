@@ -725,3 +725,42 @@ body {
         background: white;
     }
 }
+
+/* ========== 정책 위반 경고 메시지 ========== */
+.message.ai-msg.policy-warning {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+    border: 1.5px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    position: relative;
+    overflow: hidden;
+}
+
+.message.ai-msg.policy-warning::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ef4444, #dc2626, #ef4444);
+    background-size: 200% 100%;
+    animation: warningBar 2s linear infinite;
+}
+
+@keyframes warningBar {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@media (prefers-color-scheme: light) {
+    .message.ai-msg.policy-warning {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(220, 38, 38, 0.05));
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #dc2626;
+    }
+}
+
+.message.ai-msg.policy-warning strong {
+    color: #ef4444;
+    font-weight: 800;
+}
