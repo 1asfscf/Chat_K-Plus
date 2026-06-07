@@ -83,7 +83,7 @@ const System = {
         
         // URL을 클릭 가능한 링크로 변환 (모달용)
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        if (urlRegex.test(text)) {
+        if (text.match(urlRegex)) {
             msg.innerHTML = text.replace(urlRegex, url => 
                 `<a href="#" class="external-link" data-url="${url}">${url}</a>`
             );
