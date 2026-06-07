@@ -231,49 +231,44 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ========== 입력바 - 모던 ========== */
+/* ========== 입력바 - 앱 형식 고정 ========== */
 .chat-footer {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 8px;
-    padding: 10px 12px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    padding: 8px 12px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom));
     background: var(--chat-bg);
     border-top: 1px solid var(--border);
     flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
 }
+
 .chat-input {
     flex: 1;
-    height: 42px;
-    padding: 0 16px;
+    min-height: 42px;
+    max-height: 120px;
+    padding: 10px 16px;
     background: var(--bg-main);
     border: 1px solid var(--border);
     border-radius: 21px;
     font-size: 15px;
+    line-height: 1.4;
     color: var(--text-primary);
     outline: none;
+    resize: none;
+    overflow-y: auto;
+    font-family: inherit;
+    /* 앱처럼 줄어들지 않게 */
+    height: auto;
+    box-sizing: border-box;
 }
 .chat-input:focus { border-color: #3b82f6; }
-.chat-input::placeholder { color: var(--text-secondary); }
 
 .send-btn {
     width: 42px;
     height: 42px;
-    border: none;
-    border-radius: 50%;
-    background: var(--bg-main);
-    color: var(--text-secondary);
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: all 0.2s;
+    margin-bottom: 0px;
+    align-self: flex-end;
 }
-.send-btn:disabled { opacity: 0.4; }
-.send-btn.active {
-    background: #2563eb;
-    color: white;
-}
-.send-btn.active:active { transform: scale(0.92); }
