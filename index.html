@@ -101,6 +101,40 @@
                 <button class="tab" data-day="fri">금</button>
             </div>
 
+                <!-- 수업 추가 모달 -->
+    <div id="addClassModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content add-class-modal">
+            <h3>수업 추가</h3>
+            <div class="form-group">
+                <label>요일</label>
+                <select id="classDay">
+                    <option value="mon">월요일</option>
+                    <option value="tue">화요일</option>
+                    <option value="wed">수요일</option>
+                    <option value="thu">목요일</option>
+                    <option value="fri">금요일</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>시간</label>
+                <input type="text" id="classTime" placeholder="09:00-10:30">
+            </div>
+            <div class="form-group">
+                <label>과목</label>
+                <input type="text" id="classSubject" placeholder="수학">
+            </div>
+            <div class="form-group">
+                <label>교실</label>
+                <input type="text" id="classRoom" placeholder="3-2">
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelAdd" class="modal-btn cancel">취소</button>
+                <button id="saveAdd" class="modal-btn go">저장</button>
+            </div>
+        </div>
+    </div>
+
             <div id="timetableContent" class="timetable-content">
                 <!-- 데모: 월요일 시간표 -->
                 <div class="timetable-item">
