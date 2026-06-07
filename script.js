@@ -81,6 +81,12 @@ const System = {
         const msg = document.createElement('div');
         msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
         
+        // 정책 경고 스타일 적용
+        if (window.__isPolicyWarning) {
+            msg.classList.add('policy-warning');
+            window.__isPolicyWarning = false;
+        }
+        
         // URL을 클릭 가능한 링크로 변환 (모달용)
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         if (text.match(urlRegex)) {
@@ -88,7 +94,7 @@ const System = {
                 `<a href="#" class="external-link" data-url="${url}">${url}</a>`
             );
         } else {
-            msg.textContent = text;
+            msg.innerHTML = text; // ← textContent에서 변경
         }
         
         UI.chatBox.appendChild(msg);
@@ -117,7 +123,7 @@ const System = {
         }
         thinking.remove();
 
-              // === 1. 정규화 ===
+        // === 1. 정규화 ===
         const q = query.trim();
         const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
 
@@ -213,32 +219,15 @@ const System = {
 
         this.addMessage(answer, 'ai');
         this.isThinking = false;
-
-            addMessage(text, type) {
-        const msg = document.createElement('div');
-        msg.className = `message ${type === 'user'? 'user-msg' : 'ai-msg'}`;
-
-        // 정책 경고 스타일 적용
-        if (window.__isPolicyWarning) {
-            msg.classList.add('policy-warning');
-            window.__isPolicyWarning = false;
-        }
-
-        // URL을 클릭 가능한 링크로 변환
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        if (text.match(urlRegex)) {
-            msg.innerHTML = text.replace(urlRegex, url =>
-                `<a href="#" class="external-link" data-url="${url}">${url}</a>`
-            );
-        } else {
-            msg.innerHTML = text;
-        }
-
-        UI.chatBox.appendChild(msg);
-        UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
-        return msg;
     },
 
+    updateSendButton() {
+        const hasText = UI.chatInput.value.trim().length > 0;
+        UI.sendBtn.disabled = !hasText;
+        UI.sendBtn.classList.toggle('active', hasText);
+    }
+};
+    
 // ==========================================
 // 4. 이벤트
 // ==================================
