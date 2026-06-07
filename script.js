@@ -80,7 +80,17 @@ const System = {
     addMessage(text, type) {
         const msg = document.createElement('div');
         msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
-        msg.textContent = text;
+        
+        // URL을 클릭 가능한 링크로 변환 (모달용)
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        if (urlRegex.test(text)) {
+            msg.innerHTML = text.replace(urlRegex, url => 
+                `<a href="#" class="external-link" data-url="${url}">${url}</a>`
+            );
+        } else {
+            msg.textContent = text;
+        }
+        
         UI.chatBox.appendChild(msg);
         UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
         return msg;
@@ -116,7 +126,7 @@ const System = {
         // === 2. 완전 일치 ===
         if (DB[q]) answer = DB[q];
 
-        // === 3. 부분 일치 (DB 키가 질문에 포함되거나 반대) ===
+        // === 3. 부분 일치 ===
         if (!answer) {
             for (const key in DB) {
                 const nk = key.toLowerCase();
@@ -176,34 +186,33 @@ const System = {
     }
 };
 
-    // ==========================================
-    // 4. 이벤트
-    // ==========================================
+// ==========================================
+// 4. 이벤트
+// ==================================
     
-    // 메인 검색
-    const updateMainBtn = () => {
-        UI.btn.disabled = UI.input.value.trim().length === 0;
-    };
-    
-    UI.input.addEventListener('input', updateMainBtn);
-    UI.input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !UI.btn.disabled) {
-            System.runReasoning(UI.input.value.trim());
-            UI.input.value = '';
-            updateMainBtn();
-        }
-    });
-    
-    UI.btn.addEventListener('click', () => {
+// 메인 검색
+const updateMainBtn = () => {
+    UI.btn.disabled = UI.input.value.trim().length === 0;
+};
+
+UI.input.addEventListener('input', updateMainBtn);
+UI.input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !UI.btn.disabled) {
         System.runReasoning(UI.input.value.trim());
         UI.input.value = '';
         updateMainBtn();
-    });
+    }
+});
 
-    // 채팅 입력바 (모던화)
+UI.btn.addEventListener('click', () => {
+    System.runReasoning(UI.input.value.trim());
+    UI.input.value = '';
+    updateMainBtn();
+});
+
+// 채팅 입력바 (모던화)
 UI.chatInput.addEventListener('input', () => {
     System.updateSendButton();
-    // 자동 높이 조절
     UI.chatInput.style.height = 'auto';
     UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
 });
@@ -225,28 +234,51 @@ UI.chatInput.addEventListener('focus', () => {
     setTimeout(() => UI.chatBox.scrollTop = UI.chatBox.scrollHeight, 300);
 });
 
-    UI.sendBtn.addEventListener('click', () => {
-        if (UI.sendBtn.disabled) return;
-        System.runReasoning(UI.chatInput.value.trim());
-        UI.chatInput.value = '';
-        UI.chatInput.style.height = 'auto';
-        System.updateSendButton();
-    });
-
-    // 뒤로가기
-    UI.backBtn.addEventListener('click', () => {
-        System.switchView(false);
-        UI.chatBox.innerHTML = '';
-    });
-
-    // 예시 버튼
-    UI.examples.forEach(btn => {
-        btn.addEventListener('click', () => {
-            System.runReasoning(btn.textContent.trim());
-        });
-    });
-
-    // 초기 상태
-    updateMainBtn();
+UI.sendBtn.addEventListener('click', () => {
+    if (UI.sendBtn.disabled) return;
+    System.runReasoning(UI.chatInput.value.trim());
+    UI.chatInput.value = '';
+    UI.chatInput.style.height = 'auto';
     System.updateSendButton();
+});
+
+// 뒤로가기
+UI.backBtn.addEventListener('click', () => {
+    System.switchView(false);
+    UI.chatBox.innerHTML = '';
+});
+
+// 예시 버튼
+UI.examples.forEach(btn => {
+    btn.addEventListener('click', () => {
+        System.runReasoning(btn.textContent.trim());
+    });
+});
+
+// === 링크 경고 모달 ===
+const linkModal = document.getElementById('linkModal');
+const modalUrl = document.getElementById('modalUrl');
+const modalCancel = document.getElementById('modalCancel');
+const modalGo = document.getElementById('modalGo');
+let pendingUrl = '';
+
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('external-link')) {
+        e.preventDefault();
+        pendingUrl = e.target.dataset.url;
+        modalUrl.textContent = pendingUrl;
+        linkModal.classList.remove('hidden');
+    }
+});
+
+if (modalCancel) modalCancel.onclick = () => linkModal.classList.add('hidden');
+if (modalGo) modalGo.onclick = () => {
+    window.open(pendingUrl, '_blank');
+    linkModal.classList.add('hidden');
+};
+if (linkModal) linkModal.querySelector('.modal-backdrop').onclick = () => linkModal.classList.add('hidden');
+
+// 초기 상태
+updateMainBtn();
+System.updateSendButton();
 });
