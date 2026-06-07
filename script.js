@@ -337,29 +337,18 @@ function loadTimetable(day) {
         // 길게 누르면 삭제
         document.querySelectorAll('.timetable-item').forEach(el => {
             let pressTimer;
-            el.addEventListener('touchstart', () => {
-                pressTimer = setTimeout(() => {
-                    if (confirm('이 수업을 삭제할까요?')) {
-                        const idx = parseInt(el.dataset.idx);
-                        const data = getTimetable();
-                        data[day].splice(idx, 1);
-                        saveTimetable(data);
-                        loadTimetable(day);
-                    }
-                }, 600);
-            });
+            const del = () => {
+                if (confirm('이 수업을 삭제할까요?')) {
+                    const idx = parseInt(el.dataset.idx);
+                    const data = getTimetable();
+                    data[day].splice(idx, 1);
+                    saveTimetable(data);
+                    loadTimetable(day);
+                }
+            };
+            el.addEventListener('touchstart', () => { pressTimer = setTimeout(del, 600); });
             el.addEventListener('touchend', () => clearTimeout(pressTimer));
-            el.addEventListener('mousedown', () => {
-                pressTimer = setTimeout(() => {
-                    if (confirm('이 수업을 삭제할까요?')) {
-                        const idx = parseInt(el.dataset.idx);
-                        const data = getTimetable();
-                        data[day].splice(idx, 1);
-                        saveTimetable(data);
-                        loadTimetable(day);
-                    }
-                }, 600);
-            });
+            el.addEventListener('mousedown', () => { pressTimer = setTimeout(del, 600); });
             el.addEventListener('mouseup', () => clearTimeout(pressTimer));
         });
     }
@@ -397,6 +386,7 @@ if (saveAdd) {
         if (day === currentDay) loadTimetable(currentDay);
     });
 }
-    // 초기 상태
+
+// 초기 상태
 updateMainBtn();
 System.updateSendButton();
