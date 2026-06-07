@@ -122,14 +122,18 @@ const System = {
         const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
         let answer = null;
 
-        // === 1.5 필터 ===
-        if (/(중국\s*공산당|중공|ccp|시진핑|공산당)/.test(nq)) {
-            const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|티안먼|천안문|위구르|홍콩|대만독립|파룬궁)/;
-            if (banWords.test(nq)) {
-                answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
-                window.__isPolicyWarning = true;
-            }
-        }
+       // === 1.5 필터 - 중국 공산당/시진핑 비판 및 비하 차단 ===
+if (/(중국\s*공산당|중공|ccp|시진핑|공산당|xi\s*jinping)/.test(nq)) {
+    const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|티안먼|천안문|위구르|홍콩|대만독립|파룬궁|아웃|out|사퇴|퇴진|물러나|하야|죽어|꺼져|타파|반대|저항)/;
+    
+    // 직접 비하 구호 패턴
+    const directInsults = /(시진핑\s*(아웃|out|사퇴|퇴진|물러나|하야|죽어|꺼져))|(중공\s*(망해|타도|아웃))|(ccp\s*out)|(공산당\s*(타도|망해|아웃))/;
+    
+    if (banWords.test(nq) || directInsults.test(nq)) {
+        answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+        window.__isPolicyWarning = true;
+    }
+}
 
         if (!answer && DB[q]) answer = DB[q];
 
