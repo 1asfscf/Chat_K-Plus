@@ -63,65 +63,118 @@ const DB = {
     "챗지피티": "ChatGPT 공식 사이트는 https://chat.openai.com 입니다."
 };
 
-    // ==========================================
-    // 3. 시스템
-    // ==========================================
-    const System = {
-        isThinking: false,
+// ==========================================
+// 3. 시스템
+// ==========================================
+const System = {
+    isThinking: false,
 
-        switchView(isChat) {
-            UI.searchView.classList.toggle('hidden', isChat);
-            UI.chatView.classList.toggle('hidden', !isChat);
-            if (isChat) {
-                setTimeout(() => UI.chatInput.focus(), 100);
-            }
-        },
-
-        addMessage(text, type) {
-            const msg = document.createElement('div');
-            msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
-            msg.textContent = text;
-            UI.chatBox.appendChild(msg);
-            UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
-            return msg;
-        },
-
-        // [수정] 추론 과정을 하나로 통합
-        async runReasoning(query) {
-            if (!query || this.isThinking) return;
-            this.isThinking = true;
-
-            this.switchView(true);
-            this.addMessage(query, 'user');
-
-            // 하나의 thinking 버블 생성
-            const thinking = document.createElement('div');
-            thinking.className = 'message ai-msg thinking';
-            thinking.innerHTML = `<span class="thinking-icon">⚙️</span> <span class="thinking-text">분석 중...</span>`;
-            UI.chatBox.appendChild(thinking);
-            UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
-
-            // 텍스트만 변경 (4단계)
-            const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
-            for (let i = 0; i < steps.length; i++) {
-                thinking.querySelector('.thinking-text').textContent = steps[i];
-                await new Promise(r => setTimeout(r, 500));
-            }
-
-            // thinking 제거하고 답변
-            thinking.remove();
-            const answer = DB[query] || `"${query}"에 대해 학습된 내용이 없습니다. 다른 질문을 해보세요.`;
-            this.addMessage(answer, 'ai');
-            
-            this.isThinking = false;
-        },
-
-        updateSendButton() {
-            const hasText = UI.chatInput.value.trim().length > 0;
-            UI.sendBtn.disabled = !hasText;
-            UI.sendBtn.classList.toggle('active', hasText);
+    switchView(isChat) {
+        UI.searchView.classList.toggle('hidden', isChat);
+        UI.chatView.classList.toggle('hidden', !isChat);
+        if (isChat) {
+            setTimeout(() => UI.chatInput.focus(), 100);
         }
-    };
+    },
+
+    addMessage(text, type) {
+        const msg = document.createElement('div');
+        msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
+        msg.textContent = text;
+        UI.chatBox.appendChild(msg);
+        UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+        return msg;
+    },
+
+    // [완전 개편] 똑똑한 추론
+    async runReasoning(query) {
+        if (!query || this.isThinking) return;
+        this.isThinking = true;
+
+        this.switchView(true);
+        this.addMessage(query, 'user');
+
+        const thinking = document.createElement('div');
+        thinking.className = 'message ai-msg thinking';
+        thinking.innerHTML = `<span class="thinking-icon"></span> <span class="thinking-text">분석 중...</span>`;
+        UI.chatBox.appendChild(thinking);
+        UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+
+        const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
+        for (let step of steps) {
+            thinking.querySelector('.thinking-text').textContent = step;
+            await new Promise(r => setTimeout(r, 400));
+        }
+        thinking.remove();
+
+        // === 1. 정규화 ===
+        const q = query.trim();
+        const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
+
+        let answer = null;
+
+        // === 2. 완전 일치 ===
+        if (DB[q]) answer = DB[q];
+
+        // === 3. 부분 일치 (DB 키가 질문에 포함되거나 반대) ===
+        if (!answer) {
+            for (const key in DB) {
+                const nk = key.toLowerCase();
+                if (nq.includes(nk) || nk.includes(nq)) {
+                    answer = DB[key];
+                    break;
+                }
+            }
+        }
+
+        // === 4. 패턴 매칭 - 공식 사이트 ===
+        if (!answer && /공식.*사이트|사이트.*알려|홈페이지/.test(nq)) {
+            const sites = {
+                '네이버': 'https://www.naver.com',
+                '다음': 'https://www.daum.net',
+                '구글': 'https://www.google.com',
+                '유튜브': 'https://www.youtube.com',
+                '인스타': 'https://www.instagram.com',
+                '카카오': 'https://www.kakaocorp.com',
+                '쿠팡': 'https://www.coupang.com',
+                'chatgpt': 'https://chat.openai.com',
+                '챗지피티': 'https://chat.openai.com'
+            };
+            for (const name in sites) {
+                if (nq.includes(name)) {
+                    answer = `${name} 공식 사이트는 ${sites[name]} 입니다.`;
+                    break;
+                }
+            }
+        }
+
+        // === 5. 패턴 매칭 - AI 자기소개 ===
+        if (!answer && /(너|니|당신).*(누구|뭐|정체|소개|누구야|뭐야)/.test(nq)) {
+            answer = "저는 Chat K plus의 AI 어시스턴트입니다. 질문에 답하고 정보를 찾아드려요!";
+        }
+
+        // === 6. 패턴 매칭 - 중국 ===
+        if (!answer && nq.includes('중국')) {
+            if (nq.includes('수도')) answer = DB["중국 수도"];
+            else if (nq.includes('인구')) answer = DB["중국 인구"];
+            else answer = DB["중국"];
+        }
+
+        // === 7. 최종 fallback ===
+        if (!answer) {
+            answer = `"${q}"에 대해 학습된 내용이 없습니다. 다른 질문을 해보세요.`;
+        }
+
+        this.addMessage(answer, 'ai');
+        this.isThinking = false;
+    },
+
+    updateSendButton() {
+        const hasText = UI.chatInput.value.trim().length > 0;
+        UI.sendBtn.disabled = !hasText;
+        UI.sendBtn.classList.toggle('active', hasText);
+    }
+};
 
     // ==========================================
     // 4. 이벤트
