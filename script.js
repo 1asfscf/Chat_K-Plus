@@ -387,6 +387,7 @@ if (saveAdd) {
     });
 }
 
+// 초기 상태
 updateMainBtn();
 System.updateSendButton();
-});
+});   // ← 이 한 줄
