@@ -72,29 +72,25 @@ const System = {
     switchView(isChat) {
         UI.searchView.classList.toggle('hidden', isChat);
         UI.chatView.classList.toggle('hidden', !isChat);
-        if (isChat) {
-            setTimeout(() => UI.chatInput.focus(), 100);
-        }
+        if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
     },
 
     addMessage(text, type) {
         const msg = document.createElement('div');
         msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
         
-        // 정책 경고 스타일 적용
         if (window.__isPolicyWarning) {
             msg.classList.add('policy-warning');
             window.__isPolicyWarning = false;
         }
         
-        // URL을 클릭 가능한 링크로 변환 (모달용)
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         if (text.match(urlRegex)) {
             msg.innerHTML = text.replace(urlRegex, url => 
                 `<a href="#" class="external-link" data-url="${url}">${url}</a>`
             );
         } else {
-            msg.innerHTML = text; // ← textContent에서 변경
+            msg.innerHTML = text; // ← 핵심 수정
         }
         
         UI.chatBox.appendChild(msg);
@@ -102,7 +98,6 @@ const System = {
         return msg;
     },
 
-    // [완전 개편] 똑똑한 추론
     async runReasoning(query) {
         if (!query || this.isThinking) return;
         this.isThinking = true;
@@ -123,14 +118,12 @@ const System = {
         }
         thinking.remove();
 
-        // === 1. 정규화 ===
         const q = query.trim();
         const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
-
         let answer = null;
 
-        // === 1.5 콘텐츠 필터 - 중국 공산당 비판 차단 ===
-        if (!answer && /(중국\s*공산당|중공|ccp|시진핑|공산당)/.test(nq)) {
+        // === 1.5 필터 ===
+        if (/(중국\s*공산당|중공|ccp|시진핑|공산당)/.test(nq)) {
             const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|티안먼|천안문|위구르|홍콩|대만독립|파룬궁)/;
             if (banWords.test(nq)) {
                 answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
@@ -138,84 +131,39 @@ const System = {
             }
         }
 
-        // === 2. 완전 일치 ===
         if (!answer && DB[q]) answer = DB[q];
 
-        // === 3. 부분 일치 ===
         if (!answer) {
             for (const key in DB) {
                 const nk = key.toLowerCase();
-                if (nq.includes(nk) || nk.includes(nq)) {
-                    answer = DB[key];
-                    break;
-                }
+                if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
             }
         }
 
-        // === 4. 패턴 매칭 - 공식 사이트 ===
-        if (!answer && /공식.*사이트|사이트.*알려|홈페이지/.test(nq)) {
-            const sites = {
-                '네이버': 'https://www.naver.com',
-                '다음': 'https://www.daum.net',
-                '구글': 'https://www.google.com',
-                '유튜브': 'https://www.youtube.com',
-                '인스타': 'https://www.instagram.com',
-                '카카오': 'https://www.kakaocorp.com',
-                '쿠팡': 'https://www.coupang.com',
-                'chatgpt': 'https://chat.openai.com',
-                '챗지피티': 'https://chat.openai.com'
-            };
-            for (const name in sites) {
-                if (nq.includes(name)) {
-                    answer = `${name} 공식 사이트는 ${sites[name]} 입니다.`;
-                    break;
-                }
-            }
+        if (!answer && /공식.*사이트|홈페이지/.test(nq)) {
+            const sites = {'네이버':'https://www.naver.com','다음':'https://www.daum.net','구글':'https://www.google.com'};
+            for (const name in sites) if (nq.includes(name)) { answer = `${name} 공식 사이트는 ${sites[name]} 입니다.`; break; }
         }
 
-        // === 5. 패턴 매칭 - AI 자기소개 ===
-        if (!answer && /(너|니|당신).*(누구|뭐|정체|소개|누구야|뭐야)/.test(nq)) {
-            answer = "저는 Chat K plus의 AI 어시스턴트입니다. 질문에 답하고 정보를 찾아드려요!";
-        }
+        if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
 
-        // === 6. 패턴 매칭 - 중국 ===
         if (!answer && nq.includes('중국')) {
             if (nq.includes('수도')) answer = DB["중국 수도"];
             else if (nq.includes('인구')) answer = DB["중국 인구"];
             else answer = DB["중국"];
         }
 
-        // === 7. 패턴 매칭 - 시간표 ===
-        if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+        if (!answer && /(시간표|수업)/.test(nq)) {
             const data = getTimetable();
             const today = new Date().getDay();
             const days = ['sun','mon','tue','wed','thu','fri','sat'];
-            let targetDay = 'mon';
-
-            if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
-            else if (nq.includes('월')) targetDay = 'mon';
-            else if (nq.includes('화')) targetDay = 'tue';
-            else if (nq.includes('수')) targetDay = 'wed';
-            else if (nq.includes('목')) targetDay = 'thu';
-            else if (nq.includes('금')) targetDay = 'fri';
-            else targetDay = days[today === 0? 1 : today];
-
+            const targetDay = days[today === 0 ? 1 : today];
             const list = data[targetDay] || [];
-            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
-
-            if (list.length === 0) {
-                answer = `${dayName}요일 수업이 없습니다.`;
-            } else {
-                answer = `${dayName}요일 시간표:\n` + list.map(it =>
-                    `${it.time} ${it.subject} ${it.room}`
-                ).join('\n');
-            }
+            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
+            answer = list.length ? `${dayName}요일 시간표:\n` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('\n') : `${dayName}요일 수업이 없습니다.`;
         }
 
-        // === 8. 최종 fallback ===
-        if (!answer) {
-            answer = `"${q}"에 대해 학습된 내용이 없습니다. 다른 질문을 해보세요.`;
-        }
+        if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
 
         this.addMessage(answer, 'ai');
         this.isThinking = false;
