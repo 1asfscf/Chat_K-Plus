@@ -256,6 +256,7 @@ body {
 
 /* ========== 채팅 입력창 - iOS26 스타일 ========== */
 .chat-box {
+    padding: 20px 14px;
     padding-bottom: 110px !important;
 }
 
