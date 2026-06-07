@@ -255,6 +255,19 @@ UI.examples.forEach(btn => {
     });
 });
 
+// === 시간표 버튼 (모바일 전용) ===
+const timetableBtn = document.getElementById('timetableBtn');
+if (timetableBtn) {
+    timetableBtn.addEventListener('click', () => {
+        // 모바일 전용 시간표 기능
+        System.switchView(true);
+        System.addMessage('📅 시간표', 'user');
+        setTimeout(() => {
+            System.addMessage('시간표 기능이 열렸습니다!\n\n• 월~금 수업 추가\n• 알림 설정\n• 오늘 시간표 보기\n\n(현재 데모 버전)', 'ai');
+        }, 300);
+    });
+}
+
 // === 링크 경고 모달 ===
 const linkModal = document.getElementById('linkModal');
 const modalUrl = document.getElementById('modalUrl');
