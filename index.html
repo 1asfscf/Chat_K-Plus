@@ -42,14 +42,17 @@
             </footer>
         </div>
 
-                <!-- ========== 채팅 화면 ========== -->
+        <!-- ========== 채팅 화면 ========== -->
         <div id="chat-view" class="hidden">
             <header class="chat-header">
                 <button id="backBtn" class="back-btn">← 뒤로</button>
             </header>
 
             <div id="chat-box" class="chat-box">
-                <!-- 메시지가 여기 추가됨 -->
+                <!-- 데모 텍스트 -->
+                <div class="message ai-msg">안녕하세요! Chat K plus입니다. 무엇을 도와드릴까요?</div>
+                <div class="message user-msg">시간표 기능 보여줘</div>
+                <div class="message ai-msg">왼쪽 📅 버튼을 누르면 시간표를 볼 수 있어요!</div>
             </div>
 
             <footer class="chat-footer">
@@ -77,6 +80,43 @@
             <div class="modal-buttons">
                 <button id="modalCancel" class="modal-btn cancel">취소</button>
                 <button id="modalGo" class="modal-btn go">이동</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 시간표 모달 -->
+    <div id="timetableModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content timetable-modal">
+            <div class="timetable-header">
+                <h3>📅 내 시간표</h3>
+                <button id="timetableClose" class="close-btn">×</button>
+            </div>
+
+            <div class="timetable-tabs">
+                <button class="tab active" data-day="mon">월</button>
+                <button class="tab" data-day="tue">화</button>
+                <button class="tab" data-day="wed">수</button>
+                <button class="tab" data-day="thu">목</button>
+                <button class="tab" data-day="fri">금</button>
+            </div>
+
+            <div id="timetableContent" class="timetable-content">
+                <!-- 데모: 월요일 시간표 -->
+                <div class="timetable-item">
+                    <div class="timetable-time">09:00-10:30</div>
+                    <div class="timetable-subject">수학</div>
+                    <div class="timetable-room">3-2</div>
+                </div>
+                <div class="timetable-item">
+                    <div class="timetable-time">11:00-12:30</div>
+                    <div class="timetable-subject">영어</div>
+                    <div class="timetable-room">2-1</div>
+                </div>
+            </div>
+
+            <div class="timetable-footer">
+                <button id="addClassBtn" class="timetable-add">+ 수업 추가</button>
             </div>
         </div>
     </div>
