@@ -260,71 +260,121 @@ const timetableBtn = document.getElementById('timetableBtn');
 const timetableModal = document.getElementById('timetableModal');
 const timetableClose = document.getElementById('timetableClose');
 const timetableContent = document.getElementById('timetableContent');
+const addClassBtn = document.getElementById('addClassBtn');
+const addClassModal = document.getElementById('addClassModal');
+const cancelAdd = document.getElementById('cancelAdd');
+const saveAdd = document.getElementById('saveAdd');
 
-if (timetableBtn) {
-    timetableBtn.addEventListener('click', () => {
-        timetableModal.classList.remove('hidden');
-        loadTimetable('mon');
-    });
-}
-if (timetableClose) timetableClose.onclick = () => timetableModal.classList.add('hidden');
-if (timetableModal) timetableModal.querySelector('.modal-backdrop').onclick = () => timetableModal.classList.add('hidden');
+let currentDay = 'mon';
 
-// 탭 전환
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        loadTimetable(tab.dataset.day);
-    });
-});
-
-function loadTimetable(day) {
-    const data = {
+function getTimetable() {
+    const saved = localStorage.getItem('timetable');
+    if (saved) return JSON.parse(saved);
+    return {
         mon: [{time:'09:00-10:30', subject:'수학', room:'3-2'}, {time:'11:00-12:30', subject:'영어', room:'2-1'}],
         tue: [{time:'10:00-11:30', subject:'과학', room:'실험실'}],
         wed: [],
         thu: [{time:'13:00-14:30', subject:'국어', room:'3-1'}],
         fri: [{time:'09:00-10:30', subject:'체육', room:'운동장'}]
     };
+}
+
+function saveTimetable(data) {
+    localStorage.setItem('timetable', JSON.stringify(data));
+}
+
+if (timetableBtn) {
+    timetableBtn.addEventListener('click', () => {
+        timetableModal.classList.remove('hidden');
+        loadTimetable(currentDay);
+    });
+}
+if (timetableClose) timetableClose.onclick = () => timetableModal.classList.add('hidden');
+if (timetableModal) timetableModal.querySelector('.modal-backdrop').onclick = () => timetableModal.classList.add('hidden');
+
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentDay = tab.dataset.day;
+        loadTimetable(currentDay);
+    });
+});
+
+function loadTimetable(day) {
+    const data = getTimetable();
     const list = data[day] || [];
     if (list.length === 0) {
         timetableContent.innerHTML = `<div class="timetable-empty">수업이 없습니다<br><span style="font-size:12px">+ 버튼으로 추가하세요</span></div>`;
     } else {
-        timetableContent.innerHTML = list.map(item => `
-            <div class="timetable-item">
+        timetableContent.innerHTML = list.map((item, idx) => `
+            <div class="timetable-item" data-idx="${idx}">
                 <div class="timetable-time">${item.time}</div>
                 <div class="timetable-subject">${item.subject}</div>
                 <div class="timetable-room">${item.room}</div>
             </div>
         `).join('');
+
+        // 길게 누르면 삭제
+        document.querySelectorAll('.timetable-item').forEach(el => {
+            let pressTimer;
+            el.addEventListener('touchstart', () => {
+                pressTimer = setTimeout(() => {
+                    if (confirm('이 수업을 삭제할까요?')) {
+                        const idx = parseInt(el.dataset.idx);
+                        const data = getTimetable();
+                        data[day].splice(idx, 1);
+                        saveTimetable(data);
+                        loadTimetable(day);
+                    }
+                }, 600);
+            });
+            el.addEventListener('touchend', () => clearTimeout(pressTimer));
+            el.addEventListener('mousedown', () => {
+                pressTimer = setTimeout(() => {
+                    if (confirm('이 수업을 삭제할까요?')) {
+                        const idx = parseInt(el.dataset.idx);
+                        const data = getTimetable();
+                        data[day].splice(idx, 1);
+                        saveTimetable(data);
+                        loadTimetable(day);
+                    }
+                }, 600);
+            });
+            el.addEventListener('mouseup', () => clearTimeout(pressTimer));
+        });
     }
 }
 
-// === 링크 경고 모달 ===
-const linkModal = document.getElementById('linkModal');
-const modalUrl = document.getElementById('modalUrl');
-const modalCancel = document.getElementById('modalCancel');
-const modalGo = document.getElementById('modalGo');
-let pendingUrl = '';
+if (addClassBtn) {
+    addClassBtn.addEventListener('click', () => {
+        document.getElementById('classDay').value = currentDay;
+        addClassModal.classList.remove('hidden');
+    });
+}
+if (cancelAdd) cancelAdd.onclick = () => addClassModal.classList.add('hidden');
+if (addClassModal) addClassModal.querySelector('.modal-backdrop').onclick = () => addClassModal.classList.add('hidden');
 
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('external-link')) {
-        e.preventDefault();
-        pendingUrl = e.target.dataset.url;
-        modalUrl.textContent = pendingUrl;
-        linkModal.classList.remove('hidden');
-    }
-});
+if (saveAdd) {
+    saveAdd.addEventListener('click', () => {
+        const day = document.getElementById('classDay').value;
+        const time = document.getElementById('classTime').value.trim();
+        const subject = document.getElementById('classSubject').value.trim();
+        const room = document.getElementById('classRoom').value.trim();
 
-if (modalCancel) modalCancel.onclick = () => linkModal.classList.add('hidden');
-if (modalGo) modalGo.onclick = () => {
-    window.open(pendingUrl, '_blank');
-    linkModal.classList.add('hidden');
-};
-if (linkModal) linkModal.querySelector('.modal-backdrop').onclick = () => linkModal.classList.add('hidden');
+        if (!time ||!subject) return alert('시간과 과목을 입력하세요');
 
-// 초기 상태
-updateMainBtn();
-System.updateSendButton();
-});
+        const data = getTimetable();
+        if (!data[day]) data[day] = [];
+        data[day].push({time, subject, room});
+        data[day].sort((a,b) => a.time.localeCompare(b.time));
+
+        saveTimetable(data);
+        addClassModal.classList.add('hidden');
+        document.getElementById('classTime').value = '';
+        document.getElementById('classSubject').value = '';
+        document.getElementById('classRoom').value = '';
+
+        if (day === currentDay) loadTimetable(currentDay);
+    });
+}
