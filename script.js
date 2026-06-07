@@ -109,24 +109,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 채팅 입력바 (모던화)
-    UI.chatInput.addEventListener('input', () => {
-        System.updateSendButton();
-        // 자동 높이 조절
-        UI.chatInput.style.height = 'auto';
-        UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
-    });
+UI.chatInput.addEventListener('input', () => {
+    System.updateSendButton();
+    // 자동 높이 조절
+    UI.chatInput.style.height = 'auto';
+    UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
+});
 
-    UI.chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (!UI.sendBtn.disabled) {
-                System.runReasoning(UI.chatInput.value.trim());
-                UI.chatInput.value = '';
-                UI.chatInput.style.height = 'auto';
-                System.updateSendButton();
-            }
+UI.chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (!UI.sendBtn.disabled) {
+            System.runReasoning(UI.chatInput.value.trim());
+            UI.chatInput.value = '';
+            UI.chatInput.style.height = 'auto';
+            System.updateSendButton();
         }
-    });
+    }
+});
+
+// iOS 키보드 대응
+UI.chatInput.addEventListener('focus', () => {
+    setTimeout(() => UI.chatBox.scrollTop = UI.chatBox.scrollHeight, 300);
+});
 
     UI.sendBtn.addEventListener('click', () => {
         if (UI.sendBtn.disabled) return;
