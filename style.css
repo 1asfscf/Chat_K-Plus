@@ -365,3 +365,28 @@ body {
 .send-btn.active:active { transform: scale(0.92); }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* === 레이아웃 핫픽스 v4.2 === */
+#chat-view {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+.chat-box {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+}
+
+.chat-footer {
+    flex-shrink: 0 !important;
+    margin-top: auto !important;
+}
+
+/* 입력창 포커스 파란 테두리 제거 (원하면) */
+.chat-input:focus {
+    border-color: #475569 !importantㅡ
+    box-shadow: none !important;
+}
