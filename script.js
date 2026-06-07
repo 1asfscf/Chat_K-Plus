@@ -257,15 +257,48 @@ UI.examples.forEach(btn => {
 
 // === 시간표 버튼 (모바일 전용) ===
 const timetableBtn = document.getElementById('timetableBtn');
+const timetableModal = document.getElementById('timetableModal');
+const timetableClose = document.getElementById('timetableClose');
+const timetableContent = document.getElementById('timetableContent');
+
 if (timetableBtn) {
     timetableBtn.addEventListener('click', () => {
-        // 모바일 전용 시간표 기능
-        System.switchView(true);
-        System.addMessage('📅 시간표', 'user');
-        setTimeout(() => {
-            System.addMessage('시간표 기능이 열렸습니다!\n\n• 월~금 수업 추가\n• 알림 설정\n• 오늘 시간표 보기\n\n(현재 데모 버전)', 'ai');
-        }, 300);
+        timetableModal.classList.remove('hidden');
+        loadTimetable('mon');
     });
+}
+if (timetableClose) timetableClose.onclick = () => timetableModal.classList.add('hidden');
+if (timetableModal) timetableModal.querySelector('.modal-backdrop').onclick = () => timetableModal.classList.add('hidden');
+
+// 탭 전환
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        loadTimetable(tab.dataset.day);
+    });
+});
+
+function loadTimetable(day) {
+    const data = {
+        mon: [{time:'09:00-10:30', subject:'수학', room:'3-2'}, {time:'11:00-12:30', subject:'영어', room:'2-1'}],
+        tue: [{time:'10:00-11:30', subject:'과학', room:'실험실'}],
+        wed: [],
+        thu: [{time:'13:00-14:30', subject:'국어', room:'3-1'}],
+        fri: [{time:'09:00-10:30', subject:'체육', room:'운동장'}]
+    };
+    const list = data[day] || [];
+    if (list.length === 0) {
+        timetableContent.innerHTML = `<div class="timetable-empty">수업이 없습니다<br><span style="font-size:12px">+ 버튼으로 추가하세요</span></div>`;
+    } else {
+        timetableContent.innerHTML = list.map(item => `
+            <div class="timetable-item">
+                <div class="timetable-time">${item.time}</div>
+                <div class="timetable-subject">${item.subject}</div>
+                <div class="timetable-room">${item.room}</div>
+            </div>
+        `).join('');
+    }
 }
 
 // === 링크 경고 모달 ===
