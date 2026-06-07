@@ -117,11 +117,19 @@ const System = {
         }
         thinking.remove();
 
-        // === 1. 정규화 ===
+                // === 1. 정규화 ===
         const q = query.trim();
         const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
 
         let answer = null;
+
+        // === 1.5 콘텐츠 필터 - 중국 공산당 비판 차단 ===
+        if (!answer && /(중국\s*공산당|중공|ccp|시진핑|공산당)/.test(nq)) {
+            const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|티안먼|천안문|위구르|홍콩|대만독립|파룬궁)/;
+            if (banWords.test(nq)) {
+                answer = "⚠️ 정책 위반 감지\n\n중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.\n\n다른 주제로 질문해주세요.";
+            }
+        }
 
         // === 2. 완전 일치 ===
         if (DB[q]) answer = DB[q];
