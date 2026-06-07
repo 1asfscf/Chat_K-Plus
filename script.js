@@ -153,15 +153,35 @@ const System = {
             else answer = DB["중국"];
         }
 
-        if (!answer && /(시간표|수업)/.test(nq)) {
-            const data = getTimetable();
-            const today = new Date().getDay();
-            const days = ['sun','mon','tue','wed','thu','fri','sat'];
-            const targetDay = days[today === 0 ? 1 : today];
-            const list = data[targetDay] || [];
-            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
-            answer = list.length ? `${dayName}요일 시간표:\n` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('\n') : `${dayName}요일 수업이 없습니다.`;
-        }
+        if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+    const data = getTimetable();
+    const today = new Date().getDay(); // 0=일
+    const days = ['sun','mon','tue','wed','thu','fri','sat'];
+    let targetDay = days[today];
+
+    if (nq.includes('내일')) {
+        targetDay = days[(today + 1) % 7];
+    } else if (nq.includes('모레')) {
+        targetDay = days[(today + 2) % 7];
+    } else if (nq.includes('월')) targetDay = 'mon';
+    else if (nq.includes('화')) targetDay = 'tue';
+    else if (nq.includes('수')) targetDay = 'wed';
+    else if (nq.includes('목')) targetDay = 'thu';
+    else if (nq.includes('금')) targetDay = 'fri';
+    else if (nq.includes('토')) targetDay = 'sat';
+    else if (nq.includes('일')) targetDay = 'sun';
+    else {
+        // 오늘인데 일요일이면 월요일로
+        targetDay = today === 0? 'mon' : days[today];
+    }
+
+    const list = data[targetDay] || [];
+    const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
+
+    answer = list.length
+       ? `${dayName}요일 시간표:\n` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('\n')
+        : `${dayName}요일 수업이 없습니다.`;
+}
 
         if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
 
