@@ -255,6 +255,25 @@ UI.examples.forEach(btn => {
     });
 });
 
+    // === 링크 경고 모달 ===
+const linkModal = document.getElementById('linkModal');
+const modalUrl = document.getElementById('modalUrl');
+const modalCancel = document.getElementById('modalCancel');
+const modalGo = document.getElementById('modalGo');
+let pendingUrl = '';
+
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('external-link')) {
+        e.preventDefault();
+        pendingUrl = e.target.dataset.url;
+        modalUrl.textContent = pendingUrl;
+        linkModal.classList.remove('hidden');
+    }
+});
+if (modalCancel) modalCancel.onclick = () => linkModal.classList.add('hidden');
+if (modalGo) modalGo.onclick = () => { window.open(pendingUrl, '_blank'); linkModal.classList.add('hidden'); };
+if (linkModal) linkModal.querySelector('.modal-backdrop').onclick = () => linkModal.classList.add('hidden');
+
 // === 시간표 버튼 (모바일 전용) ===
 const timetableBtn = document.getElementById('timetableBtn');
 const timetableModal = document.getElementById('timetableModal');
@@ -378,3 +397,6 @@ if (saveAdd) {
         if (day === currentDay) loadTimetable(currentDay);
     });
 }
+    // 초기 상태
+updateMainBtn();
+System.updateSendButton();
