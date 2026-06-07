@@ -117,7 +117,7 @@ const System = {
         }
         thinking.remove();
 
-                // === 1. 정규화 ===
+              // === 1. 정규화 ===
         const q = query.trim();
         const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
 
@@ -127,12 +127,13 @@ const System = {
         if (!answer && /(중국\s*공산당|중공|ccp|시진핑|공산당)/.test(nq)) {
             const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|티안먼|천안문|위구르|홍콩|대만독립|파룬궁)/;
             if (banWords.test(nq)) {
-                answer = "⚠️ 정책 위반 감지\n\n중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.\n\n다른 주제로 질문해주세요.";
+                answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+                window.__isPolicyWarning = true;
             }
         }
 
         // === 2. 완전 일치 ===
-        if (DB[q]) answer = DB[q];
+        if (!answer && DB[q]) answer = DB[q];
 
         // === 3. 부분 일치 ===
         if (!answer) {
@@ -178,10 +179,10 @@ const System = {
             else answer = DB["중국"];
         }
 
-                // === 7. 패턴 매칭 - 시간표 ===
+        // === 7. 패턴 매칭 - 시간표 ===
         if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
             const data = getTimetable();
-            const today = new Date().getDay(); // 0=일, 1=월
+            const today = new Date().getDay();
             const days = ['sun','mon','tue','wed','thu','fri','sat'];
             let targetDay = 'mon';
 
@@ -191,7 +192,7 @@ const System = {
             else if (nq.includes('수')) targetDay = 'wed';
             else if (nq.includes('목')) targetDay = 'thu';
             else if (nq.includes('금')) targetDay = 'fri';
-            else targetDay = days[today === 0? 1 : today]; // 일요일이면 월요일
+            else targetDay = days[today === 0? 1 : today];
 
             const list = data[targetDay] || [];
             const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
@@ -212,14 +213,31 @@ const System = {
 
         this.addMessage(answer, 'ai');
         this.isThinking = false;
-    },
 
-    updateSendButton() {
-        const hasText = UI.chatInput.value.trim().length > 0;
-        UI.sendBtn.disabled = !hasText;
-        UI.sendBtn.classList.toggle('active', hasText);
-    }
-};
+            addMessage(text, type) {
+        const msg = document.createElement('div');
+        msg.className = `message ${type === 'user'? 'user-msg' : 'ai-msg'}`;
+
+        // 정책 경고 스타일 적용
+        if (window.__isPolicyWarning) {
+            msg.classList.add('policy-warning');
+            window.__isPolicyWarning = false;
+        }
+
+        // URL을 클릭 가능한 링크로 변환
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        if (text.match(urlRegex)) {
+            msg.innerHTML = text.replace(urlRegex, url =>
+                `<a href="#" class="external-link" data-url="${url}">${url}</a>`
+            );
+        } else {
+            msg.innerHTML = text;
+        }
+
+        UI.chatBox.appendChild(msg);
+        UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+        return msg;
+    },
 
 // ==========================================
 // 4. 이벤트
