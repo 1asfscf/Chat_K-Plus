@@ -334,3 +334,64 @@ body {
 .send-btn.active:active { 
     transform: scale(0.93); 
 }
+
+/* ========== 링크 스타일 ========== */
+.external-link {
+    color: #3b82f6;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+/* ========== 링크 경고 모달 ========== */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal.hidden { display: none; }
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+}
+.modal-content {
+    position: relative;
+    background: var(--chat-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    animation: modalIn 0.2s ease;
+}
+@keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-icon { font-size: 32px; margin-bottom: 12px; }
+.modal-content h3 { font-size: 18px; margin-bottom: 8px; }
+.modal-url {
+    font-size: 13px;
+    color: #3b82f6;
+    word-break: break-all;
+    background: var(--bg-main);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+.modal-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 20px; }
+.modal-buttons { display: flex; gap: 8px; }
+.modal-btn {
+    flex: 1;
+    height: 42px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.modal-btn.cancel { background: var(--bg-main); color: var(--text-primary); }
+.modal-btn.go { background: #2563eb; color: white; }
