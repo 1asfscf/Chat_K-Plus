@@ -231,44 +231,106 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ========== 입력바 - 앱 형식 고정 ========== */
+/* ========== 채팅 입력창 - 완전 독립형 ========== */
+.chat-box {
+    padding-bottom: 90px !important; /* 입력창 공간 확보 */
+}
+
 .chat-footer {
+    position: fixed !important;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 24px);
+    max-width: 496px;
     display: flex;
     align-items: flex-end;
     gap: 8px;
-    padding: 8px 12px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
-    background: var(--chat-bg);
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-    position: sticky;
-    bottom: 0;
+    padding: 8px 8px 8px 18px;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 26px;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    z-index: 100;
+    margin: 0 !important;
+    transition: all 0.2s ease;
+}
+
+@media (prefers-color-scheme: light) {
+    .chat-footer {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 
+            0 8px 24px rgba(0, 0, 0, 0.12),
+            0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+}
+
+.chat-footer:focus-within {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 
+        0 12px 32px rgba(0, 0, 0, 0.5),
+        0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
 .chat-input {
     flex: 1;
-    min-height: 42px;
+    min-height: 24px;
     max-height: 120px;
-    padding: 10px 16px;
-    background: var(--bg-main);
-    border: 1px solid var(--border);
-    border-radius: 21px;
+    padding: 8px 0;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
     font-size: 15px;
     line-height: 1.4;
-    color: var(--text-primary);
-    outline: none;
+    color: #f1f5f9;
     resize: none;
-    overflow-y: auto;
     font-family: inherit;
-    /* 앱처럼 줄어들지 않게 */
-    height: auto;
-    box-sizing: border-box;
 }
-.chat-input:focus { border-color: #3b82f6; }
+.chat-input::placeholder { 
+    color: #64748b; 
+}
+
+@media (prefers-color-scheme: light) {
+    .chat-input { color: #0f172a; }
+    .chat-input::placeholder { color: #94a3b8; }
+}
 
 .send-btn {
-    width: 42px;
-    height: 42px;
-    margin-bottom: 0px;
-    align-self: flex-end;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #334155;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin: 0;
+}
+.send-btn:disabled { 
+    opacity: 0.4; 
+    transform: scale(0.9);
+}
+.send-btn.active {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+.send-btn.active:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+}
+.send-btn.active:active { 
+    transform: scale(0.93); 
 }
