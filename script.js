@@ -170,7 +170,34 @@ const System = {
             else answer = DB["중국"];
         }
 
-        // === 7. 최종 fallback ===
+                // === 7. 패턴 매칭 - 시간표 ===
+        if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+            const data = getTimetable();
+            const today = new Date().getDay(); // 0=일, 1=월
+            const days = ['sun','mon','tue','wed','thu','fri','sat'];
+            let targetDay = 'mon';
+
+            if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
+            else if (nq.includes('월')) targetDay = 'mon';
+            else if (nq.includes('화')) targetDay = 'tue';
+            else if (nq.includes('수')) targetDay = 'wed';
+            else if (nq.includes('목')) targetDay = 'thu';
+            else if (nq.includes('금')) targetDay = 'fri';
+            else targetDay = days[today === 0? 1 : today]; // 일요일이면 월요일
+
+            const list = data[targetDay] || [];
+            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
+
+            if (list.length === 0) {
+                answer = `${dayName}요일 수업이 없습니다.`;
+            } else {
+                answer = `${dayName}요일 시간표:\n` + list.map(it =>
+                    `${it.time} ${it.subject} ${it.room}`
+                ).join('\n');
+            }
+        }
+
+        // === 8. 최종 fallback ===
         if (!answer) {
             answer = `"${q}"에 대해 학습된 내용이 없습니다. 다른 질문을 해보세요.`;
         }
