@@ -167,10 +167,30 @@ if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s
                 if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
             }
         }
-        if (!answer && /공식.*사이트|홈페이지/.test(nq)) {
-            const sites = {'네이버':'https://www.naver.com','다음':'https://www.daum.net','구글':'https://www.google.com'};
-            for (const name in sites) if (nq.includes(name)) { answer = `${name} 공식 사이트는 ${sites[name]} 입니다.`; break; }
+        if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
+    const sites = {
+        '네이버':'https://www.naver.com',
+        '다음':'https://www.daum.net',
+        '구글':'https://www.google.com',
+        '유튜브':'https://www.youtube.com',
+        '인스타그램':'https://www.instagram.com',
+        '인스타':'https://www.instagram.com',
+        '카카오':'https://www.kakaocorp.com',
+        '쿠팡':'https://www.coupang.com'
+    };
+    const found = [];
+    for (const name in sites) {
+        if (nq.includes(name)) {
+            // 중복 방지 (인스타/인스타그램)
+            if (!found.some(f => f.includes(sites[name]))) {
+                found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
+            }
         }
+    }
+    if (found.length > 0) {
+        answer = found.join('\n');
+    }
+}
         if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
         if (!answer && nq.includes('중국')) {
             if (nq.includes('수도')) answer = DB["중국 수도"];
