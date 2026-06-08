@@ -450,6 +450,32 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     });
 });
 
+    // ========== 사이드바 토글 ==========
+const sidebarToggle = document.getElementById('sidebarToggle');
+const appContainer = document.querySelector('.app-container');
+
+// 열기 버튼 동적 생성
+const openBtn = document.createElement('button');
+openBtn.className = 'sidebar-open-btn';
+openBtn.innerHTML = '→';
+openBtn.title = '사이드바 열기';
+document.body.appendChild(openBtn);
+
+sidebarToggle?.addEventListener('click', () => {
+    appContainer.classList.add('sidebar-collapsed');
+    localStorage.setItem('sidebar-collapsed', 'true');
+});
+
+openBtn.addEventListener('click', () => {
+    appContainer.classList.remove('sidebar-collapsed');
+    localStorage.setItem('sidebar-collapsed', 'false');
+});
+
+// 저장된 상태 복원
+if (localStorage.getItem('sidebar-collapsed') === 'true') {
+    appContainer.classList.add('sidebar-collapsed');
+}
+
 // 초기 상태
 updateMainBtn();
 System.updateSendButton();
