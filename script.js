@@ -3,16 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. UI 요소
     // ==========================================
     const UI = {
-        input: document.getElementById('queryInput'),
-        btn: document.getElementById('searchBtn'),
-        examples: document.querySelectorAll('.example-btn'),
-        searchView: document.getElementById('search-view'),
-        chatView: document.getElementById('chat-view'),
-        chatBox: document.getElementById('chat-box'),
-        backBtn: document.getElementById('backBtn'),
-        chatInput: document.getElementById('chatInput'),
-        sendBtn: document.getElementById('sendBtn')
-    };
+    input: document.getElementById('queryInput'),
+    btn: document.getElementById('searchBtn'),
+    examples: document.querySelectorAll('.example-btn'),
+    searchView: document.getElementById('search-view'),
+    chatView: document.getElementById('chat-view'),
+    chatBox: document.getElementById('chat-box'),
+    backBtn: document.getElementById('backBtn'),
+    chatInput: document.getElementById('chatInput'),
+    sendBtn: document.getElementById('sendBtn'),
+    stopBtn: document.getElementById('stopBtn') // ← 추가
+};
 
  // ==========================================
 // 2. DB
@@ -82,14 +83,12 @@ const System = {
     isThinking: false,
 
     switchView(isChat) {
-    // PC에서 겹침 방지
-    UI.searchView.style.display = isChat ? 'none' : 'flex';
-    UI.chatView.style.display = isChat ? 'flex' : 'none';
-    
-    UI.searchView.classList.toggle('hidden', isChat);
-    UI.chatView.classList.toggle('hidden', !isChat);
-    if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
-},
+        UI.searchView.style.display = isChat ? 'none' : 'flex';
+        UI.chatView.style.display = isChat ? 'flex' : 'none';
+        UI.searchView.classList.toggle('hidden', isChat);
+        UI.chatView.classList.toggle('hidden', !isChat);
+        if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
+    },
 
     addMessage(text, type) {
         const msg = document.createElement('div');
@@ -106,7 +105,7 @@ const System = {
                 `<a href="#" class="external-link" data-url="${url}">${url}</a>`
             );
         } else {
-            msg.innerHTML = text; // ← 핵심 수정
+            msg.innerHTML = text;
         }
         
         UI.chatBox.appendChild(msg);
@@ -117,6 +116,10 @@ const System = {
     async runReasoning(query) {
         if (!query || this.isThinking) return;
         this.isThinking = true;
+
+        // ← 멈추기 버튼 표시
+        UI.sendBtn.classList.add('hidden');
+        UI.stopBtn.classList.remove('hidden');
 
         this.switchView(true);
         this.addMessage(query, 'user');
@@ -129,9 +132,18 @@ const System = {
 
         const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
         for (let step of steps) {
+            if (!this.isThinking) break; // ← 중지 체크
             thinking.querySelector('.thinking-text').textContent = step;
             await new Promise(r => setTimeout(r, 400));
         }
+        
+        if (!this.isThinking) {
+            thinking.remove();
+            UI.stopBtn.classList.add('hidden');
+            UI.sendBtn.classList.remove('hidden');
+            return;
+        }
+        
         thinking.remove();
 
         const q = query.trim();
@@ -141,10 +153,7 @@ const System = {
        // === 1.5 필터 - 중국 공산당/시진핑 포괄 차단 ===
 if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq)) {
     const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
-    
-    // 직접 비하 구호 패턴 (변형 모두 포함)
     const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out/;
-    
     if (banWords.test(nq) || directInsults.test(nq)) {
         answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
         window.__isPolicyWarning = true;
@@ -152,61 +161,50 @@ if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s
 }
 
         if (!answer && DB[q]) answer = DB[q];
-
         if (!answer) {
             for (const key in DB) {
                 const nk = key.toLowerCase();
                 if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
             }
         }
-
         if (!answer && /공식.*사이트|홈페이지/.test(nq)) {
             const sites = {'네이버':'https://www.naver.com','다음':'https://www.daum.net','구글':'https://www.google.com'};
             for (const name in sites) if (nq.includes(name)) { answer = `${name} 공식 사이트는 ${sites[name]} 입니다.`; break; }
         }
-
         if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
-
         if (!answer && nq.includes('중국')) {
             if (nq.includes('수도')) answer = DB["중국 수도"];
             else if (nq.includes('인구')) answer = DB["중국 인구"];
             else answer = DB["중국"];
         }
-
         if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
-    const data = getTimetable();
-    const today = new Date().getDay(); // 0=일
-    const days = ['sun','mon','tue','wed','thu','fri','sat'];
-    let targetDay = days[today];
-
-    if (nq.includes('내일')) {
-        targetDay = days[(today + 1) % 7];
-    } else if (nq.includes('모레')) {
-        targetDay = days[(today + 2) % 7];
-    } else if (nq.includes('월')) targetDay = 'mon';
-    else if (nq.includes('화')) targetDay = 'tue';
-    else if (nq.includes('수')) targetDay = 'wed';
-    else if (nq.includes('목')) targetDay = 'thu';
-    else if (nq.includes('금')) targetDay = 'fri';
-    else if (nq.includes('토')) targetDay = 'sat';
-    else if (nq.includes('일')) targetDay = 'sun';
-    else {
-        // 오늘인데 일요일이면 월요일로
-        targetDay = today === 0? 'mon' : days[today];
-    }
-
-    const list = data[targetDay] || [];
-    const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
-
-    answer = list.length
-       ? `${dayName}요일 시간표:\n` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('\n')
-        : `${dayName}요일 수업이 없습니다.`;
-}
-
+            const data = getTimetable();
+            const today = new Date().getDay();
+            const days = ['sun','mon','tue','wed','thu','fri','sat'];
+            let targetDay = days[today];
+            if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
+            else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
+            else if (nq.includes('월')) targetDay = 'mon';
+            else if (nq.includes('화')) targetDay = 'tue';
+            else if (nq.includes('수')) targetDay = 'wed';
+            else if (nq.includes('목')) targetDay = 'thu';
+            else if (nq.includes('금')) targetDay = 'fri';
+            else if (nq.includes('토')) targetDay = 'sat';
+            else if (nq.includes('일')) targetDay = 'sun';
+            else targetDay = today === 0? 'mon' : days[today];
+            const list = data[targetDay] || [];
+            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
+            answer = list.length ? `${dayName}요일 시간표:\n` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('\n') : `${dayName}요일 수업이 없습니다.`;
+        }
         if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
 
         this.addMessage(answer, 'ai');
         this.isThinking = false;
+        
+        // ← 보내기 버튼 복원
+        UI.stopBtn.classList.add('hidden');
+        UI.sendBtn.classList.remove('hidden');
+        this.updateSendButton();
     },
 
     updateSendButton() {
@@ -269,6 +267,24 @@ UI.sendBtn.addEventListener('click', () => {
     System.runReasoning(UI.chatInput.value.trim());
     UI.chatInput.value = '';
     UI.chatInput.style.height = 'auto';
+    System.updateSendButton();
+});
+    UI.sendBtn.addEventListener('click', () => {
+    if (UI.sendBtn.disabled) return;
+    System.runReasoning(UI.chatInput.value.trim());
+    UI.chatInput.value = '';
+    UI.chatInput.style.height = 'auto';
+    System.updateSendButton();
+});
+
+// ← 추가
+UI.stopBtn.addEventListener('click', () => {
+    if (!System.isThinking) return;
+    System.isThinking = false;
+    document.querySelector('.message.thinking')?.remove();
+    System.addMessage('⏹️ 답변이 중지되었습니다.', 'ai');
+    UI.stopBtn.classList.add('hidden');
+    UI.sendBtn.classList.remove('hidden');
     System.updateSendButton();
 });
 
