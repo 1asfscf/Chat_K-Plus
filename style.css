@@ -797,13 +797,6 @@ body {
 }
 
 /* ========== BETA 배지 ========== */
-.title {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-}
-
 .beta-badge {
     display: inline-flex;
     align-items: center;
@@ -822,6 +815,7 @@ body {
     position: relative;
     top: -2px;
 }
+
 
 @keyframes betaPulse {
     0%, 100% { background-position: 0% 50%; transform: scale(1); }
