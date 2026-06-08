@@ -82,10 +82,14 @@ const System = {
     isThinking: false,
 
     switchView(isChat) {
-        UI.searchView.classList.toggle('hidden', isChat);
-        UI.chatView.classList.toggle('hidden', !isChat);
-        if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
-    },
+    // PC에서 겹침 방지
+    UI.searchView.style.display = isChat ? 'none' : 'flex';
+    UI.chatView.style.display = isChat ? 'flex' : 'none';
+    
+    UI.searchView.classList.toggle('hidden', isChat);
+    UI.chatView.classList.toggle('hidden', !isChat);
+    if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
+},
 
     addMessage(text, type) {
         const msg = document.createElement('div');
