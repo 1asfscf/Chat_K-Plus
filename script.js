@@ -269,7 +269,7 @@ UI.sendBtn.addEventListener('click', () => {
     UI.chatInput.style.height = 'auto';
     System.updateSendButton();
 });
-    UI.sendBtn.addEventListener('click', () => {
+
     if (UI.sendBtn.disabled) return;
     System.runReasoning(UI.chatInput.value.trim());
     UI.chatInput.value = '';
