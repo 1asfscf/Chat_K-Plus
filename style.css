@@ -816,7 +816,6 @@ body {
     top: -2px;
 }
 
-
 @keyframes betaPulse {
     0%, 100% { background-position: 0% 50%; transform: scale(1); }
     50% { background-position: 100% 50%; transform: scale(1.05); }
@@ -824,7 +823,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
     .beta-badge {
-        box-shadow: 0 2px 12px rgba(121, 40, 202, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        box-shadow: 0 2px 12px rgba(121, 40, 202, 0.6), inset 0 1px 0 rgba(255, 255, 0.15);
     }
 }
 @media (min-width: 1024px) {
