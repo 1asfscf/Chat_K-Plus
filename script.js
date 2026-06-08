@@ -270,14 +270,7 @@ UI.sendBtn.addEventListener('click', () => {
     System.updateSendButton();
 });
 
-    if (UI.sendBtn.disabled) return;
-    System.runReasoning(UI.chatInput.value.trim());
-    UI.chatInput.value = '';
-    UI.chatInput.style.height = 'auto';
-    System.updateSendButton();
-});
-
-// ← 추가
+// ← 멈추기 버튼
 UI.stopBtn.addEventListener('click', () => {
     if (!System.isThinking) return;
     System.isThinking = false;
