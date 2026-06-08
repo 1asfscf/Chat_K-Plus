@@ -854,3 +854,92 @@ body {
     .app-container { max-width: 1400px; }
     .chat-box { padding: 32px 80px 140px; }
 }
+
+/* ========== PC 사이드바 ========== */
+.sidebar {
+    display: none;
+    flex-direction: column;
+    background: var(--bg-main);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+}
+
+@media (min-width: 1024px) {
+    .sidebar {
+        display: flex;
+        grid-column: 1;
+        grid-row: 1 / -1;
+    }
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 20px;
+    font-weight: 800;
+    font-size: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo {
+    font-size: 24px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    background: var(--chat-bg);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background: #2563eb;
+    color: white;
+}
+
+.sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff0080, #7928ca);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+}
