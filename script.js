@@ -76,6 +76,7 @@ const DB = {
     "chat gpt": "ChatGPT 공식 사이트는 https://chat.openai.com 입니다.",
     "챗지피티": "ChatGPT 공식 사이트는 https://chat.openai.com 입니다."
 };
+
 // ==========================================
 // 3. 시스템
 // ==========================================
@@ -117,7 +118,6 @@ const System = {
         if (!query || this.isThinking) return;
         this.isThinking = true;
 
-        // ← 멈추기 버튼 표시
         UI.sendBtn.classList.add('hidden');
         UI.stopBtn.classList.remove('hidden');
 
@@ -132,7 +132,7 @@ const System = {
 
         const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
         for (let step of steps) {
-            if (!this.isThinking) break; // ← 중지 체크
+            if (!this.isThinking) break;
             thinking.querySelector('.thinking-text').textContent = step;
             await new Promise(r => setTimeout(r, 400));
         }
@@ -150,90 +150,91 @@ const System = {
         const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
         let answer = null;
 
-       // === 1.5 필터 - 중국 공산당/시진핑 포괄 차단 ===
-if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq)) {
-    const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
-    const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out/;
-    if (banWords.test(nq) || directInsults.test(nq)) {
-        answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
-        window.__isPolicyWarning = true;
-    }
-}
-
-// 1. 정확히 DB에 있는 키
-if (!answer && DB[q]) answer = DB[q];
-
-// 2. 다중 사이트
-if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
-    const sites = {
-        '네이버':'https://www.naver.com',
-        '다음':'https://www.daum.net',
-        '구글':'https://www.google.com',
-        '유튜브':'https://www.youtube.com',
-        '인스타그램':'https://www.instagram.com',
-        '인스타':'https://www.instagram.com',
-        '카카오':'https://www.kakaocorp.com',
-        '쿠팡':'https://www.coupang.com'
-    };
-    const found = [];
-    for (const name in sites) {
-        if (nq.includes(name) &&!found.some(f => f.includes(sites[name]))) {
-            found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
+        if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq)) {
+            const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
+            const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out/;
+            if (banWords.test(nq) || directInsults.test(nq)) {
+                answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+                window.__isPolicyWarning = true;
+            }
         }
+
+        if (!answer && DB[q]) answer = DB[q];
+
+        if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
+            const sites = {
+                '네이버':'https://www.naver.com',
+                '다음':'https://www.daum.net',
+                '구글':'https://www.google.com',
+                '유튜브':'https://www.youtube.com',
+                '인스타그램':'https://www.instagram.com',
+                '인스타':'https://www.instagram.com',
+                '카카오':'https://www.kakaocorp.com',
+                '쿠팡':'https://www.coupang.com'
+            };
+            const found = [];
+            for (const name in sites) {
+                if (nq.includes(name) && !found.some(f => f.includes(sites[name]))) {
+                    found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
+                }
+            }
+            if (found.length) answer = found.join('<br>');
+        }
+
+        if (!answer) {
+            for (const key in DB) {
+                const nk = key.toLowerCase();
+                if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
+            }
+        }
+
+        if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
+
+        if (!answer && nq.includes('중국')) {
+            if (nq.includes('수도')) answer = DB["중국 수도"];
+            else if (nq.includes('인구')) answer = DB["중국 인구"];
+            else answer = DB["중국"];
+        }
+
+        if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+            const data = getTimetable();
+            const today = new Date().getDay();
+            const days = ['sun','mon','tue','wed','thu','fri','sat'];
+            let targetDay = days[today];
+            if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
+            else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
+            else if (nq.includes('월')) targetDay = 'mon';
+            else if (nq.includes('화')) targetDay = 'tue';
+            else if (nq.includes('수')) targetDay = 'wed';
+            else if (nq.includes('목')) targetDay = 'thu';
+            else if (nq.includes('금')) targetDay = 'fri';
+            else if (nq.includes('토')) targetDay = 'sat';
+            else if (nq.includes('일')) targetDay = 'sun';
+            else targetDay = today === 0 ? 'mon' : days[today];
+
+            const list = data[targetDay] || [];
+            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
+            answer = list.length
+               ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
+                : `${dayName}요일 수업이 없습니다.`;
+        }
+
+        if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
+
+        this.addMessage(answer, 'ai');
+        this.isThinking = false;
+
+        UI.stopBtn.classList.add('hidden');
+        UI.sendBtn.classList.remove('hidden');
+        this.updateSendButton();
+    },
+
+    updateSendButton() {
+        const hasText = UI.chatInput.value.trim().length > 0;
+        UI.sendBtn.disabled = !hasText;
+        UI.sendBtn.classList.toggle('active', hasText);
     }
-    if (found.length) answer = found.join('<br>');
-}
-
-// 3. 느슨한 DB 검색
-if (!answer) {
-    for (const key in DB) {
-        const nk = key.toLowerCase();
-        if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
-    }
-}
-
-// 4. 나머지
-if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
-
-if (!answer && nq.includes('중국')) {
-    if (nq.includes('수도')) answer = DB["중국 수도"];
-    else if (nq.includes('인구')) answer = DB["중국 인구"];
-    else answer = DB["중국"];
-}
-
-if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
-    const data = getTimetable();
-    const today = new Date().getDay();
-    const days = ['sun','mon','tue','wed','thu','fri','sat'];
-    let targetDay = days[today];
-    if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
-    else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
-    else if (nq.includes('월')) targetDay = 'mon';
-    else if (nq.includes('화')) targetDay = 'tue';
-    else if (nq.includes('수')) targetDay = 'wed';
-    else if (nq.includes('목')) targetDay = 'thu';
-    else if (nq.includes('금')) targetDay = 'fri';
-    else if (nq.includes('토')) targetDay = 'sat';
-    else if (nq.includes('일')) targetDay = 'sun';
-    else targetDay = today === 0? 'mon' : days[today];
-
-    const list = data[targetDay] || [];
-    const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
-    answer = list.length
-       ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
-        : `${dayName}요일 수업이 없습니다.`;
-}
-
-if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
-
-this.addMessage(answer, 'ai');
-this.isThinking = false;
-
-// ← 보내기 버튼 복원
-UI.stopBtn.classList.add('hidden');
-UI.sendBtn.classList.remove('hidden');
-this.updateSendButton();
-}; //
+}; // ← 여기 세미콜론으로 System 객체 종료
     
 // ==========================================
 // 4. 이벤트
