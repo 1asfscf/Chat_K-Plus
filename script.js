@@ -160,14 +160,11 @@ if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s
     }
 }
 
-        if (!answer && DB[q]) answer = DB[q];
-        if (!answer) {
-            for (const key in DB) {
-                const nk = key.toLowerCase();
-                if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
-            }
-        }
-        if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
+// 1. 정확히 DB에 있는 키 (가장 빠름)
+if (!answer && DB[q]) answer = DB[q];
+
+// 2. 다중 사이트 (네이버+구글 같이 여러 개 잡을 때)
+if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
     const sites = {
         '네이버':'https://www.naver.com',
         '다음':'https://www.daum.net',
@@ -179,6 +176,22 @@ if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s
         '쿠팡':'https://www.coupang.com'
     };
     const found = [];
+    for (const name in sites) {
+        if (nq.includes(name) &&!found.some(f => f.includes(sites[name]))) {
+            found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
+        }
+    }
+    if (found.length) answer = found.join('<br>');
+}
+
+// 3. 느슨한 DB 검색 (부분 일치)
+if (!answer) {
+    for (const key in DB) {
+        const nk = key.toLowerCase();
+        if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
+    }
+}
+const found = [];
     for (const name in sites) {
         if (nq.includes(name)) {
             // 중복 방지 (인스타/인스타그램)
