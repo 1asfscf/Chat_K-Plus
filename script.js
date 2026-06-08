@@ -233,7 +233,7 @@ this.isThinking = false;
 UI.stopBtn.classList.add('hidden');
 UI.sendBtn.classList.remove('hidden');
 this.updateSendButton();
-},
+}, //
     
 // ==========================================
 // 4. 이벤트
