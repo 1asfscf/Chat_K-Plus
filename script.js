@@ -454,39 +454,45 @@ document.querySelectorAll('.nav-item').forEach(btn => {
 const sidebarToggle = document.getElementById('sidebarToggle');
 const appContainer = document.querySelector('.app-container');
 
-console.log('sidebarToggle:', sidebarToggle); // ← 확인용
-console.log('appContainer:', appContainer);
-
 // 열기 버튼 동적 생성
 const openBtn = document.createElement('button');
 openBtn.className = 'sidebar-open-btn';
 openBtn.innerHTML = '☰';
 openBtn.title = '사이드바 열기';
-openBtn.style.display = 'flex'; // ← 강제 표시 (테스트용)
-openBtn.style.background = 'red'; // ← 보이게
 document.body.appendChild(openBtn);
 
-console.log('openBtn created:', openBtn); // ← 확인용
+// PC인지 체크 함수
+const isPC = () => window.innerWidth >= 1024;
+
+const updateOpenBtn = () => {
+    if (isPC() && appContainer.classList.contains('sidebar-collapsed')) {
+        openBtn.style.display = 'flex';
+    } else {
+        openBtn.style.display = 'none';
+    }
+};
 
 sidebarToggle?.addEventListener('click', () => {
-    console.log('닫기 클릭');
     appContainer.classList.add('sidebar-collapsed');
     localStorage.setItem('sidebar-collapsed', 'true');
-    openBtn.style.display = 'flex'; // 강제
+    updateOpenBtn();
 });
 
 openBtn.addEventListener('click', () => {
-    console.log('열기 클릭');
     appContainer.classList.remove('sidebar-collapsed');
     localStorage.setItem('sidebar-collapsed', 'false');
-    openBtn.style.display = 'none'; // 강제
+    updateOpenBtn();
 });
 
 // 저장된 상태 복원
-if (localStorage.getItem('sidebar-collapsed') === 'true') {
+if (localStorage.getItem('sidebar-collapsed') === 'true' && isPC()) {
     appContainer.classList.add('sidebar-collapsed');
-    openBtn.style.display = 'flex';
 }
+
+// 초기 + 리사이즈
+updateOpenBtn();
+window.addEventListener('resize', updateOpenBtn);
+
 
 // 초기 상태
 updateMainBtn();
