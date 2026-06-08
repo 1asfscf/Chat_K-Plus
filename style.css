@@ -417,6 +417,26 @@ body {
     transform: scale(0.9) rotate(0deg); 
 }
 
+/* PC에서는 fixed 해제 */
+@media (min-width: 1024px) {
+    .chat-footer {
+        position: relative !important;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
+    
+    .chat-box {
+        padding-bottom: 20px !important; /* PC에서는 여백 줄임 */
+    }
+}
 /* ========== 링크 스타일 ========== */
 .external-link {
     color: #3b82f6;
