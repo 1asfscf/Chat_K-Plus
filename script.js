@@ -442,10 +442,11 @@ document.querySelectorAll('.nav-item').forEach(btn => {
         btn.classList.add('active');
         
         const text = btn.textContent.trim();
-        if (text.includes('홈')) {
-            document.getElementById('chat-view')?.classList.add('hidden');
-            document.getElementById('search-view')?.classList.remove('hidden');
-        } else if (text.includes('새 채팅')) {
+     if (text.includes('홈')) {
+    System.switchView(false); // ← 이렇게 통일
+} else if (text.includes('새 채팅')) {
+    System.switchView(true);
+}else if (text.includes('새 채팅')) {
             document.getElementById('search-view')?.classList.add('hidden');
             document.getElementById('chat-view')?.classList.remove('hidden');
         } else if (text.includes('시간표')) {
