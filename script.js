@@ -191,19 +191,7 @@ if (!answer) {
         if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
     }
 }
-const found = [];
-    for (const name in sites) {
-        if (nq.includes(name)) {
-            // 중복 방지 (인스타/인스타그램)
-            if (!found.some(f => f.includes(sites[name]))) {
-                found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
-            }
-        }
-    }
-    if (found.length > 0) {
-        answer = found.join('\n');
-    }
-}
+
         if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
         if (!answer && nq.includes('중국')) {
             if (nq.includes('수도')) answer = DB["중국 수도"];
