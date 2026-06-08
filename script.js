@@ -160,10 +160,10 @@ if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s
     }
 }
 
-// 1. 정확히 DB에 있는 키 (가장 빠름)
+// 1. 정확히 DB에 있는 키
 if (!answer && DB[q]) answer = DB[q];
 
-// 2. 다중 사이트 (네이버+구글 같이 여러 개 잡을 때)
+// 2. 다중 사이트
 if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
     const sites = {
         '네이버':'https://www.naver.com',
@@ -184,7 +184,7 @@ if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*�
     if (found.length) answer = found.join('<br>');
 }
 
-// 3. 느슨한 DB 검색 (부분 일치)
+// 3. 느슨한 DB 검색
 if (!answer) {
     for (const key in DB) {
         const nk = key.toLowerCase();
@@ -192,48 +192,54 @@ if (!answer) {
     }
 }
 
-        if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
-        if (!answer && nq.includes('중국')) {
-            if (nq.includes('수도')) answer = DB["중국 수도"];
-            else if (nq.includes('인구')) answer = DB["중국 인구"];
-            else answer = DB["중국"];
-        }
-        if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
-            const data = getTimetable();
-            const today = new Date().getDay();
-            const days = ['sun','mon','tue','wed','thu','fri','sat'];
-            let targetDay = days[today];
-            if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
-            else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
-            else if (nq.includes('월')) targetDay = 'mon';
-            else if (nq.includes('화')) targetDay = 'tue';
-            else if (nq.includes('수')) targetDay = 'wed';
-            else if (nq.includes('목')) targetDay = 'thu';
-            else if (nq.includes('금')) targetDay = 'fri';
-            else if (nq.includes('토')) targetDay = 'sat';
-            else if (nq.includes('일')) targetDay = 'sun';
-            else targetDay = today === 0? 'mon' : days[today];
-            const list = data[targetDay] || [];
-            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
-            answer = list.length ? `${dayName}요일 시간표:\n` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('\n') : `${dayName}요일 수업이 없습니다.`;
-        }
-        if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
+// 4. 나머지
+if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
 
-        this.addMessage(answer, 'ai');
-        this.isThinking = false;
+if (!answer && nq.includes('중국')) {
+    if (nq.includes('수도')) answer = DB["중국 수도"];
+    else if (nq.includes('인구')) answer = DB["중국 인구"];
+    else answer = DB["중국"];
+}
+
+if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+    const data = getTimetable();
+    const today = new Date().getDay();
+    const days = ['sun','mon','tue','wed','thu','fri','sat'];
+    let targetDay = days[today];
+    if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
+    else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
+    else if (nq.includes('월')) targetDay = 'mon';
+    else if (nq.includes('화')) targetDay = 'tue';
+    else if (nq.includes('수')) targetDay = 'wed';
+    else if (nq.includes('목')) targetDay = 'thu';
+    else if (nq.includes('금')) targetDay = 'fri';
+    else if (nq.includes('토')) targetDay = 'sat';
+    else if (nq.includes('일')) targetDay = 'sun';
+    else targetDay = today === 0? 'mon' : days[today];
+
+    const list = data[targetDay] || [];
+    const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
+    answer = list.length
+       ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
+        : `${dayName}요일 수업이 없습니다.`;
+}
+
+if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
+
+this.addMessage(answer, 'ai');
+this.isThinking = false;
+UI.stopBtn.classList.add('hidden');
+UI.sendBtn.classList.remove('hidden');
+this.updateSendButton();  
         
-        // ← 보내기 버튼 복원
-        UI.stopBtn.classList.add('hidden');
-        UI.sendBtn.classList.remove('hidden');
-        this.updateSendButton();
-    },
+this.addMessage(answer, 'ai');
+this.isThinking = false;
 
-    updateSendButton() {
-        const hasText = UI.chatInput.value.trim().length > 0;
-        UI.sendBtn.disabled = !hasText;
-        UI.sendBtn.classList.toggle('active', hasText);
-    }
-};
+// ← 보내기 버튼 복원
+UI.stopBtn.classList.add('hidden');
+UI.sendBtn.classList.remove('hidden');
+this.updateSendButton();
+},
     
 // ==========================================
 // 4. 이벤트
