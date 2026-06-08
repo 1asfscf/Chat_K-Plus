@@ -462,7 +462,6 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     System.switchView(false); // ← 이렇게 통일
 } else if (text.includes('새 채팅')) {
     System.switchView(true);
-}else if (text.includes('새 채팅')) {
             document.getElementById('search-view')?.classList.add('hidden');
             document.getElementById('chat-view')?.classList.remove('hidden');
         } else if (text.includes('시간표')) {
