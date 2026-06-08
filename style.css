@@ -68,10 +68,15 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
 .title {
     font-size: 26px;
     font-weight: 800;
     letter-spacing: -0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
 }
 .search-container {
     width: 100%;
