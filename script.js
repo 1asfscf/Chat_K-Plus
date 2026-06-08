@@ -412,6 +412,43 @@ if (saveAdd) {
         if (day === currentDay) loadTimetable(currentDay);
     });
 }
+    // ========== PC 자동화: 키보드 단축키 ==========
+document.addEventListener('keydown', (e) => {
+    // Ctrl+K 또는 Cmd+K: 검색/채팅 입력 포커스
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const input = document.getElementById('queryInput')?.offsetParent ? 
+                      document.getElementById('queryInput') : 
+                      document.getElementById('chatInput');
+        input?.focus();
+    }
+    
+    // ESC: 모달 닫기
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal:not(.hidden)').forEach(m => {
+            m.classList.add('hidden');
+        });
+    }
+});
+
+// ========== PC 자동화: 사이드바 클릭 ==========
+document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const text = btn.textContent.trim();
+        if (text.includes('홈')) {
+            document.getElementById('chat-view')?.classList.add('hidden');
+            document.getElementById('search-view')?.classList.remove('hidden');
+        } else if (text.includes('새 채팅')) {
+            document.getElementById('search-view')?.classList.add('hidden');
+            document.getElementById('chat-view')?.classList.remove('hidden');
+        } else if (text.includes('시간표')) {
+            document.getElementById('timetableModal')?.classList.remove('hidden');
+        }
+    });
+});
 
 // 초기 상태
 updateMainBtn();
