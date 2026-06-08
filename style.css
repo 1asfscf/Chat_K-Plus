@@ -437,6 +437,12 @@ body {
         padding-bottom: 20px !important; /* PC에서는 여백 줄임 */
     }
 }
+
+@media (min-width: 1024px) {
+    .chat-footer:focus-within {
+        transform: none; /* PC에서는 이동 금지 */
+    }
+}
 /* ========== 링크 스타일 ========== */
 .external-link {
     color: #3b82f6;
