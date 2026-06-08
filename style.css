@@ -1037,19 +1037,27 @@ body {
     background: var(--chat-bg);
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
-    display: none;
+    display: none; /* 기본 숨김 */
     align-items: center;
     justify-content: center;
     font-size: 18px;
     cursor: pointer;
-    z-index: 200; /* ← 50에서 200으로 상향 */
+    z-index: 200;
 }
+
+/* PC에서만 작동 */
 @media (min-width: 1024px) {
     .app-container.sidebar-collapsed .sidebar-open-btn {
         display: flex;
     }
-    /* 사이드바 접혔을 때 채팅 헤더에 여백 추가 */
     .app-container.sidebar-collapsed .chat-header {
-        padding-left: 60px; /* 버튼 공간 확보 */
+        padding-left: 60px;
+    }
+}
+
+/* 모바일에서는 항상 숨김 (사이드바 자체가 없음) */
+@media (max-width: 1023px) {
+    .sidebar-open-btn {
+        display: none !important;
     }
 }
