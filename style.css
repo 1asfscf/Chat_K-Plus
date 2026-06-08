@@ -797,3 +797,34 @@ body {
     color: #ef4444;
     font-weight: 800;
 }
+
+.title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.beta-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: white;
+    background: linear-gradient(135deg, #ff0080, #7928ca, #0070f3);
+    background-size: 200% 100%;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(121, 40, 202, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    animation: betaPulse 3s ease-in-out infinite;
+    position: relative;
+    top: -2px;
+}
+
+@keyframes betaPulse {
+    0%, 100% { background-position: 0% 50%; transform: scale(1); }
+    50% { background-position: 100% 50%; transform: scale(1.05); }
+}
