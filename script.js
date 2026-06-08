@@ -459,7 +459,7 @@ const openBtn = document.createElement('button');
 openBtn.className = 'sidebar-open-btn';
 openBtn.innerHTML = '☰';
 openBtn.title = '사이드바 열기';
-document.body.appendChild(openBtn);
+document.querySelector('.app-container').appendChild(openBtn); // ← body → app-container
 
 // PC인지 체크 함수
 const isPC = () => window.innerWidth >= 1024;
