@@ -267,13 +267,6 @@ body {
 }
 
 /* ========== 채팅 입력창 - iOS26 스타일 ========== */
-.chat-box {
-    ...
-    padding: 20px 14px 110px; /* 120→110 */
-    -webkit-overflow-scrolling: touch;
-    ...
-}
-
 .chat-footer {
     position: fixed !important;
     bottom: 20px;
