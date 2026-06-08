@@ -228,12 +228,6 @@ if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
 
 this.addMessage(answer, 'ai');
 this.isThinking = false;
-UI.stopBtn.classList.add('hidden');
-UI.sendBtn.classList.remove('hidden');
-this.updateSendButton();  
-        
-this.addMessage(answer, 'ai');
-this.isThinking = false;
 
 // ← 보내기 버튼 복원
 UI.stopBtn.classList.add('hidden');
