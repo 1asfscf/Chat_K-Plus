@@ -457,7 +457,7 @@ const appContainer = document.querySelector('.app-container');
 // 열기 버튼 동적 생성
 const openBtn = document.createElement('button');
 openBtn.className = 'sidebar-open-btn';
-openBtn.innerHTML = '→';
+openBtn.innerHTML = '☰'; // ← 변경
 openBtn.title = '사이드바 열기';
 document.body.appendChild(openBtn);
 
