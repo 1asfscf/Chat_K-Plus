@@ -1,5 +1,5 @@
 /* =========================================================
-   Chat GOL - Full Style v4.3.4V (2026-06-07)
+   Chat GOL - Full Style v4.3.5V (2026-06-07)
    ========================================================= */
 :root {
     --bg-main: #f8fafc;
@@ -283,14 +283,14 @@ body {
 /* ========== 채팅 입력창 - v1.4 Ultra Modern ========== */
 .chat-footer {
     position: fixed;
-    bottom: 0; /* ← 16px → 0으로 변경. safe-area로만 띄움 */
+    bottom: 0; /* ← 바닥에 붙임 */
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 28px);
     max-width: 520px;
     z-index: 100;
-    padding: 16px 0 calc(16px + env(safe-area-inset-bottom)); /* ← 위아래 패딩 + safe-area */
-    background: linear-gradient(180deg, transparent 0%, var(--chat-bg) 20%); /* ← 뒤 비침 방지 그라데이션 */
+    padding: 16px 0 calc(16px + env(safe-area-inset-bottom)); /* ← 상하 패딩 + safe-area */
+    background: linear-gradient(180deg, transparent 0%, var(--chat-bg) 20%); /* ← 뒤 비침 방지 */
 }
 
 @media (min-width: 1024px) {
@@ -307,31 +307,8 @@ body {
     }
 }
 
-/* ========== 채팅 입력창 - v1.4 Ultra Modern ========== */
-.chat-footer {
-    position: fixed;
-    bottom: 16px; /* ← 24px → 16px 수정 */
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 28px);
-    max-width: 520px;
-    z-index: 100;
-    padding: 0;
-    padding-bottom: env(safe-area-inset-bottom); /* ← 아이폰 하단바 대응 추가 */
-}
-
-@media (min-width: 1024px) {
-    .chat-footer {
-        position: relative;
-        bottom: auto;
-        left: auto;
-        transform: none;
-        width: 100%;
-        max-width: 880px;
-        margin: 0 auto 24px;
-        padding-bottom: 0; /* ← PC는 safe-area 불필요 */
-    }
-}
+/* 아래 중복된 .chat-footer 블록 전체 삭제 */
+/* .chat-footer { position: fixed; bottom: 16px; ... } ← 이거 통째로 지워 */
 
 /* 글래스 컨테이너 - 리퀴드 */
 .input-wrapper-modern {
