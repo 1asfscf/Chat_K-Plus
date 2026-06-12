@@ -16,6 +16,31 @@ document.addEventListener('DOMContentLoaded', () => {
     difficultySelect: document.getElementById('difficultySelect') // ← 추가
 };
 
+// ========== 입력바 높이 자동 계산 ==========
+function fixChatPadding() {
+    const footer = document.querySelector('.chat-footer');
+    const chatBox = document.getElementById('chat-box');
+    
+    if (!footer || !chatBox) return;
+    
+    // 모바일에서만 작동
+    if (window.innerWidth < 1024) {
+        const height = footer.offsetHeight;
+        chatBox.style.paddingBottom = (height + 20) + 'px'; // 입력바 높이 + 여유 20px
+    } else {
+        chatBox.style.paddingBottom = '20px'; // PC는 고정
+    }
+}
+
+// 최초 실행
+fixChatPadding();
+
+// 창 크기 바뀔 때 재계산
+window.addEventListener('resize', fixChatPadding);
+
+// iOS 키보드 올라올 때 재계산
+window.visualViewport?.addEventListener('resize', fixChatPadding);
+
 // ==========================================
 // 2. DB
 // ==========================================
