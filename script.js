@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     backBtn: document.getElementById('backBtn'),
     chatInput: document.getElementById('chatInput'),
     sendBtn: document.getElementById('sendBtn'),
-    stopBtn: document.getElementById('stopBtn') // ← 추가
+    stopBtn: document.getElementById('stopBtn'),
+    difficultySelect: document.getElementById('difficultySelect') // ← 추가
 };
 
  // ==========================================
@@ -82,33 +83,34 @@ const DB = {
 // ==========================================
 const System = {
     isThinking: false,
+    responseMode: 'normal', // ← 추가
 
     switchView(isChat) {
-        UI.searchView.style.display = isChat ? 'none' : 'flex';
-        UI.chatView.style.display = isChat ? 'flex' : 'none';
+        UI.searchView.style.display = isChat? 'none' : 'flex';
+        UI.chatView.style.display = isChat? 'flex' : 'none';
         UI.searchView.classList.toggle('hidden', isChat);
-        UI.chatView.classList.toggle('hidden', !isChat);
+        UI.chatView.classList.toggle('hidden',!isChat);
         if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
     },
 
     addMessage(text, type) {
         const msg = document.createElement('div');
-        msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
-        
+        msg.className = `message ${type === 'user'? 'user-msg' : 'ai-msg'}`;
+
         if (window.__isPolicyWarning) {
             msg.classList.add('policy-warning');
             window.__isPolicyWarning = false;
         }
-        
+
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         if (text.match(urlRegex)) {
-            msg.innerHTML = text.replace(urlRegex, url => 
+            msg.innerHTML = text.replace(urlRegex, url =>
                 `<a href="#" class="external-link" data-url="${url}">${url}</a>`
             );
         } else {
             msg.innerHTML = text;
         }
-        
+
         UI.chatBox.appendChild(msg);
         UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
         return msg;
@@ -117,6 +119,8 @@ const System = {
     async runReasoning(query) {
         if (!query || this.isThinking) return;
         this.isThinking = true;
+
+        const mode = this.responseMode; // ← 추가: 난이도 값 읽기
 
         UI.sendBtn.classList.add('hidden');
         UI.stopBtn.classList.remove('hidden');
@@ -136,14 +140,14 @@ const System = {
             thinking.querySelector('.thinking-text').textContent = step;
             await new Promise(r => setTimeout(r, 400));
         }
-        
+
         if (!this.isThinking) {
             thinking.remove();
             UI.stopBtn.classList.add('hidden');
             UI.sendBtn.classList.remove('hidden');
             return;
         }
-        
+
         thinking.remove();
 
         const q = query.trim();
@@ -174,7 +178,7 @@ const System = {
             };
             const found = [];
             for (const name in sites) {
-                if (nq.includes(name) && !found.some(f => f.includes(sites[name]))) {
+                if (nq.includes(name) &&!found.some(f => f.includes(sites[name]))) {
                     found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
                 }
             }
@@ -210,12 +214,12 @@ const System = {
             else if (nq.includes('금')) targetDay = 'fri';
             else if (nq.includes('토')) targetDay = 'sat';
             else if (nq.includes('일')) targetDay = 'sun';
-            else targetDay = today === 0 ? 'mon' : days[today];
+            else targetDay = today === 0? 'mon' : days[today];
 
             const list = data[targetDay] || [];
             const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
             answer = list.length
-               ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
+              ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
                 : `${dayName}요일 수업이 없습니다.`;
         }
 
@@ -231,15 +235,15 @@ const System = {
 
     updateSendButton() {
         const hasText = UI.chatInput.value.trim().length > 0;
-        UI.sendBtn.disabled = !hasText;
+        UI.sendBtn.disabled =!hasText;
         UI.sendBtn.classList.toggle('active', hasText);
     }
 }; // ← 여기 세미콜론으로 System 객체 종료
-    
+
 // ==========================================
 // 4. 이벤트
 // ==================================
-    
+
 // 메인 검색
 const updateMainBtn = () => {
     UI.btn.disabled = UI.input.value.trim().length === 0;
@@ -247,7 +251,7 @@ const updateMainBtn = () => {
 
 UI.input.addEventListener('input', updateMainBtn);
 UI.input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !UI.btn.disabled) {
+    if (e.key === 'Enter' &&!UI.btn.disabled) {
         System.runReasoning(UI.input.value.trim());
         UI.input.value = '';
         updateMainBtn();
@@ -268,7 +272,7 @@ UI.chatInput.addEventListener('input', () => {
 });
 
 UI.chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' &&!e.shiftKey) {
         e.preventDefault();
         if (!UI.sendBtn.disabled) {
             System.runReasoning(UI.chatInput.value.trim());
@@ -452,12 +456,12 @@ document.addEventListener('keydown', (e) => {
     // Ctrl+K 또는 Cmd+K: 검색/채팅 입력 포커스
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        const input = document.getElementById('queryInput')?.offsetParent ? 
-                      document.getElementById('queryInput') : 
+        const input = document.getElementById('queryInput')?.offsetParent?
+                      document.getElementById('queryInput') :
                       document.getElementById('chatInput');
         input?.focus();
     }
-    
+
     // ESC: 모달 닫기
     if (e.key === 'Escape') {
         document.querySelectorAll('.modal:not(.hidden)').forEach(m => {
@@ -471,7 +475,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
+
         const text = btn.textContent.trim();
      if (text.includes('홈')) {
     System.switchView(false); // ← 이렇게 통일
@@ -528,8 +532,13 @@ if (localStorage.getItem('sidebar-collapsed') === 'true' && isPC()) {
 updateOpenBtn();
 window.addEventListener('resize', updateOpenBtn);
 
+// ========== 난이도 설정 ==========
+UI.difficultySelect?.addEventListener('change', (e) => {
+    System.responseMode = e.target.value;
+});
+System.responseMode = UI.difficultySelect?.value || 'normal';
 
 // 초기 상태
 updateMainBtn();
 System.updateSendButton();
-});   // ← 이 한 줄
+}); // ← 이 한 줄
