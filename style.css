@@ -1,5 +1,5 @@
 /* =========================================================
-   Chat GOL - Full Style v4.3.1V (2026-06-07)
+   Chat GOL - Full Style v4.3.2V (2026-06-07)
    ========================================================= */
 :root {
     --bg-main: #f8fafc;
@@ -50,7 +50,8 @@ body {
 #search-view {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100%; /* ← 100dvh 말고 100%로. 부모가 이미 dvh */
+    min-height: 0;
 }
 .search-content {
     flex: 1;
@@ -68,7 +69,6 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-
 .title {
     font-size: 26px;
     font-weight: 800;
@@ -142,6 +142,7 @@ body {
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: center;
+    flex-shrink: 0; /* ← 추가: footer 찌그러짐 방지 */
 }
 .app-footer p {
     display: inline-flex;
@@ -160,7 +161,7 @@ body {
 #chat-view {
     display: flex;
     flex-direction: column;
-    height: 100dvh;
+    height: 100%; /* ← 100dvh → 100% 로 변경. 핵심 */
     min-height: 0;
     background: var(--chat-bg);
     position: relative;
@@ -195,13 +196,20 @@ body {
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px 14px 110px; /* ← 110px로 통합 */
+    padding: 20px 14px 20px; /* ← 110px → 20px로 변경. PC에서 footer가 relative라 패딩 불필요 */
     display: flex;
     flex-direction: column;
     gap: 12px;
-    scroll-behavior: smooth;
+    scroll-behavior: auto; /* ← smooth → auto. JS에서 스크롤 제어하므로 auto가 안정적 */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+}
+
+/* 모바일에서만 fixed footer라서 패딩 필요 */
+@media (max-width: 1023px) {
+    .chat-box {
+        padding-bottom: 110px; /* 모바일만 110px */
+    }
 }
 
 .message {
@@ -211,7 +219,13 @@ body {
     line-height: 1.5;
     word-break: break-word;
     margin: 2px 0;
-    flex-shrink: 0; /* ← 메시지 줄어드는 것 방지 */
+    flex-shrink: 0;
+    animation: msgIn 0.2s ease; /* ← 추가: 메시지 추가 시 렌더 보장 */
+}
+
+@keyframes msgIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .user-msg {
@@ -265,7 +279,6 @@ body {
 @keyframes spin { 
     to { transform: rotate(360deg); } 
 }
-
 /* ========== 채팅 입력창 - v1.4 Ultra Modern ========== */
 .chat-footer {
     position: fixed;
