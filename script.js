@@ -161,155 +161,182 @@ const System = {
     },
 
     async runReasoning(query) {
-        if (!query || this.isThinking) return;
-        this.isThinking = true;
+    if (!query || this.isThinking) return;
+    this.isThinking = true;
 
-        const mode = this.responseMode; // ← 추가: 난이도 값 읽기
+    const mode = this.responseMode;
+    const forceDetail = /(구체적|자세히|상세|자세한|구체적인)/.test(query); // ← 프롬프트에서 강제 감지
 
-        UI.sendBtn.classList.add('hidden');
-        UI.stopBtn.classList.remove('hidden');
+    UI.sendBtn.classList.add('hidden');
+    UI.stopBtn.classList.remove('hidden');
 
-        this.switchView(true);
-        this.addMessage(query, 'user');
+    this.switchView(true);
+    this.addMessage(query, 'user');
 
-        const thinking = document.createElement('div');
-        thinking.className = 'message ai-msg thinking';
-        thinking.innerHTML = `<span class="thinking-icon"></span> <span class="thinking-text">분석 중...</span>`;
-        UI.chatBox.appendChild(thinking);
-        UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+    const thinking = document.createElement('div');
+    thinking.className = 'message ai-msg thinking';
+    thinking.innerHTML = `<span class="thinking-icon"></span> <span class="thinking-text">분석 중...</span>`;
+    UI.chatBox.appendChild(thinking);
+    UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
 
-        const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
-        for (let step of steps) {
-            if (!this.isThinking) break;
-            thinking.querySelector('.thinking-text').textContent = step;
-            await new Promise(r => setTimeout(r, 400));
-        }
+    const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
+    for (let step of steps) {
+        if (!this.isThinking) break;
+        thinking.querySelector('.thinking-text').textContent = step;
+        await new Promise(r => setTimeout(r, 400));
+    }
 
-        if (!this.isThinking) {
-            thinking.remove();
-            UI.stopBtn.classList.add('hidden');
-            UI.sendBtn.classList.remove('hidden');
-            return;
-        }
-
+    if (!this.isThinking) {
         thinking.remove();
-
-const q = query.trim();
-const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
-const rawQ = query; // 원문 보존 - 대소문자/띄어쓰기 우회 체크용
-let answer = null;
-
-// ===== 정책 필터 v2 - 우회 방지 강화 =====
-// 1. 중국 관련 필터
-const chinaPattern = /(중국\s*공산당|중공|c\s*c\s*p|c\.?\s*c\.?\s*p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq);
-const ccpOutBypass = /c\s*c\s*p.*o\s*u\s*t|c\.?\s*c\.?\s*p.*out/i.test(rawQ); // c c p out 우회
-
-if (chinaPattern || ccpOutBypass) {
-    const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
-    const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out|c\s*c\s*p.*o\s*u\s*t/i;
-    if (banWords.test(nq) || directInsults.test(nq) || ccpOutBypass) {
-        answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
-        window.__isPolicyWarning = true;
-    }
-}
-
-// 2. 한국 대통령 필터 - 현직 + 역대
-if (!answer) {
-    const koreanPresidents = /(이대통령|이재명|윤석열|문재인|박근혜|이명박|노무현|김대중|김영삼|노태우|전두환|최규하|박정희|윤보선|이승만)/;
-    const presidentInsults = /(탄핵|사퇴|퇴진|하야|아웃|out|죽어|뒤져|꺼져|타도|처단|암살|독재|부패|무능|실패|비리|범죄|매국|빨갱이|토착왜구|적폐|쓰레기|병신|개새끼|놈|년|망해|붕괴|몰락|퇴물|청산|심판|처형)/;
-    
-    if (koreanPresidents.test(nq) && presidentInsults.test(nq)) {
-        answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>대한민국 대통령에 대한 비하/모욕적 표현은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
-        window.__isPolicyWarning = true;
-    }
-}
-// ===== 필터 끝 =====
-
-        if (!answer && DB[q]) answer = DB[q];
-
-        if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
-            const sites = {
-                '네이버':'https://www.naver.com',
-                '다음':'https://www.daum.net',
-                '구글':'https://www.google.com',
-                '유튜브':'https://www.youtube.com',
-                '인스타그램':'https://www.instagram.com',
-                '인스타':'https://www.instagram.com',
-                '카카오':'https://www.kakaocorp.com',
-                '쿠팡':'https://www.coupang.com'
-            };
-            const found = [];
-            for (const name in sites) {
-                if (nq.includes(name) &&!found.some(f => f.includes(sites[name]))) {
-                    found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
-                }
-            }
-            if (found.length) answer = found.join('<br>');
-        }
-
-        if (!answer) {
-            for (const key in DB) {
-                const nk = key.toLowerCase();
-                if (nq.includes(nk) || nk.includes(nq)) { answer = DB[key]; break; }
-            }
-        }
-
-        if (!answer && /(너|니).*(누구|뭐)/.test(nq)) answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
-
-        if (!answer && nq.includes('중국')) {
-            if (nq.includes('수도')) answer = DB["중국 수도"];
-            else if (nq.includes('인구')) answer = DB["중국 인구"];
-            else answer = DB["중국"];
-        }
-
-        if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
-            const data = getTimetable();
-            const today = new Date().getDay();
-            const days = ['sun','mon','tue','wed','thu','fri','sat'];
-            let targetDay = days[today];
-            if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
-            else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
-            else if (nq.includes('월')) targetDay = 'mon';
-            else if (nq.includes('화')) targetDay = 'tue';
-            else if (nq.includes('수')) targetDay = 'wed';
-            else if (nq.includes('목')) targetDay = 'thu';
-            else if (nq.includes('금')) targetDay = 'fri';
-            else if (nq.includes('토')) targetDay = 'sat';
-            else if (nq.includes('일')) targetDay = 'sun';
-            else targetDay = today === 0? 'mon' : days[today];
-
-            const list = data[targetDay] || [];
-            const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
-            answer = list.length
-              ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
-                : `${dayName}요일 수업이 없습니다.`;
-        }
-
-        if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
-
-// ===== 난이도 3단계 처리 =====
-if (mode === 'simple') {
-    // 간단: 첫 문장만 + 핵심 키워드
-    answer = answer.split(/[.!?]\s/)[0] + '.';
-} else if (mode === 'detail') {
-    // 상세: 기존 답변 + 추가 설명
-    if (DB[q + '_detail']) {
-        answer += `<br><br><strong>상세:</strong> ${DB[q + '_detail']}`;
-    } else {
-        answer += `<br><br>※ 더 자세한 정보가 필요하면 질문을 구체화해주세요.`;
-    }
-}
-// normal은 그대로
-// ===== 난이도 처리 끝 =====
-
-        this.addMessage(answer, 'ai');
-        this.isThinking = false;
-
         UI.stopBtn.classList.add('hidden');
         UI.sendBtn.classList.remove('hidden');
-        this.updateSendButton();
-    },
+        return;
+    }
 
+    thinking.remove();
+
+    const q = query.trim();
+    const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
+    const rawQ = query;
+    let answer = null;
+    let matchedKey = null; // ← 매칭된 DB 키 저장용
+
+    // ===== 정책 필터 v2 =====
+    const chinaPattern = /(중국\s*공산당|중공|c\s*c\s*p|c\.?\s*c\.?\s*p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq);
+    const ccpOutBypass = /c\s*c\s*p.*o\s*u\s*t|c\.?\s*c\.?\s*p.*out/i.test(rawQ);
+
+    if (chinaPattern || ccpOutBypass) {
+        const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
+        const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out|c\s*c\s*p.*o\s*u\s*t/i;
+        if (banWords.test(nq) || directInsults.test(nq) || ccpOutBypass) {
+            answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+            window.__isPolicyWarning = true;
+        }
+    }
+
+    if (!answer) {
+        const koreanPresidents = /(이대통령|이재명|윤석열|문재인|박근혜|이명박|노무현|김대중|김영삼|노태우|전두환|최규하|박정희|윤보선|이승만)/;
+        const presidentInsults = /(탄핵|사퇴|퇴진|하야|아웃|out|죽어|뒤져|꺼져|타도|처단|암살|독재|부패|무능|실패|비리|범죄|매국|빨갱이|토착왜구|적폐|쓰레기|병신|개새끼|놈|년|망해|붕괴|몰락|퇴물|청산|심판|처형)/;
+
+        if (koreanPresidents.test(nq) && presidentInsults.test(nq)) {
+            answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>대한민국 대통령에 대한 비하/모욕적 표현은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+            window.__isPolicyWarning = true;
+        }
+    }
+    // ===== 필터 끝 =====
+
+    // DB 매칭 - 정확 일치 우선
+    if (!answer && DB[q]) {
+        answer = DB[q];
+        matchedKey = q; // ← 키 저장
+    }
+
+    // 공식 사이트 패턴
+    if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
+        const sites = {
+            '네이버':'https://www.naver.com',
+            '다음':'https://www.daum.net',
+            '구글':'https://www.google.com',
+            '유튜브':'https://www.youtube.com',
+            '인스타그램':'https://www.instagram.com',
+            '인스타':'https://www.instagram.com',
+            '카카오':'https://www.kakaocorp.com',
+            '쿠팡':'https://www.coupang.com'
+        };
+        const found = [];
+        for (const name in sites) {
+            if (nq.includes(name) &&!found.some(f => f.includes(sites[name]))) {
+                found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
+                matchedKey = name; // ← 키 저장
+            }
+        }
+        if (found.length) answer = found.join('<br>');
+    }
+
+    // DB 부분 매칭 - 키도 같이 저장
+    if (!answer) {
+        for (const key in DB) {
+            const nk = key.toLowerCase();
+            if (nq.includes(nk) || nk.includes(nq)) {
+                answer = DB[key];
+                matchedKey = key; // ← 키 저장
+                break;
+            }
+        }
+    }
+
+    // 자가소개 패턴
+    if (!answer && /(너|니).*(누구|뭐)/.test(nq)) {
+        answer = "저는 Chat K plus의 AI 어시스턴트입니다!";
+        matchedKey = "너에 대해서";
+    }
+
+    // 중국 키워드
+    if (!answer && nq.includes('중국')) {
+        if (nq.includes('수도')) {
+            answer = DB["중국 수도"];
+            matchedKey = "중국 수도";
+        } else if (nq.includes('인구')) {
+            answer = DB["중국 인구"];
+            matchedKey = "중국 인구";
+        } else {
+            answer = DB["중국"];
+            matchedKey = "중국";
+        }
+    }
+
+    // 시간표
+    if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+        const data = getTimetable();
+        const today = new Date().getDay();
+        const days = ['sun','mon','tue','wed','thu','fri','sat'];
+        let targetDay = days[today];
+        if (nq.includes('내일')) targetDay = days[(today + 1) % 7];
+        else if (nq.includes('모레')) targetDay = days[(today + 2) % 7];
+        else if (nq.includes('월')) targetDay = 'mon';
+        else if (nq.includes('화')) targetDay = 'tue';
+        else if (nq.includes('수')) targetDay = 'wed';
+        else if (nq.includes('목')) targetDay = 'thu';
+        else if (nq.includes('금')) targetDay = 'fri';
+        else if (nq.includes('토')) targetDay = 'sat';
+        else if (nq.includes('일')) targetDay = 'sun';
+        else targetDay = today === 0? 'mon' : days[today];
+
+        const list = data[targetDay] || [];
+        const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
+        answer = list.length
+         ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
+            : `${dayName}요일 수업이 없습니다.`;
+    }
+
+    if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
+
+    // ===== 난이도 3단계 처리 - 개선됨 =====
+    const shouldDetail = mode === 'detail' || forceDetail; // ← 모드 or 프롬프트 키워드
+
+    if (mode === 'simple' &&!forceDetail) {
+        // 간단: 첫 문장만
+        answer = answer.split(/[.!?]\s/)[0] + '.';
+    } else if (shouldDetail && matchedKey) {
+        // 상세: 매칭된 키로 _detail 찾기
+        if (DB[matchedKey + '_detail']) {
+            answer += `<br><br><strong>상세:</strong> ${DB[matchedKey + '_detail']}`;
+        } else {
+            answer += `<br><br>※ 해당 주제의 상세 정보가 DB에 없습니다.`;
+        }
+    }
+    // normal은 그대로, simple인데 forceDetail이면 detail로 처리됨
+    // ===== 난이도 처리 끝 =====
+
+    this.addMessage(answer, 'ai');
+    this.isThinking = false;
+
+    UI.stopBtn.classList.add('hidden');
+    UI.sendBtn.classList.remove('hidden');
+    this.updateSendButton();
+},
+
+        
     updateSendButton() {
         const hasText = UI.chatInput.value.trim().length > 0;
         UI.sendBtn.disabled =!hasText;
