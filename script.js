@@ -32,8 +32,6 @@ function fixChatPadding() {
     }
 }
 
-// 최초 실행
-fixChatPadding();
 
 // 창 크기 바뀔 때 재계산
 window.addEventListener('resize', fixChatPadding);
@@ -153,21 +151,43 @@ const System = {
     responseMode: 'normal', // ← 추가
 
     switchView(isChat) {
-        UI.searchView.style.display = isChat? 'none' : 'flex';
-        UI.chatView.style.display = isChat? 'flex' : 'none';
-        UI.searchView.classList.toggle('hidden', isChat);
-        UI.chatView.classList.toggle('hidden',!isChat);
-        if (isChat) setTimeout(() => UI.chatInput.focus(), 100);
-    },
+    UI.searchView.style.display = isChat ? 'none' : 'flex';
+    UI.chatView.style.display = isChat ? 'flex' : 'none';
+    UI.searchView.classList.toggle('hidden', isChat);
+    UI.chatView.classList.toggle('hidden', !isChat);
+    if (isChat) {
+        setTimeout(() => {
+            UI.chatInput.focus();
+            fixChatPadding(); // ← 이 줄 추가. 채팅 켜질 때 계산
+        }, 100);
+    }
+},
 
     addMessage(text, type) {
-        const msg = document.createElement('div');
-        msg.className = `message ${type === 'user'? 'user-msg' : 'ai-msg'}`;
+    const msg = document.createElement('div');
+    msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
 
-        if (window.__isPolicyWarning) {
-            msg.classList.add('policy-warning');
-            window.__isPolicyWarning = false;
-        }
+    if (window.__isPolicyWarning) {
+        msg.classList.add('policy-warning');
+        window.__isPolicyWarning = false;
+    }
+
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    if (text.match(urlRegex)) {
+        msg.innerHTML = text.replace(urlRegex, url =>
+            `<a href="#" class="external-link" data-url="${url}">${url}</a>`
+        );
+    } else {
+        msg.innerHTML = text;
+    }
+
+    UI.chatBox.appendChild(msg);
+    UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+    
+    fixChatPadding(); // ← 이 한 줄만 추가
+    
+    return msg;
+},
 
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         if (text.match(urlRegex)) {
