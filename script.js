@@ -189,10 +189,10 @@ const System = {
     UI.chatBox.appendChild(msg);
     UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
     
-    fixChatPadding(); // ← 이 한 줄만 추가
+    fixChatPadding();
     
     return msg;
-},
+}, // ← 여기서 바로 async runReasoning으로 넘어가야 함
 
     async runReasoning(query) {
     if (!query || this.isThinking) return;
