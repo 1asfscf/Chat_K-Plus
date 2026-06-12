@@ -518,9 +518,6 @@ body {
     }
 }
 
-/* 구버전 숨김 */
-.send-btn, .tool-btn, .stop-btn { display: none !important; }
-
 /* PC에서는 fixed 해제 - 디자인은 유지 */
 @media (min-width: 1024px) {
     .chat-footer {
