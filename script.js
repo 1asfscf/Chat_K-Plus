@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 };
 
 // ========== 입력바 높이 자동 계산 ==========
+let paddingTimer = null; // ← 추가
 function fixChatPadding() {
     const footer = document.querySelector('.chat-footer');
     const chatBox = document.getElementById('chat-box');
@@ -25,10 +26,14 @@ function fixChatPadding() {
     
     // 모바일에서만 작동
     if (window.innerWidth < 1024) {
-        const height = footer.offsetHeight;
-        chatBox.style.paddingBottom = (height + 20) + 'px'; // 입력바 높이 + 여유 20px
+        clearTimeout(paddingTimer); // ← 추가
+        paddingTimer = setTimeout(() => { // ← 추가
+            const height = footer.offsetHeight;
+            chatBox.style.paddingBottom = (height + 20) + 'px';
+            chatBox.scrollTop = chatBox.scrollHeight; // ← 추가. 스크롤도 같이
+        }, 50); // ← 추가
     } else {
-        chatBox.style.paddingBottom = '20px'; // PC는 고정
+        chatBox.style.paddingBottom = '20px';
     }
 }
 
@@ -188,20 +193,6 @@ const System = {
     
     return msg;
 },
-
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        if (text.match(urlRegex)) {
-            msg.innerHTML = text.replace(urlRegex, url =>
-                `<a href="#" class="external-link" data-url="${url}">${url}</a>`
-            );
-        } else {
-            msg.innerHTML = text;
-        }
-
-        UI.chatBox.appendChild(msg);
-        UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
-        return msg;
-    },
 
     async runReasoning(query) {
     if (!query || this.isThinking) return;
