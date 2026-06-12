@@ -407,16 +407,18 @@ UI.chatInput.addEventListener('input', () => {
     System.updateSendButton();
     UI.chatInput.style.height = 'auto';
     UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
+    fixChatPadding(); // ← 이 줄 추가됨
 });
 
 UI.chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' &&!e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         if (!UI.sendBtn.disabled) {
             System.runReasoning(UI.chatInput.value.trim());
             UI.chatInput.value = '';
             UI.chatInput.style.height = 'auto';
             System.updateSendButton();
+            setTimeout(fixChatPadding, 100); // ← 이 줄도 추가. 전송 후 리셋
         }
     }
 });
