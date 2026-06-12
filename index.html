@@ -81,10 +81,25 @@
             </div>
 
             <footer class="chat-footer">
-    <button id="timetableBtn" class="tool-btn" title="시간표">📅</button>
-    <textarea id="chatInput" class="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
-    <button id="sendBtn" class="send-btn" disabled>↑</button>
-    <button id="stopBtn" class="stop-btn hidden" title="중지">■</button>
+    <div class="input-wrapper-modern">
+        <div class="input-top">
+            <textarea id="chatInput" class="chat-input" placeholder="Ask anything..." rows="1"></textarea>
+        </div>
+        <div class="input-controls">
+            <div class="controls-left">
+                <button id="timetableBtn" class="icon-btn" title="시간표">📅</button>
+                <select id="difficultySelect" class="difficulty-select">
+                    <option value="normal">보통</option>
+                    <option value="detail">자세히</option>
+                    <option value="simple">간단히</option>
+                </select>
+            </div>
+            <div class="controls-right">
+                <button id="sendBtn" class="send-circle" disabled>↑</button>
+                <button id="stopBtn" class="stop-circle hidden" title="중지">■</button>
+            </div>
+        </div>
+    </div>
 </footer>
         </div>
 
