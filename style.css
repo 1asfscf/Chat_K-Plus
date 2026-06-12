@@ -267,31 +267,41 @@ body {
 }
 
 /* ========== 채팅 입력창 - iOS26 스타일 ========== */
-.chat-footer {
-    position: fixed !important;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 32px);
-    max-width: 512px;
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-    padding: 6px 6px 12px;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.85));
-    backdrop-filter: blur(28px) saturate(200%);
-    -webkit-backdrop-filter: blur(28px) saturate(200%);
-    border: 1px solid rgba(148, 163, 184, 0.15);
-    border-radius: 28px;
-    box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.45),
-        0 8px 16px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    margin: 0 !important;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* 1. 글래스모피즘 래퍼 */
+.input-wrapper-modern {
+    width: 100%;
+    background: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 8px 12px 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
+
+/* 2. 난이도 드롭다운 */
+.difficulty-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* 3. 원형 버튼 */
+.send-circle, .stop-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    cursor: pointer;
+}
+.send-circle:disabled { opacity: 0.3; }
+.stop-circle { background: rgba(239, 68, 68, 0.8); }
 
 @media (prefers-color-scheme: light) {
     .chat-footer {
