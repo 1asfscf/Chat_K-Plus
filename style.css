@@ -1241,3 +1241,44 @@ body {
 }
 .send-circle:disabled { opacity: 0.3; }
 .stop-circle { background: rgba(239, 68, 68, 0.8); }
+
+.input-top {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.input-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.controls-left, .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (prefers-color-scheme: light) {
+    .input-wrapper-modern {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .difficulty-select {
+        background: rgba(0, 0, 0, 0.05);
+        color: #0f172a;
+    }
+    
+    .icon-btn, .send-circle {
+        background: rgba(0, 0, 0, 0.05);
+        color: #0f172a;
+    }
+    .icon-btn:hover, .send-circle:hover { 
+        background: rgba(0, 0, 0, 0.1); 
+    }
+    
+    .stop-circle { background: rgba(239, 68, 68, 0.9); color: #fff; }
+}
