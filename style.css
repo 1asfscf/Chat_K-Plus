@@ -1,5 +1,5 @@
 /* =========================================================
-   Chat GOL - Full Style v4.3.2V (2026-06-07)
+   Chat GOL - Full Style v4.3.3V (2026-06-07)
    ========================================================= */
 :root {
     --bg-main: #f8fafc;
@@ -161,7 +161,7 @@ body {
 #chat-view {
     display: flex;
     flex-direction: column;
-    height: 100%; /* ← 100dvh → 100% 로 변경. 핵심 */
+    height: 100%;
     min-height: 0;
     background: var(--chat-bg);
     position: relative;
@@ -196,11 +196,11 @@ body {
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px 14px 20px; /* ← 110px → 20px로 변경. PC에서 footer가 relative라 패딩 불필요 */
+    padding: 20px 14px 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    scroll-behavior: auto; /* ← smooth → auto. JS에서 스크롤 제어하므로 auto가 안정적 */
+    scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
 }
@@ -208,7 +208,7 @@ body {
 /* 모바일에서만 fixed footer라서 패딩 필요 */
 @media (max-width: 1023px) {
     .chat-box {
-        padding-bottom: 110px; /* 모바일만 110px */
+        padding-bottom: 140px; /* ← 110px → 140px 수정 */
     }
 }
 
@@ -220,7 +220,7 @@ body {
     word-break: break-word;
     margin: 2px 0;
     flex-shrink: 0;
-    animation: msgIn 0.2s ease; /* ← 추가: 메시지 추가 시 렌더 보장 */
+    animation: msgIn 0.2s ease;
 }
 
 @keyframes msgIn {
@@ -279,16 +279,18 @@ body {
 @keyframes spin { 
     to { transform: rotate(360deg); } 
 }
+
 /* ========== 채팅 입력창 - v1.4 Ultra Modern ========== */
 .chat-footer {
     position: fixed;
-    bottom: 24px;
+    bottom: 16px; /* ← 24px → 16px 수정 */
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 28px);
     max-width: 520px;
     z-index: 100;
     padding: 0;
+    padding-bottom: env(safe-area-inset-bottom); /* ← 아이폰 하단바 대응 추가 */
 }
 
 @media (min-width: 1024px) {
@@ -300,6 +302,7 @@ body {
         width: 100%;
         max-width: 880px;
         margin: 0 auto 24px;
+        padding-bottom: 0; /* ← PC는 safe-area 불필요 */
     }
 }
 
