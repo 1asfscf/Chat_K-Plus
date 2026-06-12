@@ -172,18 +172,36 @@ const System = {
 
         thinking.remove();
 
-        const q = query.trim();
-        const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
-        let answer = null;
+const q = query.trim();
+const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
+const rawQ = query; // 원문 보존 - 대소문자/띄어쓰기 우회 체크용
+let answer = null;
 
-        if (/(중국\s*공산당|중공|ccp|c\.?c\.?p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq)) {
-            const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
-            const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out/;
-            if (banWords.test(nq) || directInsults.test(nq)) {
-                answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
-                window.__isPolicyWarning = true;
-            }
-        }
+// ===== 정책 필터 v2 - 우회 방지 강화 =====
+// 1. 중국 관련 필터
+const chinaPattern = /(중국\s*공산당|중공|c\s*c\s*p|c\.?\s*c\.?\s*p|공산당|시진핑|습근평|xi\s*jinping|시\s*진\s*핑)/.test(nq);
+const ccpOutBypass = /c\s*c\s*p.*o\s*u\s*t|c\.?\s*c\.?\s*p.*out/i.test(rawQ); // c c p out 우회
+
+if (chinaPattern || ccpOutBypass) {
+    const banWords = /(비판|비난|독재|부패|타도|전복|붕괴|망해|쓰레기|나쁘|싫어|반대|문제|악|독재자|살인|탄압|인권|학살|학살자|학정|폭정|전체주의|권위주의|세습|부정부패|비리|착취|억압|감시|검열|통제|세뇌|선전|선동|거짓|위선|무능|실패|몰락|타락|퇴물|폐기|청산|심판|처단|처형|암살|테러|저항|혁명|봉기|시위|데모|항의|규탄|고발|폭로|비밀|스캔들|티안먼|천안문|위구르|신장|티베트|홍콩|대만독립|파룬궁|파룬따파|아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|추방|제거|숙청|죽어|뒤져|꺼져|꺼지|닥쳐|병신|새끼|놈|개|쓰레기|타파|반대|저항|멸망|소멸|파멸|종식)/;
+    const directInsults = /(시진핑|습근평|xi).{0,5}(아웃|out|사퇴|퇴진|물러나|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단)|(중공|공산당|ccp|c\.?c\.?p).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)|(ccp|c\.?c\.?p).{0,3}out|c\s*c\s*p.*o\s*u\s*t/i;
+    if (banWords.test(nq) || directInsults.test(nq) || ccpOutBypass) {
+        answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>중국 공산당 관련 비판적 내용은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+        window.__isPolicyWarning = true;
+    }
+}
+
+// 2. 한국 대통령 필터 - 현직 + 역대
+if (!answer) {
+    const koreanPresidents = /(이대통령|이재명|윤석열|문재인|박근혜|이명박|노무현|김대중|김영삼|노태우|전두환|최규하|박정희|윤보선|이승만)/;
+    const presidentInsults = /(탄핵|사퇴|퇴진|하야|아웃|out|죽어|뒤져|꺼져|타도|처단|암살|독재|부패|무능|실패|비리|범죄|매국|빨갱이|토착왜구|적폐|쓰레기|병신|개새끼|놈|년|망해|붕괴|몰락|퇴물|청산|심판|처형)/;
+    
+    if (koreanPresidents.test(nq) && presidentInsults.test(nq)) {
+        answer = `<strong>⚠️ 정책 위반 감지</strong><br><br>대한민국 대통령에 대한 비하/모욕적 표현은 Chat K plus 정책상 차단됩니다.<br><br>다른 주제로 질문해주세요.`;
+        window.__isPolicyWarning = true;
+    }
+}
+// ===== 필터 끝 =====
 
         if (!answer && DB[q]) answer = DB[q];
 
@@ -246,6 +264,21 @@ const System = {
         }
 
         if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
+
+// ===== 난이도 3단계 처리 =====
+if (mode === 'simple') {
+    // 간단: 첫 문장만 + 핵심 키워드
+    answer = answer.split(/[.!?]\s/)[0] + '.';
+} else if (mode === 'detail') {
+    // 상세: 기존 답변 + 추가 설명
+    if (DB[q + '_detail']) {
+        answer += `<br><br><strong>상세:</strong> ${DB[q + '_detail']}`;
+    } else {
+        answer += `<br><br>※ 더 자세한 정보가 필요하면 질문을 구체화해주세요.`;
+    }
+}
+// normal은 그대로
+// ===== 난이도 처리 끝 =====
 
         this.addMessage(answer, 'ai');
         this.isThinking = false;
