@@ -1,5 +1,5 @@
 /* =========================================================
-   Chat GOL - Full Style v4.3.5.0V (2026-06-07)
+   Chat GOL - Full Style v4.3.5.1V (2026-06-07)
    ========================================================= */
 :root {
     --bg-main: #f8fafc;
@@ -191,24 +191,32 @@ body {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* 채팅 박스 - 스크롤 영역 */
 .chat-box {
     flex: 1 1 0%;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 20px 14px 20px;
+    padding: 20px 14px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
 }
 
-/* 모바일: 입력바 실제 높이 + 여유공간 40px */
+/* 모바일: 입력바 높이 + 여유 80px 고정 */
 @media (max-width: 1023px) {
     .chat-box {
-        padding-bottom: 180px; /* ← 140px → 180px로 대폭 증가 */
+        padding-bottom: 220px; /* 입력바 120px + 여유 100px */
+    }
+}
+
+/* PC: 입력바 relative라 여백 적게 */
+@media (min-width: 1024px) {
+    .chat-box {
+        padding-bottom: 40px;
     }
 }
 
@@ -280,73 +288,82 @@ body {
     to { transform: rotate(360deg); } 
 }
 
-/* ========== 채팅 입력창 - v1.4 Ultra Modern ========== */
+/* ========== 채팅 입력창 - Ultra Modern 복구 ========== */
 .chat-footer {
     position: fixed;
-    bottom: 0; /* ← 바닥에 붙임 */
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 28px);
     max-width: 520px;
     z-index: 100;
-    padding: 16px 0 calc(16px + env(safe-area-inset-bottom)); /* ← 상하 패딩 + safe-area */
-    background: linear-gradient(180deg, transparent 0%, var(--chat-bg) 20%); /* ← 뒤 비침 방지 */
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, transparent 0%, var(--chat-bg) 30%);
+    pointer-events: none;
 }
 
-/* 모바일: JS가 계산하니까 고정값 삭제 */
-@media (max-width: 1023px) {
-    .chat-box {
-        padding-bottom: 20px; /* ← 180px → 20px. JS가 덮어씀 */
+/* PC: relative로 복귀 */
+@media (min-width: 1024px) {
+    .chat-footer {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        width: calc(100% - 48px);
+        max-width: 900px;
+        margin: 16px auto 24px;
+        padding: 0;
+        background: none;
+        pointer-events: auto;
     }
 }
 
-/* 아래 중복된 .chat-footer 블록 전체 삭제 */
-/* .chat-footer { position: fixed; bottom: 16px; ... } ← 이거 통째로 지워 */
-
-/* 글래스 컨테이너 - 리퀴드 */
+/* 글래스 컨테이너 - 리퀴드 복구 */
 .input-wrapper-modern {
     width: 100%;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(24px) saturate(200%);
     -webkit-backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 14px 18px;
     box-shadow: 
-        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        0 1px 3px rgba(0, 0, 0, 0.3);
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3);
     transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+    pointer-events: auto;
 }
 
 .input-wrapper-modern:focus-within {
-    background: rgba(15, 23, 42, 0.75);
-    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(99, 102, 241, 0.4);
     box-shadow: 
-        0 0 0 1px rgba(99, 102, 241, 0.2) inset,
-        0 0 0 4px rgba(99, 102, 241, 0.1),
-        0 12px 48px rgba(0, 0, 0, 0.5);
-    transform: translateY(-1px);
+        0 0 0 1px rgba(99, 102, 241, 0.3) inset,
+        0 0 0 4px rgba(99, 102, 241, 0.15),
+        0 16px 56px rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px);
 }
 
 .input-top {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .chat-input {
     width: 100%;
     min-height: 24px;
     max-height: 140px;
-    padding: 6px 0;
+    padding: 8px 0;
     background: transparent;
     border: none;
     outline: none;
     font-size: 16.5px;
-    line-height: 1.55;
+    line-height: 1.6;
     color: #f8fafc;
     font-family: -apple-system, BlinkMacSystemFont, "Pretendard Variable", sans-serif;
     font-weight: 450;
     letter-spacing: -0.011em;
+    resize: none;
 }
 .chat-input::placeholder {
     color: #6b7280;
@@ -361,10 +378,10 @@ body {
 .controls-left, .controls-right {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
-/* 모던 아이콘 버튼 - 40px, 노보더 */
+/* 모던 아이콘 버튼 - 40px 디테일 */
 .icon-btn {
     width: 40px;
     height: 40px;
@@ -376,8 +393,9 @@ body {
     place-items: center;
     font-size: 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
+    -webkit-tap-highlight-color: transparent;
 }
 .icon-btn::before {
     content: '';
@@ -390,46 +408,49 @@ body {
 }
 .icon-btn:hover {
     color: #e5e7eb;
+    transform: translateY(-1px);
 }
 .icon-btn:hover::before {
-    opacity: 0.08;
+    opacity: 0.1;
 }
 .icon-btn:active {
-    transform: scale(0.94);
+    transform: scale(0.92);
 }
 .icon-btn:active::before {
-    opacity: 0.12;
+    opacity: 0.15;
 }
 
-/* 난이도 - 칩 스타일 */
+/* 난이도 - 칩 스타일 디테일 */
 .difficulty-select {
-    height: 32px;
-    padding: 0 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: none;
-    border-radius: 10px;
+    height: 34px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 11px;
     color: #d1d5db;
     font-size: 13.5px;
-    font-weight: 550;
+    font-weight: 600;
     cursor: pointer;
     outline: none;
     transition: all 0.2s ease;
     letter-spacing: -0.01em;
 }
 .difficulty-select:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.1);
     color: #fff;
+    transform: translateY(-1px);
 }
 .difficulty-select:focus {
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
 }
 
-/* 전송 버튼 - 모던 FAB */
+/* 전송 버튼 - 모던 FAB 디테일 */
 .send-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
     border: none;
     background: rgba(255, 255, 255, 0.08);
     color: #6b7280;
@@ -438,41 +459,43 @@ body {
     font-size: 20px;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+    -webkit-tap-highlight-color: transparent;
 }
 .send-circle:disabled {
-    opacity: 0.4;
+    opacity: 0.35;
     cursor: not-allowed;
 }
 .send-circle:not(:disabled):hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.14);
     color: #9ca3af;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 .send-circle.active {
-    background: #6366f1;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
     color: white;
     box-shadow: 
-        0 4px 12px rgba(99, 102, 241, 0.4),
-        0 1px 3px rgba(99, 102, 241, 0.3);
+        0 6px 16px rgba(99, 102, 241, 0.5),
+        0 2px 4px rgba(99, 102, 241, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .send-circle.active:hover {
-    background: #5457e5;
-    transform: translateY(-1px) scale(1.02);
+    background: linear-gradient(135deg, #5457e5, #4338ca);
+    transform: translateY(-2px) scale(1.03);
     box-shadow: 
-        0 6px 16px rgba(99, 102, 241, 0.5),
-        0 2px 4px rgba(99, 102, 241, 0.4);
+        0 8px 20px rgba(99, 102, 241, 0.6),
+        0 3px 6px rgba(99, 102, 241, 0.5);
 }
 .send-circle.active:active {
-    transform: scale(0.96);
+    transform: scale(0.95);
 }
 
-/* 멈추기 */
+/* 멈추기 디테일 */
 .stop-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
     border: none;
-    background: #ef4444;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
     display: grid;
     place-items: center;
@@ -480,15 +503,86 @@ body {
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(239, 68, 0.3);
+    box-shadow: 
+        0 6px 16px rgba(239, 68, 68, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    -webkit-tap-highlight-color: transparent;
 }
 .stop-circle:hover {
-    background: #dc2626;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.5);
 }
 .stop-circle:active {
-    transform: scale(0.94);
+    transform: scale(0.93);
+}
+
+/* 라이트 모드 - 디테일 복구 */
+@media (prefers-color-scheme: light) {
+    .input-wrapper-modern {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 
+            0 0 0 1px rgba(0, 0, 0, 0.03) inset,
+            0 12px 40px rgba(0, 0, 0, 0.12),
+            0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+    .input-wrapper-modern:focus-within {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(99, 102, 241, 0.3);
+        box-shadow: 
+            0 0 0 1px rgba(99, 102, 241, 0.2) inset,
+            0 0 0 4px rgba(99, 102, 241, 0.1),
+            0 16px 56px rgba(0, 0, 0, 0.15);
+    }
+    .chat-input { color: #111827; }
+    .chat-input::placeholder { color: #9ca3af; }
+    .icon-btn { color: #6b7280; }
+    .icon-btn:hover { color: #374151; }
+    .difficulty-select {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 0, 0, 0.06);
+        color: #4b5563;
+    }
+    .difficulty-select:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: #111827;
+    }
+    .send-circle {
+        background: rgba(0, 0, 0, 0.06);
+        color: #9ca3af;
+    }
+    .send-circle:not(:disabled):hover {
+        background: rgba(0, 0, 0, 0.1);
+        color: #6b7280;
+    }
+}
+
+/* PC: relative 복귀 + 플로팅 효과 */
+@media (min-width: 1024px) {
+    .chat-footer {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        transform: none;
+        width: calc(100% - 48px);
+        max-width: 900px;
+        margin: 20px auto 28px;
+        padding: 0;
+        background: none;
+        pointer-events: auto;
+    }
+    
+    .input-wrapper-modern {
+        box-shadow: 
+            0 0 0 1px rgba(148, 163, 184, 0.15),
+            0 20px 50px rgba(0, 0, 0, 0.4),
+            0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+    
+    .input-wrapper-modern:focus-within {
+        transform: translateY(-4px) scale(1.01);
+    }
 }
 
 /* 라이트 모드 - 수정: rgba(255, 255, 255, 0.75) */
