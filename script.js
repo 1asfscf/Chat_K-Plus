@@ -610,64 +610,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// ========== PC 자동화: 사이드바 클릭 ==========
-document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const text = btn.textContent.trim();
-     if (text.includes('홈')) {
-    System.switchView(false); // ← 이렇게 통일
-} else if (text.includes('새 채팅')) {
-    System.switchView(true);
-            document.getElementById('search-view')?.classList.add('hidden');
-            document.getElementById('chat-view')?.classList.remove('hidden');
-        } else if (text.includes('시간표')) {
-            document.getElementById('timetableModal')?.classList.remove('hidden');
-        }
-    });
-});
-
-    // ========== 사이드바 토글 ==========
-const sidebarToggle = document.getElementById('sidebarToggle');
-const appContainer = document.querySelector('.app-container');
-
-// 열기 버튼 동적 생성
-const openBtn = document.createElement('button');
-openBtn.className = 'sidebar-open-btn';
-openBtn.innerHTML = '☰';
-openBtn.title = '사이드바 열기';
-document.querySelector('.app-container').appendChild(openBtn); // ← body → app-container
-
-// PC인지 체크 함수
-const isPC = () => window.innerWidth >= 1024;
-
-const updateOpenBtn = () => {
-    if (isPC() && appContainer.classList.contains('sidebar-collapsed')) {
-        openBtn.style.display = 'flex';
-    } else {
-        openBtn.style.display = 'none';
-    }
-};
-
-sidebarToggle?.addEventListener('click', () => {
-    appContainer.classList.add('sidebar-collapsed');
-    localStorage.setItem('sidebar-collapsed', 'true');
-    updateOpenBtn();
-});
-
-openBtn.addEventListener('click', () => {
-    appContainer.classList.remove('sidebar-collapsed');
-    localStorage.setItem('sidebar-collapsed', 'false');
-    updateOpenBtn();
-});
-
-// 저장된 상태 복원
-if (localStorage.getItem('sidebar-collapsed') === 'true' && isPC()) {
-    appContainer.classList.add('sidebar-collapsed');
-}
-
 // 초기 + 리사이즈
 updateOpenBtn();
 window.addEventListener('resize', updateOpenBtn);
