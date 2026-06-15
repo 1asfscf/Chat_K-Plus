@@ -1,4 +1,4 @@
-<!DOCTYPE html> //index.html 0.0.1
+<!DOCTYPE html> <index.html 0.0.2>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -45,52 +45,36 @@
             </footer>
         </div>
 
-        <!-- ========== 채팅 화면 ========== -->
-        <div id="chat-view" class="hidden">
-            <header class="chat-header">
-                <button id="backBtn" class="back-btn">← 뒤로</button>
-            </header>
+       <!-- ========== 채팅 화면 ========== -->
+<div id="chat-view" class="hidden">
+    <header class="chat-header">
+        <button id="backBtn" class="back-btn">← 뒤로</button>
+    </header>
 
-            <div id="chat-box" class="chat-box">
-      <footer class="chat-footer">
-    <div class="input-wrapper-modern">
-        <div class="input-top">
-            <textarea id="chatInput" class="chat-input" placeholder="Ask.챗 케이 플러스" rows="1"></textarea>
-        </div>
-        <div class="input-controls">
-            <div class="controls-left">
-                <button id="timetableBtn" class="icon-btn" title="시간표">📅</button>
-                <select id="difficultySelect" class="difficulty-select">
-                    <option value="normal">보통</option>
-                    <option value="detail">자세히</option>
-                    <option value="simple">간단히</option>
-                </select>
+    <div id="chat-box" class="chat-box"></div>
+
+    <footer class="chat-footer">
+        <div class="input-wrapper-modern">
+            <div class="input-top">
+                <textarea id="chatInput" class="chat-input" placeholder="Ask. 챗케이플러스" rows="1"></textarea>
             </div>
-            <div class="controls-right">
-                <button id="sendBtn" class="send-circle" disabled>↑</button>
-                <button id="stopBtn" class="stop-circle hidden" title="중지">■</button>
-            </div>
-        </div>
-    </div>
-</footer>
-        </div>
-
-    </div> <!-- app-container 끝 -->
-
-        <!-- 링크 경고 모달 -->
-    <div id="linkModal" class="modal hidden">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content">
-            <div class="modal-icon">⚠️</div>
-            <h3>외부 사이트로 이동</h3>
-            <p id="modalUrl" class="modal-url"></p>
-            <p class="modal-desc">Chat K plus는 외부 사이트의 내용을 보증하지 않습니다.</p>
-            <div class="modal-buttons">
-                <button id="modalCancel" class="modal-btn cancel">취소</button>
-                <button id="modalGo" class="modal-btn go">이동</button>
+            <div class="input-controls">
+                <div class="controls-left">
+                    <button id="timetableBtn" class="icon-btn" title="시간표">📅</button>
+                    <select id="difficultySelect" class="difficulty-select">
+                        <option value="normal">보통</option>
+                        <option value="detail">자세히</option>
+                        <option value="simple">간단히</option>
+                    </select>
+                </div>
+                <div class="controls-right">
+                    <button id="sendBtn" class="send-circle" disabled>↑</button>
+                    <button id="stopBtn" class="stop-circle hidden" title="중지">■</button>
+                </div>
             </div>
         </div>
-    </div>
+    </footer>
+</div>
 
     <!-- 시간표 모달 -->
     <div id="timetableModal" class="modal hidden">
