@@ -1,46 +1,67 @@
 /* =========================================================
-   Chat K plus - Modern Trendy UI v2.0 (2026-06-16)
+   Chat K plus - Premium Service UI v3.0 (2026-06-16)
    ========================================================= */
 
 /* ==========================================
- * 1. 기본 설정 & 트렌디 컬러
+ * 1. 프리미엄 다크 테마 기본 설정
  * ========================================== */
 :root {
-    /* 모던 컬러 팔레트 */
-    --bg-primary: #0f0f23;
-    --bg-secondary: #1a1a2e;
-    --bg-card: #16213e;
-    --bg-input: #0f3460;
+    /* 프리미엄 다크 컬러 */
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-tertiary: #111111;
+    --bg-card: rgba(20, 20, 20, 0.8);
+    --bg-input: rgba(30, 30, 30, 0.6);
+    --bg-hover: rgba(40, 40, 40, 0.8);
     
+    /* 텍스트 컬러 */
     --text-primary: #ffffff;
-    --text-secondary: #a0a0a0;
-    --text-muted: #6b7280;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --text-disabled: rgba(255, 255, 255, 0.3);
     
-    --accent-primary: #6366f1;
-    --accent-secondary: #8b5cf6;
-    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    /* 프리미엄 악센트 */
+    --accent-primary: #7c3aed;
+    --accent-secondary: #a855f7;
+    --accent-tertiary: #c084fc;
+    --accent-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
+    --accent-glow: rgba(124, 58, 237, 0.4);
     
+    /* 기능 컬러 */
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
     --info: #06b6d4;
     
-    --border: rgba(255, 255, 255, 0.1);
-    --border-hover: rgba(255, 255, 255, 0.2);
+    /* 투명 & 보더 */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-medium: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-accent: rgba(124, 58, 237, 0.3);
     
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    /* 프리미엄 그림자 */
+    --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 20px rgba(124, 58, 237, 0.3);
+    --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     
-    --radius-sm: 8px;
-    --radius-md: 12px;
+    /* 둥근 모서리 */
+    --radius-sm: 6px;
+    --radius-md: 10px;
     --radius-lg: 16px;
     --radius-xl: 24px;
+    --radius-full: 9999px;
     
-    --transition-fast: 150ms ease;
-    --transition-normal: 300ms ease;
-    --transition-slow: 500ms ease;
+    /* 트랜지션 */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 블러 효과 */
+    --blur-subtle: blur(8px);
+    --blur-medium: blur(16px);
+    --blur-strong: blur(24px);
 }
 
 * {
@@ -56,10 +77,10 @@ html {
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
-    line-height: 1.6;
+    line-height: 1.5;
     font-weight: 400;
     overflow: hidden;
 }
@@ -69,293 +90,158 @@ html, body {
 }
 
 /* ==========================================
- * 2. 앱 컨테이너
+ * 2. 앱 컨테이너 - 프리미엄 배경
  * ========================================== */
 .app-container {
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: var(--bg-primary);
-}
-
-/* ==========================================
- * 3. 검색 화면 - 트렌디한 디자인
- * ========================================== */
-#search-view {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 24px;
-    background: var(--accent-gradient);
     position: relative;
-    overflow: hidden;
 }
 
-/* 배경 애니메이션 효과 */
-#search-view::before {
+/* 서브tle 배경 그라데이션 */
+.app-container::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
-    animation: pulse 8s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-}
-
-.search-content {
-    width: 100%;
-    max-width: 680px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    animation: slideUp 0.8s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.logo {
-    font-size: 64px;
-    margin-bottom: 24px;
-    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.title {
-    font-size: 42px;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 12px;
-    letter-spacing: -0.02em;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.beta-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 20px;
-    margin-left: 8px;
-    vertical-align: middle;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.search-container {
-    width: 100%;
-    margin-bottom: 32px;
-    position: relative;
-}
-
-.search-input {
-    width: 100%;
-    padding: 20px 24px;
-    padding-right: 60px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-xl);
-    font-size: 18px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    color: white;
-    transition: all var(--transition-normal);
-    box-shadow: var(--shadow-lg);
-}
-
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), var(--shadow-xl);
-    transform: scale(1.01);
-}
-
-.search-btn {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
-    background: var(--accent-gradient);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-size: 20px;
-    transition: all var(--transition-normal);
-    box-shadow: var(--shadow-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.search-btn:hover:not(:disabled) {
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: var(--shadow-lg);
-}
-
-.search-btn:active:not(:disabled) {
-    transform: translateY(-50%) scale(0.95);
-}
-
-.search-btn:disabled {
-    background: rgba(255, 255, 255, 0.2);
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
-.examples {
-    margin-top: 40px;
-}
-
-.examples-title {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-}
-
-.example-btn {
-    padding: 14px 24px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-lg);
-    font-size: 15px;
-    font-weight: 500;
-    color: white;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    box-shadow: var(--shadow-sm);
-}
-
-.example-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.example-btn:active {
-    transform: translateY(0);
-}
-
-.app-footer {
-    position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 13px;
-    font-weight: 500;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(192, 132, 252, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* ==========================================
- * 4. 채팅 화면 - 모던한 디자인
+ * 3. 채팅 화면 - 프리미엄 서비스 느낌
  * ========================================== */
 #chat-view {
     display: none;
     flex-direction: column;
     height: 100vh;
-    background: var(--bg-primary);
+    background: transparent;
+    position: relative;
+    z-index: 1;
 }
 
 #chat-view:not(.hidden) {
     display: flex;
 }
 
+/* 채팅 헤더 - 투명하고 세련된 */
 .chat-header {
     display: flex;
     align-items: center;
     padding: 16px 24px;
-    background: rgba(22, 33, 62, 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: var(--blur-medium);
+    -webkit-backdrop-filter: var(--blur-medium);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-subtle);
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: all var(--transition-normal);
+}
+
+.chat-header::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--border-accent) 20%, 
+        var(--border-accent) 80%, 
+        transparent 100%);
+    opacity: 0.5;
 }
 
 .back-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
     cursor: pointer;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     transition: all var(--transition-normal);
-}
-
-.back-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--border-hover);
-    transform: translateX(-2px);
+    position: relative;
+    overflow: hidden;
 }
 
 .back-btn::before {
-    content: '←';
-    font-size: 18px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+    transform: translateX(-4px);
+    box-shadow: var(--shadow-glow);
+}
+
+.back-btn:hover::before {
+    opacity: 0.1;
+}
+
+.back-btn:active {
+    transform: translateX(-2px) scale(0.98);
+}
+
+.back-btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* 채팅 박스 - 깊이 있는 디자인 */
 .chat-box {
     flex: 1;
     overflow-y: auto;
     padding: 24px;
-    background: var(--bg-primary);
+    background: transparent;
     scroll-behavior: smooth;
+    position: relative;
+}
+
+.chat-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        transparent 0%, 
+        var(--border-subtle) 20%, 
+        var(--border-subtle) 80%, 
+        transparent 100%);
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 .chat-box::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
 }
 
 .chat-box::-webkit-scrollbar-track {
@@ -363,67 +249,112 @@ html, body {
 }
 
 .chat-box::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 3px;
+    background: var(--border-medium);
+    border-radius: 2px;
+    transition: background var(--transition-fast);
 }
 
 .chat-box::-webkit-scrollbar-thumb:hover {
-    background: var(--border-hover);
+    background: var(--border-strong);
 }
 
+/* 메시지 - 프리미엄 카드 스타일 */
 .message {
-    margin-bottom: 24px;
-    padding: 20px 24px;
+    margin-bottom: 20px;
+    padding: 18px 22px;
     border-radius: var(--radius-xl);
     max-width: 85%;
-    animation: messageSlide 0.4s ease-out;
+    animation: messageAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
 }
 
-@keyframes messageSlide {
+@keyframes messageAppear {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px) scale(0.98);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
+/* 사용자 메시지 - 그라데이션 + 글로우 */
 .user-msg {
     background: var(--accent-gradient);
     color: white;
     margin-left: auto;
-    box-shadow: var(--shadow-lg);
-    border-bottom-right-radius: 4px;
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom-right-radius: var(--radius-md);
 }
 
+.user-msg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        transparent 50%);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* AI 메시지 - 투명 카드 */
 .ai-msg {
     background: var(--bg-card);
     color: var(--text-primary);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border);
-    border-bottom-left-radius: 4px;
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid var(--border-subtle);
+    border-bottom-left-radius: var(--radius-md);
 }
 
+.ai-msg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--border-accent) 50%, 
+        transparent 100%);
+    opacity: 0.3;
+}
+
+/* 씽킹 애니메이션 */
 .thinking {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     padding: 16px 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
 }
 
 .thinking-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border: 3px solid var(--accent-primary);
     border-top-color: transparent;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: thinkingSpin 1s linear infinite;
+    box-shadow: var(--shadow-glow);
 }
 
-@keyframes spin {
+@keyframes thinkingSpin {
     to { transform: rotate(360deg); }
 }
 
@@ -431,90 +362,169 @@ html, body {
     color: var(--text-secondary);
     font-size: 15px;
     font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
+/* 외부 링크 */
 .external-link {
-    color: var(--accent-primary);
+    color: var(--accent-secondary);
     text-decoration: none;
-    border-bottom: 1px dashed var(--accent-primary);
+    border-bottom: 1px solid var(--accent-accent);
     transition: all var(--transition-fast);
+    position: relative;
+}
+
+.external-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent-primary);
+    transition: width var(--transition-normal);
 }
 
 .external-link:hover {
-    color: var(--accent-secondary);
-    border-bottom-style: solid;
+    color: var(--accent-primary);
 }
 
+.external-link:hover::after {
+    width: 100%;
+}
+
+/* 정책 경고 */
 .policy-warning {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
     color: #fca5a5;
-    padding: 20px;
+    padding: 18px 22px;
     border-radius: var(--radius-lg);
     margin-bottom: 20px;
-    backdrop-filter: blur(10px);
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
 }
 
 /* ==========================================
- * 5. 채팅 입력 - 모던한 디자인
+ * 4. 채팅 입력바 - 프리미엄 서비스 디자인
  * ========================================== */
 .chat-footer {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 20px 24px;
-    background: rgba(22, 33, 62, 0.95);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px 24px 28px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 100;
+}
+
+.chat-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--border-accent) 30%, 
+        var(--border-accent) 70%, 
+        transparent 100%);
+    opacity: 0.4;
 }
 
 .input-wrapper-modern {
     width: 100%;
+    position: relative;
 }
 
 .input-top {
     width: 100%;
+    position: relative;
 }
 
+/* 메인 입력창 - 프리미엄 디자인 */
 .chat-input {
     width: 100%;
-    padding: 16px 20px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-lg);
+    padding: 18px 24px;
+    padding-right: 60px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-xl);
     font-size: 16px;
     resize: none;
-    min-height: 56px;
-    max-height: 150px;
+    min-height: 60px;
+    max-height: 180px;
     background: var(--bg-input);
     color: var(--text-primary);
     transition: all var(--transition-normal);
     font-family: inherit;
     line-height: 1.5;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: var(--shadow-inner);
 }
 
 .chat-input::placeholder {
     color: var(--text-muted);
+    font-weight: 400;
 }
 
 .chat-input:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    background: var(--bg-card);
+    background: rgba(40, 40, 40, 0.8);
+    box-shadow: 
+        0 0 0 4px rgba(124, 58, 237, 0.1),
+        var(--shadow-glow),
+        var(--shadow-inner);
+    transform: scale(1.01);
 }
 
+.chat-input:focus::placeholder {
+    color: var(--text-disabled);
+}
+
+/* 입력창 글자 수 표시 (선택적) */
+.chat-input-wrapper {
+    position: relative;
+}
+
+.chat-input-wrapper::after {
+    content: attr(data-char-count) '/2000';
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.chat-input:focus + .chat-input-wrapper::after,
+.chat-input:not(:placeholder-shown) + .chat-input-wrapper::after {
+    opacity: 1;
+}
+
+/* 컨트롤 영역 - 세련된 레이아웃 */
 .input-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+    margin-top: 4px;
 }
 
 .controls-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .controls-right {
@@ -523,112 +533,185 @@ html, body {
     gap: 12px;
 }
 
+/* 아이콘 버튼 - 프리미엄 스타일 */
 .icon-btn {
     width: 44px;
     height: 44px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--transition-normal);
     font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-primary);
+    color: var(--text-secondary);
+    position: relative;
+    overflow: hidden;
+}
+
+.icon-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--accent-gradient);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all var(--transition-normal);
+    opacity: 0.1;
 }
 
 .icon-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--border-hover);
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+    transform: scale(1.08);
+    box-shadow: var(--shadow-glow);
+}
+
+.icon-btn:hover::before {
+    width: 200%;
+    height: 200%;
 }
 
 .icon-btn:active {
     transform: scale(0.95);
 }
 
+/* 난이도 선택 - 프리미엄 셀렉트 */
 .difficulty-select {
-    padding: 10px 16px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    padding: 12px 40px 12px 16px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
     background: var(--bg-input);
     color: var(--text-primary);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='rgba(255,255,255,0.6)' d='M7 10L2 4h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
+    background-position: right 14px center;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: var(--shadow-inner);
 }
 
 .difficulty-select:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    box-shadow: 
+        0 0 0 4px rgba(124, 58, 237, 0.1),
+        var(--shadow-glow);
+    background: rgba(40, 40, 40, 0.8);
 }
 
 .difficulty-select:hover {
-    border-color: var(--border-hover);
+    border-color: var(--border-strong);
+    background: rgba(35, 35, 35, 0.7);
 }
 
+.difficulty-select option {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 12px;
+}
+
+/* 전송/중지 버튼 - 프리미엄 원형 버튼 */
 .send-circle,
 .stop-circle {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     transition: all var(--transition-normal);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
 }
 
 .send-circle {
     background: var(--accent-gradient);
     color: white;
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow);
+}
+
+.send-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
 .send-circle:hover:not(:disabled) {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-xl);
+    transform: scale(1.12);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 30px rgba(124, 58, 237, 0.5);
+}
+
+.send-circle:hover:not(:disabled)::before {
+    opacity: 1;
 }
 
 .send-circle:active:not(:disabled) {
-    transform: scale(0.95);
+    transform: scale(1.05);
 }
 
 .send-circle:disabled {
-    background: var(--border);
+    background: var(--border-medium);
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.4;
     transform: none;
     box-shadow: none;
 }
 
 .send-circle.active {
     background: var(--accent-gradient);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: var(--shadow-medium), var(--shadow-glow); }
+    50% { box-shadow: var(--shadow-strong), 0 0 40px rgba(124, 58, 237, 0.6); }
 }
 
 .stop-circle {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
+    box-shadow: 
+        var(--shadow-medium),
+        0 0 20px rgba(239, 68, 68, 0.3);
 }
 
 .stop-circle:hover {
-    transform: scale(1.1);
-    box-shadow: var(--shadow-xl);
+    transform: scale(1.12);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 30px rgba(239, 68, 68, 0.5);
 }
 
 /* ==========================================
- * 6. 모달 공통 - 글래스모피즘
+ * 5. 모달 공통 - 프리미엄 스타일
  * ========================================== */
 .modal {
     position: fixed;
@@ -653,25 +736,29 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
 }
 
 .modal-content {
     position: relative;
-    background: rgba(22, 33, 62, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border);
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
+    border: 1px solid var(--border-medium);
     border-radius: var(--radius-xl);
     padding: 32px;
-    max-width: 480px;
+    max-width: 500px;
     width: 90%;
     z-index: 1001;
-    box-shadow: var(--shadow-xl);
-    animation: modalSlide 0.4s ease-out;
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 60px rgba(124, 58, 237, 0.1);
+    animation: modalAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes modalSlide {
+@keyframes modalAppear {
     from {
         opacity: 0;
         transform: translateY(30px) scale(0.95);
@@ -682,14 +769,29 @@ html, body {
     }
 }
 
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--border-accent) 30%, 
+        var(--border-accent) 70%, 
+        transparent 100%);
+    opacity: 0.5;
+}
+
 .close-btn {
     position: absolute;
     top: 20px;
     right: 20px;
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
     border-radius: 50%;
     cursor: pointer;
     color: var(--text-secondary);
@@ -704,39 +806,42 @@ html, body {
 .close-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.1);
+    border-color: var(--border-medium);
 }
 
 /* ==========================================
- * 7. 시간표 모달
+ * 6. 시간표 모달 - 프리미엄 디자인
  * ========================================== */
 .timetable-modal {
-    max-width: 540px;
+    max-width: 560px;
 }
 
 .timetable-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .timetable-header h3 {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: -0.02em;
 }
 
 .timetable-tabs {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     margin-bottom: 24px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     padding: 6px;
     border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
 }
 
 .tab {
@@ -750,6 +855,20 @@ html, body {
     font-size: 14px;
     font-weight: 600;
     transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
 .tab:hover {
@@ -758,13 +877,21 @@ html, body {
 }
 
 .tab.active {
-    background: var(--accent-gradient);
     color: white;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-subtle);
+}
+
+.tab.active::before {
+    opacity: 1;
+}
+
+.tab span {
+    position: relative;
+    z-index: 1;
 }
 
 .timetable-content {
-    max-height: 320px;
+    max-height: 340px;
     overflow-y: auto;
     margin-bottom: 24px;
     padding: 8px;
@@ -779,33 +906,53 @@ html, body {
 }
 
 .timetable-content::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: var(--border-medium);
     border-radius: 2px;
 }
 
 .timetable-empty {
     text-align: center;
-    padding: 48px 24px;
+    padding: 56px 24px;
     color: var(--text-muted);
     font-size: 15px;
+    font-weight: 500;
 }
 
 .timetable-item {
     display: flex;
     gap: 16px;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     margin-bottom: 12px;
     transition: all var(--transition-normal);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.timetable-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
 .timetable-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-medium);
     transform: translateX(4px);
+    box-shadow: var(--shadow-subtle);
+}
+
+.timetable-item:hover::before {
+    opacity: 1;
 }
 
 .timetable-time {
@@ -815,6 +962,7 @@ html, body {
     font-size: 15px;
     display: flex;
     align-items: center;
+    letter-spacing: 0.02em;
 }
 
 .timetable-subject {
@@ -828,15 +976,17 @@ html, body {
 
 .timetable-room {
     flex: 0 0 90px;
-    color: var(--text-muted);
-    font-size: 14px;
+    color: var(--text-primary);
+    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 12px;
-    background: rgba(99, 102, 241, 0.1);
-    border-radius: var(--radius-sm);
-    font-weight: 600;
+    padding: 8px 14px;
+    background: rgba(124, 58, 237, 0.15);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.1);
 }
 
 .timetable-footer {
@@ -845,7 +995,7 @@ html, body {
 
 .timetable-add {
     width: 100%;
-    padding: 16px;
+    padding: 18px;
     background: var(--accent-gradient);
     color: white;
     border: none;
@@ -854,16 +1004,40 @@ html, body {
     font-size: 16px;
     font-weight: 700;
     transition: all var(--transition-normal);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.timetable-add::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
 .timetable-add:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-xl);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 30px rgba(124, 58, 237, 0.4);
+}
+
+.timetable-add:hover::before {
+    opacity: 1;
 }
 
 .timetable-add:active {
@@ -871,189 +1045,195 @@ html, body {
 }
 
 /* ==========================================
- * 8. 수업 추가 모달
+ * 7. 수업 추가 모달
  * ========================================== */
 .add-class-modal {
-    max-width: 440px;
+    max-width: 460px;
 }
 
 .add-class-modal h3 {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 14px;
     font-weight: 600;
     color: var(--text-primary);
+    letter-spacing: 0.01em;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
     font-size: 15px;
     transition: all var(--transition-normal);
     background: var(--bg-input);
     color: var(--text-primary);
     font-family: inherit;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: var(--shadow-inner);
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    background: var(--bg-card);
+    background: rgba(40, 40, 40, 0.8);
+    box-shadow: 
+        0 0 0 4px rgba(124, 58, 237, 0.1),
+        var(--shadow-glow);
 }
 
 .form-group input::placeholder {
     color: var(--text-muted);
 }
 
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='rgba(255,255,255,0.6)' d='M7 10L2 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 44px;
+}
+
+.form-group select option {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 12px;
+}
+
 .modal-buttons {
     display: flex;
-    gap: 12px;
-    margin-top: 28px;
+    gap: 14px;
+    margin-top: 32px;
 }
 
 .modal-btn {
     flex: 1;
-    padding: 16px;
+    padding: 18px;
     border: none;
     border-radius: var(--radius-lg);
     cursor: pointer;
     font-size: 16px;
     font-weight: 700;
     transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
 }
 
 .modal-btn.cancel {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     color: var(--text-primary);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-medium);
 }
 
 .modal-btn.cancel:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-subtle);
 }
 
 .modal-btn.go,
 .modal-btn.save {
     background: var(--accent-gradient);
     color: white;
-    box-shadow: var(--shadow-md);
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow);
+}
+
+.modal-btn.go::before,
+.modal-btn.save::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
 }
 
 .modal-btn.go:hover,
 .modal-btn.save:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 30px rgba(124, 58, 237, 0.4);
+}
+
+.modal-btn.go:hover::before,
+.modal-btn.save:hover::before {
+    opacity: 1;
 }
 
 /* ==========================================
- * 9. 링크 경고 모달
+ * 8. 링크 경고 모달
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
-    color: var(--accent-primary);
-    margin: 16px 0;
-    padding: 16px;
-    background: rgba(99, 102, 241, 0.1);
-    border-radius: var(--radius-md);
+    color: var(--accent-secondary);
+    margin: 18px 0;
+    padding: 18px;
+    background: rgba(124, 58, 237, 0.1);
+    border-radius: var(--radius-lg);
     font-size: 14px;
     font-weight: 500;
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    border: 1px solid var(--border-accent);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
 }
 
 /* ==========================================
- * 10. 반응형 디자인
+ * 9. 반응형 디자인
  * ========================================== */
 
 /* 태블릿 */
 @media (max-width: 1024px) {
-    .search-content {
-        max-width: 600px;
-    }
-
-    .title {
-        font-size: 36px;
-    }
-
-    .logo {
-        font-size: 56px;
-    }
-
     .modal-content {
-        max-width: 500px;
+        max-width: 520px;
         padding: 28px;
+    }
+
+    .chat-input {
+        padding: 16px 20px;
+        padding-right: 56px;
+    }
+
+    .send-circle,
+    .stop-circle {
+        width: 52px;
+        height: 52px;
     }
 }
 
 /* 모바일 */
 @media (max-width: 768px) {
     :root {
-        --radius-sm: 6px;
-        --radius-md: 10px;
-        --radius-lg: 14px;
-        --radius-xl: 20px;
-    }
-
-    .search-content {
-        padding: 0 20px;
-        max-width: 100%;
-    }
-
-    .logo {
-        font-size: 48px;
-        margin-bottom: 20px;
-    }
-
-    .title {
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
-
-    .beta-badge {
-        padding: 4px 10px;
-        font-size: 10px;
-    }
-
-    .search-input {
-        padding: 16px 20px;
-        padding-right: 56px;
-        font-size: 16px;
-        border-radius: var(--radius-lg);
-    }
-
-    .search-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
-    }
-
-    .button-group {
-        gap: 8px;
-    }
-
-    .example-btn {
-        padding: 12px 20px;
-        font-size: 14px;
-        border-radius: var(--radius-md);
+        --radius-sm: 5px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 18px;
     }
 
     .chat-header {
@@ -1061,7 +1241,7 @@ html, body {
     }
 
     .back-btn {
-        padding: 8px 16px;
+        padding: 8px 14px;
         font-size: 13px;
     }
 
@@ -1071,7 +1251,7 @@ html, body {
 
     .message {
         max-width: 90%;
-        padding: 16px 20px;
+        padding: 14px 18px;
         border-radius: var(--radius-lg);
     }
 
@@ -1081,10 +1261,11 @@ html, body {
     }
 
     .chat-input {
-        padding: 14px 16px;
+        padding: 14px 18px;
+        padding-right: 52px;
         font-size: 15px;
-        min-height: 48px;
-        border-radius: var(--radius-md);
+        min-height: 52px;
+        border-radius: var(--radius-lg);
     }
 
     .input-controls {
@@ -1098,16 +1279,15 @@ html, body {
     }
 
     .difficulty-select {
-        padding: 8px 14px;
+        padding: 10px 36px 10px 14px;
         font-size: 13px;
-        padding-right: 32px;
     }
 
     .send-circle,
     .stop-circle {
         width: 48px;
         height: 48px;
-        font-size: 18px;
+        font-size: 20px;
     }
 
     .modal-content {
@@ -1123,7 +1303,8 @@ html, body {
 
     .timetable-header h3,
     .add-class-modal h3 {
-        font-size: 20px;
+        font-size: 22px;
+        margin-bottom: 24px;
     }
 
     .tab {
@@ -1148,11 +1329,11 @@ html, body {
     .timetable-room {
         flex: 0 0 70px;
         font-size: 12px;
-        padding: 4px 10px;
+        padding: 6px 10px;
     }
 
     .form-group {
-        margin-bottom: 16px;
+        margin-bottom: 18px;
     }
 
     .form-group label {
@@ -1161,52 +1342,23 @@ html, body {
 
     .form-group input,
     .form-group select {
-        padding: 12px 14px;
+        padding: 14px 16px;
         font-size: 14px;
     }
 
+    .modal-buttons {
+        gap: 10px;
+        margin-top: 24px;
+    }
+
     .modal-btn {
-        padding: 14px;
+        padding: 16px;
         font-size: 15px;
     }
 }
 
 /* 소형 모바일 */
 @media (max-width: 480px) {
-    .search-content {
-        padding: 0 16px;
-    }
-
-    .logo {
-        font-size: 40px;
-        margin-bottom: 16px;
-    }
-
-    .title {
-        font-size: 28px;
-    }
-
-    .search-input {
-        padding: 14px 18px;
-        font-size: 15px;
-    }
-
-    .search-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-
-    .button-group {
-        flex-direction: column;
-    }
-
-    .example-btn {
-        width: 100%;
-        padding: 14px 18px;
-        font-size: 15px;
-    }
-
     .chat-header {
         padding: 10px 12px;
     }
@@ -1222,7 +1374,7 @@ html, body {
 
     .message {
         max-width: 95%;
-        padding: 14px 16px;
+        padding: 12px 16px;
         margin-bottom: 16px;
         border-radius: var(--radius-md);
     }
@@ -1232,9 +1384,10 @@ html, body {
     }
 
     .chat-input {
-        padding: 12px 14px;
+        padding: 12px 16px;
         font-size: 14px;
-        min-height: 44px;
+        min-height: 48px;
+        border-radius: var(--radius-md);
     }
 
     .input-controls {
@@ -1248,16 +1401,15 @@ html, body {
     }
 
     .difficulty-select {
-        padding: 6px 12px;
+        padding: 8px 32px 8px 12px;
         font-size: 12px;
-        padding-right: 28px;
     }
 
     .send-circle,
     .stop-circle {
         width: 44px;
         height: 44px;
-        font-size: 16px;
+        font-size: 18px;
     }
 
     .modal-content {
@@ -1267,7 +1419,7 @@ html, body {
 
     .timetable-header h3,
     .add-class-modal h3 {
-        font-size: 18px;
+        font-size: 20px;
         margin-bottom: 20px;
     }
 
@@ -1297,13 +1449,13 @@ html, body {
     }
 
     .timetable-add {
-        padding: 14px;
+        padding: 16px;
         font-size: 15px;
     }
 
     .form-group input,
     .form-group select {
-        padding: 10px 12px;
+        padding: 12px 14px;
         font-size: 13px;
     }
 
@@ -1313,7 +1465,7 @@ html, body {
     }
 
     .modal-btn {
-        padding: 12px;
+        padding: 14px;
         font-size: 14px;
     }
 }
@@ -1321,7 +1473,7 @@ html, body {
 /* iOS 키보드 대응 */
 @supports (-webkit-touch-callout: none) {
     .chat-footer {
-        padding-bottom: env(safe-area-inset-bottom, 24px);
+        padding-bottom: env(safe-area-inset-bottom, 28px);
     }
 
     .modal-content {
@@ -1330,123 +1482,18 @@ html, body {
 }
 
 /* ==========================================
- * 11. 라이트 모드 지원
- * ========================================== */
-@media (prefers-color-scheme: light) {
-    :root {
-        --bg-primary: #f8fafc;
-        --bg-secondary: #ffffff;
-        --bg-card: #ffffff;
-        --bg-input: #f1f5f9;
-        
-        --text-primary: #0f172a;
-        --text-secondary: #64748b;
-        --text-muted: #94a3b8;
-        
-        --border: rgba(0, 0, 0, 0.1);
-        --border-hover: rgba(0, 0, 0, 0.2);
-        
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-        --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    #search-view {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .search-input {
-        background: rgba(255, 255, 255, 0.95);
-        color: var(--text-primary);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .search-input::placeholder {
-        color: var(--text-muted);
-    }
-
-    .example-btn {
-        background: rgba(255, 255, 255, 0.9);
-        color: var(--text-primary);
-        border-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .chat-header {
-        background: rgba(255, 255, 255, 0.9);
-        border-color: var(--border);
-    }
-
-    .ai-msg {
-        background: #ffffff;
-        border-color: var(--border);
-        color: var(--text-primary);
-    }
-
-    .chat-footer {
-        background: rgba(255, 255, 255, 0.95);
-        border-color: var(--border);
-    }
-
-    .chat-input {
-        background: var(--bg-input);
-        color: var(--text-primary);
-        border-color: var(--border);
-    }
-
-    .icon-btn {
-        background: var(--bg-input);
-        border-color: var(--border);
-        color: var(--text-primary);
-    }
-
-    .difficulty-select {
-        background: var(--bg-input);
-        color: var(--text-primary);
-        border-color: var(--border);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230f172a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    }
-
-    .modal-content {
-        background: rgba(255, 255, 255, 0.98);
-        border-color: var(--border);
-    }
-
-    .timetable-item {
-        background: var(--bg-input);
-        border-color: var(--border);
-    }
-
-    .timetable-item:hover {
-        background: #f8fafc;
-    }
-
-    .form-group input,
-    .form-group select {
-        background: var(--bg-input);
-        color: var(--text-primary);
-        border-color: var(--border);
-    }
-
-    .modal-btn.cancel {
-        background: var(--bg-input);
-        color: var(--text-primary);
-        border-color: var(--border);
-    }
-}
-
-/* ==========================================
- * 12. 애니메이션 & 트랜지션
+ * 10. 애니메이션 & 트랜지션
  * ========================================== */
 
 /* 로딩 스피너 */
 .spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid var(--border);
+    border: 3px solid var(--border-medium);
     border-top-color: var(--accent-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
+    box-shadow: var(--shadow-glow);
 }
 
 /* 페이드 인 */
@@ -1472,7 +1519,7 @@ html, body {
 @keyframes scaleIn {
     from {
         opacity: 0;
-        transform: scale(0.9);
+        transform: scale(0.95);
     }
     to {
         opacity: 1;
@@ -1480,8 +1527,18 @@ html, body {
     }
 }
 
+/* 글로우 효과 */
+.glow {
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: var(--shadow-glow); }
+    50% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.6); }
+}
+
 /* ==========================================
- * 13. 유틸리티 클래스
+ * 11. 유틸리티 클래스
  * ========================================== */
 .hidden {
     display: none !important;
@@ -1495,13 +1552,14 @@ html, body {
 }
 
 .glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: var(--blur-medium);
+    -webkit-backdrop-filter: var(--blur-medium);
+    border: 1px solid var(--border-subtle);
 }
 
 /* ==========================================
- * 14. 접근성 개선
+ * 12. 접근성 개선
  * ========================================== */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -1520,12 +1578,12 @@ html, body {
 
 /* 선택 스타일 */
 ::selection {
-    background: rgba(99, 102, 241, 0.3);
+    background: rgba(124, 58, 237, 0.3);
     color: var(--text-primary);
 }
 
 /* ==========================================
- * 15. 프린트 스타일
+ * 13. 프린트 스타일
  * ========================================== */
 @media print {
     #search-view,
@@ -1548,6 +1606,7 @@ html, body {
     .message {
         page-break-inside: avoid;
         box-shadow: none;
-        border: 1px solid #ccc;
+        border: 1px solid #333;
+        background: #1a1a1a !important;
     }
 }
