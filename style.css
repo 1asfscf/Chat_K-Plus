@@ -1,3 +1,7 @@
+/* =========================================================
+   Chat GOL - Full Style v4.3.5.2V (2026-06-07)
+   ========================================================= */
+
 /* ==========================================
  * 1. 기본 설정
  * ========================================== */
@@ -8,6 +12,13 @@
     --text-secondary: #64748b;
     --border: #e2e8f0;
     --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --info: #06b6d4;
 }
 
 * {
@@ -16,11 +27,18 @@
     box-sizing: border-box;
 }
 
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background: var(--bg-main);
     color: var(--text-primary);
     line-height: 1.6;
+    font-weight: 400;
 }
 
 html, body {
@@ -44,12 +62,14 @@ html, body {
     justify-content: center;
     min-height: 100vh;
     padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .chat-view {
     display: none;
     flex-direction: column;
     height: 100vh;
+    background: var(--bg-main);
 }
 
 .chat-view.active {
@@ -60,7 +80,6 @@ html, body {
     display: none !important;
 }
 
-
 /* ==========================================
  * 3. 검색
  * ========================================== */
@@ -68,43 +87,76 @@ html, body {
     width: 100%;
     max-width: 600px;
     margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
 }
 
 .search-input {
     width: 100%;
     padding: 16px 20px;
+    padding-right: 50px;
     border: 2px solid var(--border);
     border-radius: 12px;
     font-size: 16px;
     background: white;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .search-input:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.search-input::placeholder {
+    color: var(--text-secondary);
 }
 
 .search-btn {
     width: 100%;
     padding: 16px;
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .search-btn:hover {
-    background: #2563eb;
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.search-btn:active {
+    transform: translateY(0);
 }
 
 .search-btn:disabled {
     background: #cbd5e1;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* ==========================================
@@ -115,6 +167,7 @@ html, body {
     flex-wrap: wrap;
     gap: 12px;
     justify-content: center;
+    animation: fadeInUp 0.8s ease-out;
 }
 
 .example-btn {
@@ -124,12 +177,19 @@ html, body {
     border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .example-btn:hover {
-    border-color: #3b82f6;
+    border-color: var(--primary);
     background: #eff6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+.example-btn:active {
+    transform: translateY(0);
 }
 
 /* ==========================================
@@ -138,9 +198,17 @@ html, body {
 .chat-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 16px 20px;
     background: white;
     border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .back-btn {
@@ -150,6 +218,24 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #e2e8f0;
+}
+
+.chat-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.chat-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .chat-box {
@@ -157,6 +243,24 @@ html, body {
     overflow-y: auto;
     padding: 20px;
     background: var(--chat-bg);
+    scroll-behavior: smooth;
+}
+
+.chat-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 .message {
@@ -164,17 +268,31 @@ html, body {
     padding: 16px;
     border-radius: 12px;
     max-width: 80%;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .user-msg {
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
     margin-left: auto;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .ai-msg {
     background: #f1f5f9;
     color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .thinking {
@@ -186,7 +304,7 @@ html, body {
 .thinking-icon {
     width: 20px;
     height: 20px;
-    border: 2px solid #3b82f6;
+    border: 2px solid var(--primary);
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -196,18 +314,30 @@ html, body {
     to { transform: rotate(360deg); }
 }
 
+.thinking-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
 .external-link {
-    color: #3b82f6;
+    color: var(--primary);
     text-decoration: underline;
     cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.external-link:hover {
+    color: var(--primary-hover);
 }
 
 .policy-warning {
     background: #fef2f2;
     border: 1px solid #fecaca;
     color: #991b1b;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
 }
-
 
 /* ==========================================
  * 6. 채팅 입력
@@ -219,10 +349,16 @@ html, body {
     padding: 16px 20px;
     background: white;
     border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+}
+
+.chat-input-wrapper {
+    flex: 1;
+    position: relative;
 }
 
 .chat-input {
-    flex: 1;
+    width: 100%;
     padding: 12px 16px;
     border: 2px solid var(--border);
     border-radius: 8px;
@@ -231,52 +367,74 @@ html, body {
     min-height: 44px;
     max-height: 120px;
     background: white;
+    transition: all 0.3s ease;
 }
 
 .chat-input:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.chat-input::placeholder {
+    color: var(--text-secondary);
 }
 
 .send-btn {
     padding: 12px 20px;
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .send-btn:hover {
-    background: #2563eb;
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.send-btn:active {
+    transform: translateY(0);
 }
 
 .send-btn:disabled {
     background: #cbd5e1;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .send-btn.active {
-    background: #3b82f6;
+    background: var(--primary);
 }
 
 .stop-btn {
     padding: 12px 20px;
-    background: #ef4444;
+    background: var(--danger);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    transition: background 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .stop-btn:hover {
-    background: #dc2626;
+    background: var(--danger-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.stop-btn:active {
+    transform: translateY(0);
 }
 
 /* ==========================================
@@ -289,11 +447,17 @@ html, body {
     background: white;
     font-size: 14px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .difficulty-select:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.difficulty-select:hover {
+    border-color: var(--primary);
 }
 
 /* ==========================================
@@ -309,6 +473,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modal.hidden {
@@ -322,6 +487,7 @@ html, body {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
 }
 
 .modal-content {
@@ -332,6 +498,19 @@ html, body {
     max-width: 400px;
     width: 90%;
     z-index: 1001;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .modal-header {
@@ -344,6 +523,7 @@ html, body {
 .modal-title {
     font-size: 18px;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .modal-close {
@@ -352,12 +532,22 @@ html, body {
     font-size: 24px;
     cursor: pointer;
     color: var(--text-secondary);
+    transition: color 0.3s ease;
+    padding: 4px;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    margin-bottom: 20px;
 }
 
 .modal-buttons {
     display: flex;
     gap: 12px;
-    margin-top: 20px;
 }
 
 .modal-btn {
@@ -367,6 +557,8 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .modal-btn.cancel {
@@ -374,20 +566,32 @@ html, body {
     color: var(--text-secondary);
 }
 
+.modal-btn.cancel:hover {
+    background: #e2e8f0;
+}
+
 .modal-btn.go,
 .modal-btn.save {
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
 }
 
+.modal-btn.go:hover,
+.modal-btn.save:hover {
+    background: var(--primary-hover);
+}
 
 /* ==========================================
  * 9. 링크 경고 모달
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
-    color: #3b82f6;
+    color: var(--primary);
     margin: 12px 0;
+    padding: 12px;
+    background: #eff6ff;
+    border-radius: 8px;
+    font-size: 13px;
 }
 
 #linkModal .modal-buttons {
@@ -403,16 +607,26 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 #linkModal .modal-btn.cancel {
     background: #f1f5f9;
-    color: #64748b;
+    color: var(--text-secondary);
+}
+
+#linkModal .modal-btn.cancel:hover {
+    background: #e2e8f0;
 }
 
 #linkModal .modal-btn.go {
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
+}
+
+#linkModal .modal-btn.go:hover {
+    background: var(--primary-hover);
 }
 
 /* ==========================================
@@ -432,6 +646,7 @@ html, body {
 #timetableModal .modal-title {
     font-size: 18px;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 #timetableModal .modal-close {
@@ -439,7 +654,14 @@ html, body {
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: #64748b;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+    padding: 4px;
+    line-height: 1;
+}
+
+#timetableModal .modal-close:hover {
+    color: var(--text-primary);
 }
 
 #timetableModal .tab-container {
@@ -456,24 +678,46 @@ html, body {
     background: white;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#timetableModal .tab:hover {
+    border-color: var(--primary);
+    background: #eff6ff;
 }
 
 #timetableModal .tab.active {
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
-    border-color: #3b82f6;
+    border-color: var(--primary);
 }
 
 #timetableModal .timetable-content {
     max-height: 300px;
     overflow-y: auto;
     margin-bottom: 20px;
+    padding: 4px;
+}
+
+#timetableModal .timetable-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+#timetableModal .timetable-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+#timetableModal .timetable-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
 }
 
 #timetableModal .timetable-empty {
     text-align: center;
     padding: 40px 20px;
     color: var(--text-secondary);
+    font-size: 14px;
 }
 
 #timetableModal .timetable-item {
@@ -483,31 +727,57 @@ html, body {
     border: 1px solid var(--border);
     border-radius: 8px;
     margin-bottom: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#timetableModal .timetable-item:hover {
+    border-color: var(--primary);
+    background: #eff6ff;
 }
 
 #timetableModal .timetable-time {
     flex: 0 0 100px;
     font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
 }
 
 #timetableModal .timetable-subject {
     flex: 1;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
 }
 
 #timetableModal .timetable-room {
     flex: 0 0 80px;
     color: var(--text-secondary);
+    font-size: 13px;
 }
 
 #timetableModal .add-class-btn {
     width: 100%;
     padding: 12px;
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+#timetableModal .add-class-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+#timetableModal .add-class-btn:active {
+    transform: translateY(0);
 }
 
 /* ==========================================
@@ -526,6 +796,7 @@ html, body {
     margin-bottom: 8px;
     font-size: 14px;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 #addClassModal .form-input {
@@ -534,11 +805,17 @@ html, body {
     border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 14px;
+    transition: all 0.3s ease;
 }
 
 #addClassModal .form-input:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#addClassModal .form-input::placeholder {
+    color: var(--text-secondary);
 }
 
 #addClassModal .modal-buttons {
@@ -554,6 +831,8 @@ html, body {
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 #addClassModal .modal-btn.cancel {
@@ -561,9 +840,17 @@ html, body {
     color: var(--text-secondary);
 }
 
+#addClassModal .modal-btn.cancel:hover {
+    background: #e2e8f0;
+}
+
 #addClassModal .modal-btn.save {
-    background: #3b82f6;
+    background: var(--primary);
     color: white;
+}
+
+#addClassModal .modal-btn.save:hover {
+    background: var(--primary-hover);
 }
 
 /* ==========================================
@@ -576,41 +863,47 @@ html, body {
 
     .search-container {
         max-width: 100%;
+        margin-bottom: 32px;
+    }
+
+    .search-input {
+        font-size: 15px;
+        padding: 14px 18px;
+    }
+
+    .search-btn {
+        font-size: 15px;
+        padding: 14px;
+    }
+
+    .examples {
+        gap: 8px;
+    }
+
+    .example-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .chat-header {
+        padding: 12px 16px;
+    }
+
+    .chat-title {
+        font-size: 16px;
+    }
+
+    .back-btn {
+        padding: 6px 12px;
+        font-size: 13px;
     }
 
     .message {
         max-width: 90%;
+        padding: 14px;
     }
 
     .chat-footer {
-        padding: 12px 16px;
-    }
-
-    .modal-content {
-        max-width: 90%;
-    }
-
-    #timetableModal .modal-content {
-        max-width: 90%;
-    }
-
-    #addClassModal .modal-content {
-        max-width: 90%;
-    }
-}
-
-@media (max-width: 480px) {
-    .examples {
-        flex-direction: column;
-    }
-
-    .example-btn {
-        width: 100%;
-    }
-
-    .search-input,
-    .search-btn {
-        font-size: 14px;
         padding: 12px 16px;
     }
 
@@ -624,6 +917,126 @@ html, body {
         padding: 10px 16px;
         font-size: 13px;
     }
+
+    .modal-content {
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    #timetableModal .modal-content {
+        max-width: 90%;
+    }
+
+    #addClassModal .modal-content {
+        max-width: 90%;
+    }
+
+    .difficulty-select {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 12px;
+    }
+
+    .search-container {
+        margin-bottom: 24px;
+    }
+
+    .search-input,
+    .search-btn {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+
+    .examples {
+        flex-direction: column;
+    }
+
+    .example-btn {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    .chat-header {
+        padding: 10px 12px;
+    }
+
+    .chat-title {
+        font-size: 15px;
+    }
+
+    .back-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .message {
+        max-width: 95%;
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .chat-footer {
+        padding: 10px 12px;
+    }
+
+    .chat-input {
+        font-size: 14px;
+        padding: 10px 12px;
+        min-height: 40px;
+    }
+
+    .send-btn,
+    .stop-btn {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+
+    .modal-content {
+        max-width: 95%;
+        padding: 16px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .modal-btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    #timetableModal .tab {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    #timetableModal .timetable-item {
+        padding: 10px;
+    }
+
+    #timetableModal .timetable-time {
+        flex: 0 0 80px;
+        font-size: 13px;
+    }
+
+    #timetableModal .timetable-subject {
+        font-size: 13px;
+    }
+
+    #timetableModal .timetable-room {
+        flex: 0 0 60px;
+        font-size: 12px;
+    }
+
+    .difficulty-select {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
 }
 
 /* iOS 키보드 대응 */
@@ -631,4 +1044,1745 @@ html, body {
     .chat-footer {
         padding-bottom: env(safe-area-inset-bottom, 20px);
     }
+
+    .modal-content {
+        max-width: calc(100% - 32px);
+    }
 }
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-main: #0f172a;
+        --chat-bg: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border: #334155;
+    }
+
+    .search-input,
+    .chat-input,
+    .form-input {
+        background: #1e293b;
+        color: var(--text-primary);
+    }
+
+    .search-input::placeholder,
+    .chat-input::placeholder,
+    .form-input::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .example-btn {
+        background: #1e293b;
+        border-color: var(--border);
+        color: var(--text-primary);
+    }
+
+    .example-btn:hover {
+        background: #334155;
+    }
+
+    .ai-msg {
+        background: #334155;
+        color: var(--text-primary);
+    }
+
+    .modal-content {
+        background: #1e293b;
+    }
+
+    .modal-title {
+        color: var(--text-primary);
+    }
+
+    .modal-close {
+        color: var(--text-secondary);
+    }
+
+    .modal-close:hover {
+        color: var(--text-primary);
+    }
+
+    .modal-btn.cancel {
+        background: #334155;
+        color: var(--text-secondary);
+    }
+
+    .modal-btn.cancel:hover {
+        background: #475569;
+    }
+
+    #timetableModal .tab {
+        background: #1e293b;
+        border-color: var(--border);
+        color: var(--text-primary);
+    }
+
+    #timetableModal .tab:hover {
+        background: #334155;
+    }
+
+    #timetableModal .timetable-item {
+        background: #1e293b;
+        border-color: var(--border);
+    }
+
+    #timetableModal .timetable-item:hover {
+        background: #334155;
+    }
+
+    #timetableModal .timetable-time,
+    #timetableModal .timetable-subject {
+        color: var(--text-primary);
+    }
+
+    #timetableModal .timetable-room {
+        color: var(--text-secondary);
+    }
+}
+
+/* 프린트 스타일 */
+@media print {
+    .search-view,
+    .chat-footer,
+    .modal,
+    .back-btn,
+    .difficulty-select {
+        display: none !important;
+    }
+
+    .chat-view {
+        display: flex !important;
+        height: auto !important;
+    }
+
+    .chat-box {
+        overflow: visible !important;
+    }
+
+    .message {
+        page-break-inside: avoid;
+    }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 포커스 스타일 */
+*:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* 선택 스타일 */
+::selection {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--text-primary);
+}
+
+/* 로딩 스피너 */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 툴팁 */
+.tooltip {
+    position: relative;
+}
+
+.tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 12px;
+    background: #1e293b;
+    color: white;
+    font-size: 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.tooltip:hover::after {
+    opacity: 1;
+}
+
+/* 뱃지 */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+/* 태그 */
+.tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #f1f5f9;
+    color: var(--text-secondary);
+    font-size: 12px;
+    border-radius: 12px;
+}
+
+/* 구분선 */
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+}
+
+/* 카드 */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* 버튼 그룹 */
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-group .btn {
+    flex: 1;
+}
+
+/* 아이콘 버튼 */
+.icon-btn {
+    padding: 8px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.icon-btn:hover {
+    background: #f1f5f9;
+}
+
+/* 입력 그룹 */
+.input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.input-group .input {
+    flex: 1;
+}
+
+/* 토글 스위치 */
+.toggle {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    background: #cbd5e1;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.toggle.active {
+    background: var(--primary);
+}
+
+.toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.toggle.active::after {
+    transform: translateX(24px);
+}
+
+/* 체크박스 */
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox input {
+    display: none;
+}
+
+.checkbox .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.checkbox input:checked + .checkmark {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkbox input:checked + .checkmark::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 라디오 버튼 */
+.radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.radio input {
+    display: none;
+}
+
+.radio .radiomark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.radio input:checked + .radiomark {
+    border-color: var(--primary);
+}
+
+.radio input:checked + .radiomark::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+/* 프로그레스 바 */
+.progress {
+    width: 100%;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+/* 슬라이더 */
+.slider {
+    width: 100%;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    appearance: none;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* 알림 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 2000;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.notification.success {
+    border-left: 4px solid var(--success);
+}
+
+.notification.error {
+    border-left: 4px solid var(--danger);
+}
+
+.notification.warning {
+    border-left: 4px solid var(--warning);
+}
+
+.notification.info {
+    border-left: 4px solid var(--info);
+}
+
+/* 드롭다운 */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background: #f1f5f9;
+}
+
+/* 탭 */
+.tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+    background: #f1f5f9;
+}
+
+.tab.active {
+    border-bottom-color: var(--primary);
+    color: var(--primary);
+}
+
+/* 아코디언 */
+.accordion {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-item {
+    border-bottom: 1px solid var(--border);
+}
+
+.accordion-item:last-child {
+    border-bottom: none;
+}
+
+.accordion-header {
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.accordion-header:hover {
+    background: #f1f5f9;
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 500px;
+}
+
+/* 모달 오버레이 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 사이드바 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+    background: white;
+    border-right: 1px solid var(--border);
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.sidebar.active {
+    transform: translateX(0);
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 테이블 */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.table th {
+    font-weight: 600;
+    background: #f1f5f9;
+}
+
+.table tr:hover {
+    background: #f8fafc;
+}
+
+/* 폼 */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+/* 리스트 */
+.list {
+    list-style: none;
+}
+
+.list-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s ease;
+}
+
+.list-item:hover {
+    background: #f1f5f9;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+/* 그리드 */
+.grid {
+    display: grid;
+    gap: 16px;
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* 플렉스 */
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+/* 텍스트 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+/* 마진 */
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mt-4 { margin-top: 32px; }
+
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.mb-4 { margin-bottom: 32px; }
+
+.ml-1 { margin-left: 8px; }
+.ml-2 { margin-left: 16px; }
+.ml-3 { margin-left: 24px; }
+.ml-4 { margin-left: 32px; }
+
+.mr-1 { margin-right: 8px; }
+.mr-2 { margin-right: 16px; }
+.mr-3 { margin-right: 24px; }
+.mr-4 { margin-right: 32px; }
+
+/* 패딩 */
+.p-1 { padding: 8px; }
+.p-2 { padding: 16px; }
+.p-3 { padding: 24px; }
+.p-4 { padding: 32px; }
+
+.pt-1 { padding-top: 8px; }
+.pt-2 { padding-top: 16px; }
+.pt-3 { padding-top: 24px; }
+.pt-4 { padding-top: 32px; }
+
+.pb-1 { padding-bottom: 8px; }
+.pb-2 { padding-bottom: 16px; }
+.pb-3 { padding-bottom: 24px; }
+.pb-4 { padding-bottom: 32px; }
+
+.pl-1 { padding-left: 8px; }
+.pl-2 { padding-left: 16px; }
+.pl-3 { padding-left: 24px; }
+.pl-4 { padding-left: 32px; }
+
+.pr-1 { padding-right: 8px; }
+.pr-2 { padding-right: 16px; }
+.pr-3 { padding-right: 24px; }
+.pr-4 { padding-right: 32px; }
+
+/* 디스플레이 */
+.d-none { display: none; }
+.d-block { display: block; }
+.d-flex { display: flex; }
+.d-inline { display: inline; }
+.d-inline-block { display: inline-block; }
+
+/* 너비 */
+.w-100 { width: 100%; }
+.w-75 { width: 75%; }
+.w-50 { width: 50%; }
+.w-25 { width: 25%; }
+
+/* 높이 */
+.h-100 { height: 100%; }
+.h-75 { height: 75%; }
+.h-50 { height: 50%; }
+.h-25 { height: 25%; }
+
+/* 오버플로우 */
+.overflow-auto { overflow: auto; }
+.overflow-hidden { overflow: hidden; }
+.overflow-scroll { overflow: scroll; }
+
+/* 포지션 */
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-sticky { position: sticky; }
+
+/* 커서 */
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.cursor-not-allowed { cursor: not-allowed; }
+
+/* 텍스트 오버플로우 */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 텍스트 변환 */
+.text-uppercase { text-transform: uppercase; }
+.text-lowercase { text-transform: lowercase; }
+.text-capitalize { text-transform: capitalize; }
+
+/* 폰트 웨이트 */
+.font-weight-light { font-weight: 300; }
+.font-weight-normal { font-weight: 400; }
+.font-weight-medium { font-weight: 500; }
+.font-weight-semibold { font-weight: 600; }
+.font-weight-bold { font-weight: 700; }
+
+/* 폰트 사이즈 */
+.font-size-sm { font-size: 12px; }
+.font-size-base { font-size: 14px; }
+.font-size-lg { font-size: 16px; }
+.font-size-xl { font-size: 18px; }
+.font-size-2xl { font-size: 20px; }
+
+/* 텍스트 컬러 */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-info { color: var(--info); }
+
+/* 백그라운드 컬러 */
+.bg-primary { background: var(--primary); }
+.bg-secondary { background: var(--text-secondary); }
+.bg-success { background: var(--success); }
+.bg-danger { background: var(--danger); }
+.bg-warning { background: var(--warning); }
+.bg-info { background: var(--info); }
+
+/* 보더 */
+.border { border: 1px solid var(--border); }
+.border-top { border-top: 1px solid var(--border); }
+.border-bottom { border-bottom: 1px solid var(--border); }
+.border-left { border-left: 1px solid var(--border); }
+.border-right { border-right: 1px solid var(--border); }
+
+/* 둥근 모서리 */
+.rounded { border-radius: 4px; }
+.rounded-sm { border-radius: 2px; }
+.rounded-lg { border-radius: 8px; }
+.rounded-xl { border-radius: 12px; }
+.rounded-full { border-radius: 50%; }
+
+/* 섀도우 */
+.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.shadow { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.shadow-lg { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.shadow-xl { box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+/* 트랜지션 */
+.transition { transition: all 0.3s ease; }
+.transition-fast { transition: all 0.15s ease; }
+.transition-slow { transition: all 0.5s ease; }
+
+/* 트랜스폼 */
+.transform { transform: translateZ(0); }
+.scale-95 { transform: scale(0.95); }
+.scale-100 { transform: scale(1); }
+.scale-105 { transform: scale(1.05); }
+
+/* 회전 */
+.rotate-0 { transform: rotate(0deg); }
+.rotate-45 { transform: rotate(45deg); }
+.rotate-90 { transform: rotate(90deg); }
+.rotate-180 { transform: rotate(180deg); }
+
+/* 플립 */
+.flip-horizontal { transform: scaleX(-1); }
+.flip-vertical { transform: scaleY(-1); }
+
+/* 블러 */
+.blur-sm { filter: blur(2px); }
+.blur { filter: blur(4px); }
+.blur-lg { filter: blur(8px); }
+
+/* 밝기 */
+.brightness-50 { filter: brightness(0.5); }
+.brightness-75 { filter: brightness(0.75); }
+.brightness-100 { filter: brightness(1); }
+.brightness-125 { filter: brightness(1.25); }
+.brightness-150 { filter: brightness(1.5); }
+
+/* 콘트라스트 */
+.contrast-50 { filter: contrast(0.5); }
+.contrast-75 { filter: contrast(0.75); }
+.contrast-100 { filter: contrast(1); }
+.contrast-125 { filter: contrast(1.25); }
+.contrast-150 { filter: contrast(1.5); }
+
+/* 그레이스케일 */
+.grayscale { filter: grayscale(1); }
+.grayscale-0 { filter: grayscale(0); }
+
+/* 세피아 */
+.sepia { filter: sepia(1); }
+.sepia-0 { filter: sepia(0); }
+
+/* 인버트 */
+.invert { filter: invert(1); }
+.invert-0 { filter: invert(0); }
+
+/* 투명도 */
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* Z-인덱스 */
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+.z-auto { z-index: auto; }
+
+/* 포인터 이벤트 */
+.pointer-events-none { pointer-events: none; }
+.pointer-events-auto { pointer-events: auto; }
+
+/* 유저 셀렉트 */
+.user-select-none { user-select: none; }
+.user-select-auto { user-select: auto; }
+.user-select-text { user-select: text; }
+.user-select-all { user-select: all; }
+
+/* 오버플로우 랩 */
+.overflow-wrap-normal { overflow-wrap: normal; }
+.overflow-wrap-break-word { overflow-wrap: break-word; }
+.overflow-wrap-anywhere { overflow-wrap: anywhere; }
+
+/* 워드 브레이크 */
+.word-break-normal { word-break: normal; }
+.word-break-break-all { word-break: break-all; }
+.word-break-keep-all { word-break: keep-all; }
+
+/* 화이트 스페이스 */
+.whitespace-normal { white-space: normal; }
+.whitespace-nowrap { white-space: nowrap; }
+.whitespace-pre { white-space: pre; }
+.whitespace-pre-wrap { white-space: pre-wrap; }
+.whitespace-pre-line { white-space: pre-line; }
+
+/* 오버플로우 텍스트 */
+.overflow-text-ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.overflow-text-clip { overflow: hidden; text-overflow: clip; white-space: nowrap; }
+
+/* 텍스트 얼라인 */
+.text-align-left { text-align: left; }
+.text-align-center { text-align: center; }
+.text-align-right { text-align: right; }
+.text-align-justify { text-align: justify; }
+
+/* 버티컬 얼라인 */
+.vertical-align-baseline { vertical-align: baseline; }
+.vertical-align-top { vertical-align: top; }
+.vertical-align-middle { vertical-align: middle; }
+.vertical-align-bottom { vertical-align: bottom; }
+.vertical-align-text-top { vertical-align: text-top; }
+.vertical-align-text-bottom { vertical-align: text-bottom; }
+
+/* 플로트 */
+.float-left { float: left; }
+.float-right { float: right; }
+.float-none { float: none; }
+
+/* 클리어 */
+.clear-left { clear: left; }
+.clear-right { clear: right; }
+.clear-both { clear: both; }
+.clear-none { clear: none; }
+
+/* 디스플레이 */
+.display-none { display: none; }
+.display-inline { display: inline; }
+.display-inline-block { display: inline-block; }
+.display-block { display: block; }
+.display-flex { display: flex; }
+.display-inline-flex { display: inline-flex; }
+.display-grid { display: grid; }
+.display-inline-grid { display: inline-grid; }
+
+/* 플렉스 디렉션 */
+.flex-direction-row { flex-direction: row; }
+.flex-direction-row-reverse { flex-direction: row-reverse; }
+.flex-direction-column { flex-direction: column; }
+.flex-direction-column-reverse { flex-direction: column-reverse; }
+
+/* 플렉스 랩 */
+.flex-wrap-nowrap { flex-wrap: nowrap; }
+.flex-wrap-wrap { flex-wrap: wrap; }
+.flex-wrap-wrap-reverse { flex-wrap: wrap-reverse; }
+
+/* 플렉스 플로우 */
+.flex-flow-row-nowrap { flex-flow: row nowrap; }
+.flex-flow-row-wrap { flex-flow: row wrap; }
+.flex-flow-row-wrap-reverse { flex-flow: row wrap-reverse; }
+.flex-flow-column-nowrap { flex-flow: column nowrap; }
+.flex-flow-column-wrap { flex-flow: column wrap; }
+.flex-flow-column-wrap-reverse { flex-flow: column wrap-reverse; }
+
+/* 저스티파이 컨텐트 */
+.justify-content-start { justify-content: flex-start; }
+.justify-content-end { justify-content: flex-end; }
+.justify-content-center { justify-content: center; }
+.justify-content-between { justify-content: space-between; }
+.justify-content-around { justify-content: space-around; }
+.justify-content-evenly { justify-content: space-evenly; }
+
+/* 저스티파이 아이템 */
+.justify-items-start { justify-items: start; }
+.justify-items-end { justify-items: end; }
+.justify-items-center { justify-items: center; }
+.justify-items-stretch { justify-items: stretch; }
+
+/* 저스티파이 셀프 */
+.justify-self-start { justify-self: start; }
+.justify-self-end { justify-self: end; }
+.justify-self-center { justify-self: center; }
+.justify-self-stretch { justify-self: stretch; }
+
+/* 얼라인 컨텐트 */
+.align-content-start { align-content: flex-start; }
+.align-content-end { align-content: flex-end; }
+.align-content-center { align-content: center; }
+.align-content-between { align-content: space-between; }
+.align-content-around { align-content: space-around; }
+.align-content-stretch { align-content: stretch; }
+
+/* 얼라인 아이템 */
+.align-items-start { align-items: flex-start; }
+.align-items-end { align-items: flex-end; }
+.align-items-center { align-items: center; }
+.align-items-baseline { align-items: baseline; }
+.align-items-stretch { align-items: stretch; }
+
+/* 얼라인 셀프 */
+.align-self-start { align-self: flex-start; }
+.align-self-end { align-self: flex-end; }
+.align-self-center { align-self: center; }
+.align-self-baseline { align-self: baseline; }
+.align-self-stretch { align-self: stretch; }
+
+/* 플레이스 컨텐트 */
+.place-content-start { place-content: start; }
+.place-content-end { place-content: end; }
+.place-content-center { place-content: center; }
+.place-content-between { place-content: space-between; }
+.place-content-around { place-content: space-around; }
+.place-content-stretch { place-content: stretch; }
+
+/* 플레이스 아이템 */
+.place-items-start { place-items: start; }
+.place-items-end { place-items: end; }
+.place-items-center { place-items: center; }
+.place-items-stretch { place-items: stretch; }
+
+/* 플레이스 셀프 */
+.place-self-start { place-self: start; }
+.place-self-end { place-self: end; }
+.place-self-center { place-self: center; }
+.place-self-stretch { place-self: stretch; }
+
+/* 그리드 템플릿 컬럼스 */
+.grid-template-columns-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-template-columns-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-template-columns-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-template-columns-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-template-columns-5 { grid-template-columns: repeat(5, 1fr); }
+.grid-template-columns-6 { grid-template-columns: repeat(6, 1fr); }
+.grid-template-columns-7 { grid-template-columns: repeat(7, 1fr); }
+.grid-template-columns-8 { grid-template-columns: repeat(8, 1fr); }
+.grid-template-columns-9 { grid-template-columns: repeat(9, 1fr); }
+.grid-template-columns-10 { grid-template-columns: repeat(10, 1fr); }
+.grid-template-columns-11 { grid-template-columns: repeat(11, 1fr); }
+.grid-template-columns-12 { grid-template-columns: repeat(12, 1fr); }
+
+/* 그리드 템플릿 로우스 */
+.grid-template-rows-1 { grid-template-rows: repeat(1, 1fr); }
+.grid-template-rows-2 { grid-template-rows: repeat(2, 1fr); }
+.grid-template-rows-3 { grid-template-rows: repeat(3, 1fr); }
+.grid-template-rows-4 { grid-template-rows: repeat(4, 1fr); }
+.grid-template-rows-5 { grid-template-rows: repeat(5, 1fr); }
+.grid-template-rows-6 { grid-template-rows: repeat(6, 1fr); }
+
+/* 그리드 컬럼 */
+.grid-col-1 { grid-column: span 1; }
+.grid-col-2 { grid-column: span 2; }
+.grid-col-3 { grid-column: span 3; }
+.grid-col-4 { grid-column: span 4; }
+.grid-col-5 { grid-column: span 5; }
+.grid-col-6 { grid-column: span 6; }
+.grid-col-7 { grid-column: span 7; }
+.grid-col-8 { grid-column: span 8; }
+.grid-col-9 { grid-column: span 9; }
+.grid-col-10 { grid-column: span 10; }
+.grid-col-11 { grid-column: span 11; }
+.grid-col-12 { grid-column: span 12; }
+
+/* 그리드 로우 */
+.grid-row-1 { grid-row: span 1; }
+.grid-row-2 { grid-row: span 2; }
+.grid-row-3 { grid-row: span 3; }
+.grid-row-4 { grid-row: span 4; }
+.grid-row-5 { grid-row: span 5; }
+.grid-row-6 { grid-row: span 6; }
+
+/* 그리드 오토 플로우 */
+.grid-auto-flow-row { grid-auto-flow: row; }
+.grid-auto-flow-column { grid-auto-flow: column; }
+.grid-auto-flow-dense { grid-auto-flow: dense; }
+
+/* 그리드 오토 컬럼스 */
+.grid-auto-columns-min { grid-auto-columns: min-content; }
+.grid-auto-columns-max { grid-auto-columns: max-content; }
+.grid-auto-columns-fr { grid-auto-columns: 1fr; }
+
+/* 그리드 오토 로우스 */
+.grid-auto-rows-min { grid-auto-rows: min-content; }
+.grid-auto-rows-max { grid-auto-rows: max-content; }
+.grid-auto-rows-fr { grid-auto-rows: 1fr; }
+
+/* 그리드 갭 */
+.gap-0 { gap: 0; }
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.gap-5 { gap: 20px; }
+.gap-6 { gap: 24px; }
+.gap-7 { gap: 28px; }
+.gap-8 { gap: 32px; }
+.gap-9 { gap: 36px; }
+.gap-10 { gap: 40px; }
+.gap-11 { gap: 44px; }
+.gap-12 { gap: 48px; }
+
+/* 그리드 컬럼 갭 */
+.gap-x-0 { column-gap: 0; }
+.gap-x-1 { column-gap: 4px; }
+.gap-x-2 { column-gap: 8px; }
+.gap-x-3 { column-gap: 12px; }
+.gap-x-4 { column-gap: 16px; }
+.gap-x-5 { column-gap: 20px; }
+.gap-x-6 { column-gap: 24px; }
+.gap-x-7 { column-gap: 28px; }
+.gap-x-8 { column-gap: 32px; }
+.gap-x-9 { column-gap: 36px; }
+.gap-x-10 { column-gap: 40px; }
+.gap-x-11 { column-gap: 44px; }
+.gap-x-12 { column-gap: 48px; }
+
+/* 그리드 로우 갭 */
+.gap-y-0 { row-gap: 0; }
+.gap-y-1 { row-gap: 4px; }
+.gap-y-2 { row-gap: 8px; }
+.gap-y-3 { row-gap: 12px; }
+.gap-y-4 { row-gap: 16px; }
+.gap-y-5 { row-gap: 20px; }
+.gap-y-6 { row-gap: 24px; }
+.gap-y-7 { row-gap: 28px; }
+.gap-y-8 { row-gap: 32px; }
+.gap-y-9 { row-gap: 36px; }
+.gap-y-10 { row-gap: 40px; }
+.gap-y-11 { row-gap: 44px; }
+.gap-y-12 { row-gap: 48px; }
+
+/* 오더 */
+.order-1 { order: 1; }
+.order-2 { order: 2; }
+.order-3 { order: 3; }
+.order-4 { order: 4; }
+.order-5 { order: 5; }
+.order-6 { order: 6; }
+.order-7 { order: 7; }
+.order-8 { order: 8; }
+.order-9 { order: 9; }
+.order-10 { order: 10; }
+.order-11 { order: 11; }
+.order-12 { order: 12; }
+.order-first { order: -9999; }
+.order-last { order: 9999; }
+.order-none { order: 0; }
+
+/* 플렉스 그로우 */
+.flex-grow-0 { flex-grow: 0; }
+.flex-grow { flex-grow: 1; }
+.flex-grow-2 { flex-grow: 2; }
+.flex-grow-3 { flex-grow: 3; }
+.flex-grow-4 { flex-grow: 4; }
+.flex-grow-5 { flex-grow: 5; }
+.flex-grow-6 { flex-grow: 6; }
+.flex-grow-7 { flex-grow: 7; }
+.flex-grow-8 { flex-grow: 8; }
+.flex-grow-9 { flex-grow: 9; }
+.flex-grow-10 { flex-grow: 10; }
+.flex-grow-11 { flex-grow: 11; }
+.flex-grow-12 { flex-grow: 12; }
+
+/* 플렉스 슈링크 */
+.flex-shrink-0 { flex-shrink: 0; }
+.flex-shrink { flex-shrink: 1; }
+.flex-shrink-2 { flex-shrink: 2; }
+.flex-shrink-3 { flex-shrink: 3; }
+.flex-shrink-4 { flex-shrink: 4; }
+.flex-shrink-5 { flex-shrink: 5; }
+.flex-shrink-6 { flex-shrink: 6; }
+.flex-shrink-7 { flex-shrink: 7; }
+.flex-shrink-8 { flex-shrink: 8; }
+.flex-shrink-9 { flex-shrink: 9; }
+.flex-shrink-10 { flex-shrink: 10; }
+.flex-shrink-11 { flex-shrink: 11; }
+.flex-shrink-12 { flex-shrink: 12; }
+
+/* 플렉스 베이시스 */
+.flex-basis-0 { flex-basis: 0; }
+.flex-basis-1 { flex-basis: 4px; }
+.flex-basis-2 { flex-basis: 8px; }
+.flex-basis-3 { flex-basis: 12px; }
+.flex-basis-4 { flex-basis: 16px; }
+.flex-basis-5 { flex-basis: 20px; }
+.flex-basis-6 { flex-basis: 24px; }
+.flex-basis-7 { flex-basis: 28px; }
+.flex-basis-8 { flex-basis: 32px; }
+.flex-basis-9 { flex-basis: 36px; }
+.flex-basis-10 { flex-basis: 40px; }
+.flex-basis-11 { flex-basis: 44px; }
+.flex-basis-12 { flex-basis: 48px; }
+.flex-basis-auto { flex-basis: auto; }
+.flex-basis-full { flex-basis: 100%; }
+
+/* 오브젝트 핏 */
+.object-fit-contain { object-fit: contain; }
+.object-fit-cover { object-fit: cover; }
+.object-fit-fill { object-fit: fill; }
+.object-fit-none { object-fit: none; }
+.object-fit-scale-down { object-fit: scale-down; }
+
+/* 오브젝트 포지션 */
+.object-position-bottom { object-position: bottom; }
+.object-position-center { object-position: center; }
+.object-position-left { object-position: left; }
+.object-position-left-bottom { object-position: left bottom; }
+.object-position-left-top { object-position: left top; }
+.object-position-right { object-position: right; }
+.object-position-right-bottom { object-position: right bottom; }
+.object-position-right-top { object-position: right top; }
+.object-position-top { object-position: top; }
+
+/* 오버플로우 */
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+.overflow-y-hidden { overflow-y: hidden; }
+.overflow-x-scroll { overflow-x: scroll; }
+.overflow-y-scroll { overflow-y: scroll; }
+.overflow-x-visible { overflow-x: visible; }
+.overflow-y-visible { overflow-y: visible; }
+
+/* 오버플로우 클립 */
+.overflow-clip { overflow: clip; }
+
+/* 오버플로우 엑스 */
+.overscroll-x-auto { overscroll-behavior-x: auto; }
+.overscroll-y-auto { overscroll-behavior-y: auto; }
+.overscroll-x-contain { overscroll-behavior-x: contain; }
+.overscroll-y-contain { overscroll-behavior-y: contain; }
+.overscroll-x-none { overscroll-behavior-x: none; }
+.overscroll-y-none { overscroll-behavior-y: none; }
+
+/* 포지션 스티키 */
+.sticky { position: sticky; }
+.sticky-top { top: 0; }
+.sticky-bottom { bottom: 0; }
+
+/* 톱 */
+.top-0 { top: 0; }
+.top-1 { top: 4px; }
+.top-2 { top: 8px; }
+.top-3 { top: 12px; }
+.top-4 { top: 16px; }
+.top-5 { top: 20px; }
+.top-6 { top: 24px; }
+.top-7 { top: 28px; }
+.top-8 { top: 32px; }
+.top-9 { top: 36px; }
+.top-10 { top: 40px; }
+.top-11 { top: 44px; }
+.top-12 { top: 48px; }
+.top-auto { top: auto; }
+
+/* 라이트 */
+.right-0 { right: 0; }
+.right-1 { right: 4px; }
+.right-2 { right: 8px; }
+.right-3 { right: 12px; }
+.right-4 { right: 16px; }
+.right-5 { right: 20px; }
+.right-6 { right: 24px; }
+.right-7 { right: 28px; }
+.right-8 { right: 32px; }
+.right-9 { right: 36px; }
+.right-10 { right: 40px; }
+.right-11 { right: 44px; }
+.right-12 { right: 48px; }
+.right-auto { right: auto; }
+
+/* 바텀 */
+.bottom-0 { bottom: 0; }
+.bottom-1 { bottom: 4px; }
+.bottom-2 { bottom: 8px; }
+.bottom-3 { bottom: 12px; }
+.bottom-4 { bottom: 16px; }
+.bottom-5 { bottom: 20px; }
+.bottom-6 { bottom: 24px; }
+.bottom-7 { bottom: 28px; }
+.bottom-8 { bottom: 32px; }
+.bottom-9 { bottom: 36px; }
+.bottom-10 { bottom: 40px; }
+.bottom-11 { bottom: 44px; }
+.bottom-12 { bottom: 48px; }
+.bottom-auto { bottom: auto; }
+
+/* 레프트 */
+.left-0 { left: 0; }
+.left-1 { left: 4px; }
+.left-2 { left: 8px; }
+.left-3 { left: 12px; }
+.left-4 { left: 16px; }
+.left-5 { left: 20px; }
+.left-6 { left: 24px; }
+.left-7 { left: 28px; }
+.left-8 { left: 32px; }
+.left-9 { left: 36px; }
+.left-10 { left: 40px; }
+.left-11 { left: 44px; }
+.left-12 { left: 48px; }
+.left-auto { left: auto; }
+
+/* 인셋 */
+.inset-0 { inset: 0; }
+.inset-1 { inset: 4px; }
+.inset-2 { inset: 8px; }
+.inset-3 { inset: 12px; }
+.inset-4 { inset: 16px; }
+.inset-5 { inset: 20px; }
+.inset-6 { inset: 24px; }
+.inset-7 { inset: 28px; }
+.inset-8 { inset: 32px; }
+.inset-9 { inset: 36px; }
+.inset-10 { inset: 40px; }
+.inset-11 { inset: 44px; }
+.inset-12 { inset: 48px; }
+.inset-auto { inset: auto; }
+
+/* 인셋 엑스 */
+.inset-x-0 { left: 0; right: 0; }
+.inset-x-1 { left: 4px; right: 4px; }
+.inset-x-2 { left: 8px; right: 8px; }
+.inset-x-3 { left: 12px; right: 12px; }
+.inset-x-4 { left: 16px; right: 16px; }
+.inset-x-5 { left: 20px; right: 20px; }
+.inset-x-6 { left: 24px; right: 24px; }
+.inset-x-7 { left: 28px; right: 28px; }
+.inset-x-8 { left: 32px; right: 32px; }
+.inset-x-9 { left: 36px; right: 36px; }
+.inset-x-10 { left: 40px; right: 40px; }
+.inset-x-11 { left: 44px; right: 44px; }
+.inset-x-12 { left: 48px; right: 48px; }
+.inset-x-auto { left: auto; right: auto; }
+
+/* 인셋 와이 */
+.inset-y-0 { top: 0; bottom: 0; }
+.inset-y-1 { top: 4px; bottom: 4px; }
+.inset-y-2 { top: 8px; bottom: 8px; }
+.inset-y-3 { top: 12px; bottom: 12px; }
+.inset-y-4 { top: 16px; bottom: 16px; }
+.inset-y-5 { top: 20px; bottom: 20px; }
+.inset-y-6 { top: 24px; bottom: 24px; }
+.inset-y-7 { top: 28px; bottom: 28px; }
+.inset-y-8 { top: 32px; bottom: 32px; }
+.inset-y-9 { top: 36px; bottom: 36px; }
+.inset-y-10 { top: 40px; bottom: 40px; }
+.inset-y-11 { top: 44px; bottom: 44px; }
+.inset-y-12 { top: 48px; bottom: 48px; }
+.inset-y-auto { top: auto; bottom: auto; }
+
+/* 트랜스레이트 엑스 */
+.translate-x-0 { transform: translateX(0); }
+.translate-x-1 { transform: translateX(4px); }
+.translate-x-2 { transform: translateX(8px); }
+.translate-x-3 { transform: translateX(12px); }
+.translate-x-4 { transform: translateX(16px); }
+.translate-x-5 { transform: translateX(20px); }
+.translate-x-6 { transform: translateX(24px); }
+.translate-x-7 { transform: translateX(28px); }
+.translate-x-8 { transform: translateX(32px); }
+.translate-x-9 { transform: translateX(36px); }
+.translate-x-10 { transform: translateX(40px); }
+.translate-x-11 { transform: translateX(44px); }
+.translate-x-12 { transform: translateX(48px); }
+.translate-x-full { transform: translateX(100%); }
+.translate-x-1/2 { transform: translateX(50%); }
+.translate-x-1/3 { transform: translateX(33.333333%); }
+.translate-x-2/3 { transform: translateX(66.666667%); }
+.translate-x-1/4 { transform: translateX(25%); }
+.translate-x-2/4 { transform: translateX(50%); }
+.translate-x-3/4 { transform: translateX(75%); }
+.translate-x-1/5 { transform: translateX(20%); }
+.translate-x-2/5 { transform: translateX(40%); }
+.translate-x-3/5 { transform: translateX(60%); }
+.translate-x-4/5 { transform: translateX(80%); }
+.translate-x-1/6 { transform: translateX(16.666667%); }
+.translate-x-2/6 { transform: translateX(33.333333%); }
+.translate-x-3/6 { transform: translateX(50%); }
+.translate-x-4/6 { transform: translateX(66.666667%); }
+.translate-x-5/6 { transform: translateX(83.333333%); }
+.translate-x-1/12 { transform: translateX(8.333333%); }
+.translate-x-2/12 { transform: translateX(16.666667%); }
+.translate-x-3/12 { transform: translateX(25%); }
+.translate-x-4/12 { transform: translateX(33.333333%); }
+.translate-x-5/12 { transform: translateX(41.666667%); }
+.translate-x-6/12 { transform: translateX(50%); }
+.translate-x-7/12 { transform: translateX(58.333333%); }
+.translate-x-8/12 { transform: translateX(66.666667%); }
+.translate-x-9/12 { transform: translateX(75%); }
+.translate-x-10/12 { transform: translateX(83.333333%); }
+.translate-x-11/12 { transform: translateX(91.666667%); }
+.translate-x-pixel-1 { transform: translateX(1px); }
+.translate-x-pixel-2 { transform: translateX(2px); }
+.translate-x-pixel-3 { transform: translateX(3px); }
+.translate-x-pixel-4 { transform: translateX(4px); }
+.translate-x-pixel-5 { transform: translateX(5px); }
+.translate-x-pixel-6 { transform: translateX(6px); }
+.translate-x-pixel-7 { transform: translateX(7px); }
+.translate-x-pixel-8 { transform: translateX(8px); }
+.translate-x-pixel-9 { transform: translateX(9px); }
+.translate-x-pixel-10 { transform: translateX(10px); }
+.translate-x-pixel-11 { transform: translateX(11px); }
+.translate-x-pixel-12 { transform: translateX(12px); }
+.translate-x-pixel-13 { transform: translateX(13px); }
+.translate-x-pixel-14 { transform: translateX(14px); }
+.translate-x-pixel-15 { transform: translateX(15px); }
+.translate-x-pixel-16 { transform: translateX(16px); }
+.translate-x-pixel-17 { transform: translateX(17px); }
+.translate-x-pixel-18 { transform: translateX(18px); }
+.translate-x-pixel-19 { transform: translateX(19px); }
+.translate-x-pixel-20 { transform: translateX(20px); }
+.translate-x-pixel-21 { transform: translateX(21px); }
+.translate-x-pixel-22 { transform: translateX(22px); }
+.translate-x-pixel-23 { transform: translateX(23px); }
+.translate-x-pixel-24 { transform: translateX(24px); }
+.translate-x-pixel-25 { transform: translateX(25px); }
+.translate-x-pixel-26 { transform: translateX(26px); }
+.translate-x-pixel-27 { transform: translateX(27px); }
+.translate-x-pixel-28 { transform: translateX(28px); }
+.translate-x-pixel-29 { transform: translateX(29px); }
+.translate-x-pixel-30 { transform: translateX(30px); }
+.translate-x-pixel-31 { transform: translateX(31px); }
+.translate-x-pixel-32 { transform: translateX(32px); }
+.translate-x-pixel-33 { transform: translateX(33px); }
+.translate-x-pixel-34 { transform: translateX(34px); }
+.translate-x-pixel-35 { transform: translateX(35px); }
+.translate-x-pixel-36 { transform: translateX(36px); }
+.translate-x-pixel-37 { transform: translateX(37px); }
+.translate-x-pixel-38 { transform: translateX(38px); }
+.translate-x-pixel-39 { transform: translateX(39px); }
+.translate-x-pixel-40 { transform: translateX(40px); }
+.translate-x-pixel-41 { transform: translateX(41px); }
+.translate-x-pixel-42 { transform: translateX(42px); }
+.translate-x-pixel-43 { transform: translateX(43px); }
+.translate-x-pixel-44 { transform: translateX(44px); }
+.translate-x-pixel-45 { transform: translateX(45px); }
+.translate-x-pixel-46 { transform: translateX(46px); }
+.translate-x-pixel-47 { transform: translateX(47px); }
+.translate-x-pixel-48 { transform: translateX(48px); }
+.translate-x-pixel-49 { transform: translateX(49px); }
+.translate-x-pixel-50 { transform: translateX(50px); }
+.translate-x-pixel-51 { transform: translateX(51px); }
+.translate-x-pixel-52 { transform: translateX(52px); }
+.translate-x-pixel-53 { transform: translateX(53px); }
+.translate-x-pixel-54 { transform: translateX(54px); }
+.translate-x-pixel-55 { transform: translateX(55px); }
+.translate-x-pixel-56 { transform: translateX(56px); }
+.translate-x-pixel-57 { transform: translateX(57px); }
+.translate-x-pixel-58 { transform: translateX(58px); }
+.translate-x-pixel-59 { transform: translateX(59px); }
+.translate-x-pixel-60 { transform: translateX(60px); }
+.translate-x-pixel-61 { transform: translateX(61px); }
+.translate-x-pixel-62 { transform: translateX(62px); }
+.translate-x-pixel-63 { transform: translateX(63px); }
+.translate-x-pixel-64 { transform: translateX(64px); }
+.translate-x-pixel-65 { transform: translateX(65px); }
+.translate-x-pixel-66 { transform: translateX(66px); }
+.translate-x-pixel-67 { transform: translateX(67px); }
+.translate-x-pixel-68 { transform: translateX(68px); }
+.translate-x-pixel-69 { transform: translateX(69px); }
+.translate-x-pixel-70 { transform: translateX(70px); }
+.translate-x-pixel-71 { transform: translateX(71px); }
+.translate-x-pixel-72 { transform: translateX(72px); }
+.translate-x-pixel-73 { transform: translateX(73px); }
+.translate-x-pixel-74 { transform: translateX(74px); }
+.translate-x-pixel-75 { transform: translateX(75px); }
+.translate-x-pixel-76 { transform: translateX(76px); }
+.translate-x-pixel-77 { transform: translateX(77px); }
+.translate-x-pixel-78 { transform: translateX(78px); }
+.translate-x-pixel-79 { transform: translateX(79px); }
+.translate-x-pixel-80 { transform: translateX(80px); }
+.translate-x-pixel-81 { transform: translateX(81px); }
+.translate-x-pixel-82 { transform: translateX(82px); }
+.translate-x-pixel-83 { transform: translateX(83px); }
+.translate-x-pixel-84 { transform: translateX(84px); }
+.translate-x-pixel-85 { transform: translateX(85px); }
+.translate-x-pixel-86 { transform: translateX(86px); }
+.translate-x-pixel-87 { transform: translateX(87px); }
+.translate-x-pixel-88 { transform: translateX(88px); }
+.translate-x-pixel-89 { transform: translateX(89px); }
+.translate-x-pixel-90 { transform: translateX(90px); }
+.translate-x-pixel-91 { transform: translateX(91px); }
+.translate-x-pixel-92 { transform: translateX(92px); }
+.translate-x-pixel-93 { transform: translateX(93px); }
+.translate-x-pixel-94 { transform: translateX(94px); }
+.translate-x-pixel-95 { transform: translateX(95px); }
+.translate-x-pixel-96 { transform: translateX(96px); }
+.translate-x-pixel-97 { transform: translateX(97px); }
+.translate-x-pixel-98 { transform: translateX(98px); }
+.translate-x-pixel-99 { transform: translateX(99px); }
+.translate-x-pixel-100 { transform: translateX(100px); }
+
+/* 트랜스레이트 와이 */
+.translate-y-0 { transform: translateY(0); }
+.translate-y-1 { transform: translateY(4px); }
+.translate-y-2 { transform: translateY(8px); }
+.translate-y-3 { transform: translateY(12px); }
+.translate-y-4 { transform: translateY(16px); }
+.translate-y-5 { transform: translateY(20px); }
+.translate-y-6 { transform: translateY(24px); }
+.translate-y-7 { transform: translateY(28px); }
+.translate-y-8 { transform: translateY(32px); }
+.translate-y-9 { transform: translateY(36px); }
+.translate-y-10 { transform: translateY(40px); }
+.translate-y-11 { transform: translateY(44px); }
+.translate-y-12 { transform: translateY(48px); }
+.translate-y-full { transform: translateY(100%); }
+.translate-y-1/2 { transform: translateY(50%); }
+.translate-y-1/3 { transform: translateY(33.333333%); }
+.translate-y-2/3 { transform: translateY(66.666667%); }
+.translate-y-1/4 { transform: translateY(25%); }
+.translate-y-2/4 { transform: translateY(50%); }
+.translate-y-3/4 { transform: translateY(75%); }
+.translate-y-1/5 { transform: translateY(20%); }
+.translate-y-2/5 { transform: translateY(40%); }
+.translate-y-3/5 { transform: translateY(60%); }
+.translate-y-4/5 { transform: translateY(80%); }
+.translate-y-1/6 { transform: translateY(16.666667%); }
+.translate-y-2/6 { transform: translateY(33.333333%); }
+.translate-y-3/6 { transform: translateY(50%); }
+.translate-y-4/6 { transform: translateY(66.666667%); }
+.translate-y-5/6 { transform: translateY(83.333333%); }
+.translate-y-1/12 { transform: translateY(8.333333%); }
+.translate-y-2/12 { transform: translateY(16.666667%); }
+.translate-y-3/12 { transform: translateY(25%); }
+.translate-y-4/12 { transform: translateY(33.333333%); }
+.translate-y-5/12 { transform: translateY(41.666667%); }
+.translate-y-6/12 { transform: translateY(50%); }
+.translate-y-7/12 { transform: translateY(58.333333%); }
+.translate-y-8/12 { transform: translateY(66.666667%); }
+.translate-y-9/12 { transform: translateY(75%); }
+.translate-y-10/12 { transform: translateY(83.333333%); }
+.translate-y-11/12 { transform: translateY(91.666667%); }
+.translate-y-pixel-1 { transform: translateY(1px); }
+.translate-y-pixel-2 { transform: translateY(2px); }
+.translate-y-pixel-3 { transform: translateY(3px); }
+.translate-y-pixel-4 { transform: translateY(4px); }
+.translate-y-pixel-5 { transform: translateY(5px); }
+.translate-y-pixel-6 { transform: translateY(6px); }
+.translate-y-pixel-7 { transform: translateY(7px); }
+.translate-y-pixel-8 { transform: translateY(8px); }
+.translate-y-pixel-9 { transform: translateY(9px); }
+.translate-y-pixel-10 { transform: translateY(10px); }
+.translate-y-pixel-11 { transform: translateY(11px); }
+.translate-y-pixel-12 { transform: translateY(12px); }
+.translate-y-pixel-13 { transform: translateY(13px); }
+.translate-y-pixel-14 { transform: translateY(14px); }
+.translate-y-pixel-15 { transform: translateY(15px); }
+.translate-y-pixel-16 { transform: translateY(16px); }
+.translate-y-pixel-17 { transform: translateY(17px); }
+.translate-y-pixel-18 { transform: translateY(18px); }
+.translate-y-pixel-19 { transform: translateY(19px); }
+.translate-y-pixel-20 { transform: translateY(20px); }
+.translate-y-pixel-21 { transform: translateY(21px); }
+.translate-y-pixel-22 { transform: translateY(22px); }
+.translate-y-pixel-23 { transform: translateY(23px); }
+.translate-y-pixel-24 { transform: translateY(24px); }
+.translate-y-pixel-25 { transform: translateY(25px); }
+.translate-y-pixel-26 { transform: translateY(26px); }
+.translate-y-pixel-27 { transform: translateY(27px); }
+.translate-y-pixel-28 { transform: translateY(28px); }
+.translate-y-pixel-29 { transform: translateY(29px); }
+.translate-y-pixel-30 { transform: translateY(30px); }
+.translate-y-pixel-31 { transform: translateY(31px); }
+.translate-y-pixel-32 { transform: translateY(32px); }
+.translate-y-pixel-33 { transform: translateY(33px); }
+.translate-y-pixel-34 { transform: translateY(34px); }
+.translate-y-pixel-35 { transform: translateY(35px); }
+.translate-y-pixel-36 { transform: translateY(36px); }
+.translate-y-pixel-37 { transform: translateY(37px); }
+.translate-y-pixel-38 { transform: translateY(38px); }
+.translate-y-pixel-39 { transform: translateY(39px); }
+.translate-y-pixel-40 { transform: translateY(40px); }
+.translate-y-pixel-41 { transform: translateY(41px); }
+.translate-y-pixel-42 { transform: translateY(42px); }
+.translate-y-pixel-43 { transform: translateY(43px); }
+.translate-y-pixel-44 { transform: translateY(44px); }
+.translate-y-pixel-45 { transform: translateY(45px); }
+.translate-y-pixel-46 { transform: translateY(46px); }
+.translate-y-pixel-47 { transform: translateY(47px); }
+.translate-y-pixel-48 { transform: translateY(48px); }
+.translate-y-pixel-49 { transform: translateY(49px); }
+.translate-y-pixel-50 { transform: translateY(50px); }
+.translate-y-pixel-51 { transform: translateY(51px); }
+.translate-y-pixel-52 { transform: translateY(52px); }
+.translate-y-pixel-53 { transform: translateY(53px); }
+.translate-y-pixel-54 { transform: translateY(54px); }
+.translate-y-pixel-55 { transform: translateY(55px); }
+.translate-y-pixel-56 { transform: translateY(56px); }
+.translate-y-pixel-57 { transform: translateY(57px); }
+.translate-y-pixel-58 { transform: translateY(58px); }
+.translate-y-pixel-59 { transform: translateY(59px); }
+.translate-y-pixel-60 { transform: translateY(60px); }
+.translate-y-pixel-61 { transform: translateY(61px); }
+.translate-y-pixel-62 { transform: translateY(62px); }
+.translate-y-pixel-63 { transform: translateY(63px); }
+.translate-y-pixel-64 { transform: translateY(64px); }
+.translate-y-pixel-65 { transform: translateY(65px); }
+.translate-y-pixel-66 { transform: translateY(66px); }
+.translate-y-pixel-67 { transform: translateY(67px); }
+.translate-y-pixel-68 { transform: translateY(68px); }
+.translate-y-pixel-69 { transform: translateY(69px); }
+.translate-y-pixel-70 { transform: translateY(70px); }
+.translate-y-pixel-71 { transform: translateY(71px); }
+.translate-y-pixel-72 { transform: translateY(72px); }
+.translate-y-pixel-73 { transform: translateY(73px); }
+.translate-y-pixel-74 { transform: translateY(74px); }
+.translate-y-pixel-75 { transform: translateY(75px); }
+.translate-y-pixel-76 { transform: translateY(76px); }
+.translate-y-pixel-77 { transform: translateY(77px); }
+.translate-y-pixel-78 { transform: translateY(78px); }
+.translate-y-pixel-79 { transform: translateY(79px); }
+.translate-y-pixel-80 { transform: translateY(80px); }
+.translate-y-pixel-81 { transform: translateY(81px); }
+.translate-y-pixel-82 { transform: translateY(82px); }
+.translate-y-pixel-83 { transform: translateY(83px); }
+.translate-y-pixel-84 { transform: translateY(84px); }
+.translate-y-pixel-85 { transform: translateY(85px); }
+.translate-y-pixel-86 { transform: translateY(86px); }
+.translate-y-pixel-87 { transform: translateY(87px); }
+.translate-y-pixel-88 { transform: translateY(88px); }
+.translate-y-pixel-89 { transform: translateY(89px); }
+.translate-y-pixel-90 { transform: translateY(90px); }
+.translate-y-pixel-91 { transform: translateY(91px); }
+.translate-y-pixel-92 { transform: translateY(92px); }
+.translate-y-pixel-93 { transform: translateY(93px); }
+.translate-y-pixel-94 { transform: translateY(94px); }
+.translate-y-pixel-95 { transform: translateY(95px); }
+.translate-y-pixel-96 { transform: translateY(96px); }
+.translate-y-pixel-97 { transform: translateY(97px); }
+.translate-y-pixel-98 { transform: translateY(98px); }
+.translate-y-pixel-99 { transform: translateY(99px); }
+.translate-y-pixel-100 { transform: translateY(100px); }
+
+/* 스케일 */
+.scale-0 { transform: scale(0); }
+.scale-50 { transform: scale(0.5); }
+.scale-75 { transform: scale(0.75); }
+.scale-90 { transform: scale(0.9); }
+.scale-95 { transform: scale(0.95); }
+.scale-100 { transform: scale(1); }
+.scale-105 { transform: scale(1.05); }
+.scale-110 { transform: scale(1.1); }
+.scale-125 { transform: scale(1.25); }
+.scale-150 { transform: scale(1.5); }
+
+/* 로테이트 */
+.rotate-0 { transform: rotate(0deg); }
+.rotate-1 { transform: rotate(1deg); }
+.rotate-2 { transform: rotate(2deg); }
+.rotate-3 { transform: rotate(3deg); }
+.rotate-6 { transform: rotate(6deg); }
+.rotate-12 { transform: rotate(12deg); }
+.rotate-45 { transform: rotate(45deg); }
+.rotate-90 { transform: rotate(90deg); }
+.rotate-180 { transform: rotate(180deg); }
+
+/* 스큐 */
+.skew-x-0 { transform: skewX(0deg); }
+.skew-x-3 { transform: skewX(3deg); }
+.skew-x-6 { transform: skewX(6deg); }
+.skew-x-12 { transform: skewX(12deg); }
+.skew-y-0 { transform: skewY(0deg); }
+.skew-y-3 { transform: skewY(3deg); }
+.skew-y-6 { transform: skewY(6deg); }
+.skew-y-12 { transform: skewY(12deg); }
+
+/* 오리진 */
+.origin-center { transform-origin: center; }
+.origin-top { transform-origin: top; }
+.origin-top-right { transform-origin: top right; }
+.origin-right { transform-origin: right; }
+.origin-bottom-right { transform-origin: bottom right; }
+.origin-bottom { transform-origin: bottom; }
+.origin-bottom-left { transform-origin: bottom left; }
+.origin-left { transform-origin: left; }
+.origin-top-left { transform-origin: top left; }
+
+/* 퍼스펙티브 */
+.perspective-none { perspective: none; }
+.perspective-100 { perspective: 100px; }
+.perspective-150 { perspective: 150px; }
+.perspective-200 { perspective: 200px; }
+.perspective-250 { perspective: 250px; }
+.perspective-300 { perspective: 300px; }
+.perspective-350 { perspective: 350px; }
+.perspective-400 { perspective: 400px; }
+.perspective-450 { perspective: 450px; }
+.perspective-500 { perspective: 500px; }
+.perspective-550 { perspective: 550px; }
+.perspective-600 { perspective: 600px; }
+.perspective-650 { perspective: 650px; }
+.perspective-700 { perspective: 700px; }
+.perspective-750 { perspective: 750px; }
+.perspective-800 { perspective: 800px; }
+.perspective-850 { perspective: 850px; }
+.perspective-900 { perspective: 900px; }
+.perspective-950 { perspective: 950px; }
+.perspective-1000 { perspective: 1000px; }
+
+/* 퍼스펙티브 오리진 */
+.perspective-origin-center { perspective-origin: center; }
+.perspective-origin-top { perspective-origin: top; }
+.perspective-origin-top-right { perspective-origin: top right; }
+.perspective-origin-right { perspective-origin: right; }
+.perspective-origin-bottom-right { perspective-origin: bottom right; }
+.perspective-origin-bottom { perspective-origin: bottom; }
+.perspective-origin-bottom-left { perspective-origin: bottom left; }
+.perspective-origin-left { perspective-origin: left; }
+.perspective-origin-top-left { perspective-origin: top left; }
+
+/* 트랜스폼 스타일 */
+.transform-style-flat { transform-style: flat; }
+.transform-style-3d { transform-style: preserve-3d; }
+
+/* 백페이스 비저빌리티 */
+.backface-visible { backface-visibility: visible; }
+.backface-hidden { backface-visibility: hidden; }
+
+/* 유틸리티 클래스 끝 */
