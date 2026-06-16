@@ -637,4 +637,4 @@ System.responseMode = UI.difficultySelect?.value || 'normal';
 
 // 초기 상태
 updateMainBtn();
-System.updateSendButton();
+System.updateSendButton(); //
