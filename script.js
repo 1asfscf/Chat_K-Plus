@@ -3,18 +3,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. UI 요소
     // ==========================================
     const UI = {
-    input: document.getElementById('queryInput'),
-    btn: document.getElementById('searchBtn'),
-    examples: document.querySelectorAll('.example-btn'),
-    searchView: document.getElementById('search-view'),
-    chatView: document.getElementById('chat-view'),
-    chatBox: document.getElementById('chat-box'),
-    backBtn: document.getElementById('backBtn'),
-    chatInput: document.getElementById('chatInput'),
-    sendBtn: document.getElementById('sendBtn'),
-    stopBtn: document.getElementById('stopBtn'),
-    difficultySelect: document.getElementById('difficultySelect') // ← 추가
-};
+        input: document.getElementById('queryInput'),
+        btn: document.getElementById('searchBtn'),
+        examples: document.querySelectorAll('.example-btn'),
+        searchView: document.getElementById('search-view'),
+        chatView: document.getElementById('chat-view'),
+        chatBox: document.getElementById('chat-box'),
+        backBtn: document.getElementById('backBtn'),
+        chatInput: document.getElementById('chatInput'),
+        sendBtn: document.getElementById('sendBtn'),
+        stopBtn: document.getElementById('stopBtn'),
+        difficultySelect: document.getElementById('difficultySelect'),
+        // 링크 경고 모달
+        linkModal: document.getElementById('linkModal'),
+        modalUrl: document.getElementById('modalUrl'),
+        modalCancel: document.getElementById('modalCancel'),
+        modalGo: document.getElementById('modalGo'),
+        // 시간표 모달
+        timetableBtn: document.getElementById('timetableBtn'),
+        timetableModal: document.getElementById('timetableModal'),
+        timetableClose: document.getElementById('timetableClose'),
+        timetableContent: document.getElementById('timetableContent'),
+        addClassBtn: document.getElementById('addClassBtn'),
+        addClassModal: document.getElementById('addClassModal'),
+        cancelAdd: document.getElementById('cancelAdd'),
+        saveAdd: document.getElementById('saveAdd')
+    };
+
+    // ... (나머지 코드)
+});
 
 // ========== 입력바 높이 자동 계산 ==========
 let paddingTimer = null; // ← 추가
