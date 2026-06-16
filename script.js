@@ -30,9 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAdd: document.getElementById('saveAdd')
     };
 
-    // ... (나머지 코드)
-});
-
 // ========== 입력바 높이 자동 계산 ==========
 let paddingTimer = null; // ← 추가
 function fixChatPadding() {
