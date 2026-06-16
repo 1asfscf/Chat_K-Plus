@@ -1,5 +1,5 @@
 /* =========================================================
-   Chat K plus - Premium Service UI v3.0 (2026-06-16)
+   Chat K plus - Fixed Premium UI v3.1 (2026-06-16)
    ========================================================= */
 
 /* ==========================================
@@ -90,7 +90,7 @@ html, body {
 }
 
 /* ==========================================
- * 2. 앱 컨테이너 - 프리미엄 배경
+ * 2. 앱 컨테이너
  * ========================================== */
 .app-container {
     width: 100%;
@@ -117,7 +117,222 @@ html, body {
 }
 
 /* ==========================================
- * 3. 채팅 화면 - 프리미엄 서비스 느낌
+ * 3. 검색 화면
+ * ========================================== */
+#search-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    background: var(--accent-gradient);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 배경 애니메이션 효과 */
+#search-view::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+    animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.search-content {
+    width: 100%;
+    max-width: 680px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    font-size: 64px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.title {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.beta-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.search-container {
+    width: 100%;
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 20px 24px;
+    padding-right: 60px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    color: white;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-lg);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), var(--shadow-xl);
+    transform: scale(1.01);
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 20px;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover:not(:disabled) {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.search-btn:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.search-btn:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.examples {
+    margin-top: 40px;
+}
+
+.examples-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.example-btn {
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+}
+
+.example-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.example-btn:active {
+    transform: translateY(0);
+}
+
+.app-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* ==========================================
+ * 4. 채팅 화면 - 프리미엄 서비스 느낌
  * ========================================== */
 #chat-view {
     display: none;
@@ -407,7 +622,7 @@ html, body {
 }
 
 /* ==========================================
- * 4. 채팅 입력바 - 프리미엄 서비스 디자인
+ * 5. 채팅 입력바 - 프리미엄 서비스 디자인
  * ========================================== */
 .chat-footer {
     display: flex;
@@ -487,29 +702,6 @@ html, body {
 
 .chat-input:focus::placeholder {
     color: var(--text-disabled);
-}
-
-/* 입력창 글자 수 표시 (선택적) */
-.chat-input-wrapper {
-    position: relative;
-}
-
-.chat-input-wrapper::after {
-    content: attr(data-char-count) '/2000';
-    position: absolute;
-    bottom: 12px;
-    right: 16px;
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 500;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity var(--transition-fast);
-}
-
-.chat-input:focus + .chat-input-wrapper::after,
-.chat-input:not(:placeholder-shown) + .chat-input-wrapper::after {
-    opacity: 1;
 }
 
 /* 컨트롤 영역 - 세련된 레이아웃 */
@@ -711,7 +903,7 @@ html, body {
 }
 
 /* ==========================================
- * 5. 모달 공통 - 프리미엄 스타일
+ * 6. 모달 공통 - 프리미엄 스타일
  * ========================================== */
 .modal {
     position: fixed;
@@ -811,7 +1003,7 @@ html, body {
 }
 
 /* ==========================================
- * 6. 시간표 모달 - 프리미엄 디자인
+ * 7. 시간표 모달
  * ========================================== */
 .timetable-modal {
     max-width: 560px;
@@ -1045,7 +1237,7 @@ html, body {
 }
 
 /* ==========================================
- * 7. 수업 추가 모달
+ * 8. 수업 추가 모달
  * ========================================== */
 .add-class-modal {
     max-width: 460px;
@@ -1189,7 +1381,7 @@ html, body {
 }
 
 /* ==========================================
- * 8. 링크 경고 모달
+ * 9. 링크 경고 모달
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
@@ -1205,7 +1397,7 @@ html, body {
 }
 
 /* ==========================================
- * 9. 반응형 디자인
+ * 10. 반응형 디자인
  * ========================================== */
 
 /* 태블릿 */
@@ -1479,62 +1671,6 @@ html, body {
     .modal-content {
         max-width: calc(100% - 32px);
     }
-}
-
-/* ==========================================
- * 10. 애니메이션 & 트랜지션
- * ========================================== */
-
-/* 로딩 스피너 */
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--border-medium);
-    border-top-color: var(--accent-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    box-shadow: var(--shadow-glow);
-}
-
-/* 페이드 인 */
-.fade-in {
-    animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* 슬라이드 업 */
-.slide-up {
-    animation: slideUp 0.4s ease-out;
-}
-
-/* 스케일 인 */
-.scale-in {
-    animation: scaleIn 0.3s ease-out;
-}
-
-@keyframes scaleIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* 글로우 효과 */
-.glow {
-    animation: glow 2s ease-in-out infinite;
-}
-
-@keyframes glow {
-    0%, 100% { box-shadow: var(--shadow-glow); }
-    50% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.6); }
 }
 
 /* ==========================================
