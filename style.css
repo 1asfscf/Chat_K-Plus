@@ -1,24 +1,46 @@
 /* =========================================================
-   Chat K plus - Fixed Style v1.0 (2026-06-16)
+   Chat K plus - Modern Trendy UI v2.0 (2026-06-16)
    ========================================================= */
 
 /* ==========================================
- * 1. 기본 설정
+ * 1. 기본 설정 & 트렌디 컬러
  * ========================================== */
 :root {
-    --bg-main: #f8fafc;
-    --chat-bg: #ffffff;
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --border: #e2e8f0;
-    --shadow: 0 4px 20px rgba(0,0,0,0.06);
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
+    /* 모던 컬러 팔레트 */
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-input: #0f3460;
+    
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #6b7280;
+    
+    --accent-primary: #6366f1;
+    --accent-secondary: #8b5cf6;
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    
     --success: #10b981;
     --warning: #f59e0b;
+    --danger: #ef4444;
     --info: #06b6d4;
+    
+    --border: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.2);
+    
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
 }
 
 * {
@@ -34,16 +56,16 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: var(--bg-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
     font-weight: 400;
+    overflow: hidden;
 }
 
 html, body {
     height: 100%;
-    overflow: hidden;
 }
 
 /* ==========================================
@@ -53,10 +75,11 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background: var(--bg-primary);
 }
 
 /* ==========================================
- * 3. 검색 화면
+ * 3. 검색 화면 - 트렌디한 디자인
  * ========================================== */
 #search-view {
     display: flex;
@@ -64,21 +87,42 @@ html, body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 24px;
+    background: var(--accent-gradient);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 배경 애니메이션 효과 */
+#search-view::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+    animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
 }
 
 .search-content {
     width: 100%;
-    max-width: 600px;
+    max-width: 680px;
     text-align: center;
-    animation: fadeInUp 0.6s ease-out;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.8s ease-out;
 }
 
-@keyframes fadeInUp {
+@keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -87,97 +131,124 @@ html, body {
 }
 
 .logo {
-    font-size: 48px;
-    margin-bottom: 16px;
-    color: white;
+    font-size: 64px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 .title {
-    font-size: 32px;
-    font-weight: 700;
+    font-size: 42px;
+    font-weight: 800;
     color: white;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .beta-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    background: rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
     color: white;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
     margin-left: 8px;
     vertical-align: middle;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .search-container {
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
+    position: relative;
 }
 
 .search-input {
     width: 100%;
-    padding: 16px 20px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 16px;
-    background: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px 24px;
+    padding-right: 60px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    color: white;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-lg);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .search-input:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.search-input::placeholder {
-    color: var(--text-secondary);
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), var(--shadow-xl);
+    transform: scale(1.01);
 }
 
 .search-btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--primary);
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background: var(--accent-gradient);
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    margin-top: 12px;
+    font-size: 20px;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.search-btn:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+.search-btn:hover:not(:disabled) {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: var(--shadow-lg);
 }
 
-.search-btn:active {
-    transform: translateY(0);
+.search-btn:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .search-btn:disabled {
-    background: #cbd5e1;
+    background: rgba(255, 255, 255, 0.2);
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+    opacity: 0.5;
 }
 
 .examples {
-    margin-top: 32px;
+    margin-top: 40px;
 }
 
 .examples-title {
-    color: white;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 14px;
-    margin-bottom: 12px;
-    opacity: 0.9;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .button-group {
@@ -188,21 +259,24 @@ html, body {
 }
 
 .example-btn {
-    padding: 12px 20px;
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
 }
 
 .example-btn:hover {
-    border-color: var(--primary);
-    background: #eff6ff;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+    box-shadow: var(--shadow-md);
 }
 
 .example-btn:active {
@@ -211,22 +285,22 @@ html, body {
 
 .app-footer {
     position: absolute;
-    bottom: 20px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    color: white;
-    font-size: 12px;
-    opacity: 0.7;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+    font-weight: 500;
 }
 
 /* ==========================================
- * 4. 채팅 화면
+ * 4. 채팅 화면 - 모던한 디자인
  * ========================================== */
 #chat-view {
     display: none;
     flex-direction: column;
     height: 100vh;
-    background: var(--bg-main);
+    background: var(--bg-primary);
 }
 
 #chat-view:not(.hidden) {
@@ -236,32 +310,47 @@ html, body {
 .chat-header {
     display: flex;
     align-items: center;
-    padding: 16px 20px;
-    background: white;
+    padding: 16px 24px;
+    background: rgba(22, 33, 62, 0.8);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .back-btn {
-    padding: 8px 16px;
-    background: #f1f5f9;
-    border: none;
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
     cursor: pointer;
     font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: all var(--transition-normal);
 }
 
 .back-btn:hover {
-    background: #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
+    transform: translateX(-2px);
+}
+
+.back-btn::before {
+    content: '←';
+    font-size: 18px;
 }
 
 .chat-box {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
-    background: var(--chat-bg);
+    padding: 24px;
+    background: var(--bg-primary);
     scroll-behavior: smooth;
 }
 
@@ -270,30 +359,31 @@ html, body {
 }
 
 .chat-box::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: transparent;
 }
 
 .chat-box::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--border);
     border-radius: 3px;
 }
 
 .chat-box::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: var(--border-hover);
 }
 
 .message {
-    margin-bottom: 20px;
-    padding: 16px;
-    border-radius: 12px;
-    max-width: 80%;
-    animation: fadeIn 0.3s ease-out;
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    border-radius: var(--radius-xl);
+    max-width: 85%;
+    animation: messageSlide 0.4s ease-out;
+    position: relative;
 }
 
-@keyframes fadeIn {
+@keyframes messageSlide {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -302,28 +392,32 @@ html, body {
 }
 
 .user-msg {
-    background: var(--primary);
+    background: var(--accent-gradient);
     color: white;
     margin-left: auto;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--shadow-lg);
+    border-bottom-right-radius: 4px;
 }
 
 .ai-msg {
-    background: #f1f5f9;
+    background: var(--bg-card);
     color: var(--text-primary);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    border-bottom-left-radius: 4px;
 }
 
 .thinking {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    padding: 16px 20px;
 }
 
 .thinking-icon {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--primary);
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--accent-primary);
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -335,40 +429,44 @@ html, body {
 
 .thinking-text {
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .external-link {
-    color: var(--primary);
-    text-decoration: underline;
-    cursor: pointer;
-    transition: color 0.3s ease;
+    color: var(--accent-primary);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent-primary);
+    transition: all var(--transition-fast);
 }
 
 .external-link:hover {
-    color: var(--primary-hover);
+    color: var(--accent-secondary);
+    border-bottom-style: solid;
 }
 
 .policy-warning {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    color: #991b1b;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
 }
 
 /* ==========================================
- * 5. 채팅 입력 (모던화)
+ * 5. 채팅 입력 - 모던한 디자인
  * ========================================== */
 .chat-footer {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 16px 20px;
-    background: white;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(20px);
     border-top: 1px solid var(--border);
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .input-wrapper-modern {
@@ -381,33 +479,36 @@ html, body {
 
 .chat-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 16px 20px;
     border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: var(--radius-lg);
+    font-size: 16px;
     resize: none;
-    min-height: 44px;
-    max-height: 120px;
-    background: white;
-    transition: all 0.3s ease;
+    min-height: 56px;
+    max-height: 150px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    transition: all var(--transition-normal);
     font-family: inherit;
+    line-height: 1.5;
+}
+
+.chat-input::placeholder {
+    color: var(--text-muted);
 }
 
 .chat-input:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.chat-input::placeholder {
-    color: var(--text-secondary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    background: var(--bg-card);
 }
 
 .input-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .controls-left {
@@ -419,95 +520,115 @@ html, body {
 .controls-right {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .icon-btn {
-    padding: 8px;
-    background: none;
-    border: none;
-    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all var(--transition-normal);
     font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
 }
 
 .icon-btn:hover {
-    background: #f1f5f9;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
+    transform: scale(1.05);
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
 }
 
 .difficulty-select {
-    padding: 8px 12px;
+    padding: 10px 16px;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    background: white;
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    color: var(--text-primary);
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
 }
 
 .difficulty-select:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
 .difficulty-select:hover {
-    border-color: var(--primary);
+    border-color: var(--border-hover);
 }
 
 .send-circle,
 .stop-circle {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--shadow-lg);
 }
 
 .send-circle {
-    background: var(--primary);
+    background: var(--accent-gradient);
     color: white;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .send-circle:hover:not(:disabled) {
-    background: var(--primary-hover);
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl);
+}
+
+.send-circle:active:not(:disabled) {
+    transform: scale(0.95);
 }
 
 .send-circle:disabled {
-    background: #cbd5e1;
+    background: var(--border);
     cursor: not-allowed;
+    opacity: 0.5;
     transform: none;
     box-shadow: none;
 }
 
 .send-circle.active {
-    background: var(--primary);
+    background: var(--accent-gradient);
 }
 
 .stop-circle {
-    background: var(--danger);
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: white;
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .stop-circle:hover {
-    background: var(--danger-hover);
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl);
 }
 
 /* ==========================================
- * 6. 모달 공통
+ * 6. 모달 공통 - 글래스모피즘
  * ========================================== */
 .modal {
     position: fixed;
@@ -532,102 +653,121 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
 }
 
 .modal-content {
     position: relative;
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 400px;
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    max-width: 480px;
     width: 90%;
     z-index: 1001;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    animation: slideUp 0.3s ease-out;
+    box-shadow: var(--shadow-xl);
+    animation: modalSlide 0.4s ease-out;
 }
 
-@keyframes slideUp {
+@keyframes modalSlide {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 .close-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 50%;
     cursor: pointer;
     color: var(--text-secondary);
-    transition: color 0.3s ease;
-    padding: 4px;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     line-height: 1;
 }
 
 .close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
+    transform: rotate(90deg);
 }
 
 /* ==========================================
  * 7. 시간표 모달
  * ========================================== */
 .timetable-modal {
-    max-width: 500px;
+    max-width: 540px;
 }
 
 .timetable-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .timetable-header h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .timetable-tabs {
     display: flex;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    border-radius: var(--radius-lg);
 }
 
 .tab {
     flex: 1;
-    padding: 8px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: white;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-secondary);
     cursor: pointer;
     font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: all var(--transition-normal);
 }
 
 .tab:hover {
-    border-color: var(--primary);
-    background: #eff6ff;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .tab.active {
-    background: var(--primary);
+    background: var(--accent-gradient);
     color: white;
-    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
 }
 
 .timetable-content {
-    max-height: 300px;
+    max-height: 320px;
     overflow-y: auto;
-    margin-bottom: 20px;
-    padding: 4px;
+    margin-bottom: 24px;
+    padding: 8px;
 }
 
 .timetable-content::-webkit-scrollbar {
@@ -635,79 +775,95 @@ html, body {
 }
 
 .timetable-content::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: transparent;
 }
 
 .timetable-content::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: var(--border);
     border-radius: 2px;
 }
 
 .timetable-empty {
     text-align: center;
-    padding: 40px 20px;
-    color: var(--text-secondary);
-    font-size: 14px;
+    padding: 48px 24px;
+    color: var(--text-muted);
+    font-size: 15px;
 }
 
 .timetable-item {
     display: flex;
-    gap: 12px;
-    padding: 12px;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
+    border-radius: var(--radius-lg);
+    margin-bottom: 12px;
+    transition: all var(--transition-normal);
     cursor: pointer;
 }
 
 .timetable-item:hover {
-    border-color: var(--primary);
-    background: #eff6ff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-hover);
+    transform: translateX(4px);
 }
 
 .timetable-time {
-    flex: 0 0 100px;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 14px;
+    flex: 0 0 110px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
 }
 
 .timetable-subject {
     flex: 1;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
 }
 
 .timetable-room {
-    flex: 0 0 80px;
-    color: var(--text-secondary);
-    font-size: 13px;
+    flex: 0 0 90px;
+    color: var(--text-muted);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
 }
 
 .timetable-footer {
-    margin-top: 16px;
+    margin-top: 20px;
 }
 
 .timetable-add {
     width: 100%;
-    padding: 12px;
-    background: var(--primary);
+    padding: 16px;
+    background: var(--accent-gradient);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    font-size: 16px;
+    font-weight: 700;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .timetable-add:hover {
-    background: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: var(--shadow-xl);
 }
 
 .timetable-add:active {
@@ -718,18 +874,21 @@ html, body {
  * 8. 수업 추가 모달
  * ========================================== */
 .add-class-modal {
-    max-width: 400px;
+    max-width: 440px;
 }
 
 .add-class-modal h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
 }
 
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
@@ -743,60 +902,67 @@ html, body {
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    background: white;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    transition: all var(--transition-normal);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-family: inherit;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    background: var(--bg-card);
 }
 
 .form-group input::placeholder {
-    color: var(--text-secondary);
+    color: var(--text-muted);
 }
 
 .modal-buttons {
     display: flex;
     gap: 12px;
-    margin-top: 20px;
+    margin-top: 28px;
 }
 
 .modal-btn {
     flex: 1;
-    padding: 12px;
+    padding: 16px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all var(--transition-normal);
 }
 
 .modal-btn.cancel {
-    background: #f1f5f9;
-    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
 }
 
 .modal-btn.cancel:hover {
-    background: #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
 }
 
 .modal-btn.go,
 .modal-btn.save {
-    background: var(--primary);
+    background: var(--accent-gradient);
     color: white;
+    box-shadow: var(--shadow-md);
 }
 
 .modal-btn.go:hover,
 .modal-btn.save:hover {
-    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 /* ==========================================
@@ -804,38 +970,80 @@ html, body {
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
-    color: var(--primary);
-    margin: 12px 0;
-    padding: 12px;
-    background: #eff6ff;
-    border-radius: 8px;
-    font-size: 13px;
+    color: var(--accent-primary);
+    margin: 16px 0;
+    padding: 16px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 /* ==========================================
- * 10. 반응형
+ * 10. 반응형 디자인
  * ========================================== */
-@media (max-width: 768px) {
-    .search-content {
-        padding: 0 16px;
-    }
 
-    .logo {
-        font-size: 40px;
+/* 태블릿 */
+@media (max-width: 1024px) {
+    .search-content {
+        max-width: 600px;
     }
 
     .title {
-        font-size: 24px;
+        font-size: 36px;
+    }
+
+    .logo {
+        font-size: 56px;
+    }
+
+    .modal-content {
+        max-width: 500px;
+        padding: 28px;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+    :root {
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --radius-xl: 20px;
+    }
+
+    .search-content {
+        padding: 0 20px;
+        max-width: 100%;
+    }
+
+    .logo {
+        font-size: 48px;
+        margin-bottom: 20px;
+    }
+
+    .title {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .beta-badge {
+        padding: 4px 10px;
+        font-size: 10px;
     }
 
     .search-input {
-        font-size: 15px;
-        padding: 14px 18px;
+        padding: 16px 20px;
+        padding-right: 56px;
+        font-size: 16px;
+        border-radius: var(--radius-lg);
     }
 
     .search-btn {
-        font-size: 15px;
-        padding: 14px;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
     }
 
     .button-group {
@@ -843,8 +1051,9 @@ html, body {
     }
 
     .example-btn {
-        padding: 10px 16px;
-        font-size: 13px;
+        padding: 12px 20px;
+        font-size: 14px;
+        border-radius: var(--radius-md);
     }
 
     .chat-header {
@@ -852,64 +1061,140 @@ html, body {
     }
 
     .back-btn {
-        padding: 6px 12px;
+        padding: 8px 16px;
         font-size: 13px;
+    }
+
+    .chat-box {
+        padding: 16px;
     }
 
     .message {
         max-width: 90%;
-        padding: 14px;
+        padding: 16px 20px;
+        border-radius: var(--radius-lg);
     }
 
     .chat-footer {
-        padding: 12px 16px;
+        padding: 16px;
+        gap: 12px;
     }
 
     .chat-input {
-        font-size: 14px;
-        padding: 10px 14px;
+        padding: 14px 16px;
+        font-size: 15px;
+        min-height: 48px;
+        border-radius: var(--radius-md);
+    }
+
+    .input-controls {
+        gap: 12px;
+    }
+
+    .icon-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .difficulty-select {
+        padding: 8px 14px;
+        font-size: 13px;
+        padding-right: 32px;
     }
 
     .send-circle,
     .stop-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
     }
 
     .modal-content {
-        max-width: 90%;
-        padding: 20px;
+        max-width: 92%;
+        padding: 24px;
+        border-radius: var(--radius-lg);
     }
 
     .timetable-modal,
     .add-class-modal {
-        max-width: 90%;
+        max-width: 92%;
     }
 
-    .difficulty-select {
-        padding: 6px 10px;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 480px) {
-    .search-content {
-        padding: 0 12px;
-    }
-
-    .logo {
-        font-size: 32px;
-    }
-
-    .title {
+    .timetable-header h3,
+    .add-class-modal h3 {
         font-size: 20px;
     }
 
-    .search-input,
-    .search-btn {
+    .tab {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .timetable-item {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .timetable-time {
+        flex: 0 0 90px;
         font-size: 14px;
-        padding: 12px 16px;
+    }
+
+    .timetable-subject {
+        font-size: 15px;
+    }
+
+    .timetable-room {
+        flex: 0 0 70px;
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .modal-btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+}
+
+/* 소형 모바일 */
+@media (max-width: 480px) {
+    .search-content {
+        padding: 0 16px;
+    }
+
+    .logo {
+        font-size: 40px;
+        margin-bottom: 16px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
+    .search-input {
+        padding: 14px 18px;
+        font-size: 15px;
+    }
+
+    .search-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
 
     .button-group {
@@ -918,7 +1203,8 @@ html, body {
 
     .example-btn {
         width: 100%;
-        padding: 12px 16px;
+        padding: 14px 18px;
+        font-size: 15px;
     }
 
     .chat-header {
@@ -926,71 +1212,116 @@ html, body {
     }
 
     .back-btn {
-        padding: 6px 10px;
+        padding: 6px 12px;
         font-size: 12px;
+    }
+
+    .chat-box {
+        padding: 12px;
     }
 
     .message {
         max-width: 95%;
-        padding: 12px;
+        padding: 14px 16px;
         margin-bottom: 16px;
+        border-radius: var(--radius-md);
     }
 
     .chat-footer {
-        padding: 10px 12px;
+        padding: 12px;
     }
 
     .chat-input {
+        padding: 12px 14px;
         font-size: 14px;
-        padding: 10px 12px;
-        min-height: 40px;
+        min-height: 44px;
+    }
+
+    .input-controls {
+        gap: 8px;
+    }
+
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .difficulty-select {
+        padding: 6px 12px;
+        font-size: 12px;
+        padding-right: 28px;
     }
 
     .send-circle,
     .stop-circle {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
     }
 
     .modal-content {
         max-width: 95%;
-        padding: 16px;
+        padding: 20px;
+    }
+
+    .timetable-header h3,
+    .add-class-modal h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
     }
 
     .tab {
-        padding: 6px;
+        padding: 8px;
         font-size: 12px;
     }
 
     .timetable-item {
-        padding: 10px;
+        padding: 12px;
+        gap: 10px;
     }
 
     .timetable-time {
-        flex: 0 0 80px;
+        flex: 0 0 75px;
         font-size: 13px;
     }
 
     .timetable-subject {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .timetable-room {
         flex: 0 0 60px;
-        font-size: 12px;
+        font-size: 11px;
+        padding: 4px 8px;
     }
 
-    .difficulty-select {
-        padding: 6px 8px;
-        font-size: 12px;
+    .timetable-add {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .modal-buttons {
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .modal-btn {
+        padding: 12px;
+        font-size: 14px;
     }
 }
 
 /* iOS 키보드 대응 */
 @supports (-webkit-touch-callout: none) {
     .chat-footer {
-        padding-bottom: env(safe-area-inset-bottom, 20px);
+        padding-bottom: env(safe-area-inset-bottom, 24px);
     }
 
     .modal-content {
@@ -998,88 +1329,204 @@ html, body {
     }
 }
 
-/* 다크 모드 지원 */
-@media (prefers-color-scheme: dark) {
+/* ==========================================
+ * 11. 라이트 모드 지원
+ * ========================================== */
+@media (prefers-color-scheme: light) {
     :root {
-        --bg-main: #0f172a;
-        --chat-bg: #1e293b;
-        --text-primary: #f1f5f9;
-        --text-secondary: #94a3b8;
-        --border: #334155;
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-card: #ffffff;
+        --bg-input: #f1f5f9;
+        
+        --text-primary: #0f172a;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        
+        --border: rgba(0, 0, 0, 0.1);
+        --border-hover: rgba(0, 0, 0, 0.2);
+        
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
     }
 
-    .search-input,
-    .chat-input,
-    .form-group input,
-    .form-group select {
-        background: #1e293b;
+    #search-view {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .search-input {
+        background: rgba(255, 255, 255, 0.95);
         color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.3);
     }
 
-    .search-input::placeholder,
-    .chat-input::placeholder,
-    .form-group input::placeholder {
-        color: var(--text-secondary);
+    .search-input::placeholder {
+        color: var(--text-muted);
     }
 
     .example-btn {
-        background: #1e293b;
-        border-color: var(--border);
+        background: rgba(255, 255, 255, 0.9);
         color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.5);
     }
 
-    .example-btn:hover {
-        background: #334155;
+    .chat-header {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: var(--border);
     }
 
     .ai-msg {
-        background: #334155;
-        color: var(--text-primary);
-    }
-
-    .modal-content {
-        background: #1e293b;
-    }
-
-    .modal-btn.cancel {
-        background: #334155;
-        color: var(--text-secondary);
-    }
-
-    .modal-btn.cancel:hover {
-        background: #475569;
-    }
-
-    .tab {
-        background: #1e293b;
+        background: #ffffff;
         border-color: var(--border);
         color: var(--text-primary);
     }
 
-    .tab:hover {
-        background: #334155;
+    .chat-footer {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: var(--border);
+    }
+
+    .chat-input {
+        background: var(--bg-input);
+        color: var(--text-primary);
+        border-color: var(--border);
+    }
+
+    .icon-btn {
+        background: var(--bg-input);
+        border-color: var(--border);
+        color: var(--text-primary);
+    }
+
+    .difficulty-select {
+        background: var(--bg-input);
+        color: var(--text-primary);
+        border-color: var(--border);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230f172a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    }
+
+    .modal-content {
+        background: rgba(255, 255, 255, 0.98);
+        border-color: var(--border);
     }
 
     .timetable-item {
-        background: #1e293b;
+        background: var(--bg-input);
         border-color: var(--border);
     }
 
     .timetable-item:hover {
-        background: #334155;
+        background: #f8fafc;
     }
 
-    .timetable-time,
-    .timetable-subject {
+    .form-group input,
+    .form-group select {
+        background: var(--bg-input);
         color: var(--text-primary);
+        border-color: var(--border);
     }
 
-    .timetable-room {
-        color: var(--text-secondary);
+    .modal-btn.cancel {
+        background: var(--bg-input);
+        color: var(--text-primary);
+        border-color: var(--border);
     }
 }
 
-/* 프린트 스타일 */
+/* ==========================================
+ * 12. 애니메이션 & 트랜지션
+ * ========================================== */
+
+/* 로딩 스피너 */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 페이드 인 */
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 슬라이드 업 */
+.slide-up {
+    animation: slideUp 0.4s ease-out;
+}
+
+/* 스케일 인 */
+.scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ==========================================
+ * 13. 유틸리티 클래스
+ * ========================================== */
+.hidden {
+    display: none !important;
+}
+
+.text-gradient {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================
+ * 14. 접근성 개선
+ * ========================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+*:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* 선택 스타일 */
+::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: var(--text-primary);
+}
+
+/* ==========================================
+ * 15. 프린트 스타일
+ * ========================================== */
 @media print {
     #search-view,
     .chat-footer,
@@ -1100,33 +1547,7 @@ html, body {
 
     .message {
         page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
     }
-}
-
-/* 접근성 */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* 포커스 스타일 */
-*:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
-/* 선택 스타일 */
-::selection {
-    background: rgba(59, 130, 246, 0.2);
-    color: var(--text-primary);
-}
-
-/* 유틸리티 클래스 */
-.hidden {
-    display: none !important;
 }
