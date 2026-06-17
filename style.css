@@ -1,18 +1,21 @@
 /* =========================================================
-   Chat K plus - Complete Premium UI v4.0.2 (2026-06-17)
+   Chat K plus - Complete Premium UI v3.2롤백 (2026-06-17)
    ========================================================= */
 
 /* ==========================================
  * 1. 프리미엄 다크 테마 기본 설정
  * ========================================== */
 :root {
-    /* 프리미엄 다크 컬러 */
-    --bg-primary: #000000;
-    --bg-secondary: #0a0a0a;
-    --bg-tertiary: #111111;
-    --bg-card: rgba(20, 20, 20, 0.8);
-    --bg-input: rgba(30, 30, 30, 0.6);
-    --bg-hover: rgba(40, 40, 40, 0.8);
+    --bg-primary: #000;
+    --input-light-bg: #ffffff;
+    --input-light-border: rgba(0,0,0,0.08);
+    --input-light-text: #1a1a1a;
+    
+    /* 텍스트 컬러 */
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 0.7);
+    /* ... 나머지 전부 여기 안으로 ... */
+} /* ← 맨 끝에 한 번만 */
     
     /* 텍스트 컬러 */
     --text-primary: #ffffff;
