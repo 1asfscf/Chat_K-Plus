@@ -1,245 +1,269 @@
-/* style.css 0.0.4 */
-:root {
-    --bg-main: #ffffff;
-    --bg-input: #f1f3f5;
-    --text-primary: #000000;
-    --text-secondary: #868e96;
-    --text-placeholder: #adb5bd;
-    --border-light: #dee2e6;
-    --border-dark: #000000;
-    --send-btn-bg: #000000;
-    --send-btn-disabled: #e9ecef;
-    --send-btn-icon: #ffffff;
-    --safe-area-inset-top: env(safe-area-inset-top, 0px);
-    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
-}
+/* =========================================================
+   Chat K plus - Chat View & Input Bar Only (2026-06-16)
+   ========================================================= */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html, body {
-    height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", Roboto, "Noto Sans KR", sans-serif;
-    background: var(--bg-main);
-    color: var(--text-primary);
-    overflow: hidden;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.app-container {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ========== 검색 화면 ========== */
-#search-view {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.search-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-    width: 100%;
-    max-width: 600px;
-}
-
-.logo { font-size: 48px; }
-.title { font-size: 32px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.beta-badge { font-size: 12px; background: #000; color: #fff; padding: 2px 6px; border-radius: 4px; }
-
-.search-container {
-    width: 100%;
-    display: flex;
-    gap: 8px;
-}
-
-.search-input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-.search-btn {
-    padding: 12px 20px;
-    background: var(--send-btn-bg);
-    color: var(--send-btn-icon);
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-}
-.search-btn:disabled { background: var(--send-btn-disabled); color: var(--text-placeholder); }
-
-.examples { text-align: center; }
-.examples-title { color: var(--text-secondary); margin-bottom: 12px; font-size: 14px; }
-.button-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.example-btn {
-    padding: 8px 16px;
-    background: var(--bg-input);
-    border: none;
-    border-radius: 16px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.app-footer {
-    position: absolute;
-    bottom: 20px;
-    font-size: 12px;
-    color: var(--text-secondary);
-}
-
-/* ========== 채팅 화면 ========== */
+/* ==========================================
+ * 1. 채팅 화면 - 미니멀 프리미엄 디자인
+ * ========================================== */
 #chat-view {
-    display: flex;
+    display: none;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
-    background: var(--bg-main);
+    height: 100vh;
+    background: var(--bg-primary);
+    position: relative;
+    z-index: 1;
 }
 
-/* 상단 헤더 - "새 채팅" + 굵은 선 */
+#chat-view:not(.hidden) {
+    display: flex;
+}
+
+/* 채팅 헤더 - 깔끔한 미니멀 디자인 */
 .chat-header {
-    width: 100%;
-    padding: 16px 20px;
-    padding-top: calc(16px + var(--safe-area-inset-top));
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    background: var(--bg-main);
-    border-bottom: 3px solid var(--border-dark);
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: var(--blur-medium);
+    -webkit-backdrop-filter: var(--blur-medium);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-subtle);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.chat-header::after {
-    content: "새 채팅";
+.chat-header-title {
     font-size: 18px;
     font-weight: 700;
     color: var(--text-primary);
+    letter-spacing: -0.01em;
 }
 
 .back-btn {
-    position: absolute;
-    left: 16px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
     cursor: pointer;
-    padding: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all var(--transition-normal);
 }
 
-/* 채팅 내용 영역 - 빈 화면 */
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+    transform: translateX(-2px);
+}
+
+.back-btn:active {
+    transform: translateX(-1px) scale(0.98);
+}
+
+/* 채팅 박스 - 깔끔한 빈 상태 */
 .chat-box {
     flex: 1;
-    width: 100%;
     overflow-y: auto;
-    background: var(--bg-main);
-    padding: 20px;
+    padding: 24px 20px;
+    padding-bottom: 24px;
+    background: transparent;
+    scroll-behavior: smooth;
+    position: relative;
 }
 
-/* 메시지 스타일 */
+.chat-box::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 2px;
+    transition: background var(--transition-fast);
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong);
+}
+
+/* 빈 상태 메시지 */
+.chat-box.empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
+
+.chat-box.empty::before {
+    content: '💬';
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.3;
+}
+
+.chat-box.empty::after {
+    content: '새로운 대화를 시작하세요';
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: -0.01em;
+}
+
+/* 메시지 - 깔끔한 카드 스타일 */
 .message {
     margin-bottom: 16px;
-    max-width: 80%;
-    padding: 12px 16px;
-    border-radius: 18px;
-    line-height: 1.5;
-    word-break: break-word;
+    padding: 16px 20px;
+    border-radius: var(--radius-lg);
+    max-width: 85%;
+    animation: messageAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 사용자 메시지 */
 .user-msg {
-    background: #007aff;
+    background: var(--accent-gradient);
     color: white;
     margin-left: auto;
+    box-shadow: var(--shadow-medium);
+    border-bottom-right-radius: var(--radius-sm);
 }
 
+/* AI 메시지 */
 .ai-msg {
-    background: var(--bg-input);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid var(--border-subtle);
+    border-bottom-left-radius: var(--radius-sm);
 }
 
+/* 씽킹 애니메이션 */
 .thinking {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: var(--text-secondary);
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
 }
 
-.thinking-icon::before {
-    content: "✦";
-    animation: spin 1s linear infinite;
-    display: inline-block;
+.thinking-icon {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--accent-primary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: thinkingSpin 1s linear infinite;
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
+@keyframes thinkingSpin {
     to { transform: rotate(360deg); }
 }
 
-/* 하단 입력 영역 */
+.thinking-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ==========================================
+ * 2. 채팅 입력바 - 미니멀 프리미엄 디자인
+ * ========================================== */
 .chat-footer {
-    width: 100%;
-    padding: 8px 16px;
-    padding-bottom: calc(8px + var(--safe-area-inset-bottom));
-    background: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 20px));
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 100;
 }
 
 .input-wrapper-modern {
-    background: var(--bg-input);
-    border-radius: 24px;
-    padding: 8px 12px 12px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    width: 100%;
+    position: relative;
 }
 
 .input-top {
     width: 100%;
+    position: relative;
 }
 
+/* 메인 입력창 - 미니멀 디자인 */
 .chat-input {
     width: 100%;
-    border: none;
-    background: transparent;
+    padding: 14px 52px 14px 18px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-full);
+    font-size: 15px;
     resize: none;
-    outline: none;
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--text-primary);
+    min-height: 48px;
     max-height: 120px;
+    line-height: 1.4;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    transition: all var(--transition-normal);
     font-family: inherit;
-    padding: 4px;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: var(--shadow-inner);
 }
 
 .chat-input::placeholder {
-    color: var(--text-placeholder);
+    color: var(--text-muted);
+    font-weight: 400;
+    line-height: 1.4;
+    font-size: 15px;
 }
 
-/* 입력창 컨트롤 */
+.chat-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 0 0 3px rgba(124, 58, 237, 0.12),
+        var(--shadow-glow);
+}
+
+.chat-input:focus::placeholder {
+    color: var(--text-disabled);
+}
+
+/* 컨트롤 영역 - 미니멀 아이콘 디자인 */
 .input-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 6px;
+    margin-top: 2px;
 }
 
 .controls-left {
@@ -248,86 +272,505 @@ html, body {
     gap: 4px;
 }
 
-.icon-btn {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 4px;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-}
-
-/* + 버튼 */
-#timetableBtn::before {
-    content: "+";
-    font-weight: 300;
-}
-
-/* 설정 버튼 - timetableBtn 다음에 가상 요소로 추가 */
-#timetableBtn::after {
-    content: "☰";
-    font-size: 20px;
-    margin-left: 8px;
-    transform: rotate(90deg);
-    display: inline-block;
-}
-
-.difficulty-select {
-    display: none; /* 이미지엔 없음 */
-}
-
 .controls-right {
     display: flex;
     align-items: center;
+    gap: 4px;
 }
 
-/* 전송 버튼 - 원형 + 화살표 */
-.send-circle {
-    width: 32px;
-    height: 32px;
+/* 아이콘 버튼 - 미니멀 원형 디자인 */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
     border-radius: 50%;
-    border: 2px solid var(--border-dark);
-    background: var(--bg-main);
-    color: var(--text-primary);
-    font-size: 18px;
-    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--text-secondary);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.icon-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--accent-gradient);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all var(--transition-normal);
+    opacity: 0.12;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+    transform: scale(1.08);
+    box-shadow: var(--shadow-glow);
+}
+
+.icon-btn:hover::before {
+    width: 200%;
+    height: 200%;
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+/* 특수 아이콘 버튼 스타일 */
+.icon-btn.attachment {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.icon-btn.attachment:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.icon-btn.menu {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.icon-btn.menu:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 난이도 선택 - 미니멀 디자인 */
+.difficulty-select {
+    padding: 8px 32px 8px 12px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all var(--transition-normal);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M4 6L1 2h6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: var(--shadow-inner);
+    flex-shrink: 0;
+    height: 36px;
+}
+
+.difficulty-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 
+        0 0 0 2px rgba(124, 58, 237, 0.12),
+        var(--shadow-glow);
+}
+
+.difficulty-select:hover {
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.difficulty-select option {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 12px;
+}
+
+/* 전송/중지 버튼 - 미니멀 원형 디자인 */
+.send-circle,
+.stop-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.send-circle {
+    background: var(--accent-gradient);
+    color: white;
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow);
+}
+
+.send-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.send-circle:hover:not(:disabled) {
+    transform: scale(1.08);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 25px rgba(124, 58, 237, 0.4);
+}
+
+.send-circle:hover:not(:disabled)::before {
+    opacity: 1;
+}
+
+.send-circle:active:not(:disabled) {
+    transform: scale(1.02);
 }
 
 .send-circle:disabled {
-    border-color: var(--border-light);
-    color: var(--text-placeholder);
+    background: var(--border-medium);
     cursor: not-allowed;
+    opacity: 0.4;
+    transform: none;
+    box-shadow: none;
 }
 
-.send-circle:not(:disabled):active {
-    transform: scale(0.9);
+.send-circle.active {
+    background: var(--accent-gradient);
+    animation: sendPulse 2s ease-in-out infinite;
+}
+
+@keyframes sendPulse {
+    0%, 100% { 
+        box-shadow: var(--shadow-medium), var(--shadow-glow);
+    }
+    50% { 
+        box-shadow: var(--shadow-strong), 0 0 35px rgba(124, 58, 237, 0.5);
+    }
 }
 
 .stop-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--border-dark);
-    background: var(--bg-main);
-    color: var(--text-primary);
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 
+        var(--shadow-medium),
+        0 0 15px rgba(239, 68, 68, 0.25);
 }
 
-/* ========== 모달 ========== */
+.stop-circle:hover {
+    transform: scale(1.08);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 25px rgba(239, 68, 68, 0.4);
+}
+
+/* ==========================================
+ * 3. 모바일 최적화
+ * ========================================== */
+
+/* iOS 키보드 대응 */
+@supports (-webkit-touch-callout: none) {
+    .chat-footer {
+        padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 34px));
+        gap: 4px;
+    }
+    
+    .chat-input {
+        padding: 12px 48px 12px 16px;
+        min-height: 44px;
+        font-size: 14px;
+        line-height: 1.3;
+    }
+    
+    .input-controls {
+        margin-top: 1px;
+    }
+    
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .difficulty-select {
+        height: 32px;
+        padding: 6px 28px 6px 10px;
+        font-size: 11px;
+    }
+    
+    .send-circle,
+    .stop-circle {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+/* 안드로이드 키보드 대응 */
+@media (max-width: 768px) {
+    .chat-header {
+        padding: 14px 16px;
+    }
+
+    .chat-header-title {
+        font-size: 16px;
+    }
+
+    .back-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .chat-box {
+        padding: 20px 16px;
+    }
+
+    .message {
+        max-width: 90%;
+        padding: 14px 18px;
+    }
+
+    .chat-footer {
+        padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 16px));
+        gap: 4px;
+    }
+
+    .chat-input {
+        padding: 12px 48px 12px 16px;
+        min-height: 44px;
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+    .input-controls {
+        gap: 4px;
+        margin-top: 1px;
+    }
+
+    .controls-left {
+        gap: 2px;
+    }
+
+    .controls-right {
+        gap: 3px;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .difficulty-select {
+        height: 32px;
+        padding: 6px 28px 6px 10px;
+        font-size: 11px;
+    }
+
+    .send-circle,
+    .stop-circle {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+/* 소형 모바일 */
+@media (max-width: 480px) {
+    .chat-header {
+        padding: 12px 14px;
+    }
+
+    .chat-header-title {
+        font-size: 15px;
+    }
+
+    .back-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .chat-box {
+        padding: 16px 12px;
+    }
+
+    .message {
+        max-width: 95%;
+        padding: 12px 16px;
+        margin-bottom: 14px;
+    }
+
+    .chat-footer {
+        padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 16px));
+        gap: 3px;
+    }
+
+    .chat-input {
+        padding: 10px 44px 10px 14px;
+        min-height: 40px;
+        font-size: 14px;
+        line-height: 1.3;
+    }
+
+    .input-controls {
+        gap: 3px;
+        margin-top: 1px;
+    }
+
+    .controls-left {
+        gap: 2px;
+    }
+
+    .controls-right {
+        gap: 2px;
+    }
+
+    .icon-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .difficulty-select {
+        height: 28px;
+        padding: 5px 24px 5px 8px;
+        font-size: 10px;
+    }
+
+    .send-circle,
+    .stop-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+/* ==========================================
+ * 4. 키보드 열릴 때 동적 조정
+ * ========================================== */
+.chat-footer.keyboard-open {
+    padding-bottom: max(8px, env(safe-area-inset-bottom, 20px));
+}
+
+.chat-footer.keyboard-open .chat-input {
+    max-height: 100px;
+    min-height: 40px;
+}
+
+/* ==========================================
+ * 5. 랜드스케이프 모드 대응
+ * ========================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .chat-footer {
+        padding: 4px 12px calc(4px + env(safe-area-inset-bottom, 12px));
+        gap: 2px;
+    }
+    
+    .chat-input {
+        padding: 8px 44px 8px 14px;
+        min-height: 36px;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+    
+    .input-controls {
+        margin-top: 1px;
+    }
+    
+    .icon-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .difficulty-select {
+        height: 28px;
+        padding: 5px 24px 5px 8px;
+        font-size: 10px;
+    }
+    
+    .send-circle,
+    .stop-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+    
+    .chat-box {
+        padding: 12px;
+    }
+}
+
+/* =========================================================
+   Chat K plus - Additional Styles (6-10) (2026-06-16)
+   ========================================================= */
+
+/* ==========================================
+ * 6. 외부 링크 및 정책 경고
+ * ========================================== */
+
+/* 외부 링크 */
+.external-link {
+    color: var(--accent-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-accent);
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.external-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent-primary);
+    transition: width var(--transition-normal);
+}
+
+.external-link:hover {
+    color: var(--accent-primary);
+}
+
+.external-link:hover::after {
+    width: 100%;
+}
+
+/* 정책 경고 */
+.policy-warning {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    padding: 18px 22px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+}
+
+/* ==========================================
+ * 7. 모달 공통 - 프리미엄 스타일
+ * ========================================== */
 .modal {
     position: fixed;
     top: 0;
@@ -338,6 +781,11 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal.hidden {
+    display: none;
 }
 
 .modal-backdrop {
@@ -346,119 +794,470 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
 }
 
 .modal-content {
     position: relative;
-    background: var(--bg-main);
-    border-radius: 16px;
-    padding: 24px;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    max-width: 500px;
     width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-    z-index: 1;
+    z-index: 1001;
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 60px rgba(124, 58, 237, 0.1);
+    animation: modalAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--border-accent) 30%, 
+        var(--border-accent) 70%, 
+        transparent 100%);
+    opacity: 0.5;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    transform: rotate(90deg) scale(1.1);
+    border-color: var(--border-medium);
+}
+
+/* ==========================================
+ * 8. 시간표 모달
+ * ========================================== */
+.timetable-modal {
+    max-width: 560px;
 }
 
 .timetable-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 28px;
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    line-height: 1;
+.timetable-header h3 {
+    font-size: 26px;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
 }
 
 .timetable-tabs {
     display: flex;
-    gap: 4px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--border-light);
+    gap: 6px;
+    margin-bottom: 24px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 6px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-subtle);
 }
 
 .tab {
     flex: 1;
-    padding: 8px;
-    background: none;
+    padding: 12px;
     border: none;
-    border-bottom: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-secondary);
     cursor: pointer;
+    font-size: 14px;
     font-weight: 600;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.tab:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .tab.active {
-    border-bottom-color: var(--border-dark);
+    color: white;
+    box-shadow: var(--shadow-subtle);
+}
+
+.tab.active::before {
+    opacity: 1;
+}
+
+.tab span {
+    position: relative;
+    z-index: 1;
+}
+
+.timetable-content {
+    max-height: 340px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    padding: 8px;
+}
+
+.timetable-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.timetable-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.timetable-content::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 2px;
+}
+
+.timetable-empty {
+    text-align: center;
+    padding: 56px 24px;
+    color: var(--text-muted);
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .timetable-item {
     display: flex;
-    gap: 12px;
-    padding: 12px;
-    background: var(--bg-input);
-    border-radius: 8px;
-    margin-bottom: 8px;
+    gap: 16px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    margin-bottom: 12px;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-.timetable-time { font-weight: 600; min-width: 100px; }
-.timetable-subject { flex: 1; }
-.timetable-room { color: var(--text-secondary); font-size: 14px; }
+.timetable-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
 
-.timetable-footer { margin-top: 16px; }
+.timetable-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-medium);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-subtle);
+}
+
+.timetable-item:hover::before {
+    opacity: 1;
+}
+
+.timetable-time {
+    flex: 0 0 110px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02em;
+}
+
+.timetable-subject {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.timetable-room {
+    flex: 0 0 90px;
+    color: var(--text-primary);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    background: rgba(124, 58, 237, 0.15);
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.1);
+}
+
+.timetable-footer {
+    margin-top: 20px;
+}
+
 .timetable-add {
     width: 100%;
-    padding: 12px;
-    background: var(--bg-input);
+    padding: 18px;
+    background: var(--accent-gradient);
+    color: white;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: var(--radius-lg);
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all var(--transition-normal);
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.timetable-add::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.timetable-add:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 30px rgba(124, 58, 237, 0.4);
+}
+
+.timetable-add:hover::before {
+    opacity: 1;
+}
+
+.timetable-add:active {
+    transform: translateY(0);
+}
+
+/* ==========================================
+ * 9. 수업 추가 모달
+ * ========================================== */
+.add-class-modal {
+    max-width: 460px;
+}
+
+.add-class-modal h3 {
+    font-size: 26px;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
 }
 
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 22px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
     font-size: 14px;
     font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
     width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 16px 18px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    font-size: 15px;
+    transition: all var(--transition-normal);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-family: inherit;
+    backdrop-filter: var(--blur-subtle);
+    -webkit-backdrop-filter: var(--blur-subtle);
+    box-shadow: var(--shadow-inner);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background: rgba(40, 40, 40, 0.8);
+    box-shadow: 
+        0 0 0 4px rgba(124, 58, 237, 0.1),
+        var(--shadow-glow);
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='rgba(255,255,255,0.6)' d='M7 10L2 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 44px;
+}
+
+.form-group select option {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 12px;
 }
 
 .modal-buttons {
     display: flex;
-    gap: 8px;
-    margin-top: 20px;
+    gap: 14px;
+    margin-top: 32px;
 }
 
 .modal-btn {
     flex: 1;
-    padding: 12px;
+    padding: 18px;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: var(--radius-lg);
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
 }
 
-.modal-btn.cancel { background: var(--bg-input); }
-.modal-btn.go { background: var(--send-btn-bg); color: var(--send-btn-icon); }
+.modal-btn.cancel {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    border: 1px solid var(--border-medium);
+}
 
-.policy-warning {
-    background: #fff3cd !important;
-    border: 1px solid #ffc107;
+.modal-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-subtle);
+}
+
+.modal-btn.go,
+.modal-btn.save {
+    background: var(--accent-gradient);
+    color: white;
+    box-shadow: 
+        var(--shadow-medium),
+        var(--shadow-glow);
+}
+
+.modal-btn.go::before,
+.modal-btn.save::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.2) 0%, 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.modal-btn.go:hover,
+.modal-btn.save:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        var(--shadow-strong),
+        0 0 30px rgba(124, 58, 237, 0.4);
+}
+
+.modal-btn.go:hover::before,
+.modal-btn.save:hover::before {
+    opacity: 1;
+}
+
+/* ==========================================
+ * 10. 링크 경고 모달
+ * ========================================== */
+#linkModal .modal-url {
+    word-break: break-all;
+    color: var(--accent-secondary);
+    margin: 18px 0;
+    padding: 18px;
+    background: rgba(124, 58, 237, 0.1);
+    border-radius: var(--radius-lg);
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid var(--border-accent);
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
 }
