@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ==========================================
-    // 1. UI 요소
-    // ==========================================
     const UI = {
         input: document.getElementById('queryInput'),
         btn: document.getElementById('searchBtn'),
@@ -14,13 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sendBtn: document.getElementById('sendBtn'),
         stopBtn: document.getElementById('stopBtn'),
         difficultySelect: document.getElementById('difficultySelect'),
-        document.getElementById('chatInput').placeholder = 'Ask 무엇이든 물어보세요';
-        // 링크 경고 모달
         linkModal: document.getElementById('linkModal'),
         modalUrl: document.getElementById('modalUrl'),
         modalCancel: document.getElementById('modalCancel'),
         modalGo: document.getElementById('modalGo'),
-        // 시간표 모달
         timetableBtn: document.getElementById('timetableBtn'),
         timetableModal: document.getElementById('timetableModal'),
         timetableClose: document.getElementById('timetableClose'),
@@ -30,6 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
         cancelAdd: document.getElementById('cancelAdd'),
         saveAdd: document.getElementById('saveAdd')
     };
+
+    // placeholder 설정
+    UI.chatInput.placeholder = 'Ask 무엇이든 물어보세요';
+
+    let paddingTimer = null;
+    function fixChatPadding() {
+        const footer = document.querySelector('.chat-footer');
+        if (!footer ||!UI.chatBox) return;
+
+        if (window.innerWidth < 1024) {
+            clearTimeout(paddingTimer);
+            paddingTimer = setTimeout(() => {
+                const height = footer.offsetHeight;
+                UI.chatBox.style.paddingBottom = (height + 20) + 'px';
+                UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+            }, 50);
+        } else {
+            UI.chatBox.style.paddingBottom = '20px';
+        }
+    }
     
     // ========== 입력바 높이 자동 계산 ==========
     let paddingTimer = null;
