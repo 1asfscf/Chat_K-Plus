@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sendBtn: document.getElementById('sendBtn'),
         stopBtn: document.getElementById('stopBtn'),
         difficultySelect: document.getElementById('difficultySelect'),
+        document.getElementById('chatInput').placeholder = 'Ask 무엇이든 물어보세요';
         // 링크 경고 모달
         linkModal: document.getElementById('linkModal'),
         modalUrl: document.getElementById('modalUrl'),
