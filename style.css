@@ -42,7 +42,70 @@ html, body {
 
 /* ========== 검색 화면 ========== */
 #search-view {
-    display: none; /* 이미지 기준으로는 채팅뷰만 보이게 */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.search-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.logo { font-size: 48px; }
+.title { font-size: 32px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.beta-badge { font-size: 12px; background: #000; color: #fff; padding: 2px 6px; border-radius: 4px; }
+
+.search-container {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.search-btn {
+    padding: 12px 20px;
+    background: var(--send-btn-bg);
+    color: var(--send-btn-icon);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.search-btn:disabled { background: var(--send-btn-disabled); color: var(--text-placeholder); }
+
+.examples { text-align: center; }
+.examples-title { color: var(--text-secondary); margin-bottom: 12px; font-size: 14px; }
+.button-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.example-btn {
+    padding: 8px 16px;
+    background: var(--bg-input);
+    border: none;
+    border-radius: 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.app-footer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
 }
 
 /* ========== 채팅 화면 ========== */
@@ -54,7 +117,7 @@ html, body {
     background: var(--bg-main);
 }
 
-/* 상단 헤더 - "새 채팅" */
+/* 상단 헤더 - "새 채팅" + 굵은 선 */
 .chat-header {
     width: 100%;
     padding: 16px 20px;
@@ -64,7 +127,7 @@ html, body {
     justify-content: center;
     position: relative;
     background: var(--bg-main);
-    border-bottom: 3px solid var(--border-dark); /* 이미지 상단 굵은 선 */
+    border-bottom: 3px solid var(--border-dark);
 }
 
 .chat-header::after {
@@ -94,19 +157,57 @@ html, body {
     padding: 20px;
 }
 
+/* 메시지 스타일 */
+.message {
+    margin-bottom: 16px;
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.user-msg {
+    background: #007aff;
+    color: white;
+    margin-left: auto;
+}
+
+.ai-msg {
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.thinking {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+}
+
+.thinking-icon::before {
+    content: "✦";
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* 하단 입력 영역 */
 .chat-footer {
     width: 100%;
     padding: 8px 16px;
     padding-bottom: calc(8px + var(--safe-area-inset-bottom));
     background: var(--bg-main);
-    border-top: 1px solid var(--border-light);
 }
 
 .input-wrapper-modern {
     background: var(--bg-input);
     border-radius: 24px;
-    padding: 12px 8px 16px;
+    padding: 8px 12px 12px 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -127,16 +228,11 @@ html, body {
     color: var(--text-primary);
     max-height: 120px;
     font-family: inherit;
+    padding: 4px;
 }
 
 .chat-input::placeholder {
     color: var(--text-placeholder);
-}
-
-.chat-input::before {
-    content: "Ask ";
-    font-weight: 600;
-    color: var(--text-primary);
 }
 
 /* 입력창 컨트롤 */
@@ -144,45 +240,45 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 4px;
 }
 
 .controls-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 4px;
 }
 
 .icon-btn {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     padding: 4px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 32px;
+    height: 32px;
 }
 
-/* + 버튼 만들기 */
-.icon-btn::before {
+/* + 버튼 */
+#timetableBtn::before {
     content: "+";
-    font-size: 24px;
     font-weight: 300;
-    line-height: 1;
 }
 
-/* 설정 아이콘 만들기 */
-.icon-btn::after {
+/* 설정 버튼 - timetableBtn 다음에 가상 요소로 추가 */
+#timetableBtn::after {
     content: "☰";
-    font-size: 18px;
-    margin-left: 12px;
+    font-size: 20px;
+    margin-left: 8px;
     transform: rotate(90deg);
+    display: inline-block;
 }
 
 .difficulty-select {
-    display: none; /* 이미지에는 없음 */
+    display: none; /* 이미지엔 없음 */
 }
 
 .controls-right {
@@ -231,7 +327,7 @@ html, body {
     cursor: pointer;
 }
 
-/* ========== 모달 공통 ========== */
+/* ========== 모달 ========== */
 .modal {
     position: fixed;
     top: 0;
@@ -265,27 +361,104 @@ html, body {
     z-index: 1;
 }
 
-/* placeholder에 Ask 붙이기 위한 트릭 */
-#chatInput {
-    position: relative;
+.timetable-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
-#chatInput::placeholder {
-    content: "Ask 무엇이든 물어보세요";
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
 }
 
-/* 실제 Ask 텍스트를 넣으려면 JS 필요. CSS만으로는 한계 있어서 placeholder로 대체 */
-.input-top::before {
-    content: "Ask ";
-    position: absolute;
-    left: 16px;
-    top: 12px;
+.timetable-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.tab {
+    flex: 1;
+    padding: 8px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
     font-weight: 600;
-    color: var(--text-primary);
-    pointer-events: none;
-    z-index: 1;
 }
 
-#chatInput {
-    text-indent: 35px; /* Ask 공간 확보 */
+.tab.active {
+    border-bottom-color: var(--border-dark);
+}
+
+.timetable-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-input);
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.timetable-time { font-weight: 600; min-width: 100px; }
+.timetable-subject { flex: 1; }
+.timetable-room { color: var(--text-secondary); font-size: 14px; }
+
+.timetable-footer { margin-top: 16px; }
+.timetable-add {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-input);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.modal-btn.cancel { background: var(--bg-input); }
+.modal-btn.go { background: var(--send-btn-bg); color: var(--send-btn-icon); }
+
+.policy-warning {
+    background: #fff3cd !important;
+    border: 1px solid #ffc107;
 }
