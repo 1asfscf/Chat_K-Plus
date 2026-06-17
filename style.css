@@ -308,3 +308,48 @@ body {
 }
 
 .hidden { display: none !important; }
+
+/* 모달 긴급 패치 */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* 최상단 */
+    padding: 16px;
+}
+.modal.hidden { display: none !important; }
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+}
+
+.modal-content {
+    position: relative;
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+/* 시간표 아이템 모바일 대응 */
+.timetable-item {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 12px;
+    padding: 14px;
+}
+@media (max-width: 400px) {
+    .timetable-item { grid-template-columns: 1fr; gap: 6px; }
+    .timetable-time { font-size: 13px; opacity: 0.7; }
+}
