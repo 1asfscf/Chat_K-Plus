@@ -1,9 +1,19 @@
+// =========================================================
+// Chat K plus - Optimized JavaScript (2026-06-16)
+// =========================================================
+
 document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 1. UI 요소 참조
+    // ==========================================
     const UI = {
+        // 검색 화면
         input: document.getElementById('queryInput'),
         btn: document.getElementById('searchBtn'),
         examples: document.querySelectorAll('.example-btn'),
         searchView: document.getElementById('search-view'),
+        
+        // 채팅 화면
         chatView: document.getElementById('chat-view'),
         chatBox: document.getElementById('chat-box'),
         backBtn: document.getElementById('backBtn'),
@@ -11,77 +21,75 @@ document.addEventListener('DOMContentLoaded', () => {
         sendBtn: document.getElementById('sendBtn'),
         stopBtn: document.getElementById('stopBtn'),
         difficultySelect: document.getElementById('difficultySelect'),
+        
+        // 입력바 컨트롤
+        attachmentBtn: document.getElementById('attachmentBtn'),
+        timetableBtn: document.getElementById('timetableBtn'),
+        menuBtn: document.getElementById('menuBtn'),
+        
+        // 링크 경고 모달
         linkModal: document.getElementById('linkModal'),
         modalUrl: document.getElementById('modalUrl'),
         modalCancel: document.getElementById('modalCancel'),
         modalGo: document.getElementById('modalGo'),
-        timetableBtn: document.getElementById('timetableBtn'),
+        
+        // 시간표 모달
         timetableModal: document.getElementById('timetableModal'),
         timetableClose: document.getElementById('timetableClose'),
         timetableContent: document.getElementById('timetableContent'),
         addClassBtn: document.getElementById('addClassBtn'),
+        
+        // 수업 추가 모달
         addClassModal: document.getElementById('addClassModal'),
         cancelAdd: document.getElementById('cancelAdd'),
         saveAdd: document.getElementById('saveAdd')
     };
 
     // placeholder 설정
-    UI.chatInput.placeholder = 'Ask 무엇이든 물어보세요';
-
-    let paddingTimer = null;
-    function fixChatPadding() {
-        const footer = document.querySelector('.chat-footer');
-        if (!footer ||!UI.chatBox) return;
-
-        if (window.innerWidth < 1024) {
-            clearTimeout(paddingTimer);
-            paddingTimer = setTimeout(() => {
-                const height = footer.offsetHeight;
-                UI.chatBox.style.paddingBottom = (height + 20) + 'px';
-                UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
-            }, 50);
-        } else {
-            UI.chatBox.style.paddingBottom = '20px';
-        }
+    if (UI.chatInput) {
+        UI.chatInput.placeholder = '무엇이든 물어보세요';
     }
-    
-    // ========== 입력바 높이 자동 계산 ==========
+
+    // ==========================================
+    // 2. 유틸리티 함수
+    // ==========================================
     let paddingTimer = null;
+    
     function fixChatPadding() {
         const footer = document.querySelector('.chat-footer');
         const chatBox = document.getElementById('chat-box');
         
         if (!footer || !chatBox) return;
         
-        if (window.innerWidth < 1024) {
+        // CSS의 미디어쿼리와 일치하도록 768px로 조정
+        if (window.innerWidth < 768) {
             clearTimeout(paddingTimer);
             paddingTimer = setTimeout(() => {
                 const height = footer.offsetHeight;
                 chatBox.style.paddingBottom = (height + 20) + 'px';
                 chatBox.scrollTop = chatBox.scrollHeight;
+                
+                // CSS의 keyboard-open 클래스와 연동
+                if (footer.classList.contains('keyboard-open')) {
+                    chatBox.style.paddingBottom = (height + 10) + 'px';
+                }
             }, 50);
         } else {
             chatBox.style.paddingBottom = '20px';
         }
     }
 
+    // 이벤트 리스너 등록 (중복 제거)
     window.addEventListener('resize', fixChatPadding);
-    window.visualViewport?.addEventListener('resize', fixChatPadding);
-
-
-// 창 크기 바뀔 때 재계산
-window.addEventListener('resize', fixChatPadding);
-
-// iOS 키보드 올라올 때 재계산
-window.visualViewport?.addEventListener('resize', fixChatPadding);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', fixChatPadding);
+    }
 
     // ==========================================
-    // 2. DB
+    // 3. 데이터베이스
     // ==========================================
     const DB = {
-        // ==========================================
         // 🤖 AI 자기소개
-        // ==========================================
         "너에 대해서": "저는 Chat K plus의 AI 어시스턴트입니다. 빠른 검색과 대화에 최적화된 지능형 봇이죠.",
         "너 누구야": "저는 Chat K plus의 AI 어시스턴트입니다. 빠른 검색과 대화에 최적화된 지능형 봇이죠.",
         "넌 뭐야": "저는 Chat K plus의 AI 어시스턴트입니다. 빠른 검색과 대화에 최적화된 지능형 봇이죠.",
@@ -95,20 +103,14 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         "krl": "저는 KRL V10 기반의 AI 어시스턴트입니다.",
         "krl v10": "네, 저는 KRL V10 기반으로 동작합니다.",
 
-        // ==========================================
         // 🎬 영화/엔터테인먼트
-        // ==========================================
         "아바타 2가 뭐죠?": "판도라 행성의 바다를 배경으로 한 SF 영화입니다. 제이크 설리와 네이티리 가족이 해양 부족과 만나 겪는 이야기죠.",
 
-        // ==========================================
         // 🏛️ 정치/사회
-        // ==========================================
         "정치": "사회적 갈등을 조정하고 공동의 이익을 도모하는 의사결정 과정입니다.",
         "사회/정치2": "시민의 권리와 의무, 법과 제도를 다루는 학문 분야입니다.",
 
-        // ==========================================
         // 🇨🇳 중국 관련
-        // ==========================================
         "중국": "중국은 동아시아 국가로 수도는 베이징입니다. 인구 약 14억 명으로 세계 2위입니다.",
         "중국 수도": "중국의 수도는 베이징(北京)입니다.",
         "중국 인구": "2024년 기준 약 14억 1천만 명입니다.",
@@ -121,9 +123,7 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         "만리장성": "만리장성은 중국 북부를 가로지르는 세계 최대 방어시설로 길이가 2만km가 넘습니다.",
         "중국 음식": "짜장면, 마라탕, 딤섬, 베이징덕이 유명합니다.",
 
-        // ==========================================
         // 👶 아기/육아
-        // ==========================================
         "아기": "아기는 출생 후 12개월까지의 영유아를 말합니다. 이 시기는 신체와 뇌 발달이 가장 빠른 시기입니다.",
         "아기_detail": "아기(0~12개월)는 신생아기(0~1개월), 영아기(1~12개월)로 나뉩니다. 평균적으로 생후 6개월에 첫 이가 나고, 12개월경 첫 걸음을 뗍니다. 수면은 하루 14~17시간 필요하며, 모유나 분유를 주식으로 합니다. 애착 형성이 중요한 시기로, 스킨십과 눈맞춤이 정서 발달에 핵심입니다.",
         
@@ -145,9 +145,7 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         "예방접종": "예방접종은 질병 예방을 위한 필수 접종입니다. BCG, B형간염, DPT 등 국가필수예방접종이 있습니다.",
         "예방접종_detail": "국가필수예방접종은 무료입니다. 생후 0개월: B형간염 1차, BCG. 1개월: B형간염 2차. 2개월: DPT 1차, 소아마비 1차. 4개월: DPT 2차, 소아마비 2차. 6개월: B형간염 3차, DPT 3차. 12개월: MMR 1차, 수두. 접종 후 20~30분 병원에 머물며 이상반응 관찰 필요. 발열 시 해열제 복용 가능합니다.",
 
-        // ==========================================
         // 🔍 검색 포털
-        // ==========================================
         "다음": "다음 공식 사이트는 https://www.daum.net 입니다.",
         "다음 공식 사이트": "다음 공식 사이트는 https://www.daum.net 입니다.",
         "다음 사이트 공식 사이트 알려줘": "다음 공식 사이트는 https://www.daum.net 입니다.",
@@ -156,18 +154,14 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         "다음에서 기저귀라고 검색하면": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
         "기저귀 관련검색어": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀",
 
-        // ==========================================
         // 🏛️ 역사/문화
-        // ==========================================
         "천안문": "천안문은 중국 베이징 중심부에 있는 성문입니다. 명나라 때 건설되었고 천안문 광장과 자금성의 입구입니다.",
         "천안문_detail": "천안문(天安門)은 1417년 명나라 영락제 때 처음 세워졌고, 현재 건물은 1651년 청나라 순치제 때 재건된 것입니다. 높이 34.7m, 폭 66m 규모입니다. 1949년 10월 1일 마오쩌둥이 중화인민공화국 성립을 선포한 곳이기도 합니다. 천안문 광장은 세계에서 가장 큰 도시 광장 중 하나로 면적은 약 44만㎡입니다.",
 
         "천안문 광장": "천안문 광장은 베이징 중심부에 있는 대형 광장입니다. 면적 약 44만㎡로 대규모 집회와 행사가 열립니다.",
         "천안문 광장_detail": "천안문 광장은 남북 길이 880m, 동서 500m로 100만 명 이상 수용 가능합니다. 광장 주변에는 인민대회당, 중국국가박물관, 인민영웅기념비, 마오쩌둥 기념당이 있습니다. 매년 국경절 열병식 등 국가 주요 행사가 개최됩니다.",
 
-        // ==========================================
         // 🔬 생물학/과학
-        // ==========================================
         "생물학적 성 차이": "인간의 성별은 성염색체 XX(여성), XY(남성)에 의해 결정됩니다. 성호르몬과 생식기관 구조에서 근본적 차이가 있습니다.",
         "생물학적 성 차이_detail": "🔬 유전적 수준: 여성 XX, 남성 XY 염색체. Y염색체의 SRY 유전자가 고환 발달 촉진.<br><br>호르몬: 여성은 에스트로겐·프로게스테론이 높고, 남성은 테스토스테론이 높음. 이는 근육량, 체지방 분포, 2차 성징에 영향.<br><br>생식기관: 여성은 난소·자궁·질, 남성은 고환·정관·전립선·음경 구조.<br><br>뇌 신경과학: 편도체, 해마, 뇌량 등 일부 영역에서 평균적 차이가 보고되나, 개인차가 성별 간 차이보다 크고 학계 논쟁 중. 과도한 일반화 주의 필요.",
 
@@ -180,16 +174,14 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         "뇌 성 차이": "뇌 구조에서 성별 간 평균적 차이가 일부 보고되나, 개인차가 더 크고 학계에서 논쟁 중입니다.",
         "뇌 성 차이_detail": "보고된 차이: 편도체(남성>여성 경향), 해마(여성>남성 경향), 뇌량(여성>남성 경향). 그러나 표본 크기, 환경 통제 한계로 일관된 결론 없음. '남성적 뇌 vs 여성적 뇌' 이분법은 과학적 근거 부족. 성별보다 개인 경험, 학습, 환경이 뇌 발달에 더 큰 영향. 중요: 과학적 합의는 유전적·생식적 차이까지이며, 인지·행동 차이는 논쟁 영역입니다.",
 
-        // ==========================================
         // 🌐 공식 사이트
-        // ==========================================
         "네이버 공식 사이트": "네이버 공식 사이트는 https://www.naver.com 입니다.",
-        "구글": "구글 공식 사이트는 https://www.google.com 입니다.",
-        "구글 공식 사이트": "구글 공식 사이트는 https://www.google.com 입니다.",
-        "유튜브": "유튜브 공식 사이트는 https://www.youtube.com 입니다.",
-        "유튜브 공식 사이트": "유튜브 공식 사이트는 https://www.youtube.com 입니다.",
-        "인스타그램": "인스타그램 공식 사이트는 https://www.instagram.com 입니다.",
-        "인스타 공식 사이트": "인스타그램 공식 사이트는 https://www.instagram.com 입니다.",
+        "구글": "구글 공식 사이트는 https://www.google 입니다.",
+        "구글 공식 사이트": "구글 공식 사이트는 https://www.google 입니다.",
+        "유튜브": "유튜브 공식 사이트는 https://www.youtube 입니다.",
+        "유튜브 공식 사이트": "유튜브 공식 사이트는 https://www.youtube 입니다.",
+        "인스타그램": "인스타그램 공식 사이트는 https://www.instagram 입니다.",
+        "인스타 공식 사이트": "인스타그램 공식 사이트는 https://www.instagram 입니다.",
         "카카오": "카카오 공식 사이트는 https://www.kakaocorp.com 입니다.",
         "카카오톡": "카카오톡 공식 사이트는 https://www.kakaocorp.com/service/KakaoTalk 입니다.",
         "쿠팡": "쿠팡 공식 사이트는 https://www.coupang.com 입니다.",
@@ -197,14 +189,17 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         "chat gpt": "ChatGPT 공식 사이트는 https://chat.openai.com 입니다.",
         "챗지피티": "ChatGPT 공식 사이트는 https://chat.openai.com 입니다."
     };
+
     // ==========================================
-    // 3. 시스템
+    // 4. 시스템 기능
     // ==========================================
     const System = {
         isThinking: false,
         responseMode: 'normal',
 
         switchView(isChat) {
+            if (!UI.searchView || !UI.chatView) return;
+            
             UI.searchView.style.display = isChat ? 'none' : 'flex';
             UI.chatView.style.display = isChat ? 'flex' : 'none';
             UI.searchView.classList.toggle('hidden', isChat);
@@ -212,13 +207,15 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
             
             if (isChat) {
                 setTimeout(() => {
-                    UI.chatInput.focus();
+                    if (UI.chatInput) UI.chatInput.focus();
                     fixChatPadding();
                 }, 100);
             }
         },
 
         addMessage(text, type) {
+            if (!UI.chatBox) return null;
+            
             const msg = document.createElement('div');
             msg.className = `message ${type === 'user' ? 'user-msg' : 'ai-msg'}`;
 
@@ -250,8 +247,8 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
             const mode = this.responseMode;
             const forceDetail = /(구체적|자세히|상세|자세한|구체적인)/.test(query);
 
-            UI.sendBtn.classList.add('hidden');
-            UI.stopBtn.classList.remove('hidden');
+            if (UI.sendBtn) UI.sendBtn.classList.add('hidden');
+            if (UI.stopBtn) UI.stopBtn.classList.remove('hidden');
 
             this.switchView(true);
             this.addMessage(query, 'user');
@@ -265,14 +262,15 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
             const steps = ["분석 중...", "검색 중...", "확인 중...", "생성 중..."];
             for (const step of steps) {
                 if (!this.isThinking) break;
-                thinking.querySelector('.thinking-text').textContent = step;
+                const thinkingText = thinking.querySelector('.thinking-text');
+                if (thinkingText) thinkingText.textContent = step;
                 await new Promise(r => setTimeout(r, 400));
             }
 
             if (!this.isThinking) {
                 thinking.remove();
-                UI.stopBtn.classList.add('hidden');
-                UI.sendBtn.classList.remove('hidden');
+                if (UI.stopBtn) UI.stopBtn.classList.add('hidden');
+                if (UI.sendBtn) UI.sendBtn.classList.remove('hidden');
                 return;
             }
 
@@ -328,7 +326,7 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
                 };
                 const found = [];
                 for (const name in sites) {
-                    if (nq.includes(name) &&!found.some(f => f.includes(sites[name]))) {
+                    if (nq.includes(name) && !found.some(f => f.includes(sites[name]))) {
                         found.push(`${name} 공식 사이트는 ${sites[name]} 입니다.`);
                         matchedKey = name;
                     }
@@ -383,13 +381,13 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
                 else if (nq.includes('금')) targetDay = 'fri';
                 else if (nq.includes('토')) targetDay = 'sat';
                 else if (nq.includes('일')) targetDay = 'sun';
-                else targetDay = today === 0? 'mon' : days[today];
+                else targetDay = today === 0 ? 'mon' : days[today];
 
                 const list = data[targetDay] || [];
                 const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금',sat:'토',sun:'일'}[targetDay];
-                answer = list.length
-                 ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
-                : `${dayName}요일 수업이 없습니다.`;
+                answer = list.length 
+                    ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
+                    : `${dayName}요일 수업이 없습니다.`;
             }
 
             if (!answer) answer = `"${q}"에 대해 학습된 내용이 없습니다.`;
@@ -397,7 +395,7 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
             // ===== 난이도 3단계 처리 - 개선됨 =====
             const shouldDetail = mode === 'detail' || forceDetail;
 
-            if (mode === 'simple' &&!forceDetail) {
+            if (mode === 'simple' && !forceDetail) {
                 // 간단: 첫 문장만
                 answer = answer.split(/[.!?]\s/)[0] + '.';
             } else if (shouldDetail && matchedKey) {
@@ -414,116 +412,23 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
             this.addMessage(answer, 'ai');
             this.isThinking = false;
 
-            UI.stopBtn.classList.add('hidden');
-            UI.sendBtn.classList.remove('hidden');
+            if (UI.stopBtn) UI.stopBtn.classList.add('hidden');
+            if (UI.sendBtn) UI.sendBtn.classList.remove('hidden');
             this.updateSendButton();
         },
 
         updateSendButton() {
+            if (!UI.chatInput || !UI.sendBtn) return;
+            
             const hasText = UI.chatInput.value.trim().length > 0;
-            UI.sendBtn.disabled =!hasText;
+            UI.sendBtn.disabled = !hasText;
             UI.sendBtn.classList.toggle('active', hasText);
         }
     };
 
     // ==========================================
-    // 4. 이벤트
+    // 5. 시간표 기능
     // ==========================================
-
-    // 메인 검색
-    const updateMainBtn = () => {
-        UI.btn.disabled = UI.input.value.trim().length === 0;
-    };
-
-    UI.input.addEventListener('input', updateMainBtn);
-    UI.input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' &&!UI.btn.disabled) {
-            System.runReasoning(UI.input.value.trim());
-            UI.input.value = '';
-            updateMainBtn();
-        }
-    });
-
-    UI.btn.addEventListener('click', () => {
-        System.runReasoning(UI.input.value.trim());
-        UI.input.value = '';
-        updateMainBtn();
-    });
-
-    // 채팅 입력바 (모던화)
-    UI.chatInput.addEventListener('input', () => {
-        System.updateSendButton();
-        UI.chatInput.style.height = 'auto';
-        UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
-        fixChatPadding();
-    });
-
-    UI.chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (!UI.sendBtn.disabled) {
-                System.runReasoning(UI.chatInput.value.trim());
-                UI.chatInput.value = '';
-                UI.chatInput.style.height = 'auto';
-                System.updateSendButton();
-                setTimeout(fixChatPadding, 100);
-            }
-        }
-    });
-
-    // iOS 키보드 대응
-    UI.chatInput.addEventListener('focus', () => {
-        setTimeout(() => UI.chatBox.scrollTop = UI.chatBox.scrollHeight, 300);
-    });
-
-    UI.sendBtn.addEventListener('click', () => {
-        if (UI.sendBtn.disabled) return;
-        System.runReasoning(UI.chatInput.value.trim());
-        UI.chatInput.value = '';
-        UI.chatInput.style.height = 'auto';
-        System.updateSendButton();
-    });
-
-    // 멈추기 버튼
-    UI.stopBtn.addEventListener('click', () => {
-        if (!System.isThinking) return;
-        System.isThinking = false;
-        document.querySelector('.message.thinking')?.remove();
-        System.addMessage('⏹️ 답변이 중지되었습니다.', 'ai');
-        UI.stopBtn.classList.add('hidden');
-        UI.sendBtn.classList.remove('hidden');
-        System.updateSendButton();
-    });
-
-    // 뒤로가기
-    UI.backBtn.addEventListener('click', () => {
-        System.switchView(false);
-        UI.chatBox.innerHTML = '';
-    });
-
-    // 예시 버튼
-    UI.examples.forEach(btn => {
-        btn.addEventListener('click', () => {
-            System.runReasoning(btn.textContent.trim());
-        });
-    });
-
-    // === 링크 경고 모달 ===
-    let pendingUrl = '';
-
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('external-link')) {
-            e.preventDefault();
-            pendingUrl = e.target.dataset.url;
-            UI.modalUrl.textContent = pendingUrl;
-            UI.linkModal.classList.remove('hidden');
-        }
-    });
-    if (UI.modalCancel) UI.modalCancel.onclick = () => UI.linkModal.classList.add('hidden');
-    if (UI.modalGo) UI.modalGo.onclick = () => { window.open(pendingUrl, '_blank'); UI.linkModal.classList.add('hidden'); };
-    if (UI.linkModal) UI.linkModal.querySelector('.modal-backdrop').onclick = () => UI.linkModal.classList.add('hidden');
-
-    // === 시간표 버튼 (모바일 전용) ===
     let currentDay = 'mon';
 
     function getTimetable() {
@@ -542,25 +447,9 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         localStorage.setItem('timetable', JSON.stringify(data));
     }
 
-    if (UI.timetableBtn) {
-        UI.timetableBtn.addEventListener('click', () => {
-            UI.timetableModal.classList.remove('hidden');
-            loadTimetable(currentDay);
-        });
-    }
-    if (UI.timetableClose) UI.timetableClose.onclick = () => UI.timetableModal.classList.add('hidden');
-    if (UI.timetableModal) UI.timetableModal.querySelector('.modal-backdrop').onclick = () => UI.timetableModal.classList.add('hidden');
-
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentDay = tab.dataset.day;
-            loadTimetable(currentDay);
-        });
-    });
-
     function loadTimetable(day) {
+        if (!UI.timetableContent) return;
+        
         const data = getTimetable();
         const list = data[day] || [];
         if (list.length === 0) {
@@ -594,48 +483,258 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         }
     }
 
-    if (UI.addClassBtn) {
-        UI.addClassBtn.addEventListener('click', () => {
-            document.getElementById('classDay').value = currentDay;
-            UI.addClassModal.classList.remove('hidden');
+    // ==========================================
+    // 6. 이벤트 리스너 설정
+    // ==========================================
+
+    // 메인 검색
+    function updateMainBtn() {
+        if (!UI.input || !UI.btn) return;
+        UI.btn.disabled = UI.input.value.trim().length === 0;
+    }
+
+    if (UI.input) {
+        UI.input.addEventListener('input', updateMainBtn);
+        UI.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !UI.btn.disabled) {
+                System.runReasoning(UI.input.value.trim());
+                UI.input.value = '';
+                updateMainBtn();
+            }
         });
     }
-    if (UI.cancelAdd) UI.cancelAdd.onclick = () => UI.addClassModal.classList.add('hidden');
-    if (UI.addClassModal) UI.addClassModal.querySelector('.modal-backdrop').onclick = () => UI.addClassModal.classList.add('hidden');
+
+    if (UI.btn) {
+        UI.btn.addEventListener('click', () => {
+            System.runReasoning(UI.input.value.trim());
+            UI.input.value = '';
+            updateMainBtn();
+        });
+    }
+
+    // 채팅 입력바
+    if (UI.chatInput) {
+        UI.chatInput.addEventListener('input', () => {
+            System.updateSendButton();
+            UI.chatInput.style.height = 'auto';
+            UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
+            fixChatPadding();
+        });
+
+        UI.chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!UI.sendBtn.disabled) {
+                    System.runReasoning(UI.chatInput.value.trim());
+                    UI.chatInput.value = '';
+                    UI.chatInput.style.height = 'auto';
+                    System.updateSendButton();
+                    setTimeout(fixChatPadding, 100);
+                }
+            }
+        });
+
+        // iOS 키보드 대응
+        UI.chatInput.addEventListener('focus', () => {
+            setTimeout(() => {
+                if (UI.chatBox) UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
+            }, 300);
+        });
+    }
+
+    if (UI.sendBtn) {
+        UI.sendBtn.addEventListener('click', () => {
+            if (UI.sendBtn.disabled) return;
+            System.runReasoning(UI.chatInput.value.trim());
+            UI.chatInput.value = '';
+            UI.chatInput.style.height = 'auto';
+            System.updateSendButton();
+        });
+    }
+
+    // 멈추기 버튼
+    if (UI.stopBtn) {
+        UI.stopBtn.addEventListener('click', () => {
+            if (!System.isThinking) return;
+            System.isThinking = false;
+            document.querySelector('.message.thinking')?.remove();
+            System.addMessage('⏹️ 답변이 중지되었습니다.', 'ai');
+            UI.stopBtn.classList.add('hidden');
+            UI.sendBtn.classList.remove('hidden');
+            System.updateSendButton();
+        });
+    }
+
+    // 뒤로가기
+    if (UI.backBtn) {
+        UI.backBtn.addEventListener('click', () => {
+            System.switchView(false);
+            if (UI.chatBox) UI.chatBox.innerHTML = '';
+        });
+    }
+
+    // 예시 버튼
+    UI.examples.forEach(btn => {
+        btn.addEventListener('click', () => {
+            System.runReasoning(btn.textContent.trim());
+        });
+    });
+
+    // 새로운 버튼 이벤트
+    if (UI.attachmentBtn) {
+        UI.attachmentBtn.addEventListener('click', () => {
+            console.log('첨부 버튼 클릭');
+            // 첨부 기능 구현 예정
+        });
+    }
+
+    if (UI.menuBtn) {
+        UI.menuBtn.addEventListener('click', () => {
+            console.log('메뉴 버튼 클릭');
+            // 메뉴 기능 구현 예정
+        });
+    }
+
+    // 링크 경고 모달
+    let pendingUrl = '';
+
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('external-link')) {
+            e.preventDefault();
+            pendingUrl = e.target.dataset.url;
+            if (UI.modalUrl) UI.modalUrl.textContent = pendingUrl;
+            if (UI.linkModal) UI.linkModal.classList.remove('hidden');
+        }
+    });
+
+    if (UI.modalCancel) {
+        UI.modalCancel.onclick = () => {
+            if (UI.linkModal) UI.linkModal.classList.add('hidden');
+        };
+    }
+
+    if (UI.modalGo) {
+        UI.modalGo.onclick = () => {
+            window.open(pendingUrl, '_blank');
+            if (UI.linkModal) UI.linkModal.classList.add('hidden');
+        };
+    }
+
+    if (UI.linkModal) {
+        const backdrop = UI.linkModal.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.onclick = () => UI.linkModal.classList.add('hidden');
+        }
+    }
+
+    // 시간표 모달
+    if (UI.timetableBtn) {
+        UI.timetableBtn.addEventListener('click', () => {
+            if (UI.timetableModal) {
+                UI.timetableModal.classList.remove('hidden');
+                loadTimetable(currentDay);
+            }
+        });
+    }
+
+    if (UI.timetableClose) {
+        UI.timetableClose.onclick = () => {
+            if (UI.timetableModal) UI.timetableModal.classList.add('hidden');
+        };
+    }
+
+    if (UI.timetableModal) {
+        const backdrop = UI.timetableModal.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.onclick = () => UI.timetableModal.classList.add('hidden');
+        }
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentDay = tab.dataset.day;
+            loadTimetable(currentDay);
+        });
+    });
+
+    if (UI.addClassBtn) {
+        UI.addClassBtn.addEventListener('click', () => {
+            const classDay = document.getElementById('classDay');
+            if (classDay) {
+                classDay.value = currentDay;
+            }
+            if (UI.addClassModal) {
+                UI.addClassModal.classList.remove('hidden');
+            }
+        });
+    }
+
+    if (UI.cancelAdd) {
+        UI.cancelAdd.onclick = () => {
+            if (UI.addClassModal) UI.addClassModal.classList.add('hidden');
+        };
+    }
+
+    if (UI.addClassModal) {
+        const backdrop = UI.addClassModal.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.onclick = () => UI.addClassModal.classList.add('hidden');
+        }
+    }
 
     if (UI.saveAdd) {
         UI.saveAdd.addEventListener('click', () => {
-            const day = document.getElementById('classDay').value;
-            const time = document.getElementById('classTime').value.trim();
-            const subject = document.getElementById('classSubject').value.trim();
-            const room = document.getElementById('classRoom').value.trim();
+            const classDay = document.getElementById('classDay');
+            const classTime = document.getElementById('classTime');
+            const classSubject = document.getElementById('classSubject');
+            const classRoom = document.getElementById('classRoom');
 
-            if (!time ||!subject) return alert('시간과 과목을 입력하세요');
+            if (!classDay || !classTime || !classSubject) {
+                alert('시간과 과목을 입력하세요');
+                return;
+            }
+
+            const day = classDay.value;
+            const time = classTime.value.trim();
+            const subject = classSubject.value.trim();
+            const room = classRoom ? classRoom.value.trim() : '';
+
+            if (!time || !subject) {
+                alert('시간과 과목을 입력하세요');
+                return;
+            }
 
             const data = getTimetable();
             if (!data[day]) data[day] = [];
             data[day].push({time, subject, room});
-            data[day].sort((a,b) => a.time.localeCompare(b.time));
+            data[day].sort((a, b) => a.time.localeCompare(b.time));
 
             saveTimetable(data);
-            UI.addClassModal.classList.add('hidden');
-            document.getElementById('classTime').value = '';
-            document.getElementById('classSubject').value = '';
-            document.getElementById('classRoom').value = '';
+            if (UI.addClassModal) UI.addClassModal.classList.add('hidden');
+            
+            if (classTime) classTime.value = '';
+            if (classSubject) classSubject.value = '';
+            if (classRoom) classRoom.value = '';
 
             if (day === currentDay) loadTimetable(currentDay);
         });
     }
 
-    // ========== PC 자동화: 키보드 단축키 ==========
+    // PC 자동화: 키보드 단축키
     document.addEventListener('keydown', (e) => {
         // Ctrl+K 또는 Cmd+K: 검색/채팅 입력 포커스
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
             e.preventDefault();
-            const input = document.getElementById('queryInput')?.offsetParent?
-                          document.getElementById('queryInput') :
-                          document.getElementById('chatInput');
-            input?.focus();
+            const input = document.getElementById('queryInput');
+            const chatInput = document.getElementById('chatInput');
+            
+            if (input && input.offsetParent) {
+                input.focus();
+            } else if (chatInput) {
+                chatInput.focus();
+            }
         }
 
         // ESC: 모달 닫기
@@ -646,13 +745,15 @@ window.visualViewport?.addEventListener('resize', fixChatPadding);
         }
     });
 
-    // ========== 난이도 설정 ==========
-    UI.difficultySelect?.addEventListener('change', (e) => {
-        System.responseMode = e.target.value;
-    });
-    System.responseMode = UI.difficultySelect?.value || 'normal';
+    // 난이도 설정
+    if (UI.difficultySelect) {
+        UI.difficultySelect.addEventListener('change', (e) => {
+            System.responseMode = e.target.value;
+        });
+        System.responseMode = UI.difficultySelect.value || 'normal';
+    }
 
     // 초기 상태
     updateMainBtn();
     System.updateSendButton();
-}); // DOMContentLoaded 끝
+}); //
