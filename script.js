@@ -1,5 +1,5 @@
 // =========================================================
-// Chat K plus - Optimized JavaScript (2026-06-18)
+// Chat K plus - Optimized JavaScript (2026-06-18 v2.0)
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "다음에서 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
         "다음 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
         "다음에서 기저귀라고 검색하면": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
-        "기저귀 관련검색어": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀",
+        "기저귀 관련검색어": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균",
 
         // 🏛️ 역사/문화
         "천안문": "천안문은 중국 베이징 중심부에 있는 성문입니다. 명나라 때 건설되었고 천안문 광장과 자금성의 입구입니다.",
@@ -174,14 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
         "뇌 성 차이": "뇌 구조에서 성별 간 평균적 차이가 일부 보고되나, 개인차가 더 크고 학계에서 논쟁 중입니다.",
         "뇌 성 차이_detail": "보고된 차이: 편도체(남성>여성 경향), 해마(여성>남성 경향), 뇌량(여성>남성 경향). 그러나 표본 크기, 환경 통제 한계로 일관된 결론 없음. '남성적 뇌 vs 여성적 뇌' 이분법은 과학적 근거 부족. 성별보다 개인 경험, 학습, 환경이 뇌 발달에 더 큰 영향. 중요: 과학적 합의는 유전적·생식적 차이까지이며, 인지·행동 차이는 논쟁 영역입니다.",
 
-        // 🌐 공식 사이트
+        // 🌐 공식 사이트 (URL 수정됨)
         "네이버 공식 사이트": "네이버 공식 사이트는 https://www.naver.com 입니다.",
-        "구글": "구글 공식 사이트는 https://www.google 입니다.",
-        "구글 공식 사이트": "구글 공식 사이트는 https://www.google 입니다.",
-        "유튜브": "유튜브 공식 사이트는 https://www.youtube 입니다.",
-        "유튜브 공식 사이트": "유튜브 공식 사이트는 https://www.youtube 입니다.",
-        "인스타그램": "인스타그램 공식 사이트는 https://www.instagram 입니다.",
-        "인스타 공식 사이트": "인스타그램 공식 사이트는 https://www.instagram 입니다.",
+        "구글": "구글 공식 사이트는 https://www.google.com 입니다.",
+        "구글 공식 사이트": "구글 공식 사이트는 https://www.google.com 입니다.",
+        "유튜브": "유튜브 공식 사이트는 https://www.youtube.com 입니다.",
+        "유튜브 공식 사이트": "유튜브 공식 사이트는 https://www.youtube.com 입니다.",
+        "인스타그램": "인스타그램 공식 사이트는 https://www.instagram.com 입니다.",
+        "인스타 공식 사이트": "인스타그램 공식 사이트는 https://www.instagram.com 입니다.",
         "카카오": "카카오 공식 사이트는 https://www.kakaocorp.com 입니다.",
         "카카오톡": "카카오톡 공식 사이트는 https://www.kakaocorp.com/service/KakaoTalk 입니다.",
         "쿠팡": "쿠팡 공식 사이트는 https://www.coupang.com 입니다.",
@@ -312,7 +312,7 @@ const System = {
             matchedKey = q;
         }
 
-        // 공식 사이트 패턴
+        // 공식 사이트 패턴 (URL 수정됨)
         if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
             const sites = {
                 '네이버':'https://www.naver.com',
@@ -616,9 +616,7 @@ const System = {
     // ==========================================
     let currentDay = 'mon';
 
-    function getTimetable() {
-        const saved = localStorage.getItem('timetable');
-        if (saved) return JSON.parse(saved);
+    function getDefaultTimetable() {
         return {
             mon: [{time:'09:00-10:30', subject:'수학', room:'3-2'}, {time:'11:00-12:30', subject:'영어', room:'2-1'}],
             tue: [{time:'10:00-11:30', subject:'과학', room:'실험실'}],
@@ -626,6 +624,19 @@ const System = {
             thu: [{time:'13:00-14:30', subject:'국어', room:'3-1'}],
             fri: [{time:'09:00-10:30', subject:'체육', room:'운동장'}]
         };
+    }
+
+    function getTimetable() {
+        const saved = localStorage.getItem('timetable');
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error('시간표 데이터 파싱 오류:', e);
+                return getDefaultTimetable();
+            }
+        }
+        return getDefaultTimetable();
     }
 
     function saveTimetable(data) {
@@ -697,14 +708,16 @@ const System = {
         });
     }
 
-    // 채팅 입력바
+    // 채팅 입력바 핸들러 (함수 분리)
+    function handleChatInput() {
+        System.updateSendButton();
+        UI.chatInput.style.height = 'auto';
+        UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
+        fixChatPadding();
+    }
+
     if (UI.chatInput) {
-        UI.chatInput.addEventListener('input', () => {
-            System.updateSendButton();
-            UI.chatInput.style.height = 'auto';
-            UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
-            fixChatPadding();
-        });
+        UI.chatInput.addEventListener('input', handleChatInput);
 
         UI.chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
