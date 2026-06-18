@@ -1,6 +1,6 @@
 /* =========================================================
-   Chat K plus - Complete CSS (2026-06-17 v2.2)
-   라이트 테마 완전 적용, 중복 제거, 입력바 위치 수정, 버튼 복구, 모달 수정
+   Chat K plus - Complete CSS (2026-06-17 v2.3)
+   라이트 테마 완전 적용, 중복 제거, 입력바 위치 수정, 버튼 복구, 모달 수정, 입력창 디자인 수정, 반응형 대응 강화
    ========================================================= */
 
 /* ==========================================
@@ -471,7 +471,7 @@ html, body {
 }
 
 /* ==========================================
- * 5. 채팅 입력바 - 위치 수정 및 버튼 복구
+ * 5. 채팅 입력바 - 디자인 수정 및 반응형 강화
  * ========================================== */
 .chat-footer {
     display: flex;
@@ -492,26 +492,29 @@ html, body {
     width: 100%;
     position: relative;
     background: var(--bg-primary);
-    border: 1.5px solid #e5e5e5;
-    border-radius: 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 28px;
     padding: 16px 20px 16px 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: all var(--transition-normal);
 }
 
 .input-wrapper-modern:focus-within {
-    border-color: var(--text-primary);
+    border-color: #000000;
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
 .input-top {
     width: 100%;
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* 메인 입력창 - 위치 수정 */
+/* 메인 입력창 - 디자인 수정 */
 .chat-input {
-    width: 100%;
+    flex: 1;
     padding: 12px 0;
     border: none;
     border-radius: 0;
@@ -538,6 +541,48 @@ html, body {
     border: none;
     background: transparent;
     box-shadow: none;
+}
+
+/* 원형 버튼 컨테이너 */
+.circular-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* 원형 버튼 - 디자인 수정 */
+.circular-btn {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666666;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.circular-btn::before {
+    display: none;
+}
+
+.circular-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: #000000;
+    transform: scale(1.05);
+    color: #000000;
+}
+
+.circular-btn:active {
+    transform: scale(0.95);
 }
 
 /* 컨트롤 영역 */
@@ -663,21 +708,28 @@ html, body {
 }
 
 /* ==========================================
- * 모바일 최적화 - 5번 섹션에 통합
+ * 모바일 최적화 - 강화된 반응형 대응
  * ========================================== */
 
-/* iOS 키보드 대응 */
+/* iOS 키보드 대응 - 강화 */
 @supports (-webkit-touch-callout: none) {
     .chat-footer {
-        padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 20px));
+        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 20px));
     }
     
     .input-wrapper-modern {
-        padding: 14px 18px 14px 18px;
+        padding: 12px 16px 12px 16px;
+        border-radius: 24px;
     }
     
     .chat-input {
         min-height: 44px;
+        font-size: 16px;
+    }
+    
+    .circular-btn {
+        width: 36px;
+        height: 36px;
         font-size: 16px;
     }
     
@@ -694,7 +746,7 @@ html, body {
     }
 }
 
-/* 안드로이드 키보드 대응 */
+/* 안드로이드 키보드 대응 - 강화 */
 @media (max-width: 768px) {
     .chat-header {
         padding: 16px;
@@ -715,16 +767,22 @@ html, body {
     }
 
     .chat-footer {
-        padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 20px));
+        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 20px));
     }
 
     .input-wrapper-modern {
-        padding: 14px 18px 14px 18px;
-        border-radius: 20px;
+        padding: 12px 16px 12px 16px;
+        border-radius: 24px;
     }
 
     .chat-input {
         min-height: 44px;
+        font-size: 16px;
+    }
+
+    .circular-btn {
+        width: 36px;
+        height: 36px;
         font-size: 16px;
     }
 
@@ -741,7 +799,7 @@ html, body {
     }
 }
 
-/* 소형 모바일 - 위치 수정 */
+/* 소형 모바일 - 강화된 반응형 대응 */
 @media (max-width: 480px) {
     .chat-header {
         padding: 14px 16px;
@@ -772,12 +830,18 @@ html, body {
 
     .input-wrapper-modern {
         padding: 14px 16px 14px 16px;
-        border-radius: 18px;
+        border-radius: 20px;
     }
 
     .chat-input {
         min-height: 44px;
         font-size: 16px;
+    }
+
+    .circular-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
 
     .icon-btn {
@@ -790,6 +854,41 @@ html, body {
     .stop-circle {
         width: 36px;
         height: 36px;
+    }
+}
+
+/* 초소형 모바일 - 추가 대응 */
+@media (max-width: 360px) {
+    .chat-footer {
+        padding: 20px 12px calc(20px + env(safe-area-inset-bottom, 20px));
+    }
+
+    .input-wrapper-modern {
+        padding: 12px 12px 12px 12px;
+        border-radius: 18px;
+    }
+
+    .chat-input {
+        min-height: 40px;
+        font-size: 15px;
+    }
+
+    .circular-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .icon-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .send-circle,
+    .stop-circle {
+        width: 34px;
+        height: 34px;
     }
 }
 
@@ -1321,7 +1420,7 @@ html, body {
  * ========================================== */
 
 /* ==========================================
- * 12. 키보드 열릴 때 동적 조정
+ * 12. 키보드 열릴 때 동적 조정 - 강화
  * ========================================== */
 .chat-footer.keyboard-open {
     padding-bottom: max(20px, env(safe-area-inset-bottom, 24px));
@@ -1332,8 +1431,24 @@ html, body {
     min-height: 44px;
 }
 
+.chat-footer.keyboard-open .circular-btn {
+    width: 36px;
+    height: 36px;
+}
+
+.chat-footer.keyboard-open .icon-btn {
+    width: 36px;
+    height: 36px;
+}
+
+.chat-footer.keyboard-open .send-circle,
+.chat-footer.keyboard-open .stop-circle {
+    width: 40px;
+    height: 40px;
+}
+
 /* ==========================================
- * 13. 랜드스케이프 모드 대응
+ * 13. 랜드스케이프 모드 대응 - 강화
  * ========================================== */
 @media (max-height: 500px) and (orientation: landscape) {
     .chat-footer {
@@ -1342,6 +1457,7 @@ html, body {
     
     .input-wrapper-modern {
         padding: 12px 16px 12px 16px;
+        border-radius: 20px;
     }
     
     .chat-input {
@@ -1349,10 +1465,16 @@ html, body {
         font-size: 16px;
     }
     
+    .circular-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
     .icon-btn {
         width: 32px;
         height: 32px;
-        font-size: 16px;
+        font-size: 14px;
     }
     
     .send-circle,
