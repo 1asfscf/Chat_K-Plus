@@ -1,7 +1,6 @@
-
 /* =========================================================
-   Chat K plus - Complete CSS (2026-06-17 v2.4)
-   라이트 테마 완전 적용, 중복 제거, 입력바 위치 수정, 버튼 복구, 모달 수정, 입력창 디자인 수정, 반응형 대응 강화, 섬세한 수정
+   Chat K plus - Complete CSS (2026-06-17 v2.5)
+   라이트 테마 완전 적용, 중복 제거, 입력바 위치 수정, 버튼 복구, 모달 수정, 입력창 디자인 수정, 반응형 대응 강화, 섬세한 수정, 입력바 위치 전체 수정, 테두리 모던하게 변경
    ========================================================= */
 
 /* ==========================================
@@ -472,13 +471,13 @@ html, body {
 }
 
 /* ==========================================
- * 5. 채팅 입력바 - 이미지 스타일로 완전 변경
+ * 5. 채팅 입력바 - 위치 전체 수정, 테두리 모던하게 변경
  * ========================================== */
 .chat-footer {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 20px));
+    padding: 24px 20px calc(32px + env(safe-area-inset-bottom, 28px));
     background: transparent;
     border-top: none;
     box-shadow: none;
@@ -492,8 +491,8 @@ html, body {
     position: relative;
     background: #ffffff; /* 이미지와 동일한 흰색 */
     border: 1px solid #e5e5e5; /* 얇은 보더 */
-    border-radius: 24px; /* 더 둥글게 */
-    padding: 14px 16px 10px 18px;
+    border-radius: 32px; /* 더 둥글고 모던하게 */
+    padding: 18px 20px 14px 22px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: all var(--transition-normal);
 }
@@ -514,11 +513,11 @@ html, body {
 /* 메인 입력창 */
 .chat-input {
     flex: 1;
-    padding: 8px 0 10px 0;
+    padding: 10px 0 12px 0;
     border: none;
     font-size: 17px; /* 이미지와 동일 */
     resize: none;
-    min-height: 32px;
+    min-height: 44px; /* 더 높게 */
     max-height: 120px;
     line-height: 1.4;
     background: transparent;
@@ -580,7 +579,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .controls-left {
@@ -689,16 +688,16 @@ html, body {
 /* iOS 키보드 대응 - 강화 */
 @supports (-webkit-touch-callout: none) {
     .chat-footer {
-        padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 20px));
+        padding: 20px 18px calc(28px + env(safe-area-inset-bottom, 24px));
     }
     
     .input-wrapper-modern {
-        padding: 12px 14px 12px 14px;
-        border-radius: 22px;
+        padding: 16px 18px 16px 18px;
+        border-radius: 28px;
     }
     
     .chat-input {
-        min-height: 36px;
+        min-height: 40px;
         font-size: 16px;
     }
     
@@ -742,16 +741,16 @@ html, body {
     }
 
     .chat-footer {
-        padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 20px));
+        padding: 20px 18px calc(28px + env(safe-area-inset-bottom, 24px));
     }
 
     .input-wrapper-modern {
-        padding: 12px 14px 12px 14px;
-        border-radius: 22px;
+        padding: 16px 18px 16px 18px;
+        border-radius: 28px;
     }
 
     .chat-input {
-        min-height: 36px;
+        min-height: 40px;
         font-size: 16px;
     }
 
@@ -800,16 +799,16 @@ html, body {
     }
 
     .chat-footer {
-        padding: 20px 12px calc(20px + env(safe-area-inset-bottom, 24px));
+        padding: 24px 16px calc(32px + env(safe-area-inset-bottom, 28px));
     }
 
     .input-wrapper-modern {
-        padding: 12px 12px 12px 12px;
-        border-radius: 20px;
+        padding: 14px 16px 14px 16px;
+        border-radius: 26px;
     }
 
     .chat-input {
-        min-height: 36px;
+        min-height: 40px;
         font-size: 16px;
     }
 
@@ -835,16 +834,16 @@ html, body {
 /* 초소형 모바일 - 추가 대응 */
 @media (max-width: 360px) {
     .chat-footer {
-        padding: 18px 10px calc(18px + env(safe-area-inset-bottom, 20px));
+        padding: 22px 14px calc(30px + env(safe-area-inset-bottom, 26px));
     }
 
     .input-wrapper-modern {
-        padding: 10px 10px 10px 10px;
-        border-radius: 18px;
+        padding: 12px 14px 12px 14px;
+        border-radius: 24px;
     }
 
     .chat-input {
-        min-height: 32px;
+        min-height: 36px;
         font-size: 15px;
     }
 
@@ -1398,12 +1397,12 @@ html, body {
  * 12. 키보드 열릴 때 동적 조정 - 강화
  * ========================================== */
 .chat-footer.keyboard-open {
-    padding-bottom: max(18px, env(safe-area-inset-bottom, 24px));
+    padding-bottom: max(28px, env(safe-area-inset-bottom, 28px));
 }
 
 .chat-footer.keyboard-open .chat-input {
     max-height: 120px;
-    min-height: 36px;
+    min-height: 40px;
 }
 
 .chat-footer.keyboard-open .circular-btn {
@@ -1427,16 +1426,16 @@ html, body {
  * ========================================== */
 @media (max-height: 500px) and (orientation: landscape) {
     .chat-footer {
-        padding: 14px 14px calc(14px + env(safe-area-inset-bottom, 20px));
+        padding: 18px 18px calc(26px + env(safe-area-inset-bottom, 24px));
     }
     
     .input-wrapper-modern {
-        padding: 10px 14px 10px 14px;
-        border-radius: 20px;
+        padding: 14px 18px 14px 18px;
+        border-radius: 26px;
     }
     
     .chat-input {
-        min-height: 32px;
+        min-height: 36px;
         font-size: 16px;
     }
     
