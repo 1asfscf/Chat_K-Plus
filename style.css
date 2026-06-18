@@ -1,7 +1,7 @@
-
 /* =========================================================
-   Chat K plus - Complete CSS (2026-06-17 v2.5)
+   Chat K plus - Complete CSS (2026-06-18 v3.1.T)
    라이트 테마 완전 적용, 중복 제거, 입력바 위치 수정, 버튼 복구, 모달 수정, 입력창 디자인 수정, 반응형 대응 강화, 섬세한 수정, 입력바 위치 전체 수정, 테두리 모던하게 변경
+   모던한 디자인 추가, 원형 느낌 강조, 입체적 효과 추가
    ========================================================= */
 
 /* ==========================================
@@ -49,6 +49,12 @@
     --shadow-glow: 0 0 0 rgba(0, 0, 0, 0);
     --shadow-inner: inset 0 1px 0 rgba(0, 0, 0, 0.03);
     
+    /* 모던한 그림자 - 추가됨 */
+    --shadow-modern: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-modern-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+    --shadow-3d: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-3d-hover: 0 16px 48px rgba(0, 0, 0, 0.18), 0 6px 16px rgba(0, 0, 0, 0.1);
+    
     /* 둥근 모서리 */
     --radius-sm: 6px;
     --radius-md: 10px;
@@ -65,6 +71,10 @@
     --blur-subtle: blur(8px);
     --blur-medium: blur(12px);
     --blur-strong: blur(16px);
+    
+    /* 모던한 블러 효과 - 추가됨 */
+    --blur-modern: blur(20px);
+    --blur-glass: blur(30px);
 }
 
 /* ==========================================
@@ -112,7 +122,7 @@ html, body {
 }
 
 /* ==========================================
- * 3. 검색 화면 (라이트 톤)
+ * 3. 검색 화면 (라이트 톤) - 입체적 디자인 추가
  * ========================================== */
 #search-view {
     display: flex;
@@ -195,6 +205,7 @@ html, body {
     position: relative;
 }
 
+/* 검색 입력바 - 입체적 디자인 추가 */
 .search-input {
     width: 100%;
     padding: 20px 24px;
@@ -202,10 +213,12 @@ html, body {
     border: 2px solid rgba(0, 0, 0, 0.15);
     border-radius: var(--radius-xl);
     font-size: 18px;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.98);
     color: #000000;
     transition: all var(--transition-normal);
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-3d);
+    backdrop-filter: var(--blur-modern);
+    -webkit-backdrop-filter: var(--blur-modern);
 }
 
 .search-input::placeholder {
@@ -215,8 +228,9 @@ html, body {
 .search-input:focus {
     outline: none;
     border-color: #000000;
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08), var(--shadow-strong);
+    box-shadow: var(--shadow-3d-hover), 0 0 0 4px rgba(0, 0, 0, 0.08);
     transform: scale(1.01);
+    background: rgba(255, 255, 255, 1);
 }
 
 .search-btn {
@@ -233,7 +247,7 @@ html, body {
     cursor: pointer;
     font-size: 20px;
     transition: all var(--transition-normal);
-    box-shadow: var(--shadow-medium);
+    box-shadow: var(--shadow-modern);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -241,7 +255,7 @@ html, body {
 
 .search-btn:hover:not(:disabled) {
     transform: translateY(-50%) scale(1.1);
-    box-shadow: var(--shadow-strong);
+    box-shadow: var(--shadow-modern-hover);
 }
 
 .search-btn:active:not(:disabled) {
@@ -472,7 +486,7 @@ html, body {
 }
 
 /* ==========================================
- * 5. 채팅 입력바 - 위치 전체 수정, 테두리 모던하게 변경
+ * 5. 채팅 입력바 - 모던한 디자인 + 원형 느낌 강조
  * ========================================== */
 .chat-footer {
     display: flex;
@@ -490,17 +504,20 @@ html, body {
 .input-wrapper-modern {
     width: 100%;
     position: relative;
-    background: #ffffff; /* 이미지와 동일한 흰색 */
-    border: 1px solid #e5e5e5; /* 얇은 보더 */
+    background: rgba(255, 255, 255, 0.98); /* 모던한 블러 효과 */
+    border: 1px solid #e5e5e5;
     border-radius: 32px; /* 더 둥글고 모던하게 */
     padding: 18px 20px 14px 22px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: var(--shadow-modern);
+    backdrop-filter: var(--blur-modern);
+    -webkit-backdrop-filter: var(--blur-modern);
     transition: all var(--transition-normal);
 }
 
 .input-wrapper-modern:focus-within {
     border-color: #000000;
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-modern-hover), 0 0 0 3px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 1);
 }
 
 .input-top {
@@ -516,9 +533,9 @@ html, body {
     flex: 1;
     padding: 10px 0 12px 0;
     border: none;
-    font-size: 17px; /* 이미지와 동일 */
+    font-size: 17px;
     resize: none;
-    min-height: 44px; /* 더 높게 */
+    min-height: 44px;
     max-height: 120px;
     line-height: 1.4;
     background: transparent;
@@ -527,7 +544,7 @@ html, body {
 }
 
 .chat-input::placeholder {
-    color: #b0b0b0; /* 이미지와 동일한 회색 */
+    color: #b0b0b0;
     font-weight: 400;
 }
 
@@ -538,7 +555,7 @@ html, body {
     box-shadow: none;
 }
 
-/* 원형 버튼 컨테이너 */
+/* 원형 버튼 컨테이너 - 원형 느낌 강조 */
 .circular-buttons {
     display: flex;
     align-items: center;
@@ -546,13 +563,13 @@ html, body {
     flex-shrink: 0;
 }
 
-/* 원형 버튼 - 이미지 스타일 */
+/* 원형 버튼 - 원형 느낌 강조 */
 .circular-btn {
     width: 36px;
     height: 36px;
     background: transparent;
     border: 1px solid #e5e5e5;
-    border-radius: 50%;
+    border-radius: 50%; /* 완전한 원형 */
     cursor: pointer;
     font-size: 18px;
     display: flex;
@@ -561,13 +578,15 @@ html, body {
     color: #666666;
     transition: all var(--transition-fast);
     flex-shrink: 0;
+    box-shadow: var(--shadow-subtle);
 }
 
 .circular-btn:hover {
     background: rgba(0, 0, 0, 0.04);
     border-color: #000000;
-    transform: scale(1.05);
+    transform: scale(1.1); /* 더 큰 스케일 효과 */
     color: #000000;
+    box-shadow: var(--shadow-medium);
 }
 
 .circular-btn:active {
@@ -595,13 +614,13 @@ html, body {
     gap: 8px;
 }
 
-/* 아이콘 버튼 */
+/* 아이콘 버튼 - 원형 느낌 강조 */
 .icon-btn {
     width: 36px;
     height: 36px;
     background: transparent;
     border: none;
-    border-radius: 50%;
+    border-radius: 50%; /* 완전한 원형 */
     cursor: pointer;
     font-size: 18px;
     display: flex;
@@ -614,8 +633,9 @@ html, body {
 
 .icon-btn:hover {
     background: rgba(0, 0, 0, 0.04);
-    transform: scale(1.05);
+    transform: scale(1.1); /* 더 큰 스케일 효과 */
     color: #000000;
+    box-shadow: var(--shadow-subtle);
 }
 
 .icon-btn:active {
@@ -638,32 +658,35 @@ html, body {
     background-position: right 8px center;
 }
 
-/* 전송 버튼 - 이미지 스타일 */
+/* 전송 버튼 - 원형 느낌 강조 */
 .send-circle,
 .stop-circle {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 50%; /* 완전한 원형 */
     border: none;
     cursor: pointer;
     font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #e5e5e5; /* 비활성화 상태 */
+    background: #e5e5e5;
     color: #a9a8af;
     transition: all var(--transition-fast);
     flex-shrink: 0;
+    box-shadow: var(--shadow-subtle);
 }
 
 .send-circle:not(:disabled) {
     background: #000000;
     color: #ffffff;
+    box-shadow: var(--shadow-medium);
 }
 
 .send-circle:not(:disabled):hover {
-    transform: scale(1.05);
+    transform: scale(1.1); /* 더 큰 스케일 효과 */
     background: #222222;
+    box-shadow: var(--shadow-modern);
 }
 
 .send-circle:disabled {
@@ -680,6 +703,7 @@ html, body {
 .stop-circle:hover {
     background: #ef4444;
     color: white;
+    box-shadow: var(--shadow-medium);
 }
 
 /* ==========================================
