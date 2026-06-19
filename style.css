@@ -1,6 +1,6 @@
 /* =========================================================
-   Chat K plus - Complete CSS (2026-06-18 v3.5)
-   v3.4 기반 + 입력바 위치 수정 (sticky, safe-area, 막 제거)
+   Chat K plus - Complete CSS (2026-06-18 v3.5 FINAL)
+   v3.4 기반 + 입력바 위치 수정 + 색상 오타 수정
    ========================================================= */
 
 /* ==========================================
@@ -11,7 +11,7 @@
     --bg-primary: #ffffff;
     --bg-secondary: #ffffff;
     --bg-tertiary: #f8f8f8;
-    --bg-card: rgba(255, 255, 0.95);
+    --bg-card: rgba(255, 255, 255, 0.95);
     --bg-input: #ffffff;
     --bg-hover: rgba(0, 0, 0, 0.04);
     
@@ -139,7 +139,7 @@ html, body {
 }
 
 /* ==========================================
- * 3. 검색 화면 (라이트 톤)
+ * 3. 검색 화면
  * ========================================== */
 #search-view {
     display: flex;
@@ -347,7 +347,7 @@ html, body {
 }
 
 /* ==========================================
- * 4. 채팅 화면 - 라이트 테마
+ * 4. 채팅 화면
  * ========================================== */
 #chat-view {
     display: none;
@@ -464,8 +464,9 @@ html, body {
     border-bottom-right-radius: 6px;
 }
 
+/* [수정됨 v3.5] 색상 오타 수정: #f5f5 → #f5f5f5 */
 .ai-msg {
-    background: #f5f5;
+    background: #f5f5f5;
     color: var(--text-primary);
     border: 1px solid #eeeeee;
     border-bottom-left-radius: 6px;
@@ -547,6 +548,7 @@ html, body {
     z-index: 0;
 }
 
+/* [수정됨 v3.5] 색상 오타 수정: 255,255,0.3 → 255,255,255,0.3 */
 .input-wrapper-modern::after {
     content: '';
     position: absolute;
@@ -554,7 +556,7 @@ html, body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
     opacity: 0;
     transition: opacity var(--transition-normal);
     pointer-events: none;
@@ -1156,13 +1158,6 @@ html, body {
     }
 }
 
-.modal-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
     background: linear-gradient(90deg, 
         transparent 0%, 
         rgba(0, 0, 0, 0.15) 30%, 
@@ -1179,7 +1174,7 @@ html, body {
     height: 40px;
     background: rgba(0, 0, 0, 0.06);
     border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 50%;
+    border-radius: 50%;
     cursor: pointer;
     color: var(--text-secondary);
     transition: all var(--transition-normal);
@@ -1198,7 +1193,7 @@ html, body {
 }
 
 /* ==========================================
- * 8. 시간표 모달 - 수정됨
+ * 8. 시간표 모달
  * ========================================== */
 .timetable-modal {
     max-width: 560px;
@@ -1333,7 +1328,7 @@ html, body {
 
 .timetable-item:hover {
     background: #f0f0f0;
-    border-color: #d8;
+    border-color: #d8d8d8;
     transform: translateX(4px);
     box-shadow: var(--shadow-subtle);
 }
@@ -1408,7 +1403,7 @@ html, body {
     right: 0;
     bottom: 0;
     background: linear-gradient(135deg, 
-        rgba(255, 255, 0.2) 0%, 
+        rgba(255, 255, 255, 0.2) 0%, 
         transparent 50%);
     opacity: 0;
     transition: opacity var(--transition-normal);
@@ -1428,7 +1423,7 @@ html, body {
 }
 
 /* ==========================================
- * 9. 수업 추가 모달 - 수정됨
+ * 9. 수업 추가 모달
  * ========================================== */
 .add-class-modal {
     max-width: 460px;
@@ -1564,7 +1559,7 @@ html, body {
 }
 
 /* ==========================================
- * 10. 링크 경고 모달 - 수정됨
+ * 10. 링크 경고 모달
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
@@ -1584,7 +1579,7 @@ html, body {
  * ========================================== */
 
 /* ==========================================
- * 12. 키보드 열릴 때 동적 조정 - 강화
+ * 12. 키보드 열릴 때 동적 조정
  * ========================================== */
 .chat-footer.keyboard-open {
     padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
@@ -1612,7 +1607,7 @@ html, body {
 }
 
 /* ==========================================
- * 13. 랜드스케이프 모드 대응 - 강화
+ * 13. 랜드스케이프 모드 대응
  * ========================================== */
 @media (max-height: 500px) and (orientation: landscape) {
     .chat-footer {
