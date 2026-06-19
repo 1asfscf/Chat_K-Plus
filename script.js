@@ -1,3 +1,4 @@
+
 // =========================================================
 // Chat K plus - Complete Rebuild (2026-06-18 v3.2.U)
 // fixChatPadding 제거, 시간표 기능 강화, 천안문/IT 데이터 추가
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 채팅 화면
         chatView: document.getElementById('chat-view'),
-        chatBox = document.getElementById('chat-box'),
+        chatBox: document.getElementById('chat-box'),
         backBtn: document.getElementById('backBtn'),
         chatInput: document.getElementById('chatInput'),
         sendBtn: document.getElementById('sendBtn'),
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 시간표 모달
         timetableModal: document.getElementById('timetableModal'),
         timetableClose: document.getElementById('timetableClose'),
-        timetableContent = document.getElementById('timetableContent'),
+        timetableContent: document.getElementById('timetableContent'),
         addClassBtn: document.getElementById('addClassBtn'),
         
         // 수업 추가 모달
@@ -122,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "이유식_detail": "이유식은 생후 180일경 시작이 WHO 권고입니다. 초기(6개월): 10배죽, 소고기미음 등 하루 1회. 중기(7~8개월): 7배죽, 채소큐브 추가 하루 2회. 후기(9~11개월): 5배죽, 손가락 음식 하루 3회. 완료기(12개월~): 진밥, 일반식. 알레르기 확인을 위해 한 가지 재료씩 3일 간격으로 추가합니다. 꿀, 생우유, 달걀흰자는 12개월 이후 급여합니다.",
             
             "아기 수면": "아기는 하루 14~17시간 수면이 필요합니다. 밤낮 구분은 3개월 이후 생깁니다.",
-            "아기 수면_detail": "신생아: 16~20시간, 2~4시간 간격. 3개월: 15시간, 밤에 5~6시간 연속 수면 시작. 6개월: 14시간, 밤 8~10시간 통잠 가능. 수면교육은 4~6개월부터 가능하며, 일정한 수업의식(목욕→수유→자장가)이 도움됩니다. 엎드려 재우기는 SIDS 위험으로 금지, 반드시 바로 눕힙니다.",
+            "아기 수면_detail": "신생아: 16~20시간, 2~4시간 간격. 3개월: 15시간, 밤에 5~6시간 연속 수면 시작. 6개월: 14시간, 밤 8~10시간 통잠 가능. 수면교육은 4~6개월부터 가능하며, 일정한 수면의식(목욕→수유→자장가)이 도움됩니다. 엎드려 재우기는 SIDS 위험으로 금지, 반드시 바로 눕힙니다.",
             
             "예방접종": "예방접종은 질병 예방을 위한 필수 접종입니다. BCG, B형간염, DPT 등 국가필수예방접종이 있습니다.",
             "예방접종_detail": "국가필수예방접종은 무료입니다. 생후 0개월: B형간염 1차, BCG. 1개월: B형간염 2차. 2개월: DPT 1차, 소아마비 1차. 4개월: DPT 2차, 소아마비 2차. 6개월: B형간염 3차, DPT 3차. 12개월: MMR 1차, 수두. 접종 후 20~30분 병원에 머물며 이상반응 관찰 필요. 발열 시 해열제 복용 가능합니다."
