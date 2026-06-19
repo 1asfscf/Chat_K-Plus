@@ -1,6 +1,6 @@
 /* =========================================================
-   Chat K plus - Complete CSS (2026-06-19 v3.6 배타1)
-   v2.5R 기반 + 모달 X 버튼 개선 + 입력창 모던화
+   Chat K plus - Complete CSS (2026-06-19 v3.6 배타2)
+   v3.6 배타1 기반 + 스크롤 겹침 수정
    ========================================================= */
 
 /* ==========================================
@@ -139,7 +139,7 @@ html, body {
 }
 
 /* ==========================================
- * 3. 검색 화면 (모던화됨)
+ * 3. 검색 화면
  * ========================================== */
 #search-view {
     display: flex;
@@ -222,19 +222,18 @@ html, body {
     position: relative;
 }
 
-/* [모던화됨] 검색 입력창 - 더 크고 둥글게 */
 .search-input {
     width: 100%;
     padding: 24px 28px;
     padding-right: 72px;
     border: 2px solid rgba(0, 0, 0, 0.12);
-    border-radius: 28px;
+    border-radius: 32px;
     font-size: 20px;
     background: #ffffff;
     color: #000000;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-input-detail);
-    font-weight: 500;
+    line-height: 1.4;
 }
 
 .search-input::placeholder {
@@ -252,11 +251,10 @@ html, body {
     outline: none;
     border-color: #000000;
     box-shadow: var(--shadow-input-detail-focus);
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.005);
     background: #ffffff;
 }
 
-/* [모던화됨] 검색 버튼 - 더 크게 */
 .search-btn {
     position: absolute;
     right: 10px;
@@ -267,7 +265,7 @@ html, body {
     background: var(--accent-gradient);
     color: white;
     border: none;
-    border-radius: 16px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 24px;
     transition: all var(--transition-normal);
@@ -278,7 +276,7 @@ html, body {
 }
 
 .search-btn:hover:not(:disabled) {
-    transform: translateY(-50%) scale(1.08);
+    transform: translateY(-50%) scale(1.1);
     box-shadow: var(--shadow-btn-hover);
 }
 
@@ -314,11 +312,11 @@ html, body {
 }
 
 .example-btn {
-    padding: 16px 28px;
+    padding: 14px 24px;
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 20px;
-    font-size: 16px;
+    border-radius: var(--radius-lg);
+    font-size: 15px;
     font-weight: 500;
     color: #000000;
     cursor: pointer;
@@ -412,22 +410,30 @@ html, body {
     color: var(--text-primary);
 }
 
+/* [수정됨 v3.6 배타2] 채팅 박스 - 스크롤 겹침 수정 */
 .chat-box {
     flex: 1;
     overflow-y: auto;
-    padding: 24px 20px;
+    padding: 24px 20px 120px 20px; /* 하단 패딩 증가 */
     background: var(--bg-primary);
     scroll-behavior: smooth;
     min-height: 0;
+    overscroll-behavior: contain; /* 스크롤 체이닝 방지 */
 }
 
 .chat-box::-webkit-scrollbar {
-    width: 4px;
+    width: 6px; /* 스크롤바 너비 증가 */
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0; /* 스크롤바 트랙 여백 */
 }
 
 .chat-box::-webkit-scrollbar-thumb {
     background: #e0e0e0;
-    border-radius: 2px;
+    border-radius: 3px;
+    margin: 4px 0; /* 스크롤바 썸 여백 */
 }
 
 .chat-box.empty {
@@ -506,7 +512,7 @@ html, body {
 }
 
 /* ==========================================
- * 5. 채팅 입력바 (모던화됨)
+ * 5. 채팅 입력바
  * ========================================== */
 .chat-footer {
     display: flex;
@@ -522,13 +528,12 @@ html, body {
     flex-shrink: 0;
 }
 
-/* [모던화됨] 입력바 래퍼 - 더 크고 둥글게 */
 .input-wrapper-modern {
     width: 100%;
     position: relative;
     background: #ffffff;
     border: 2px solid #e5e5e5;
-    border-radius: 32px;
+    border-radius: 48px;
     padding: 18px 22px 16px 24px;
     box-shadow: var(--shadow-floating);
     transition: all var(--transition-normal);
@@ -591,21 +596,19 @@ html, body {
     z-index: 2;
 }
 
-/* [모던화됨] 채팅 입력창 - 더 크게 */
 .chat-input {
     flex: 1;
     padding: 10px 0 12px 0;
     border: none;
-    font-size: 17px;
+    font-size: 18px;
     resize: none;
-    min-height: 42px;
-    max-height: 100px;
+    min-height: 44px;
+    max-height: 120px;
     line-height: 1.4;
     background: transparent;
     color: #000000;
     font-family: inherit;
     z-index: 2;
-    font-weight: 500;
 }
 
 .chat-input::placeholder {
@@ -620,7 +623,6 @@ html, body {
     box-shadow: none;
 }
 
-/* [모던화됨] 원형 버튼 그룹 - 더 크게 */
 .circular-buttons {
     display: flex;
     align-items: center;
@@ -653,7 +655,6 @@ html, body {
     opacity: 1;
 }
 
-/* [모던화됨] 원형 버튼 - 더 크게 */
 .circular-btn {
     width: 40px;
     height: 40px;
@@ -694,7 +695,7 @@ html, body {
 .circular-btn:hover {
     background: rgba(0, 0, 0, 0.06);
     border-color: #000000;
-    transform: scale(1.12);
+    transform: scale(1.15);
     color: #000000;
     box-shadow: var(--shadow-btn-hover);
 }
@@ -725,7 +726,6 @@ html, body {
     gap: 10px;
 }
 
-/* [모던화됨] 아이콘 버튼 - 더 크게 */
 .icon-btn {
     width: 40px;
     height: 40px;
@@ -764,7 +764,7 @@ html, body {
 
 .icon-btn:hover {
     background: rgba(0, 0, 0, 0.06);
-    transform: scale(1.12);
+    transform: scale(1.15);
     color: #000000;
     box-shadow: var(--shadow-btn);
 }
@@ -790,7 +790,6 @@ html, body {
     z-index: 2;
 }
 
-/* [모던화됨] 전송/중지 버튼 - 더 크게 */
 .send-circle,
 .stop-circle {
     width: 44px;
@@ -838,7 +837,7 @@ html, body {
 }
 
 .send-circle:not(:disabled):hover {
-    transform: scale(1.12);
+    transform: scale(1.15);
     background: #222222;
     box-shadow: var(--shadow-btn-hover);
 }
@@ -868,12 +867,12 @@ html, body {
     
     .input-wrapper-modern {
         padding: 16px 20px 14px 22px;
-        border-radius: 30px;
+        border-radius: 44px;
     }
     
     .chat-input {
-        min-height: 38px;
-        font-size: 16px;
+        min-height: 40px;
+        font-size: 17px;
     }
     
     .circular-btn {
@@ -905,7 +904,7 @@ html, body {
     }
 
     .chat-box {
-        padding: 20px 16px;
+        padding: 20px 16px 100px 16px; /* 하단 패딩 조정 */
     }
 
     .message {
@@ -916,12 +915,12 @@ html, body {
 
     .input-wrapper-modern {
         padding: 16px 20px 14px 22px;
-        border-radius: 30px;
+        border-radius: 44px;
     }
 
     .chat-input {
-        min-height: 38px;
-        font-size: 16px;
+        min-height: 40px;
+        font-size: 17px;
     }
 
     .circular-btn {
@@ -958,7 +957,7 @@ html, body {
     }
 
     .chat-box {
-        padding: 16px 12px;
+        padding: 16px 12px 80px 12px; /* 하단 패딩 조정 */
     }
 
     .message {
@@ -969,60 +968,64 @@ html, body {
 
     .input-wrapper-modern {
         padding: 14px 18px 12px 20px;
-        border-radius: 28px;
+        border-radius: 40px;
     }
 
     .chat-input {
         min-height: 36px;
-        font-size: 15px;
-    }
-
-    .circular-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 15px;
-    }
-
-    .icon-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 15px;
-    }
-
-    .send-circle,
-    .stop-circle {
-        width: 38px;
-        height: 38px;
-    }
-}
-
-@media (max-width: 360px) {
-    .input-wrapper-modern {
-        padding: 12px 16px 10px 18px;
-        border-radius: 26px;
-    }
-
-    .chat-input {
-        min-height: 34px;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     .circular-btn {
         width: 32px;
         height: 32px;
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .icon-btn {
         width: 32px;
         height: 32px;
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .send-circle,
     .stop-circle {
         width: 36px;
         height: 36px;
+    }
+}
+
+@media (max-width: 360px) {
+    .chat-box {
+        padding: 14px 10px 70px 10px; /* 하단 패딩 조정 */
+    }
+    
+    .input-wrapper-modern {
+        padding: 12px 16px 10px 18px;
+        border-radius: 36px;
+    }
+
+    .chat-input {
+        min-height: 34px;
+        font-size: 15px;
+    }
+
+    .circular-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .icon-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .send-circle,
+    .stop-circle {
+        width: 34px;
+        height: 34px;
     }
 }
 
@@ -1035,9 +1038,13 @@ html, body {
         padding: 6px 16px calc(8px + env(safe-area-inset-bottom));
     }
     
+    .chat-box {
+        padding: 8px 8px 60px 8px; /* 하단 패딩 조정 */
+    }
+    
     .input-wrapper-modern {
         padding: 12px 16px 10px 18px;
-        border-radius: 26px;
+        border-radius: 36px;
     }
     
     .chat-input {
@@ -1046,25 +1053,21 @@ html, body {
     }
     
     .circular-btn {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         font-size: 14px;
     }
     
     .icon-btn {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         font-size: 14px;
     }
     
     .send-circle,
     .stop-circle {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .chat-box {
-        padding: 8px;
+        width: 34px;
+        height: 34px;
     }
 }
 
@@ -1109,7 +1112,7 @@ html, body {
 }
 
 /* ==========================================
- * 7. 모달 공통 (개선됨)
+ * 7. 모달 공통
  * ========================================== */
 .modal {
     position: fixed;
@@ -1185,7 +1188,6 @@ html, body {
     opacity: 0.5;
 }
 
-/* [개선됨] X 버튼 - SVG 아이콘 직접 사용 */
 .close-btn {
     position: absolute;
     top: 16px;
@@ -1205,7 +1207,6 @@ html, body {
     z-index: 10;
 }
 
-/* [개선됨] SVG 아이콘 직접 사용 */
 .close-btn svg {
     width: 20px;
     height: 20px;
@@ -1216,7 +1217,6 @@ html, body {
     fill: none;
 }
 
-/* [개선됨] 호버 효과 - 회전 제거 */
 .close-btn:hover {
     background: rgba(0, 0, 0, 0.1);
     color: var(--text-primary);
@@ -1224,20 +1224,18 @@ html, body {
     border-color: rgba(0, 0, 0, 0.15);
 }
 
-/* [개선됨] 활성 효과 */
 .close-btn:active {
     transform: scale(0.95);
     background: rgba(0, 0, 0, 0.15);
 }
 
-/* [개선됨] 포커스 효과 - 접근성 개선 */
 .close-btn:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 /* ==========================================
- * 8. 시간표 모달 (개선됨)
+ * 8. 시간표 모달
  * ========================================== */
 .timetable-modal {
     max-width: 560px;
@@ -1248,7 +1246,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 28px;
-    padding-right: 44px; /* X 버튼 공간 확보 */
+    padding-right: 44px;
 }
 
 .timetable-header h3 {
@@ -1468,7 +1466,7 @@ html, body {
 }
 
 /* ==========================================
- * 9. 수업 추가 모달 (개선됨)
+ * 9. 수업 추가 모달
  * ========================================== */
 .add-class-modal {
     max-width: 460px;
@@ -1482,7 +1480,7 @@ html, body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 28px;
-    padding-right: 44px; /* X 버튼 공간 확보 */
+    padding-right: 44px;
     letter-spacing: -0.02em;
 }
 
@@ -1605,7 +1603,7 @@ html, body {
 }
 
 /* ==========================================
- * 10. 링크 경고 모달 (개선됨)
+ * 10. 링크 경고 모달
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
