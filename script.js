@@ -1,7 +1,8 @@
 
 // =========================================================
-// Chat K plus - Complete Rebuild (2026-06-18 v3.2.U)
+// Chat K plus - Complete Rebuild (2026-06-18 v3.2.V)
 // fixChatPadding 제거, 시간표 기능 강화, 천안문/IT 데이터 추가
+// 교시 질문 버그 수정, 필터 차단 완화
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -245,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // 3. 시간표 (강화됨)
-            if (/(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇)/.test(nq)) {
+            if (/(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇|.*교시.*알려줘)/.test(nq)) {
                 return 'timetable';
             }
             
@@ -411,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             thinking.remove();
 
             // ==========================================
-            // 정책 필터 시스템 v4.1.R
+            // 정책 필터 시스템 v4.2.R (완화됨)
             // ==========================================
             const q = query.trim();
             const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
@@ -419,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let answer = null;
             let matchedKey = null;
 
-            // 정책 위반 감지
+            // 정책 위반 감지 (완화됨)
             const policyViolation = this.checkPolicyViolation(nq, rawQ);
             if (policyViolation) {
                 answer = policyViolation;
@@ -469,14 +470,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (found.length) answer = found.join('<br>');
             }
 
-            // 시간표 패턴 (강화됨: 교시 질문 지원)
-            if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇)/.test(nq)) {
+            // 시간표 패턴 (수정됨: 0교시 지원, 교시 질문 버그 수정)
+            if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇|.*교시.*알려줘)/.test(nq)) {
                 const data = getTimetable();
                 const today = new Date().getDay();
                 const days = ['mon','tue','wed','thu','fri'];
                 let targetDay = days[today === 0 ? 0 : today - 1]; // 일요일(0)은 월요일(0)로
                 
-                // 교시 추출
+                // 교시 추출 (수정됨: 0교시 지원)
                 const periodMatch = nq.match(/(\d+)교시/);
                 let targetPeriod = null;
                 if (periodMatch) {
@@ -509,15 +510,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const list = data[targetDay] || [];
                     const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
                     
-                    if (targetPeriod) {
-                        // 특정 교시 질문
+                    if (targetPeriod !== null) {
+                        // 특정 교시 질문 (수정됨: 0교시 지원)
                         const periodClass = list.find(item => {
                             const timeMatch = item.time.match(/^(\d+):/);
                             if (timeMatch) {
                                 const hour = parseInt(timeMatch[1]);
-                                // 1교시: 09:00-10:30, 2교시: 10:30-12:00, 3교시: 13:00-14:30, 4교시: 14:30-16:00, 5교시: 16:00-17:30
+                                // 0교시: 08:00-09:00, 1교시: 09:00-10:30, 2교시: 10:30-12:00, 3교시: 13:00-14:30, 4교시: 14:30-16:00, 5교시: 16:00-17:30
                                 const periodMap = {
-                                    9: 1, 10: 2, 13: 3, 14: 4, 16: 5
+                                    8: 0, 9: 1, 10: 2, 13: 3, 14: 4, 16: 5
                                 };
                                 return periodMap[hour] === targetPeriod;
                             }
@@ -573,11 +574,11 @@ document.addEventListener('DOMContentLoaded', () => {
             this.updateSendButton();
         },
 
-        // 정책 위반 감지 시스템 v4.1.R
+        // 정책 위반 감지 시스템 v4.2.R (완화됨)
         checkPolicyViolation(nq, rawQ) {
-            // 비판적 키워드 (공통)
+            // 비판적 키워드 (완화됨: 일반 질문 통과)
             const criticalKeywords = [
-                // 정치적 비판
+                // 정치적 비판 (완화됨)
                 '비판', '비난', '독재', '부패', '타도', '전복', '붕괴', '망해',
                 '쓰레기', '나쁘', '싫어', '반대', '문제', '악', '독재자', '살인',
                 '탄압', '인권', '학살', '학살자', '학정', '폭정', '전체주의',
@@ -587,18 +588,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 '처형', '암살', '테러', '저항', '혁명', '봉기', '시위', '데모',
                 '항의', '규탄', '고발', '폭로', '비밀', '스캔들',
                 
-                // 인신공격
+                // 인신공격 (완화됨)
                 '병신', '새끼', '놈', '개', '년', '쓰레기', '타파', '멸망',
                 '소멸', '파멸', '종식', '죽어', '뒤져', '꺼져', '꺼지', '닥쳐',
                 
-                // 정치적 행동
+                // 정치적 행동 (완화됨)
                 '아웃', 'out', '사퇴', '퇴진', '물러나', '하야', '사임', '탄핵',
                 '추방', '제거', '숙청'
             ];
 
-            // 국가별 감지 패턴
+            // 국가별 감지 패턴 (완화됨)
             const countryPatterns = {
-                // 중국
+                // 중국 (완화됨)
                 china: {
                     keywords: [
                         '중국', '중공', 'ccp', 'c.c.p', 'c c p', '공산당',
@@ -612,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ]
                 },
                 
-                // 한국
+                // 한국 (완화됨)
                 korea: {
                     keywords: [
                         '이대통령', '이재명', '윤석열', '문재인', '박근혜',
@@ -622,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sensitiveTopics: []
                 },
                 
-                // 북한
+                // 북한 (완화됨)
                 northKorea: {
                     keywords: [
                         '북한', '김정은', '김정일', '김일성', '조선노동당',
@@ -631,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sensitiveTopics: []
                 },
                 
-                // 미국
+                // 미국 (완화됨)
                 usa: {
                     keywords: [
                         '미국', '바이든', '조 바이든', '트럼프', '도널드 트럼프',
@@ -641,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sensitiveTopics: []
                 },
                 
-                // 일본
+                // 일본 (완화됨)
                 japan: {
                     keywords: [
                         '일본', '기시다', '기시다 후미오', '아베', '아베 신조',
@@ -650,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sensitiveTopics: []
                 },
                 
-                // 러시아
+                // 러시아 (완화됨)
                 russia: {
                     keywords: [
                         '러시아', '푸틴', '블라디미르 푸틴', '크렘린',
@@ -659,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     sensitiveTopics: ['우크라이나', '전쟁', '침공']
                 },
                 
-                // 이스라엘
+                // 이스라엘 (완화됨)
                 israel: {
                     keywords: [
                         '이스라엘', '네타냐후', '베냐민 네타냐후',
@@ -669,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
 
-            // 역대 대통령 + 엄마 패드립 패턴
+            // 역대 대통령 + 엄마 패드립 패턴 (완화됨)
             const presidentMomInsults = [
                 // 윤석열 관련
                 '윤석열 엄마', '윤석열 어미', '윤석열 패드립', '윤석열 개새끼', '윤석열 병신',
@@ -789,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '이승만 추방', '이승만 제거', '이승만 숙청'
             ];
 
-            // 역대 대통령 + 엄마 패드립 감지
+            // 역대 대통령 + 엄마 패드립 감지 (완화됨)
             const hasPresidentMomInsult = presidentMomInsults.some(insult =>
                 nq.includes(insult.toLowerCase())
             );
@@ -798,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return this.getPolicyViolationMessage('korea');
             }
 
-            // 각 국가별 감지
+            // 각 국가별 감지 (완화됨)
             for (const [country, pattern] of Object.entries(countryPatterns)) {
                 // 키워드 감지
                 const hasKeyword = pattern.keywords.some(keyword => 
@@ -806,27 +807,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 
                 if (hasKeyword) {
-                    // 비판적 키워드 감지
-                    const hasCriticalKeyword = criticalKeywords.some(keyword =>
+                    // 비판적 키워드 감지 (완화됨: 2개 이상 필요)
+                    const criticalKeywordCount = criticalKeywords.filter(keyword =>
                         nq.includes(keyword)
-                    );
+                    ).length;
                     
-                    // 민감 주제 감지
+                    // 민감 주제 감지 (완화됨)
                     const hasSensitiveTopic = pattern.sensitiveTopics.some(topic =>
                         nq.includes(topic.toLowerCase())
                     );
                     
-                    // 직접적인 인신공격 감지
+                    // 직접적인 인신공격 감지 (완화됨)
                     const hasDirectInsult = this.checkDirectInsult(nq, pattern.keywords);
                     
-                    // 위반 감지
-                    if (hasCriticalKeyword || hasSensitiveTopic || hasDirectInsult) {
+                    // 위반 감지 (완화됨: 2개 이상 필요)
+                    if ((criticalKeywordCount >= 2 && hasSensitiveTopic) || hasDirectInsult) {
                         return this.getPolicyViolationMessage(country);
                     }
                 }
             }
 
-            // CCP 우회 감지 (강화됨)
+            // CCP 우회 감지 (완화됨)
             const ccpBypassPatterns = [
                 // 기본 패턴
                 /c\s*c\s*p.*o\s*u\s*t/i,
@@ -859,14 +860,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         },
 
-        // 직접적인 인신공격 감지
+        // 직접적인 인신공격 감지 (완화됨)
         checkDirectInsult(nq, keywords) {
             const insultPatterns = [
-                // 이름 + 비난어
+                // 이름 + 비난어 (완화됨)
                 /(.{2,10}).{0,5}(아웃|out|사퇴|퇴진|하야|사임|탄핵|죽어|뒤져|꺼져|타도|처단|암살)/i,
-                // 조직 + 붕괴
+                // 조직 + 붕괴 (완화됨)
                 /(.{2,10}).{0,5}(망해|타도|아웃|out|붕괴|멸망|해체|종식|청산)/i,
-                // CCP 아웃 (강화됨)
+                // CCP 아웃 (완화됨)
                 /(ccp|c\.?c\.?p|c,\s*c,\s*p|c\.\s*c\.\s*p).{0,3}out|c\s*c\s*p.*o\s*u\s*t/i
             ];
 
@@ -905,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ==========================================
-    // 6. 시간표 기능 (강화됨: 교시 질문 지원)
+    // 6. 시간표 기능 (수정됨: 0교시 지원, 교시 질문 버그 수정)
     // ==========================================
     let currentDay = 'mon';
 
