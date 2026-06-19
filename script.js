@@ -1244,4 +1244,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // 초기 상태
     updateMainBtn();
     System.updateSendButton();
-});//
+}); //
