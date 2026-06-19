@@ -1,8 +1,8 @@
 
 // =========================================================
-// Chat K plus - Complete Rebuild (2026-06-18 v3.2.V)
+// Chat K plus - Complete Rebuild (2026-06-18 v3.2.X)
 // fixChatPadding 제거, 시간표 기능 강화, 천안문/IT 데이터 추가
-// 교시 질문 버그 수정, 필터 차단 완화
+// 교시 질문 버그 수정, 필터 차단 완화, 입력창 위치 수정
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
             thinking.remove();
 
             // ==========================================
-            // 정책 필터 시스템 v4.2.R (완화됨)
+            // 정책 필터 시스템 v4.3.R (완화됨)
             // ==========================================
             const q = query.trim();
             const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.updateSendButton();
         },
 
-        // 정책 위반 감지 시스템 v4.2.R (완화됨)
+        // 정책 위반 감지 시스템 v4.3.R (완화됨)
         checkPolicyViolation(nq, rawQ) {
             // 비판적 키워드 (완화됨: 일반 질문 통과)
             const criticalKeywords = [
@@ -1006,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleChatInput() {
         System.updateSendButton();
         UI.chatInput.style.height = 'auto';
-        UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
+        UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 80) + 'px'; // [수정됨 V3.2X-연장] 120->80
     }
 
     if (UI.chatInput) {
@@ -1024,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // iOS 키보드 대응
+        // iOS 키보드 대응 (수정됨 V3.2X-연장)
         UI.chatInput.addEventListener('focus', () => {
             setTimeout(() => {
                 if (UI.chatBox) UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
