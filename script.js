@@ -1,7 +1,6 @@
-
 // =========================================================
-// Chat K plus - Complete Rebuild (2026-06-18 v3.1.R)
-// Hotfix Applied
+// Chat K plus - Complete Rebuild (2026-06-18 v3.2.U)
+// fixChatPadding 제거, 시간표 기능 강화, 천안문/IT 데이터 추가
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 채팅 화면
         chatView: document.getElementById('chat-view'),
-        chatBox: document.getElementById('chat-box'),
+        chatBox = document.getElementById('chat-box'),
         backBtn: document.getElementById('backBtn'),
         chatInput: document.getElementById('chatInput'),
         sendBtn: document.getElementById('sendBtn'),
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 시간표 모달
         timetableModal: document.getElementById('timetableModal'),
         timetableClose: document.getElementById('timetableClose'),
-        timetableContent: document.getElementById('timetableContent'),
+        timetableContent = document.getElementById('timetableContent'),
         addClassBtn: document.getElementById('addClassBtn'),
         
         // 수업 추가 모달
@@ -55,35 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 2. 유틸리티 함수
     // ==========================================
-    let paddingTimer = null;
-    
-    function fixChatPadding() {
-        const footer = document.querySelector('.chat-footer');
-        const chatBox = document.getElementById('chat-box');
-        
-        if (!footer || !chatBox) return;
-        
-        if (window.innerWidth < 768) {
-            clearTimeout(paddingTimer);
-            paddingTimer = setTimeout(() => {
-                const height = footer.offsetHeight;
-                chatBox.style.paddingBottom = (height + 20) + 'px';
-                chatBox.scrollTop = chatBox.scrollHeight;
-                
-                if (footer.classList.contains('keyboard-open')) {
-                    chatBox.style.paddingBottom = (height + 10) + 'px';
-                }
-            }, 50);
-        } else {
-            chatBox.style.paddingBottom = '20px';
-        }
-    }
-
-    // 이벤트 리스너 등록 (중복 제거)
-    window.addEventListener('resize', fixChatPadding);
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', fixChatPadding);
-    }
+    // fixChatPadding 함수 제거됨
 
     // ==========================================
     // 3. 데이터베이스 (카테고리별 분류)
@@ -151,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "이유식_detail": "이유식은 생후 180일경 시작이 WHO 권고입니다. 초기(6개월): 10배죽, 소고기미음 등 하루 1회. 중기(7~8개월): 7배죽, 채소큐브 추가 하루 2회. 후기(9~11개월): 5배죽, 손가락 음식 하루 3회. 완료기(12개월~): 진밥, 일반식. 알레르기 확인을 위해 한 가지 재료씩 3일 간격으로 추가합니다. 꿀, 생우유, 달걀흰자는 12개월 이후 급여합니다.",
             
             "아기 수면": "아기는 하루 14~17시간 수면이 필요합니다. 밤낮 구분은 3개월 이후 생깁니다.",
-            "아기 수면_detail": "신생아: 16~20시간, 2~4시간 간격. 3개월: 15시간, 밤에 5~6시간 연속 수면 시작. 6개월: 14시간, 밤 8~10시간 통잠 가능. 수면교육은 4~6개월부터 가능하며, 일정한 수면의식(목욕→수유→자장가)이 도움됩니다. 엎드려 재우기는 SIDS 위험으로 금지, 반드시 바로 눕힙니다.",
+            "아기 수면_detail": "신생아: 16~20시간, 2~4시간 간격. 3개월: 15시간, 밤에 5~6시간 연속 수면 시작. 6개월: 14시간, 밤 8~10시간 통잠 가능. 수면교육은 4~6개월부터 가능하며, 일정한 수업의식(목욕→수유→자장가)이 도움됩니다. 엎드려 재우기는 SIDS 위험으로 금지, 반드시 바로 눕힙니다.",
             
             "예방접종": "예방접종은 질병 예방을 위한 필수 접종입니다. BCG, B형간염, DPT 등 국가필수예방접종이 있습니다.",
             "예방접종_detail": "국가필수예방접종은 무료입니다. 생후 0개월: B형간염 1차, BCG. 1개월: B형간염 2차. 2개월: DPT 1차, 소아마비 1차. 4개월: DPT 2차, 소아마비 2차. 6개월: B형간염 3차, DPT 3차. 12개월: MMR 1차, 수두. 접종 후 20~30분 병원에 머물며 이상반응 관찰 필요. 발열 시 해열제 복용 가능합니다."
@@ -163,39 +134,66 @@ document.addEventListener('DOMContentLoaded', () => {
             "다음 공식 사이트": "다음 공식 사이트는 https://www.daum.net 입니다.",
             "다음 사이트 공식 사이트 알려줘": "다음 공식 사이트는 https://www.daum.net 입니다.",
             "다음에서 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
-            "다음 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
+            "다음 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
             "다음에서 기저귀라고 검색하면": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
             "기저귀 관련검색어": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균"
         },
 
-        // 🏛️ 역사/문화
+        // 🏛️ 역사/문화 - 천안문 상세 데이터 추가
         history: {
             "천안문": "천안문은 중국 베이징 중심부에 있는 성문입니다. 명나라 때 건설되었고 천안문 광장과 자금성의 입구입니다.",
-            "천안문_detail": "천안문(天安門)은 1417년 명나라 영락제 때 처음 세워졌고, 현재 건물은 1651년 청나라 순치제 때 재건된 것입니다. 높이 34.7m, 폭 66m 규모입니다. 1949년 10월 1일 마오쩌둥이 중화인민공화국 성립을 선포한 곳이기도 합니다. 천안문 광장은 세계에서 가장 큰 도시 광장 중 하나로 면적은 약 44만㎡입니다.",
+            "천안문_detail": "천안문(天安門)은 1417년 명나라 영락제 때 처음 세워졌고, 현재 건물은 1651년 청나라 순치제 때 재건된 것입니다. 높이 34.7m, 폭 66m 규모입니다. 1949년 10월 1일 마오쩌둥이 중화인민공화국 성립을 선포한 곳이기도 합니다. 천안문 광장은 세계에서 가장 큰 도시 광장 중 하나로 면적은 약 44만㎡입니다.<br><br><strong>건축 특징:</strong><br>• 전통 중국 건축 양식의 대표적인 성문<br>• 붉은 벽과 금색 기와, 정교한 조각 장식<br>• 5개의 아치형 문과 2개의 탑<br>• 천안문 광장과 자금성을 연결하는 중요한 통로<br><br><strong>역사적 의미:</strong><br>• 명나라와 청나라 황제의 출입문<br>• 1949년 중화인민공화국 성립 선포 장소<br>• 중국의 상징적인 건축물<br>• 유네스코 세계문화유산 자금성의 일부",
 
             "천안문 광장": "천안문 광장은 베이징 중심부에 있는 대형 광장입니다. 면적 약 44만㎡로 대규모 집회와 행사가 열립니다.",
-            "천안문 광장_detail": "천안문 광장은 남북 길이 880m, 동서 500m로 100만 명 이상 수용 가능합니다. 광장 주변에는 인민대회당, 중국국가박물관, 인민영웅기념비, 마오쩌둥 기념당이 있습니다. 매년 국경절 열병식 등 국가 주요 행사가 개최됩니다."
+            "천안문 광장_detail": "천안문 광장은 남북 길이 880m, 동서 500m로 100만 명 이상 수용 가능합니다. 광장 주변에는 인민대회당, 중국국가박물관, 인민영웅기념비, 마오쩌둥 기념당이 있습니다. 매년 국경절 열병식 등 국가 주요 행사가 개최됩니다.<br><br><strong>주요 시설:</strong><br>• 인민대회당: 중국 전국인민대표대회 회의장<br>• 중국국가박물관: 중국 역사와 문화 전시<br>• 인민영웅기념비: 혁명 영웅들을 기리는 기념비<br>• 마오쩌둥 기념당: 마오쩌둥의 시신이 안치된 곳<br><br><strong>역사적 사건:</strong><br>• 1949년 10월 1일: 중화인민공화국 성립 선포<br>• 1966년: 문화대혁명 시작<br>• 1976년: 마오쩌둥 사망 후 추모 행사<br>• 매년 10월 1일: 국경절 열병식<br><br><strong>상징적 의미:</strong><br>• 중국 공산당의 권력 상징<br>• 중국의 정치적 중심지<br>• 대규모 집회와 행사 장소<br>• 중국의 국가적 상징"
         },
 
-        // 🔬 생물학/과학
-        science: {
-            "생물학적 성 차이": "인간의 성별은 성염색체 XX(여성), XY(남성)에 의해 결정됩니다. 성호르몬과 생식기관 구조에서 근본적 차이가 있습니다.",
-            "생물학적 성 차이_detail": "🔬 유전적 수준: 여성 XX, 남성 XY 염색체. Y염색체의 SRY 유전자가 고환 발달 촉진.<br><br>호르몬: 여성은 에스트로겐·프로게스테론이 높고, 남성은 테스토스테론이 높음. 이는 근육량, 체지방 분포, 2차 성징에 영향.<br><br>생식기관: 여성은 난소·자궁·질, 남성은 고환·정관·전립선·음경 구조.<br><br>뇌 신경과학: 편도체, 해마, 뇌량 등 일부 영역에서 평균적 차이가 보고되나, 개인차가 성별 간 차이보다 크고 학계 논쟁 중. 과도한 일반화 주의 필요.",
+        // 💻 IT 관련 - 광범위한 데이터 추가
+        it: {
+            "it": "IT(Information Technology)는 정보 기술을 의미합니다. 컴퓨터, 소프트웨어, 네트워크, 데이터 등을 활용하여 정보를 처리, 저장, 전송하는 기술입니다.",
+            "it_detail": "IT는 현대 사회의 핵심 기술로, 다음과 같은 분야를 포함합니다:<br><br><strong>주요 분야:</strong><br>• 소프트웨어 개발: 앱, 웹, 시스템 소프트웨어<br>• 하드웨어: 컴퓨터, 스마트폰, 서버<br>• 네트워크: 인터넷, 5G, 통신 기술<br>• 데이터: 빅데이터, AI, 클라우드<br>• 보안: 사이버 보안, 암호화<br><br><strong>최신 트렌드:</strong><br>• 인공지능(AI): ChatGPT, 자율주행<br>• 클라우드 컴퓨팅: AWS, Azure, GCP<br>• 빅데이터: 데이터 분석, 머신러닝<br>• 사물인터넷(IoT): 스마트 홈, 웨어러블<br>• 블록체인: 암호화폐, 분산 원장<br><br><strong>미래 전망:</strong><br>• AI와 자동화의 확대<br>• 5G 및 6G 네트워크 발전<br>• 양자 컴퓨팅 상용화<br>• 메타버스 및 가상 현실<br>• 지속 가능한 기술 개발",
 
-            "성염색체": "성염색체는 성별을 결정하는 염색체입니다. 여성은 XX, 남성은 XY 구성입니다.",
-            "성염색체_detail": "Y염색체에는 SRY(Sex-determining Region Y) 유전자가 있어 태아 6~7주경 고환 발달을 유도합니다. SRY가 없으면 난소로 발달합니다. X염색체에는 800개 이상 유전자가 있으나 Y염색체에는 약 70개만 존재합니다.",
+            "인공지능": "인공지능(AI)은 인간의 지능을 모방하는 컴퓨터 시스템입니다. 학습, 추론, 문제 해결 등 인간의 지능적 활동을 수행합니다.",
+            "인공지능_detail": "인공지능은 다음과 같은 기술을 포함합니다:<br><br><strong>주요 기술:</strong><br>• 머신러닝: 데이터에서 패턴 학습<br>• 딥러닝: 신경망 기반 학습<br>• 자연어 처리: 언어 이해 및 생성<br>• 컴퓨터 비전: 이미지 인식<br>• 로보틱스: 로봇 제어<br><br><strong>주요 응용:</strong><br>• ChatGPT: 대화형 AI<br>• 자율주행: 자동차 운전<br>• 의료: 질병 진단<br>• 금융: 사기 탐지<br>• 교육: 개인화 학습<br><br><strong>미래 전망:</strong><br>• AGI(범용 인공지능) 개발<br>• AI 윤리 및 규제<br>• 인간-AI 협업<br>• AI 기반 자동화 확대",
 
-            "성호르몬": "성호르몬은 생식과 2차 성징을 조절합니다. 에스트로겐, 프로게스테론, 테스토스테론이 대표적입니다.",
-            "성호르몬_detail": "에스트로겐: 여성에서 높음. 유방 발달, 월경 주기, 골밀도 유지. 테스토스테론: 남성에서 높음. 근육량 증가, 체모, 목소리 변화. 프로게스테론: 여성 월경 주기 후반 상승, 임신 유지. 남녀 모두 3가지 호르몬을 가지지만 농도 비율이 다릅니다.",
+            "머신러닝": "머신러닝은 데이터에서 패턴을 학습하여 예측이나 결정을 내리는 AI 기술입니다.",
+            "머신러닝_detail": "머신러닝은 다음과 같은 유형이 있습니다:<br><br><strong>주요 유형:</strong><br>• 지도학습: 라벨이 있는 데이터 학습<br>• 비지도학습: 라벨이 없는 데이터 학습<br>• 강화학습: 보상을 통한 학습<br>• 준지도학습: 일부 라벨만 있는 데이터 학습<br><br><strong>주요 알고리즘:</strong><br>• 선형 회귀: 연속적 값 예측<br>• 로지스틱 회귀: 분류 문제<br>• 결정 트리: 의사결정 규칙<br>• 랜덤 포레스트: 다수 결정 트리<br>• 신경망: 딥러닝 기반<br><br><strong>응용 분야:</strong><br>• 추천 시스템: 넷플릭스, 아마존<br>• 이미지 인식: 얼굴 인식<br>• 자연어 처리: 번역, 챗봇<br>• 금융: 주가 예측<br>• 의료: 질병 진단",
 
-            "뇌 성 차이": "뇌 구조에서 성별 간 평균적 차이가 일부 보고되나, 개인차가 더 크고 학계에서 논쟁 중입니다.",
-            "뇌 성 차이_detail": "보고된 차이: 편도체(남성>여성 경향), 해마(여성>남성 경향), 뇌량(여성>남성 경향). 그러나 표본 크기, 환경 통제 한계로 일관된 결론 없음. '남성적 뇌 vs 여성적 뇌' 이분법은 과학적 근거 부족. 성별보다 개인 경험, 학습, 환경이 뇌 발달에 더 큰 영향. 중요: 과학적 합의는 유전적·생식적 차이까지이며, 인지·행동 차이는 논쟁 영역입니다.",
+            "딥러닝": "딥러닝은 인간의 뇌 신경망을 모방한 머신러닝 기술입니다. 다층 신경망을 사용하여 복잡한 패턴을 학습합니다.",
+            "딥러닝_detail": "딥러닝은 다음과 같은 특징이 있습니다:<br><br><strong>주요 특징:</strong><br>• 다층 신경망: 여러 층의 노드<br>• 자동 특징 추출: 수동 특징 추출 불필요<br>• 대규모 데이터: 많은 데이터 필요<br>• GPU 활용: 병렬 처리<br><br><strong>주요 아키텍처:</strong><br>• CNN: 이미지 처리<br>• RNN: 시계열 데이터<br>• Transformer: 자연어 처리<br>• GAN: 생성 모델<br><br><strong>응용 분야:</strong><br>• 이미지 인식: 객체 탐지<br>• 자연어 처리: 번역, 챗봇<br>• 음성 인식: Siri, Google Assistant<br>• 자율주행: Tesla Autopilot<br>• 의료: 의료 영상 분석",
 
-            "섹스": "섹스(Sex)는 생물학적 성별을 의미합니다. 인간의 경우 성염색체 XX(여성), XY(남성)에 의해 결정되며, 성호르몬과 생식기관 구조에서 근본적 차이가 있습니다.",
-            "섹스_detail": "🔬 유전적 수준: 여성 XX, 남성 XY 염색체. Y염색체의 SRY 유전자가 고환 발달 촉진.<br><br>호르몬: 여성은 에스트로겐·프로게스테론이 높고, 남성은 테스토스테론이 높음. 이는 근육량, 체지방 분포, 2차 성징에 영향.<br><br>생식기관: 여성은 난소·자궁·질, 남성은 고환·정관·전립선·음경 구조.<br><br>뇌 신경과학: 편도체, 해마, 뇌량 등 일부 영역에서 평균적 차이가 보고되나, 개인차가 성별 간 차이보다 크고 학계 논쟁 중. 과도한 일반화 주의 필요.",
+            "클라우드": "클라우드 컴퓨팅은 인터넷을 통해 컴퓨팅 리소스를 제공하는 서비스입니다.",
+            "클라우드_detail": "클라우드 컴퓨팅은 다음과 같은 서비스 모델이 있습니다:<br><br><strong>서비스 모델:</strong><br>• IaaS: 인프라 서비스 (AWS EC2)<br>• PaaS: 플랫폼 서비스 (Google App Engine)<br>• SaaS: 소프트웨어 서비스 (Google Docs)<br><br><strong>주요 제공업체:</strong><br>• AWS: 아마존 웹 서비스<br>• Azure: 마이크로소프트<br>• GCP: 구글 클라우드 플랫폼<br>• IBM Cloud: IBM<br><br><strong>장점:</strong><br>• 비용 절감: 사용한 만큼만 지불<br>• 확장성: 필요에 따라 리소스 확장<br>• 유연성: 언제 어디서나 접근<br>• 자동화: 자동 리소스 관리<br><br><strong>응용 분야:</strong><br>• 웹 호스팅: 사이트 운영<br>• 데이터 저장: 클라우드 스토리지<br>• AI/ML: 머신러닝 모델 학습<br>• 개발: 앱 개발 및 테스트",
 
-            "과학": "과학은 자연 현상을 체계적으로 관찰, 실험, 분석하여 법칙과 원리를 발견하는 학문입니다. 물리학, 화학, 생물학, 지구과학 등 다양한 분야가 포함됩니다.",
-            "과학_detail": "과학은 자연 현상을 체계적으로 연구하는 학문으로, 다음과 같은 특징이 있습니다:<br><br>1. **객관성**: 주관적인 판단을 배제하고 사실에 기반한 연구<br>2. **재현성**: 동일한 조건에서 동일한 결과가 나와야 함<br>3. **검증 가능성**: 실험과 관찰을 통해 이론을 검증<br>4. **예측 가능성**: 발견된 법칙을 통해 미래를 예측<br><br>주요 분야: 물리학(물질과 에너지), 화학(물질의 구조와 변화), 생물학(생명 현상), 지구과학(지구와 우주)"
+            "빅데이터": "빅데이터는 대규모의 복잡한 데이터 집합을 의미합니다. 전통적인 데이터 처리 방법으로는 처리하기 어렵습니다.",
+            "빅데이터_detail": "빅데이터는 다음과 같은 특징이 있습니다:<br><br><strong>3V 특징:</strong><br>• Volume: 대용량 데이터<br>• Velocity: 빠른 데이터 생성 속도<br>• Variety: 다양한 데이터 형식<br><br><strong>주요 기술:</strong><br>• Hadoop: 분산 처리<br>• Spark: 빠른 데이터 처리<br>• NoSQL: 비관계형 데이터베이스<br>• 데이터 웨어하우스: 데이터 저장<br><br><strong>응용 분야:</strong><br>• 마케팅: 고객 행동 분석<br>• 금융: 사기 탐지<br>• 의료: 질병 예측<br>• 제조: 품질 관리<br>• 교통: 교통 흐름 최적화<br><br><strong>미래 전망:</strong><br>• AI와 빅데이터 결합<br>• 실시간 데이터 분석<br>• 프라이버시 보안 강화<br>• 데이터 거버넌스",
+
+            "사물인터넷": "사물인터넷(IoT)은 인터넷에 연결된 사물들이 데이터를 주고받는 기술입니다.",
+            "사물인터넷_detail": "사물인터넷은 다음과 같은 특징이 있습니다:<br><br><strong>주요 특징:</strong><br>• 연결성: 사물 간 연결<br>• 센서: 데이터 수집<br>• 통신: 데이터 전송<br>• 분석: 데이터 처리<br><br><strong>주요 응용:</strong><br>• 스마트 홈: 가전 제어<br>• 웨어러블: 건강 모니터링<br>• 스마트 시티: 도시 관리<br>• 산업용 IoT: 공장 자동화<br>• 농업: 스마트 팜<br><br><strong>기술:</strong><br>• 센서: 온도, 습도, 위치<br>• 통신: Wi-Fi, Bluetooth, 5G<br>• 클라우드: 데이터 저장<br>• AI: 데이터 분석<br><br><strong>미래 전망:</strong><br>• 5G 네트워크 확대<br>• 엣지 컴퓨팅 발전<br>• 보안 강화<br>• 표준화",
+
+            "블록체인": "블록체인은 분산 원장 기술입니다. 데이터를 블록에 저장하고 체인으로 연결하여 보안성을 높입니다.",
+            "블록체인_detail": "블록체인은 다음과 같은 특징이 있습니다:<br><br><strong>주요 특징:</strong><br>• 분산화: 중앙 서버 없음<br>• 불변성: 데이터 변경 불가<br>• 투명성: 모든 거래 공개<br>• 보안: 암호화 기술<br><br><strong>주요 응용:</strong><br>• 암호화폐: 비트코인, 이더리움<br>• 스마트 계약: 자동 계약 실행<br>• 공급망: 제품 추적<br>• 투표: 안전한 투표 시스템<br>• 의료: 의료 기록 관리<br><br><strong>기술:</strong><br>• 해시: 데이터 무결성<br>• 합의 알고리즘: PoW, PoS<br>• 스마트 계약: 자동화<br>• 분산 네트워크: P2P<br><br><strong>미래 전망:</strong><br>• DeFi: 탈중앙화 금융<br>• NFT: 디지털 자산<br>• 메타버스: 가상 경제<br>• 규제: 법적 프레임워크",
+
+            "사이버 보안": "사이버 보안은 컴퓨터 시스템과 네트워크를 보호하는 기술입니다.",
+            "사이버 보안_detail": "사이버 보안은 다음과 같은 분야를 포함합니다:<br><br><strong>주요 분야:</strong><br>• 네트워크 보안: 네트워크 보호<br>• 애플리케이션 보안: 앱 보호<br>• 정보 보안: 데이터 보호<br>• 운영 보안: 시스템 보호<br><br><strong>주요 위협:</strong><br>• 맬웨어: 악성 소프트웨어<br>• 피싱: 사기 이메일<br>• 랜섬웨어: 데이터 납치<br>• DDoS: 서비스 거부 공격<br><br><strong>보안 기술:</strong><br>• 암호화: 데이터 보호<br>• 방화벽: 네트워크 필터링<br>• IDS/IPS: 침입 탐지/방지<br>• MFA: 다중 인증<br><br><strong>미래 전망:</strong><br>• AI 기반 보안<br>• 제로 트러스트: 신뢰 없는 보안<br>• 클라우드 보안<br>• 프라이버시 보호",
+
+            "5g": "5G는 5세대 이동통신 기술입니다. 4G보다 빠른 속도와 낮은 지연 시간을 제공합니다.",
+            "5g_detail": "5G는 다음과 같은 특징이 있습니다:<br><br><strong>주요 특징:</strong><br>• 고속: 최대 20Gbps<br>• 저지연: 1ms 이하<br>• 대용량: 많은 기기 연결<br><br><strong>주요 응용:</strong><br>• 자율주행: 실시간 통신<br>• IoT: 많은 기기 연결<br>• 원격 의료: 원격 수술<br>• 스마트 시티: 도시 관리<br>• VR/AR: 가현실 경험<br><br><strong>기술:</strong><br>• mmWave: 고주파 대역<br>• Massive MIMO: 다중 안테나<br>• 네트워크 슬라이싱: 네트워크 분할<br>• 엣지 컴퓨팅: 가까운 서버<br><br><strong>미래 전망:</strong><br>• 6G 개발<br>• 전국망 확대<br>• 새로운 서비스 출시<br>• 보안 강화",
+
+            "프로그래밍": "프로그래밍은 컴퓨터에게 명령을 내리는 언어입니다.",
+            "프로그래밍_detail": "프로그래밍은 다음과 같은 언어가 있습니다:<br><br><strong>주요 언어:</strong><br>• Python: 데이터 과학, AI<br>• JavaScript: 웹 개발<br>• Java: 엔터프라이즈<br>• C++: 시스템 프로그래밍<br>• Go: 클라우드, 동시성<br><br><strong>개발 도구:</strong><br>• IDE: VS Code, IntelliJ<br>• Git: 버전 관리<br>• Docker: 컨테이너화<br>• CI/CD: 자동화<br><br><strong>개발 방법론:</strong><br>• 애자일: 유연한 개발<br>• 스크럼: 팀 협업<br>• TDD: 테스트 주도 개발<br>• DevOps: 개발-운영 통합<br><br><strong>미래 전망:</strong><br>• AI 기반 개발<br>• 로우코드/노코드<br>• 클라우드 네이티브<br>• 보안 강화",
+
+            "웹 개발": "웹 개발은 웹사이트와 웹 애플리케이션을 만드는 기술입니다.",
+            "웹 개발_detail": "웹 개발은 다음과 같은 기술을 포함합니다:<br><br><strong>프론트엔드:</strong><br>• HTML: 구조<br>• CSS: 스타일<br>• JavaScript: 동작<br>• React: UI 라이브러리<br>• Vue.js: UI 프레임워크<br><br><strong>백엔드:</strong><br>• Node.js: JavaScript 서버<br>• Python: Django, Flask<br>• Java: Spring<br>• PHP: Laravel<br><br><strong>데이터베이스:</strong><br>• MySQL: 관계형 DB<br>• MongoDB: NoSQL<br>• PostgreSQL: 관계형 DB<br>• Redis: 캐시<br><br><strong>배포:</strong><br>• AWS: 클라우드 호스팅<br>• Vercel: 프론트엔드 호스팅<br>• Netlify: 정적 사이트<br>• Docker: 컨테이너화<br><br><strong>미래 전망:</strong><br>• PWA: 프로그레시브 웹 앱<br>• 서버리스: 서버 없는 아키텍처<br>• JAMstack: 정적 사이트<br>• 웹어셈블리: 고성능 웹",
+
+            "모바일 개발": "모바일 개발은 스마트폰 앱을 만드는 기술입니다.",
+            "모바일 개발_detail": "모바일 개발은 다음과 같은 플랫폼이 있습니다:<br><br><strong>주요 플랫폼:</strong><br>• iOS: 아이폰, 아이패드<br>• Android: 삼성, LG 등<br>• 하이브리드: React Native, Flutter<br><br><strong>개발 도구:</strong><br>• Xcode: iOS 개발<br>• Android Studio: Android 개발<br>• React Native: 크로스 플랫폼<br>• Flutter: 크로스 플랫폼<br><br><strong>주요 언어:</strong><br>• Swift: iOS<br>• Kotlin: Android<br>• JavaScript: React Native<br>• Dart: Flutter<br><br><strong>배포:</strong><br>• App Store: iOS<br>• Google Play: Android<br><br><strong>미래 전망:</strong><br>• 크로스 플랫폼 확대<br>• AR/VR 앱<br>• AI 기반 앱<br>• 5G 활용",
+
+            "데이터베이스": "데이터베이스는 데이터를 저장하고 관리하는 시스템입니다.",
+            "데이터베이스_detail": "데이터베이스는 다음과 같은 유형이 있습니다:<br><br><strong>관계형 DB:</strong><br>• MySQL: 오픈소스<br>• PostgreSQL: 고급 기능<br>• Oracle: 엔터프라이즈<br>• SQL Server: Microsoft<br><br><strong>NoSQL:</strong><br>• MongoDB: 문서 기반<br>• Redis: 키-값 저장<br>• Cassandra: 분산 DB<br>• Elasticsearch: 검색 엔진<br><br><strong>클라우드 DB:</strong><br>• AWS RDS: 관리형 DB<br>• Google Cloud SQL: 관리형 DB<br>• Azure Database: 관리형 DB<br><br><strong>미래 전망:</strong><br>• 멀티모델 DB<br>• 분산 DB<br>• AI 기반 DB<br>• 실시간 분석",
+
+            "devops": "DevOps는 개발과 운영을 통합하는 방법론입니다.",
+            "devops_detail": "DevOps는 다음과 같은 실천이 있습니다:<br><br><strong>주요 실천:</strong><br>• CI/CD: 지속적 통합/배포<br>• IaC: 인프라 코드화<br>• 모니터링: 시스템 감시<br>• 로깅: 기록 관리<br><br><strong>주요 도구:</strong><br>• Git: 버전 관리<br>• Jenkins: CI/CD<br>• Docker: 컨테이너화<br>• Kubernetes: 오케스트레이션<br>• Terraform: IaC<br><br><strong>장점:</strong><br>• 빠른 배포: 자동화<br>• 안정성: 지속적 통합<br>• 협업: 개발-운영 통합<br>• 효율성: 자동화<br><br><strong>미래 전망:</strong><br>• AI 기반 DevOps<br>• 서버리스 확대<br>• 보안 강화<br>• 관찰 가능성"
         },
 
         // 🌐 공식 사이트
@@ -245,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return 'websites';
             }
             
-            // 3. 시간표
-            if (/(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+            // 3. 시간표 (강화됨)
+            if (/(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇)/.test(nq)) {
                 return 'timetable';
             }
             
@@ -265,22 +263,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 return 'history';
             }
             
-            // 7. 생물학/과학
+            // 7. IT 관련 (추가됨)
+            if (/(it|인공지능|머신러닝|딥러닝|클라우드|빅데이터|사물인터넷|블록체인|사이버 보안|5g|프로그래밍|웹 개발|모바일 개발|데이터베이스|devops)/.test(nq)) {
+                return 'it';
+            }
+            
+            // 8. 생물학/과학
             if (/(생물학|성|염색체|호르몬|뇌|섹스|과학)/.test(nq)) {
                 return 'science';
             }
             
-            // 8. 정치/사회
+            // 9. 정치/사회
             if (/(정치|사회|탄핵)/.test(nq)) {
                 return 'politics';
             }
             
-            // 9. 영화/엔터테인먼트
+            // 10. 영화/엔터테인먼트
             if (/(영화|엔터|아바타)/.test(nq)) {
                 return 'entertainment';
             }
             
-            // 10. 검색 포털
+            // 11. 검색 포털
             if (/(다음|네이버|구글|유튜브|인스타|카카오|쿠팡)/.test(nq)) {
                 return 'search';
             }
@@ -337,7 +340,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isChat) {
                 setTimeout(() => {
                     if (UI.chatInput) UI.chatInput.focus();
-                    fixChatPadding();
                 }, 100);
             }
         },
@@ -365,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             UI.chatBox.appendChild(msg);
             UI.chatBox.scrollTop = UI.chatBox.scrollHeight;
-            fixChatPadding();
             
             return msg;
         },
@@ -467,12 +468,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (found.length) answer = found.join('<br>');
             }
 
-            // 시간표 패턴 (개편됨: 월~금요일만)
-            if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업)/.test(nq)) {
+            // 시간표 패턴 (강화됨: 교시 질문 지원)
+            if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇)/.test(nq)) {
                 const data = getTimetable();
                 const today = new Date().getDay();
                 const days = ['mon','tue','wed','thu','fri'];
                 let targetDay = days[today === 0 ? 0 : today - 1]; // 일요일(0)은 월요일(0)로
+                
+                // 교시 추출
+                const periodMatch = nq.match(/(\d+)교시/);
+                let targetPeriod = null;
+                if (periodMatch) {
+                    targetPeriod = parseInt(periodMatch[1]);
+                }
                 
                 if (nq.includes('내일')) {
                     const nextDayIndex = (today === 0 ? 0 : today - 1) + 1;
@@ -499,9 +507,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!answer) {
                     const list = data[targetDay] || [];
                     const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
-                    answer = list.length 
-                        ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
-                        : `${dayName}요일 수업이 없습니다.`;
+                    
+                    if (targetPeriod) {
+                        // 특정 교시 질문
+                        const periodClass = list.find(item => {
+                            const timeMatch = item.time.match(/^(\d+):/);
+                            if (timeMatch) {
+                                const hour = parseInt(timeMatch[1]);
+                                // 1교시: 09:00-10:30, 2교시: 10:30-12:00, 3교시: 13:00-14:30, 4교시: 14:30-16:00, 5교시: 16:00-17:30
+                                const periodMap = {
+                                    9: 1, 10: 2, 13: 3, 14: 4, 16: 5
+                                };
+                                return periodMap[hour] === targetPeriod;
+                            }
+                            return false;
+                        });
+                        
+                        if (periodClass) {
+                            answer = `${dayName}요일 ${targetPeriod}교시는 ${periodClass.subject} (${periodClass.room})입니다.`;
+                        } else {
+                            answer = `${dayName}요일 ${targetPeriod}교시 수업이 없습니다.`;
+                        }
+                    } else {
+                        // 전체 시간표
+                        answer = list.length 
+                            ? `${dayName}요일 시간표:<br>` + list.map(it => `${it.time} ${it.subject} ${it.room}`).join('<br>')
+                            : `${dayName}요일 수업이 없습니다.`;
+                    }
                 }
             }
 
@@ -872,7 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ==========================================
-    // 6. 시간표 기능 (개편됨: 월~금요일만)
+    // 6. 시간표 기능 (강화됨: 교시 질문 지원)
     // ==========================================
     let currentDay = 'mon';
 
@@ -973,7 +1005,6 @@ document.addEventListener('DOMContentLoaded', () => {
         System.updateSendButton();
         UI.chatInput.style.height = 'auto';
         UI.chatInput.style.height = Math.min(UI.chatInput.scrollHeight, 120) + 'px';
-        fixChatPadding();
     }
 
     if (UI.chatInput) {
@@ -987,7 +1018,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     UI.chatInput.value = '';
                     UI.chatInput.style.height = 'auto';
                     System.updateSendButton();
-                    setTimeout(fixChatPadding, 100);
                 }
             }
         });
@@ -1214,4 +1244,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // 초기 상태
     updateMainBtn();
     System.updateSendButton();
-}); //
+});//
