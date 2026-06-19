@@ -1,6 +1,6 @@
 /* =========================================================
-   Chat K plus - Complete CSS (2026-06-18 v3.5 FINAL)
-   v3.4 기반 + 입력바 위치 수정 + 색상 오타 수정
+   Chat K plus - Complete CSS (2026-06-19 v3.6 배타1)
+   v2.5R 기반 + 모달 X 버튼 개선 + 입력창 모던화
    ========================================================= */
 
 /* ==========================================
@@ -68,7 +68,7 @@
     --shadow-circle-frame: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.03);
     --shadow-circle-frame-hover: 0 4px 12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05);
     
-    /* [수정됨 v3.5] 채팅방/입력바 떠 있는 느낌 - 줄임 */
+    /* 채팅방/입력바 떠 있는 느낌 */
     --shadow-floating: 0 8px 24px rgba(0,0,0,0.08);
     --shadow-floating-hover: 0 12px 32px rgba(0,0,0,0.12);
     --shadow-floating-focus: 0 12px 32px rgba(0,0,0,0.12);
@@ -139,7 +139,7 @@ html, body {
 }
 
 /* ==========================================
- * 3. 검색 화면
+ * 3. 검색 화면 (모던화됨)
  * ========================================== */
 #search-view {
     display: flex;
@@ -222,49 +222,54 @@ html, body {
     position: relative;
 }
 
+/* [모던화됨] 검색 입력창 - 더 크고 둥글게 */
 .search-input {
     width: 100%;
-    padding: 20px 24px;
-    padding-right: 60px;
-    border: 2px solid rgba(0, 0, 0, 0.15);
-    border-radius: var(--radius-xl);
-    font-size: 18px;
+    padding: 24px 28px;
+    padding-right: 72px;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 28px;
+    font-size: 20px;
     background: #ffffff;
     color: #000000;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-input-detail);
+    font-weight: 500;
 }
 
 .search-input::placeholder {
     color: rgba(0, 0, 0, 0.5);
+    font-weight: 400;
 }
 
 .search-input:hover {
     box-shadow: var(--shadow-input-detail-hover);
-    border-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
 }
 
 .search-input:focus {
     outline: none;
     border-color: #000000;
     box-shadow: var(--shadow-input-detail-focus);
-    transform: scale(1.01);
+    transform: translateY(-2px);
     background: #ffffff;
 }
 
+/* [모던화됨] 검색 버튼 - 더 크게 */
 .search-btn {
     position: absolute;
-    right: 8px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
     background: var(--accent-gradient);
     color: white;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-btn);
     display: flex;
@@ -273,7 +278,7 @@ html, body {
 }
 
 .search-btn:hover:not(:disabled) {
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.08);
     box-shadow: var(--shadow-btn-hover);
 }
 
@@ -309,11 +314,11 @@ html, body {
 }
 
 .example-btn {
-    padding: 14px 24px;
+    padding: 16px 28px;
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: var(--radius-lg);
-    font-size: 15px;
+    border-radius: 20px;
+    font-size: 16px;
     font-weight: 500;
     color: #000000;
     cursor: pointer;
@@ -464,7 +469,6 @@ html, body {
     border-bottom-right-radius: 6px;
 }
 
-/* [수정됨 v3.5] 색상 오타 수정: #f5f5 → #f5f5f5 */
 .ai-msg {
     background: #f5f5f5;
     color: var(--text-primary);
@@ -502,15 +506,13 @@ html, body {
 }
 
 /* ==========================================
- * 5. 채팅 입력바 - v3.5 수정됨
+ * 5. 채팅 입력바 (모던화됨)
  * ========================================== */
-
-/* [수정됨 v3.5] 입력바 위치 수정: sticky + safe-area */
 .chat-footer {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 8px 16px calc(12px + env(safe-area-inset-bottom));
+    padding: 12px 20px calc(16px + env(safe-area-inset-bottom));
     background: transparent;
     border-top: none;
     box-shadow: none;
@@ -520,13 +522,14 @@ html, body {
     flex-shrink: 0;
 }
 
+/* [모던화됨] 입력바 래퍼 - 더 크고 둥글게 */
 .input-wrapper-modern {
     width: 100%;
     position: relative;
     background: #ffffff;
     border: 2px solid #e5e5e5;
-    border-radius: 40px;
-    padding: 14px 18px 12px 20px;
+    border-radius: 32px;
+    padding: 18px 22px 16px 24px;
     box-shadow: var(--shadow-floating);
     transition: all var(--transition-normal);
     position: relative;
@@ -548,7 +551,6 @@ html, body {
     z-index: 0;
 }
 
-/* [수정됨 v3.5] 색상 오타 수정: 255,255,0.3 → 255,255,255,0.3 */
 .input-wrapper-modern::after {
     content: '';
     position: absolute;
@@ -585,26 +587,27 @@ html, body {
     position: relative;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 14px;
     z-index: 2;
 }
 
+/* [모던화됨] 채팅 입력창 - 더 크게 */
 .chat-input {
     flex: 1;
-    padding: 8px 0 10px 0;
+    padding: 10px 0 12px 0;
     border: none;
-    font-size: 16px;
+    font-size: 17px;
     resize: none;
-    min-height: 36px;
-    max-height: 80px;
+    min-height: 42px;
+    max-height: 100px;
     line-height: 1.4;
     background: transparent;
     color: #000000;
     font-family: inherit;
     z-index: 2;
+    font-weight: 500;
 }
 
-/* [수정됨 v3.5] placeholder 대비 개선 */
 .chat-input::placeholder {
     color: #757575;
     font-weight: 400;
@@ -617,14 +620,15 @@ html, body {
     box-shadow: none;
 }
 
+/* [모던화됨] 원형 버튼 그룹 - 더 크게 */
 .circular-buttons {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-shrink: 0;
-    padding: 4px;
+    padding: 6px;
     background: rgba(0, 0, 0, 0.04);
-    border-radius: 20px;
+    border-radius: 24px;
     border: 2px solid #000000;
     box-shadow: var(--shadow-circle-frame);
     z-index: 2;
@@ -649,14 +653,15 @@ html, body {
     opacity: 1;
 }
 
+/* [모던화됨] 원형 버튼 - 더 크게 */
 .circular-btn {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     background: transparent;
     border: 1px solid #e5e5e5;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -689,7 +694,7 @@ html, body {
 .circular-btn:hover {
     background: rgba(0, 0, 0, 0.06);
     border-color: #000000;
-    transform: scale(1.15);
+    transform: scale(1.12);
     color: #000000;
     box-shadow: var(--shadow-btn-hover);
 }
@@ -703,31 +708,32 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    margin-top: 10px;
+    gap: 14px;
+    margin-top: 12px;
     z-index: 2;
 }
 
 .controls-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .controls-right {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
+/* [모던화됨] 아이콘 버튼 - 더 크게 */
 .icon-btn {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     background: transparent;
     border: 2px solid #000000;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -758,7 +764,7 @@ html, body {
 
 .icon-btn:hover {
     background: rgba(0, 0, 0, 0.06);
-    transform: scale(1.15);
+    transform: scale(1.12);
     color: #000000;
     box-shadow: var(--shadow-btn);
 }
@@ -769,29 +775,30 @@ html, body {
 }
 
 .difficulty-select {
-    padding: 10px 32px 10px 12px;
+    padding: 12px 36px 12px 14px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: transparent;
     color: var(--text-primary);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23666' d='M5 7L2 3h6z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 10px center;
+    background-position: right 12px center;
     z-index: 2;
 }
 
+/* [모던화됨] 전송/중지 버튼 - 더 크게 */
 .send-circle,
 .stop-circle {
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -831,7 +838,7 @@ html, body {
 }
 
 .send-circle:not(:disabled):hover {
-    transform: scale(1.15);
+    transform: scale(1.12);
     background: #222222;
     box-shadow: var(--shadow-btn-hover);
 }
@@ -856,35 +863,35 @@ html, body {
 /* 모바일 최적화 */
 @supports (-webkit-touch-callout: none) {
     .chat-footer {
-        padding: 8px 14px calc(10px + env(safe-area-inset-bottom));
+        padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
     }
     
     .input-wrapper-modern {
-        padding: 12px 16px 10px 18px;
-        border-radius: 36px;
+        padding: 16px 20px 14px 22px;
+        border-radius: 30px;
     }
     
     .chat-input {
-        min-height: 32px;
-        font-size: 15px;
+        min-height: 38px;
+        font-size: 16px;
     }
     
     .circular-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
     }
     
     .icon-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
     }
     
     .send-circle,
     .stop-circle {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -908,31 +915,31 @@ html, body {
     }
 
     .input-wrapper-modern {
-        padding: 12px 16px 10px 18px;
-        border-radius: 36px;
+        padding: 16px 20px 14px 22px;
+        border-radius: 30px;
     }
 
     .chat-input {
-        min-height: 32px;
-        font-size: 15px;
+        min-height: 38px;
+        font-size: 16px;
     }
 
     .circular-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
     }
 
     .icon-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
     }
 
     .send-circle,
     .stop-circle {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -961,99 +968,99 @@ html, body {
     }
 
     .input-wrapper-modern {
-        padding: 10px 14px 8px 16px;
-        border-radius: 34px;
+        padding: 14px 18px 12px 20px;
+        border-radius: 28px;
     }
 
     .chat-input {
-        min-height: 30px;
-        font-size: 14px;
+        min-height: 36px;
+        font-size: 15px;
     }
 
     .circular-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 13px;
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
     }
 
     .icon-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 13px;
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
     }
 
     .send-circle,
     .stop-circle {
-        width: 32px;
-        height: 32px;
+        width: 38px;
+        height: 38px;
     }
 }
 
 @media (max-width: 360px) {
     .input-wrapper-modern {
-        padding: 8px 12px 6px 14px;
-        border-radius: 32px;
+        padding: 12px 16px 10px 18px;
+        border-radius: 26px;
     }
 
     .chat-input {
-        min-height: 28px;
-        font-size: 13px;
+        min-height: 34px;
+        font-size: 14px;
     }
 
     .circular-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
 
     .icon-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
 
     .send-circle,
     .stop-circle {
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
     }
 }
 
 .chat-footer.keyboard-open {
-    padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 10px));
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
     .chat-footer {
-        padding: 4px 12px calc(6px + env(safe-area-inset-bottom));
+        padding: 6px 16px calc(8px + env(safe-area-inset-bottom));
     }
     
     .input-wrapper-modern {
-        padding: 8px 12px 6px 14px;
-        border-radius: 32px;
+        padding: 12px 16px 10px 18px;
+        border-radius: 26px;
     }
     
     .chat-input {
-        min-height: 28px;
-        font-size: 14px;
+        min-height: 34px;
+        font-size: 15px;
     }
     
     .circular-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
     
     .icon-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 12px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
     
     .send-circle,
     .stop-circle {
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
     }
     
     .chat-box {
@@ -1102,7 +1109,7 @@ html, body {
 }
 
 /* ==========================================
- * 7. 모달 공통
+ * 7. 모달 공통 (개선됨)
  * ========================================== */
 .modal {
     position: fixed;
@@ -1163,7 +1170,6 @@ html, body {
     }
 }
 
-/* [수정됨] 떠돌던 background 삭제하고 ::before에 제대로 넣음 */
 .modal-content::before {
     content: '';
     position: absolute;
@@ -1179,13 +1185,13 @@ html, body {
     opacity: 0.5;
 }
 
-/* [수정됨] X 버튼 깨짐 방지: SVG 아이콘으로 교체 */
+/* [개선됨] X 버튼 - SVG 아이콘 직접 사용 */
 .close-btn {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
     background: rgba(0, 0, 0, 0.06);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 50%;
@@ -1196,28 +1202,42 @@ html, body {
     align-items: center;
     justify-content: center;
     padding: 0;
+    z-index: 10;
 }
 
-/* SVG X 아이콘 */
-.close-btn::before {
-    content: '';
-    width: 16px;
-    height: 16px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+/* [개선됨] SVG 아이콘 직접 사용 */
+.close-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
 }
 
+/* [개선됨] 호버 효과 - 회전 제거 */
 .close-btn:hover {
     background: rgba(0, 0, 0, 0.1);
     color: var(--text-primary);
-    transform: rotate(90deg) scale(1.1);
+    transform: scale(1.1);
     border-color: rgba(0, 0, 0, 0.15);
 }
 
+/* [개선됨] 활성 효과 */
+.close-btn:active {
+    transform: scale(0.95);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* [개선됨] 포커스 효과 - 접근성 개선 */
+.close-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
 /* ==========================================
- * 8. 시간표 모달
+ * 8. 시간표 모달 (개선됨)
  * ========================================== */
 .timetable-modal {
     max-width: 560px;
@@ -1228,6 +1248,7 @@ html, body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 28px;
+    padding-right: 44px; /* X 버튼 공간 확보 */
 }
 
 .timetable-header h3 {
@@ -1447,7 +1468,7 @@ html, body {
 }
 
 /* ==========================================
- * 9. 수업 추가 모달
+ * 9. 수업 추가 모달 (개선됨)
  * ========================================== */
 .add-class-modal {
     max-width: 460px;
@@ -1461,6 +1482,7 @@ html, body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 28px;
+    padding-right: 44px; /* X 버튼 공간 확보 */
     letter-spacing: -0.02em;
 }
 
@@ -1583,7 +1605,7 @@ html, body {
 }
 
 /* ==========================================
- * 10. 링크 경고 모달
+ * 10. 링크 경고 모달 (개선됨)
  * ========================================== */
 #linkModal .modal-url {
     word-break: break-all;
@@ -1596,77 +1618,4 @@ html, body {
     font-weight: 500;
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: var(--shadow-subtle);
-}
-
-/* ==========================================
- * 11. 제거됨 - 중복 제거
- * ========================================== */
-
-/* ==========================================
- * 12. 키보드 열릴 때 동적 조정
- * ========================================== */
-.chat-footer.keyboard-open {
-    padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
-}
-
-.chat-footer.keyboard-open .chat-input {
-    max-height: 80px;
-    min-height: 32px;
-}
-
-.chat-footer.keyboard-open .circular-btn {
-    width: 30px;
-    height: 30px;
-}
-
-.chat-footer.keyboard-open .icon-btn {
-    width: 30px;
-    height: 30px;
-}
-
-.chat-footer.keyboard-open .send-circle,
-.chat-footer.keyboard-open .stop-circle {
-    width: 34px;
-    height: 34px;
-}
-
-/* ==========================================
- * 13. 랜드스케이프 모드 대응
- * ========================================== */
-@media (max-height: 500px) and (orientation: landscape) {
-    .chat-footer {
-        padding: 4px 12px calc(6px + env(safe-area-inset-bottom));
-    }
-    
-    .input-wrapper-modern {
-        padding: 8px 12px 6px 14px;
-        border-radius: 32px;
-    }
-    
-    .chat-input {
-        min-height: 28px;
-        font-size: 14px;
-    }
-    
-    .circular-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 12px;
-    }
-    
-    .icon-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 12px;
-    }
-    
-    .send-circle,
-    .stop-circle {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .chat-box {
-        padding: 8px;
-    }
 }
