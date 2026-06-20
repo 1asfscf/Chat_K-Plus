@@ -1,8 +1,6 @@
-
 // =========================================================
-// Chat K plus - Complete Rebuild (2026-06-18 v3.2.X)
-// fixChatPadding 제거, 시간표 기능 강화, 천안문/IT 데이터 추가
-// 교시 질문 버그 수정, 필터 차단 완화, 입력창 위치 수정
+// Chat K plus - Complete Rebuild (2026-06-19 v3.6 배타2)
+// v3.2.X 기반 + 공식 사이트 다중 매칭 + 시간표 기능 개선 + 정책 필터 완화
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -56,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 2. 유틸리티 함수
     // ==========================================
-    // fixChatPadding 함수 제거됨
 
     // ==========================================
     // 3. 데이터베이스 (카테고리별 분류)
@@ -135,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "다음": "다음 공식 사이트는 https://www.daum.net 입니다.",
             "다음 공식 사이트": "다음 공식 사이트는 https://www.daum.net 입니다.",
             "다음 사이트 공식 사이트 알려줘": "다음 공식 사이트는 https://www.daum.net 입니다.",
-            "다음에서 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저귀\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
+            "다음에서 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
             "다음 기저귀": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
             "다음에서 기저귀라고 검색하면": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균\ndiaper\n기저귀 하기스\n분유\n노인 기저귀\n기저귀 갈아요\n기저귀 브랜드\n면기저귀\n기저귀 갈아\n기저귀 바우처\n기저귀 채우기",
             "기저귀 관련검색어": "다음 관련검색어:\n성인용 기저귀\n아기 기저귀\n성인 기저귀\n신생아 기저귀\n하기스 기저귀\n기저귀 영어\n기저귀 갈기\n기저귀 영어로\n천기저귀\n성인용 팬티기저균"
@@ -412,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
             thinking.remove();
 
             // ==========================================
-            // 정책 필터 시스템 v4.3.R (완화됨)
+            // 정책 필터 시스템 v4.4.R (완화됨)
             // ==========================================
             const q = query.trim();
             const nq = q.toLowerCase().replace(/[?!.~]/g, '').replace(/\s+/g, ' ');
@@ -438,8 +435,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const results = QuestionClassifier.searchDB(category, q);
                 
                 if (results.length > 0) {
-                    // 첫 번째 결과 사용
-                    answer = results[0].value;
+                    // [수정됨 v3.6 배타2] 모든 매칭 결과 사용
+                    answer = results.map(r => r.value).join('<br><br>');
                     matchedKey = results[0].key;
                 }
             }
@@ -448,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 특수 패턴 처리
             // ==========================================
             
-            // 공식 사이트 패턴
+            // [수정됨 v3.6 배타2] 공식 사이트 패턴 - 다중 매칭
             if (!answer && /공식.*사이트|홈페이지|사이트.*알려줘|사이트.*알려/.test(nq)) {
                 const sites = {
                     '네이버':'https://www.naver.com',
@@ -470,45 +467,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (found.length) answer = found.join('<br>');
             }
 
-            // 시간표 패턴 (수정됨: 0교시 지원, 교시 질문 버그 수정)
+            // [수정됨 v3.6 배타2] 시간표 패턴 - 요일 추출 개선
             if (!answer && /(시간표|수업.*뭐|오늘.*수업|내일.*수업|.*교시.*뭐|.*교시.*무엇|.*교시.*알려줘)/.test(nq)) {
                 const data = getTimetable();
                 const today = new Date().getDay();
                 const days = ['mon','tue','wed','thu','fri'];
-                let targetDay = days[today === 0 ? 0 : today - 1]; // 일요일(0)은 월요일(0)로
+                let targetDay = null;
+                let dayName = null;
                 
-                // 교시 추출 (수정됨: 0교시 지원)
-                const periodMatch = nq.match(/(\d+)교시/);
-                let targetPeriod = null;
-                if (periodMatch) {
-                    targetPeriod = parseInt(periodMatch[1]);
-                }
-                
-                if (nq.includes('내일')) {
+                // 요일 추출 (수정됨)
+                if (nq.includes('오늘')) {
+                    if (today === 0 || today === 6) {
+                        // 주말
+                        answer = "주말(토요일, 일요일) 시간표 기능이 원활하지 않을 수 있습니다. 월~금요일 중으로 말씀해주시면 알려드리겠습니다.";
+                    } else {
+                        targetDay = days[today - 1];
+                        dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
+                    }
+                } else if (nq.includes('내일')) {
                     const nextDayIndex = (today === 0 ? 0 : today - 1) + 1;
-                    targetDay = days[nextDayIndex < 5 ? nextDayIndex : 0]; // 금요일 다음은 월요일
+                    if (nextDayIndex >= 5) {
+                        answer = "주말(토요일, 일요일) 시간표 기능이 원활하지 않을 수 있습니다. 월~금요일 중으로 말씀해주시면 알려드리겠습니다.";
+                    } else {
+                        targetDay = days[nextDayIndex];
+                        dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
+                    }
                 } else if (nq.includes('모레')) {
                     const nextDayIndex = (today === 0 ? 0 : today - 1) + 2;
-                    targetDay = days[nextDayIndex < 5 ? nextDayIndex : (nextDayIndex - 5)]; // 목요일+2일 = 월요일
+                    if (nextDayIndex >= 5) {
+                        answer = "주말(토요일, 일요일) 시간표 기능이 원활하지 않을 수 있습니다. 월~금요일 중으로 말씀해주시면 알려드리겠습니다.";
+                    } else {
+                        targetDay = days[nextDayIndex];
+                        dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
+                    }
                 } else if (nq.includes('월')) {
                     targetDay = 'mon';
+                    dayName = '월';
                 } else if (nq.includes('화')) {
                     targetDay = 'tue';
+                    dayName = '화';
                 } else if (nq.includes('수')) {
                     targetDay = 'wed';
+                    dayName = '수';
                 } else if (nq.includes('목')) {
                     targetDay = 'thu';
+                    dayName = '목';
                 } else if (nq.includes('금')) {
                     targetDay = 'fri';
+                    dayName = '금';
                 } else if (nq.includes('토') || nq.includes('일')) {
-                    answer = "주말(토요일, 일요일) 시간표는 제공하지 않습니다. 월~금요일 시간표만 조회 가능합니다.";
+                    answer = "주말(토요일, 일요일) 시간표 기능이 원활하지 않을 수 있습니다. 월~금요일 중으로 말씨해주시면 알려드리겠습니다.";
                 } else if (today === 0 || today === 6) {
-                    answer = "주말(토요일, 일요일) 시간표는 제공하지 않습니다. 월~금요일 시간표만 조회 가능합니다.";
+                    answer = "주말(토요일, 일요일) 시간표 기능이 원활하지 않을 수 있습니다. 월~금요일 중으로 말씨해주시면 알려드리겠습니다.";
                 }
 
-                if (!answer) {
+                if (!answer && targetDay) {
                     const list = data[targetDay] || [];
-                    const dayName = {mon:'월',tue:'화',wed:'수',thu:'목',fri:'금'}[targetDay];
+                    
+                    // 교시 추출 (수정됨: 0교시 지원)
+                    const periodMatch = nq.match(/(\d+)교시/);
+                    let targetPeriod = null;
+                    if (periodMatch) {
+                        targetPeriod = parseInt(periodMatch[1]);
+                    }
                     
                     if (targetPeriod !== null) {
                         // 특정 교시 질문 (수정됨: 0교시 지원)
@@ -574,9 +595,19 @@ document.addEventListener('DOMContentLoaded', () => {
             this.updateSendButton();
         },
 
-        // 정책 위반 감지 시스템 v4.3.R (완화됨)
+        // 정책 위반 감지 시스템 v4.4.R (완화됨)
         checkPolicyViolation(nq, rawQ) {
-            // 비판적 키워드 (완화됨: 일반 질문 통과)
+            // [수정됨 v3.6 배타2] 박근혜 탄핵 이유 질문 필터링 제외
+            if (/(박근혜.*탄핑.*이유|탄핑.*이유.*알려줘|역대.*대통령.*탄핑|대통령.*탄핑.*이유)/.test(nq)) {
+                return null; // 필터링하지 않음
+            }
+
+            // [수정됨 v3.6 배타2] 공산당 나쁜거야? 질문 완화
+            if (/공산당.*나쁜|공산당.*좋지|공산당.*싫어|공산당.*싫/.test(nq)) {
+                return "공산당에 대한 저의나 비판적 표현은 제가할 수 없습니다. 정치적 입장에 대한 판단은 사용자의 몫입니다.";
+            }
+
+            // 비판적 키워드 (완화됨)
             const criticalKeywords = [
                 // 정치적 비판 (완화됨)
                 '비판', '비난', '독재', '부패', '타도', '전복', '붕괴', '망해',
@@ -807,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 
                 if (hasKeyword) {
-                    // 비판적 키워드 감지 (완화됨: 2개 이상 필요)
+                    // 비판적 키워드 감지 (완화됨: 3개 이상 필요)
                     const criticalKeywordCount = criticalKeywords.filter(keyword =>
                         nq.includes(keyword)
                     ).length;
@@ -820,8 +851,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // 직접적인 인신공격 감지 (완화됨)
                     const hasDirectInsult = this.checkDirectInsult(nq, pattern.keywords);
                     
-                    // 위반 감지 (완화됨: 2개 이상 필요)
-                    if ((criticalKeywordCount >= 2 && hasSensitiveTopic) || hasDirectInsult) {
+                    // 위반 감지 (완화됨: 3개 이상 필요)
+                    if ((criticalKeywordCount >= 3 && hasSensitiveTopic) || hasDirectInsult) {
                         return this.getPolicyViolationMessage(country);
                     }
                 }
@@ -906,7 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ==========================================
-    // 6. 시간표 기능 (수정됨: 0교시 지원, 교시 질문 버그 수정)
+    // 6. 시간표 기능 (수정됨: 요일 추출 개선)
     // ==========================================
     let currentDay = 'mon';
 
